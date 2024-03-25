@@ -20,7 +20,8 @@ This is a lightweight enum reflection class based on [magic_enum](https://github
 - no macros
 - does not use `__PRETTY_FUNCTION__` or `__FUNCTION__`
 - class based
-- support for scoped and unscoped enums 
+- support for scoped and unscoped enums
+- support for enum aliases, gaps
 
 # Examples
 ```c++
@@ -65,7 +66,9 @@ _output_
 ```
 ### `enum_names`
 ```c++
-for(const auto ev : conjure_enum::enum_names<component>)
+for(const auto ev : conjure_enum::enum_names<component>) // scoped
+   std::cout << ev << '\n';
+for(const auto ev : conjure_enum::enum_names<component1>) // unscoped
    std::cout << ev << '\n';
 ```
 _output_
@@ -81,4 +84,51 @@ component::path
 component::query
 component::fragment
 component::host
+scheme
+authority
+userinfo
+user
+password
+host
+port
+path
+query
+fragment
+host
+```
+### `enum_values`
+```c++
+for(const auto ev : conjure_enum::enum_values<component>) // scoped
+   std::cout << static_cast<int>(ev) << '\n';
+```
+_output_
+```CSV
+0
+1
+2
+3
+4
+5
+6
+12
+13
+14
+```
+### `enum_entries`
+```c++
+for(const auto [value, str] : conjure_enum::enum_entries<component>) // scoped
+   std::cout << value << ' ' str << '\n';
+```
+_output_
+```CSV
+0 component::scheme
+1 component::authority
+2 component::userinfo
+3 component::user
+4 component::password
+5 component::host
+6 component::port
+12 component::path
+13 component::query
+14 component::fragment
 ```

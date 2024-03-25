@@ -1,4 +1,4 @@
-# uri
+# conjure_enum
 
 ### Lightweight header-only C++20 enum reflection
 

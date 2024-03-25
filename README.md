@@ -23,7 +23,7 @@
 This is a lightweight enum reflection class based on [magic_enum](https://github.com/Neargye/magic_enum).
 We reworked the core of the library, stripped back all but the most basic functionality that most
 developers look for. We updated the code to C++20, taking advantage of `std::source_location`, as well as other
-improvements only available in C++20 (such as `constexpr` algorthims, `consteval`, concepts, `to_array` and so forth).
+improvements only available in C++20 (such as `constexpr` algorithms, concepts, `to_array` and so forth).
 
 ## Motivation
 - header-only
@@ -34,7 +34,7 @@ improvements only available in C++20 (such as `constexpr` algorthims, `consteval
 
 ## Features
 - single _header-only_
-- all methods `constexpr`; no virtual methods
+- all methods `static constexpr`; no virtual methods
 - implements subset of the most used features
 - no macros (`__PRETTY_FUNCTION__`, `__FUNCTION__` or `__FUNCSIG__`), pure c++20
 - class based
@@ -44,6 +44,7 @@ improvements only available in C++20 (such as `constexpr` algorthims, `consteval
 - built-in unit tests
 
 # Examples
+All examples refer to the folowing enums:
 ```c++
 enum class component : int { scheme, authority, userinfo, user, password, host, port, path=12, test=path, query, fragment };
 enum component1 : int { scheme, authority, userinfo, user, password, host, port, path=12, query, fragment };

@@ -132,3 +132,23 @@ _output_
 13 component::query
 14 component::fragment
 ```
+### `is_scoped`
+```c++
+std::cout << std::boolalpha << conjure_enum::is_scoped<component>() << '\n';
+std::cout << std::boolalpha << conjure_enum::is_scoped<component1>() << '\n';
+```
+_output_
+```CSV
+true
+false
+```
+### `is_valid`
+```c++
+std::cout << std::boolalpha << conjure_enum::is_valid<component, component::password>() << '\n';
+std::cout << std::boolalpha << conjure_enum::is_valid<component, static_cast<int>(16)>() << '\n';
+```
+_output_
+```CSV
+true
+false
+```

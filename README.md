@@ -22,6 +22,7 @@ This is a lightweight enum reflection class based on [magic_enum](https://github
 - class based
 - support for scoped and unscoped enums
 - support for enum aliases, gaps
+- support for gcc, clang; msvc TBA
 
 # Examples
 ```c++

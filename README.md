@@ -11,11 +11,22 @@
 <a href="https://en.wikipedia.org/wiki/C%2B%2B20"><img src="https://github.com/fix8mt/conjure_enum/blob/master/assets/badgecpprequired.svg"></a>
 <a href="https://http://www.boost.org/LICENSE_1_0.txt"><img src="https://github.com/fix8mt/conjure_enum/blob/master/assets/badgeboostlic.svg"></a>
 
+# Quick links
+|**Link**|**Description**|
+--|--
+|[Here](https://github.com/fix8mt/conjure_enum/blob/master/include/fix8/conjure_enum.hpp)| For implementation|
+|[Examples](#2-examples)| For examples|
+|[Building](#3-building)| How to build or include|
+
+> [!TIP]
+> Use the built-in [table of contents](https://github.blog/changelog/2021-04-13-table-of-contents-support-in-markdown-files/) to navigate this guide.
+
+------------------------------------------------------------------------
 # Introduction
 This is a lightweight enum reflection class based on [magic_enum](https://github.com/Neargye/magic_enum).
 We reworked the core of the library, stripped back all but the most basic functionality that most
 developers look for. We updated the code to C++20, taking advantage of `std::source_location`, as well as other
-improvements only available in C++20 (such as `constexpr` algorthims, `consteval`, `to_array` and so forth).
+improvements only available in C++20 (such as `constexpr` algorthims, `consteval`, concepts, `to_array` and so forth).
 
 ## Motivation
 - header-only

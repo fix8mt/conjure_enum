@@ -54,7 +54,7 @@ namespace FIX8 {
 
 //-----------------------------------------------------------------------------------------
 #if not defined ENUM_MIN_VALUE
-# define ENUM_MIN_VALUE 0
+# define ENUM_MIN_VALUE -128
 #endif
 #if not defined ENUM_MAX_VALUE
 # define ENUM_MAX_VALUE 127

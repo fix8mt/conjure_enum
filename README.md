@@ -1,10 +1,21 @@
+<p align="center">
+  <a href="https://www.fix8mt.com"><img src="https://github.com/fix8mt/conjure_enum/blob/master/assets/fix8mt_Master_Logo_Green_Trans.png" width="200"></a>
+</p>
 # conjure_enum
 
 ### Lightweight header-only C++20 enum reflection
 
 ------------------------------------------------------------------------
+[![Ubuntu](https://github.com/fix8mt/conjure_enum/actions/workflows/cmake-single-platform.yml/badge.svg)](https://github.com/fix8mt/conjure_enum/actions/workflows/cmake-single-platform.yml)
+<a href="https://en.wikipedia.org/wiki/C%2B%2B20"><img src="https://github.com/fix8mt/conjure_enum/blob/master/assets/badgecpprequired.svg"></a>
+<a href="https://http://www.boost.org/LICENSE_1_0.txt"><img src="https://github.com/fix8mt/conjure_enum/blob/master/assets/badgeboostlic.svg"></a>
+
+------------------------------------------------------------------------
 # Introduction
 This is a lightweight enum reflection class based on [magic_enum](https://github.com/Neargye/magic_enum).
+We reworked the core of the library, stripped back all but the most basic functionality that most
+developers look for. We updated the code to C++20, taking advantage of `std::source_location`, as well as other
+improvements only available in C++20 (such as `constexpr` algorthims, `consteval`, `to_array` and so forth).
 
 ## Motivation
 - header-only
@@ -16,13 +27,13 @@ This is a lightweight enum reflection class based on [magic_enum](https://github
 ## Features
 - single _header-only_
 - all methods `constexpr`; no virtual methods
-- implements subset of most used features
-- no macros, pure c++20
-- does not use `__PRETTY_FUNCTION__` or `__FUNCTION__`
+- implements subset of the most used features
+- no macros (`__PRETTY_FUNCTION__`, `__FUNCTION__` or `__FUNCSIG__`), pure c++20
 - class based
 - support for scoped and unscoped enums
 - support for enum aliases, gaps
-- support for gcc, clang; msvc TBA
+- support for GCC, Clang; MSVC (TBA)
+- built-in unit tests
 
 # Examples
 ```c++
@@ -180,7 +191,7 @@ component1
 This implementation is header only. Apart from standard C++20 includes there are no external dependencies needed in your application.
 [Catch2](https://github.com/catchorg/Catch2.git) is used for the built-in unit tests.
 
-## i. Obtaining the source, building the examples
+## Obtaining the source, building the examples
 To clone and default build the test app, unit tests and the benchmark:
 ```bash
 git clone https://github.com/fix8mt/conjure_enum.git
@@ -192,7 +203,7 @@ make -j4
 make test (or ctest)
 ```
 
-## ii. Using in your application with cmake
+## Using in your application with cmake
 In `CMakeLists.txt` set your include path to:
 ```cmake
 include_directories([conjure_enum directory]/include)
@@ -209,7 +220,7 @@ in your application. Everything in this class is within the namespace `FIX8`, so
 using namespace FIX8;
 ```
 
-## iii. Integrating `conjure_enum` in your project with cmake FetchContent
+## Integrating `conjure_enum` in your project with cmake FetchContent
 You can use cmake [FetchContent](https://cmake.org/cmake/help/latest/module/FetchContent.html) to integrate `conjure_enum` with your project.
 If your project was called `myproj` with the sourcefile `myproj.cpp` then...
 ```cmake

@@ -3,7 +3,7 @@
 ### Lightweight header-only C++20 enum reflection
 
 ------------------------------------------------------------------------
-# 1. Introduction
+# Introduction
 This is a lightweight enum reflection class based on [magic_enum](https://github.com/Neargye/magic_enum).
 
 ## Motivation
@@ -21,3 +21,23 @@ This is a lightweight enum reflection class based on [magic_enum](https://github
 - does not use `__PRETTY_FUNCTION__` or `__FUNCTION__`
 - class based
 - support for scoped and unscoped enums 
+
+# Examples
+```c++
+enum class component : int { scheme, authority, userinfo, user, password, host, port, path=12, test=path, query, fragment };
+enum component1 : int { scheme, authority, userinfo, user, password, host, port, path=12, query, fragment };
+```
+
+### `enum_to_string`
+```c++
+auto name { conjure_enum::enum_to_string(component::path) };
+auto alias_name { conjure_enum::enum_to_string(component::test) }; // alias
+auto noscope_name { conjure_enum::enum_to_string(path) };
+std::cout << name << '\n' << alias_name << '\n' << noscope_name << '\n';
+```
+_output_
+```CSV
+component::path
+component::path
+path
+```

@@ -44,13 +44,14 @@ improvements only available in C++20 (such as `constexpr` algorithms, concepts, 
 - built-in unit tests
 
 # Examples
-All examples refer to the folowing enums:
+All examples refer to the following enums:
 ```c++
 enum class component : int { scheme, authority, userinfo, user, password, host, port, path=12, test=path, query, fragment };
 enum component1 : int { scheme, authority, userinfo, user, password, host, port, path=12, query, fragment };
 ```
 
 ### `enum_to_string`
+Returns a `std::string_view`.
 ```c++
 auto name { conjure_enum::enum_to_string(component::path) };
 auto alias_name { conjure_enum::enum_to_string(component::test) }; // alias
@@ -65,6 +66,7 @@ path
 ```
 
 ### `string_to_enum`
+Returns a `std::optional<T>`.
 ```c++
 int value { static_cast<int>(conjure_enum::string_to_enum<component>("component::path").value()) };
 int noscope_value { static_cast<int>(conjure_enum::string_to_enum<component1>("path").value()) };
@@ -78,6 +80,7 @@ _output_
 100
 ```
 ### `int_to_enum`
+Returns a `std::optional<T>`.
 ```c++
 int value { static_cast<int>(conjure_enum::int_to_enum<component>(12).value()) };
 int noscope_value { static_cast<int>(conjure_enum::int_to_enum<component1>(12).value()) };
@@ -91,6 +94,7 @@ _output_
 100
 ```
 ### `count`
+Returns a `std::size_t`.
 ```c++
 std::cout << conjure_enum::count<component>()  << '\n';
 ```
@@ -99,6 +103,7 @@ _output_
 10
 ```
 ### `enum_names`
+Returns a `std::array<std::string_view, count>`.
 ```c++
 for(const auto ev : conjure_enum::enum_names<component>) // scoped
    std::cout << ev << '\n';
@@ -131,6 +136,7 @@ fragment
 host
 ```
 ### `enum_values`
+Returns a `std::array<T, count>`.
 ```c++
 for(const auto ev : conjure_enum::enum_values<component>) // scoped
    std::cout << static_cast<int>(ev) << '\n';
@@ -149,6 +155,7 @@ _output_
 14
 ```
 ### `enum_entries`
+Returns a `std::array<std::tuple<T, std::string_view>, count>`.
 ```c++
 for(const auto [value, str] : conjure_enum::enum_entries<component>) // scoped
    std::cout << value << ' ' str << '\n';
@@ -167,6 +174,7 @@ _output_
 14 component::fragment
 ```
 ### `is_scoped`
+Returns a `bool`.
 ```c++
 std::cout << std::boolalpha << conjure_enum::is_scoped<component>() << '\n';
 std::cout << std::boolalpha << conjure_enum::is_scoped<component1>() << '\n';
@@ -177,6 +185,7 @@ true
 false
 ```
 ### `is_valid`
+Returns a `bool`.
 ```c++
 std::cout << std::boolalpha << conjure_enum::is_valid<component, component::password>() << '\n';
 std::cout << std::boolalpha << conjure_enum::is_valid<component, static_cast<component>(16)>() << '\n';
@@ -187,6 +196,7 @@ true
 false
 ```
 ### `get_type`
+Returns a `std::string_view`.
 ```c++
 std::cout << conjure_enum::get_type<component>() << '\n';
 std::cout << conjure_enum::get_type<component1>() << '\n';

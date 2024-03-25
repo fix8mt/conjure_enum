@@ -17,3 +17,7 @@ This is a lightweight enum reflection class based on [magic_enum](https://github
 - single _header-only_
 - all methods `constexpr`; no virtual methods
 - implements subset of most used features
+- no macros
+- does not use `__PRETTY_FUNCTION__` or `__FUNCTION__`
+- class based
+- support for scoped and unscoped enums 

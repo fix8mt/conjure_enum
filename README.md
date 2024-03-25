@@ -18,9 +18,6 @@
 |[Examples](#examples)| For examples|
 |[Building](#building)| How to build or include|
 
-> [!TIP]
-> Use the built-in [table of contents](https://github.blog/changelog/2021-04-13-table-of-contents-support-in-markdown-files/) to navigate this guide.
-
 ------------------------------------------------------------------------
 # Introduction
 This is a lightweight enum reflection class based on [magic_enum](https://github.com/Neargye/magic_enum).

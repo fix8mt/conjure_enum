@@ -57,6 +57,19 @@ _output_
 12
 100
 ```
+### `int_to_enum`
+```c++
+int value { static_cast<int>(conjure_enum::int_to_enum<component>(12).value()) };
+int noscope_value { static_cast<int>(conjure_enum::int_to_enum<component1>(12).value()) };
+int bad_value { static_cast<int>(conjure_enum::int_to_enum<component>(100).value_or(component(100))) };
+std::cout << value << '\n' << noscope_value << '\n' << bad_value << '\n';
+```
+_output_
+```CSV
+12
+12
+100
+```
 ### `count`
 ```c++
 std::cout << conjure_enum::count<component>()  << '\n';
@@ -146,7 +159,7 @@ false
 ### `is_valid`
 ```c++
 std::cout << std::boolalpha << conjure_enum::is_valid<component, component::password>() << '\n';
-std::cout << std::boolalpha << conjure_enum::is_valid<component, static_cast<int>(16)>() << '\n';
+std::cout << std::boolalpha << conjure_enum::is_valid<component, static_cast<component>(16)>() << '\n';
 ```
 _output_
 ```CSV

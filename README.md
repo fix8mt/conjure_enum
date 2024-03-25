@@ -11,7 +11,6 @@
 <a href="https://en.wikipedia.org/wiki/C%2B%2B20"><img src="https://github.com/fix8mt/conjure_enum/blob/master/assets/badgecpprequired.svg"></a>
 <a href="https://http://www.boost.org/LICENSE_1_0.txt"><img src="https://github.com/fix8mt/conjure_enum/blob/master/assets/badgeboostlic.svg"></a>
 
-------------------------------------------------------------------------
 # Introduction
 This is a lightweight enum reflection class based on [magic_enum](https://github.com/Neargye/magic_enum).
 We reworked the core of the library, stripped back all but the most basic functionality that most

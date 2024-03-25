@@ -9,7 +9,7 @@
 //		SPDX-License-Identifier: MIT
 //		Copyright (c) 2019 - 2024 Daniil Goncharov <neargye@gmail.com>.
 //
-// Lightweight header-only C++20 magic enum implementation
+// Lightweight header-only C++20 enum reflection
 //
 // Distributed under the Boost Software License, Version 1.0 August 17th, 2003
 //

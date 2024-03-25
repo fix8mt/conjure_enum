@@ -9,7 +9,7 @@
 #		SPDX-License-Identifier: MIT
 #		Copyright (c) 2019 - 2024 Daniil Goncharov <neargye@gmail.com>.
 #
-# Lightweight header-only C++20 magic enum implementation
+# Lightweight header-only C++20 enum reflection
 #
 # Distributed under the Boost Software License, Version 1.0 August 17th, 2003
 #
@@ -39,7 +39,7 @@ cmake_minimum_required (VERSION 3.20)
 project (conjure_enum
    LANGUAGES CXX
 	HOMEPAGE_URL https://github.com/fix8mt/conjure_enum
-   DESCRIPTION "Lightweight magic enum"
+   DESCRIPTION "Lightweight C++20 enum reflection"
    VERSION 1.0.0
 )
 include(FetchContent)

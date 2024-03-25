@@ -41,3 +41,17 @@ component::path
 component::path
 path
 ```
+
+### `string_to_enum`
+```c++
+int value { static_cast<int>(conjure_enum::string_to_enum<component>("component::path").value()) };
+int noscope_value { static_cast<int>(conjure_enum::string_to_enum<component1>("path").value()) };
+int bad_value { static_cast<int>(conjure_enum::string_to_enum<component>("bad_string").value_or(component(100))) };
+std::cout << value << '\n' << noscope_value << '\n' << bad_value << '\n';
+```
+_output_
+```CSV
+12
+12
+100
+```

@@ -15,8 +15,8 @@
 |**Link**|**Description**|
 --|--
 |[Here](https://github.com/fix8mt/conjure_enum/blob/master/include/fix8/conjure_enum.hpp)| For implementation|
-|[Examples](#2-examples)| For examples|
-|[Building](#3-building)| How to build or include|
+|[Examples](#examples)| For examples|
+|[Building](#building)| How to build or include|
 
 > [!TIP]
 > Use the built-in [table of contents](https://github.blog/changelog/2021-04-13-table-of-contents-support-in-markdown-files/) to navigate this guide.

@@ -44,7 +44,6 @@ project (conjure_enum
 )
 include(FetchContent)
 
-message(STATUS "Downloading Catch2...")
 FetchContent_Declare(Catch2
    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
    GIT_SHALLOW ON

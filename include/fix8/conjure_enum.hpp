@@ -136,8 +136,10 @@ public:
 			if (auto lc { result.find_first_of(']') }; lc != std::string_view::npos)
 				return result.substr(0, lc);
 		}
+#elif defined(_MSC_VER)
+# error "incomplete"
 #else
-#error "compiler not supported"
+# error "compiler not supported"
 #endif
 		return {};
 	}
@@ -157,8 +159,10 @@ public:
 			if (auto lc { result.find_first_of(']') }; lc != std::string_view::npos)
 				return result.substr(0, lc);
 		}
+#elif defined(_MSC_VER)
+# error "incomplete"
 #else
-#error "compiler not supported"
+# error "compiler not supported"
 #endif
 		return {};
 	}
@@ -207,9 +211,9 @@ public:
 	template<typename T>
 	static constexpr std::optional<T> int_to_enum(int value) noexcept
 	{
-		if (auto result { std::find_if(enum_entries<T>.cbegin(), enum_entries<T>.cend(),
-			[value](const auto& pp) { return std::get<T>(pp) == static_cast<T>(value); }) }; result != enum_entries<T>.cend())
-				return std::get<T>(*result);
+		if (auto result { std::find(enum_values<T>.cbegin(), enum_values<T>.cend(), static_cast<T>(value)) };
+			result != enum_values<T>.cend())
+				return *result;
 		return {};
 	}
 

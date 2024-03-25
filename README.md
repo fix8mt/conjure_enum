@@ -166,3 +166,59 @@ _output_
 true
 false
 ```
+### `get_type`
+```c++
+std::cout << conjure_enum::get_type<component>() << '\n';
+std::cout << conjure_enum::get_type<component1>() << '\n';
+```
+_output_
+```CSV
+component
+component1
+```
+# Building
+This implementation is header only. Apart from standard C++20 includes there are no external dependencies needed in your application.
+[Catch2](https://github.com/catchorg/Catch2.git) is used for the built-in unit tests.
+
+## i. Obtaining the source, building the examples
+To clone and default build the test app, unit tests and the benchmark:
+```bash
+git clone https://github.com/fix8mt/conjure_enum.git
+cd conjure_enum
+mkdir build
+cd build
+cmake ..
+make -j4
+make test (or ctest)
+```
+
+## ii. Using in your application with cmake
+In `CMakeLists.txt` set your include path to:
+```cmake
+include_directories([conjure_enum directory]/include)
+# e.g.
+set(cjedir /home/dd/prog/conjure_enum)
+include_directories(${cjedir}/include)
+```
+and just include:
+```c++
+#include <fix8/conjure_enum.hpp>
+```
+in your application. Everything in this class is within the namespace `FIX8`, so you can add:
+```c++
+using namespace FIX8;
+```
+
+## iii. Integrating `conjure_enum` in your project with cmake FetchContent
+You can use cmake [FetchContent](https://cmake.org/cmake/help/latest/module/FetchContent.html) to integrate `conjure_enum` with your project.
+If your project was called `myproj` with the sourcefile `myproj.cpp` then...
+```cmake
+project(myproj)
+add_executable (myproj myproj.cpp)
+set_target_properties(myproj PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED true)
+message(STATUS "Downloading conjure_enum...")
+include(FetchContent)
+FetchContent_Declare(conjure_enum GIT_REPOSITORY https://github.com/fix8mt/conjure_enum.git)
+FetchContent_MakeAvailable(conjure_enum)
+target_include_directories(myproj PRIVATE ${conjure_enum_SOURCE_DIR}/include)
+```

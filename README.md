@@ -55,3 +55,30 @@ _output_
 12
 100
 ```
+### `count`
+```c++
+std::cout << conjure_enum::count<component>()  << '\n';
+```
+_output_
+```CSV
+10
+```
+### `enum_names`
+```c++
+for(const auto ev : conjure_enum::enum_names<component>)
+   std::cout << ev << '\n';
+```
+_output_
+```CSV
+component::scheme
+component::authority
+component::userinfo
+component::user
+component::password
+component::host
+component::port
+component::path
+component::query
+component::fragment
+component::host
+```

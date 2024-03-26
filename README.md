@@ -202,12 +202,15 @@ _output_
 ```
 Example using returned object:
 ```c++
-auto myfunc { conjure_enum::for_each<component>([](component val, int other)
+int total{};
+auto myfunc { conjure_enum::for_each<component>([](component val, int other, int& tot)
 {
    std::cout << static_cast<int>(val) << ' ' << other << '\n';
+	tot += static_cast<int>(val);
    return 0;
-}, 10) };
+}, 10, std::ref(total)) };
 myfunc(component::fragment);
+std::cout << total << '\n';
 ```
 _output_
 ```CSV
@@ -222,6 +225,7 @@ _output_
 13 10
 14 10
 14 10 <== invoked with returned object
+74
 ```
 ### `is_scoped`
 Returns a `bool`

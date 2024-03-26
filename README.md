@@ -197,11 +197,12 @@ _output_
 13 10
 14 10
 ```
+Examnple using returned object:
 ```c++
 conjure_enum::for_each<component>([](component val, int other)
 {
-	std::cout << static_cast<int>(val) << ' ' << other << '\n';
-	return 0;
+   std::cout << static_cast<int>(val) << ' ' << other << '\n';
+   return 0;
 }, 10)(component::fragment);
 ```
 _output_

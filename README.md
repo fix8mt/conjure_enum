@@ -176,7 +176,8 @@ _output_
 ### `for_each`
 Call supplied invocable for each enum. First parameter of invocable must be an enum value (passed by `for_each`). Optionally provide
 any additional parameters. Works with lambdas, member functions, functions etc. When using a member function, the _first_ parameter
-passed by your call must be the `this` pointer of the object.
+passed by your call must be the `this` pointer of the object. If you wish to pass a `reference` parameter, you must wrap it in
+`std::ref`.
 
 Returns `std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...)` which can be stored or immediately invoked.
 ```c++

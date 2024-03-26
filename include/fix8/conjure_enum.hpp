@@ -45,6 +45,7 @@
 #include <tuple>
 #include <concepts>
 #include <optional>
+#include <functional>
 #include <ostream>
 #include <cstddef>
 #include <array>
@@ -237,6 +238,15 @@ public:
 
 	template<typename T, T e>
 	static constexpr auto enum_name_v { enum_name<T, e>() };
+
+	template<typename T, typename Fn, typename... Args>
+	requires std::invocable<Fn&&, T, Args...>
+	[[maybe_unused]] static constexpr auto for_each(Fn&& func, Args&&... args) noexcept
+	{
+		for (const auto ev : enum_values<T>)
+			std::invoke(std::forward<Fn>(func), ev, std::forward<Args>(args)...);
+		return std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...);
+	}
 };
 
 //-----------------------------------------------------------------------------------------

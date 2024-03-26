@@ -100,5 +100,14 @@ int main()
 	else
 		std::cout << "invalid int to enum\n";
 
+	int total{};
+	auto myfunc { conjure_enum::for_each<component>([](component val, int other, int& tot)
+	{
+		std::cout << static_cast<int>(val) << ' ' << other << '\n';
+		tot += static_cast<int>(val);
+	}, 10, std::ref(total)) };
+	myfunc(component::fragment);
+	std::cout << total << '\n';
+
 	return 0;
 }

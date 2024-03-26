@@ -174,8 +174,8 @@ _output_
 14 component::fragment
 ```
 ### `for_each`
-Call supplied invocable for each enum. First parameter of invocable must be an enum value (passed by `for_each`). Optionally provide
-any additional parameters. Works with lambdas, member functions, functions etc. When using a member function, the _first_ parameter
+Call supplied invocable for each enum. Similar to `std::for_each` except first parameter of your invocable must be an enum value (passed by `for_each`).
+Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. When using a member function, the _first_ parameter
 passed by your call must be the `this` pointer of the object. If you wish to pass a `reference` parameter, you must wrap it in
 `std::ref`.
 
@@ -184,7 +184,6 @@ Returns `std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<A
 conjure_enum::for_each<component>([](component val, int other)
 {
    std::cout << static_cast<int>(val) << ' ' << other << '\n';
-   return 0;
 }, 10);
 ```
 _output_
@@ -207,7 +206,6 @@ auto myfunc { conjure_enum::for_each<component>([](component val, int other, int
 {
    std::cout << static_cast<int>(val) << ' ' << other << '\n';
    tot += static_cast<int>(val);
-   return 0;
 }, 10, std::ref(total)) };
 myfunc(component::fragment);
 std::cout << total << '\n';

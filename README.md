@@ -206,7 +206,7 @@ int total{};
 auto myfunc { conjure_enum::for_each<component>([](component val, int other, int& tot)
 {
    std::cout << static_cast<int>(val) << ' ' << other << '\n';
-	tot += static_cast<int>(val);
+   tot += static_cast<int>(val);
    return 0;
 }, 10, std::ref(total)) };
 myfunc(component::fragment);

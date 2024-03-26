@@ -176,7 +176,8 @@ _output_
 ### `for_each`
 Call supplied invocable for each enum. First parameter of invocable must be an enum value (passed by `for_each`). Optionally provide
 any additional parameters. Works with lambdas, member functions, functions etc.
-Returns `std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...)` which can be itself invoked.
+
+Returns `std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...)` which can be stored or immediately invoked.
 ```c++
 conjure_enum::for_each<component>([](component val, int other)
 {

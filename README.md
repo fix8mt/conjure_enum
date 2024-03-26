@@ -173,6 +173,29 @@ _output_
 13 component::query
 14 component::fragment
 ```
+### `for_each`
+Call supplied invocable for each enum. First parameter of invocable must be defined as a enum value. Optionally provide
+any additional parameters. Works with lambdas, member functions, functions etc.
+```c++
+conjure_enum::for_each<component>([](component val, int other)
+{
+	std::cout << static_cast<int>(val) << ' ' << other << '\n';
+	return 0;
+}, 10);
+```
+_output_
+```CSV
+0 10
+1 10
+2 10
+3 10
+4 10
+5 10
+6 10
+12 10
+13 10
+14 10
+```
 ### `is_scoped`
 Returns a `bool`
 ```c++

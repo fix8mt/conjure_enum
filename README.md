@@ -197,7 +197,7 @@ _output_
 13 10
 14 10
 ```
-Examnple using returned object:
+Example using returned object:
 ```c++
 conjure_enum::for_each<component>([](component val, int other)
 {

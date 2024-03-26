@@ -174,13 +174,13 @@ _output_
 14 component::fragment
 ```
 ### `for_each`
-Call supplied invocable for each enum. First parameter of invocable must be defined as a enum value. Optionally provide
+Call supplied invocable for each enum. First parameter of invocable must be an enum value (passed by `for_each`). Optionally provide
 any additional parameters. Works with lambdas, member functions, functions etc.
 ```c++
 conjure_enum::for_each<component>([](component val, int other)
 {
-	std::cout << static_cast<int>(val) << ' ' << other << '\n';
-	return 0;
+   std::cout << static_cast<int>(val) << ' ' << other << '\n';
+   return 0;
 }, 10);
 ```
 _output_

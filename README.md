@@ -51,16 +51,18 @@ enum component1 : int { scheme, authority, userinfo, user, password, host, port,
 ```
 
 ### `enum_to_string`
-Returns a `std::string_view`
+Returns a `std::string_view` (empty if not found)
 ```c++
 auto name { conjure_enum::enum_to_string(component::path) };
+auto name_trim { conjure_enum::enum_to_string(component::path, true) }; // optionally remove scope
 auto alias_name { conjure_enum::enum_to_string(component::test) }; // alias
 auto noscope_name { conjure_enum::enum_to_string(path) };
-std::cout << name << '\n' << alias_name << '\n' << noscope_name << '\n';
+std::cout << name << '\n' << name_trim << '\n' << alias_name << '\n' << noscope_name << '\n';
 ```
 _output_
 ```CSV
 component::path
+path
 component::path
 path
 ```
@@ -133,7 +135,6 @@ port
 path
 query
 fragment
-host
 ```
 ### `enum_values`
 Returns a `std::array<T, count>`
@@ -257,6 +258,25 @@ _output_
 ```CSV
 component
 component1
+```
+### `remove_scope`
+Returns a `std::string_view` with scope removed; for unscoped returns unchanged
+```c++
+for(const auto ev : conjure_enum::enum_names<component>) // scoped
+   std::cout << conjure_enum::remove_scope<component>(ev) << '\n';
+```
+_output_
+```CSV
+scheme
+authority
+userinfo
+user
+password
+host
+port
+path
+query
+fragment
 ```
 # Building
 This implementation is header only. Apart from standard C++20 includes there are no external dependencies needed in your application.

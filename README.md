@@ -200,11 +200,12 @@ _output_
 ```
 Example using returned object:
 ```c++
-conjure_enum::for_each<component>([](component val, int other)
+auto myfunc { conjure_enum::for_each<component>([](component val, int other)
 {
    std::cout << static_cast<int>(val) << ' ' << other << '\n';
    return 0;
-}, 10)(component::fragment);
+}, 10) };
+myfunc(component::fragment);
 ```
 _output_
 ```CSV

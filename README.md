@@ -54,7 +54,7 @@ enum component1 : int { scheme, authority, userinfo, user, password, host, port,
 Returns a `std::string_view` (empty if not found)
 ```c++
 auto name { conjure_enum::enum_to_string(component::path) };
-auto name_trim { conjure_enum::enum_to_string(component::path, true) }; // optionally remove scope
+auto name_trim { conjure_enum::enum_to_string(component::path, true) }; // optionally remove scope in result
 auto alias_name { conjure_enum::enum_to_string(component::test) }; // alias
 auto noscope_name { conjure_enum::enum_to_string(path) };
 std::cout << name << '\n' << name_trim << '\n' << alias_name << '\n' << noscope_name << '\n';
@@ -71,12 +71,14 @@ path
 Returns a `std::optional<T>`
 ```c++
 int value { static_cast<int>(conjure_enum::string_to_enum<component>("component::path").value()) };
+int value_trim { static_cast<int>(conjure_enum::string_to_enum<component>("path", true).value()) }; // optionally remove scope in test
 int noscope_value { static_cast<int>(conjure_enum::string_to_enum<component1>("path").value()) };
 int bad_value { static_cast<int>(conjure_enum::string_to_enum<component>("bad_string").value_or(component(100))) };
-std::cout << value << '\n' << noscope_value << '\n' << bad_value << '\n';
+std::cout << value << '\n' << value_trim << '\n' << noscope_value << '\n' << bad_value << '\n';
 ```
 _output_
 ```CSV
+12
 12
 12
 100
@@ -124,7 +126,6 @@ component::port
 component::path
 component::query
 component::fragment
-component::host
 scheme
 authority
 userinfo
@@ -175,7 +176,7 @@ _output_
 14 component::fragment
 ```
 ### `for_each`
-Call supplied invocable for each enum. Similar to `std::for_each` except first parameter of your invocable must be an enum value (passed by `for_each`).
+Call supplied invocable for each enum. Similar to `std::for_each` except first parameter of your invocable must accept an enum value (passed by `for_each`).
 Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. When using a member function, the _first_ parameter
 passed by your call must be the `this` pointer of the object. If you wish to pass a `reference` parameter, you must wrap it in
 `std::ref`.

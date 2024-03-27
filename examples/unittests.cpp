@@ -37,15 +37,18 @@
 //----------------------------------------------------------------------------------------
 #include <catch2/catch_test_macros.hpp>
 #include <string_view>
+#include <iostream>
 #include <fix8/conjure_enum.hpp>
 
 //-----------------------------------------------------------------------------------------
 using namespace FIX8;
 using namespace std::literals::string_view_literals;
+using namespace std::literals::string_literals;
 
 //-----------------------------------------------------------------------------------------
 enum class component : int { scheme, authority, userinfo, user, password, host, port, path=12, test=path, query, fragment };
 enum component1 : int { scheme, authority, userinfo, user, password, host, port, path=12, query, fragment };
+enum class numbers { zero, one, two, three, four, five, FIVE=five, six, seven, eight, nine };
 
 //-----------------------------------------------------------------------------------------
 // run as: ctest --output-on-failure
@@ -157,11 +160,43 @@ TEST_CASE("enum_entries")
 }
 
 //-----------------------------------------------------------------------------------------
+TEST_CASE("enum_contains")
+{
+	REQUIRE(conjure_enum::enum_contains(component::path));
+	REQUIRE(conjure_enum::enum_contains(component::test)); // alias
+	REQUIRE(conjure_enum::enum_contains(path));
+	REQUIRE(!conjure_enum::enum_contains(static_cast<component>(100)));
+	REQUIRE(conjure_enum::enum_contains<component>("component::path"sv));
+	REQUIRE(conjure_enum::enum_contains<component1>("path"sv));
+}
+
+//-----------------------------------------------------------------------------------------
 TEST_CASE("enum_to_string")
 {
 	REQUIRE(conjure_enum::enum_to_string(component::path) == "component::path");
 	REQUIRE(conjure_enum::enum_to_string(component::test) == "component::path"); // alias
 	REQUIRE(conjure_enum::enum_to_string(path) == "path");
+	REQUIRE(conjure_enum::enum_to_string(static_cast<component>(100)).empty());
+}
+
+//-----------------------------------------------------------------------------------------
+TEST_CASE("remove_scope")
+{
+	REQUIRE(conjure_enum::remove_scope<component>(conjure_enum::enum_name<component, component::fragment>()) == "fragment"sv);
+	REQUIRE(conjure_enum::remove_scope<component1>(conjure_enum::enum_name<component1, fragment>()) == "fragment"sv);
+}
+
+//-----------------------------------------------------------------------------------------
+TEST_CASE("iterators")
+{
+	auto itr{conjure_enum::cbegin<component>()};
+	const auto [a, b] {*itr};
+	REQUIRE(a == component::scheme);
+	REQUIRE(b == "component::scheme"sv);
+	int cnt{};
+	for (; itr != conjure_enum::cend<component>(); ++itr)
+		++cnt;
+	REQUIRE(cnt == conjure_enum::count<component>());
 }
 
 //-----------------------------------------------------------------------------------------
@@ -193,5 +228,89 @@ TEST_CASE("get_type")
 {
 	REQUIRE(conjure_enum::get_type<component>() == "component");
 	REQUIRE(conjure_enum::get_type<component1>() == "component1");
+}
+
+//-----------------------------------------------------------------------------------------
+TEST_CASE("for_each")
+{
+	int total{};
+	auto myfunc { conjure_enum::for_each<component>([](component val, int& tot)
+	{
+		tot += static_cast<int>(val);
+	}, std::ref(total)) };
+	myfunc(component::fragment);
+	REQUIRE(total == 74);
+}
+
+//-----------------------------------------------------------------------------------------
+TEST_CASE("enum_bitset")
+{
+	enum_bitset<numbers> eb;
+	eb.set_all<numbers::zero,numbers::two,numbers::five,numbers::nine>();
+	REQUIRE(eb.test_all<numbers::zero,numbers::two,numbers::five,numbers::nine>());
+	eb.clear_all<numbers::FIVE>(); // use alias
+	REQUIRE(!eb.test_all<numbers::zero,numbers::two,numbers::five,numbers::nine>());
+	eb.clear(numbers::nine);
+	REQUIRE(!eb.test(numbers::nine));
+
+	enum_bitset<numbers> ec(numbers::one,numbers::three,numbers::six);
+	REQUIRE(ec.to_ulong() == (1 << 1 | 1 << 3 | 1 << 6));
+	REQUIRE(ec.to_string() == "0001001010"s);
+	REQUIRE(ec.to_ulong() == 0b0001001010);
+	REQUIRE(ec.to_string('-', '+') == "---+--+-+-"s);
+
+	REQUIRE(ec.test<numbers::one>());
+	ec.flip<numbers::one>();
+	REQUIRE(!ec.test<numbers::one>());
+	ec.flip<numbers::one>();
+	REQUIRE(ec.test<numbers::one>());
+	ec.flip();
+	REQUIRE(ec.to_ulong() == 0b1110110101);
+	REQUIRE(ec.count() == 7);
+	ec.clear<numbers::three>();
+	REQUIRE(!ec.test<numbers::three>());
+	ec.set<numbers::three>();
+	REQUIRE(ec.test<numbers::three>());
+	ec.clear(numbers::three);
+	REQUIRE(!ec.test<numbers::three>());
+	ec.set(numbers::three);
+	REQUIRE(ec.test<numbers::three>());
+
+	enum_bitset<numbers> ed(numbers::two,numbers::three,numbers::four,numbers::seven);
+	REQUIRE(ed.test_all<numbers::two,numbers::three,numbers::four,numbers::seven>());
+	REQUIRE(ed.test_any<numbers::two,numbers::three,numbers::four,numbers::seven>());
+	REQUIRE((ed << 1) == 0b0100111000);
+	ed <<= 1;
+	REQUIRE(ed.to_ulong() == 0b0100111000);
+	REQUIRE((ed >> 1) == 0b0010011100);
+	ed >>= 1;
+	REQUIRE(ed.to_ulong() == 0b0010011100);
+
+	REQUIRE((ed | numbers::one) == 0b0010011110);
+	REQUIRE((ed & numbers::two) == 0b100);
+	ed |= numbers::one;
+	REQUIRE(ed.to_ulong() == 0b0010011110);
+	ed &= numbers::one;
+	REQUIRE(ed.to_ulong() == 0b10);
+	//std::cerr << ed << '\n';
+
+	ed.clear();
+	REQUIRE(!ed);
+	REQUIRE((ed ^ numbers::one) == 0b010);
+	ed ^= numbers::one;
+	REQUIRE(ed.to_ulong() == 0b010);
+
+	enum_bitset<numbers> ee(0b10101010);
+	std::ostringstream ostr;
+	ee.for_each([&ostr](numbers val) noexcept
+	{
+		ostr << conjure_enum::enum_to_string<numbers>(val) << '(' << static_cast<int>(val) << ')' << '\n';
+	});
+	REQUIRE(ostr.str() ==
+R"(numbers::one(1)
+numbers::three(3)
+numbers::five(5)
+numbers::seven(7)
+)");
 }
 

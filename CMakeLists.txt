@@ -42,29 +42,42 @@ project (conjure_enum
    DESCRIPTION "Lightweight C++20 enum reflection"
    VERSION 1.0.0
 )
-include(FetchContent)
 
-FetchContent_Declare(Catch2
-   GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-   GIT_SHALLOW ON
-   GIT_TAG devel
-)
-FetchContent_MakeAvailable(Catch2)
-list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
+# to disable building unit tests:
+# cmake -DBUILD_UNITTESTS=false ..
+option(BUILD_UNITTESTS "enable building unit tests" true)
+message("-- Build unit tests: ${BUILD_UNITTESTS}")
+if(BUILD_UNITTESTS)
+	include(FetchContent)
+	FetchContent_Declare(Catch2
+		GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+		GIT_SHALLOW ON
+		GIT_TAG devel
+	)
+	FetchContent_MakeAvailable(Catch2)
+	list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
+endif()
 
-set(files example.cpp unittests.cpp)
+set(files example.cpp)
+if(BUILD_UNITTESTS)
+   list(APPEND files unittests.cpp)
+endif()
 foreach(x IN LISTS files)
 	cmake_path(GET x STEM LAST_ONLY target)
 	add_executable(${target} examples/${x})
 	set_target_properties(${target} PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED true)
-	target_include_directories(${target} PRIVATE include examples)
-	target_link_libraries(${target} PRIVATE Catch2::Catch2WithMain)
+		target_include_directories(${target} PRIVATE include examples)
+	if(BUILD_UNITTESTS)
+		target_link_libraries(${target} PRIVATE Catch2::Catch2WithMain)
+	endif()
 	add_custom_command(TARGET ${target} POST_BUILD COMMAND ${CMAKE_STRIP} ${target})
 	cmake_path(GET x FILENAME fname)
 	get_target_property(cppstd ${target} CXX_STANDARD)
 	message("-- adding ${fname} cxx std: C++${cppstd}")
 endforeach()
 
-include(Catch)
-enable_testing()
-catch_discover_tests(unittests)
+if(BUILD_UNITTESTS)
+	include(Catch)
+	enable_testing()
+	catch_discover_tests(unittests)
+endif()

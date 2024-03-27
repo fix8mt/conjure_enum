@@ -40,13 +40,17 @@
 
 #include <fix8/conjure_enum.hpp>
 
+using namespace std::literals::string_view_literals;
+using namespace std::literals::string_literals;
 //-----------------------------------------------------------------------------------------
 using namespace FIX8;
 
 enum class component : int { scheme, authority, userinfo, user, password, host, port, path=12, test=path, query, fragment };
 enum component1 : int { scheme, authority, userinfo, user, password, host, port, path=12, query, fragment };
+enum class numbers : int { zero, one, two, three, four, five, six, seven, eight, nine };
+enum class numbers1 : int { zero=4, one=3, two=2, three, four, five, six, seven, eight, nine };
 
-int main()
+int main(int argc, char *argv[])
 {
 	/*
 	std::cout << get_name(epeek<component, component::user>()) << '\n';
@@ -60,20 +64,35 @@ int main()
 	else
 		std::cout << "not valid\n";
 
+	/*
 	for(const auto ev : conjure_enum::enum_values<component>)
 		std::cout << static_cast<int>(ev) << '\n';
 	for(const auto [a, b] : conjure_enum::enum_entries<component>)
-		std::cout << static_cast<int>(a) << ' ' << b << '\n';
+		std::cout << '*' << static_cast<int>(a) << ' ' << conjure_enum::remove_scope<component>(b) << '\n';
 	for(const auto ev : conjure_enum::enum_values<component1>)
 		std::cout << static_cast<int>(ev) << '\n';
 	for(const auto ev : conjure_enum::enum_names<component>)
 		std::cout << ev << '\n';
 	std::cout << conjure_enum::enum_names<component>[5] << '\n';
+	enum_bitset<numbers> n1(numbers::zero,numbers::one,numbers::three,numbers::seven,numbers::nine);
+	n1.for_each([](numbers val) noexcept
+	{
+		std::cout << conjure_enum::enum_to_string<numbers>(val) << '(' << static_cast<int>(val) << ')' << '\n';
+	});
+		*/
+	/*
+	for (auto itr{conjure_enum::cbegin<component>()}; itr != conjure_enum::cend<component>(); ++itr)
+	{
+		const auto [a, b] {*itr};
+		std::cout << static_cast<int>(a) << ' ' << conjure_enum::remove_scope<component>(b) << '\n';
+	}*/
 
+	/*
 	std::cout << "1: " << std::string_view(conjure_enum::enum_name_v<component, component::fragment>) << '\n';
 	std::cout << "2: " << conjure_enum::enum_name<component, component::fragment>().get() << '\n';
-	std::cout << "3: " << conjure_enum::enum_to_string(component::path) << '\n';
+	std::cout << "3: " << conjure_enum::enum_to_string(component::path, true) << '\n';
 	std::cout << "4: " << conjure_enum::enum_to_string(component::test) << '\n';
+	std::cout << "16: " << '\"' << conjure_enum::enum_to_string(static_cast<component>(100)) << '\"' << '\n';
 	std::cout << "5: " << conjure_enum::enum_to_string(path) << '\n';
 	std::cout << "6: " << static_cast<int>(conjure_enum::string_to_enum<component>("component::path").value()) << '\n';
 	std::cout << "7: " << static_cast<int>(conjure_enum::string_to_enum<component1>("path").value()) << '\n';
@@ -82,7 +101,9 @@ int main()
 	std::cout << "10: " << conjure_enum::get_name<component, component::scheme>() << '\n';
 	std::cout << "16: " << conjure_enum::get_type<component>() << '\n';
 	std::cout << "16: " << conjure_enum::get_type<component1>() << '\n';
+	*/
 
+	/*
 	//using enum component;
 	//std::cout << std::boolalpha << is_scoped<component, scheme>() << '\n';
 	std::cout << "11: " << std::boolalpha << conjure_enum::is_scoped<component>() << '\n';
@@ -109,5 +130,39 @@ int main()
 	myfunc(component::fragment);
 	std::cout << total << '\n';
 
+	// enum_bitset
+	enum class numbers : int { zero, one, two, three, four, five, six, seven, eight, nine };
+	//enum_bitset<component> ec;
+	enum_bitset<numbers> eb;
+	eb.set_all<numbers::zero,numbers::two,numbers::five,numbers::nine>();
+	std::cout << eb << '\n';
+	std::cout << eb.test_all<numbers::zero,numbers::two,numbers::five,numbers::nine>() << '\n';
+	eb.clear_all<numbers::five>();
+	std::cout << eb.test_all<numbers::zero,numbers::two,numbers::five,numbers::nine>() << '\n';
+	std::cout << eb << '\n';
+	eb.clear(numbers::nine);
+	std::cout << eb << '\n';
+	enum_bitset<numbers> ec(numbers::one,numbers::three,numbers::six);
+	std::cout << ec << '\n';
+	std::cout << ec.to_string('-', '+') << '\n'<< '\n';
+	std::cout << ec << '\n';
+	ec.flip<numbers::one>();
+	std::cout << ec << '\n';
+	ec.flip<numbers::one>();
+	std::cout << ec << '\n';
+	ec.flip();
+	std::cout << ec << '\n';
+	ec.flip();
+	std::cout << ec << '\n';
+	*/
+	std::cout << std::boolalpha << conjure_enum::enum_contains<component>("component::path"sv) << '\n';
+	std::cout << std::boolalpha << conjure_enum::enum_contains<component>(argv[1]) << '\n';
+	for(const auto [a, b] : conjure_enum::enum_entries_sorted<component>)
+		std::cout << conjure_enum::remove_scope<component>(b) << ' ' << static_cast<int>(a) << '\n';
+	for(const auto [a, b] : conjure_enum::enum_entries<numbers1>)
+		std::cout << b << ' ' << static_cast<int>(a) << '\n';
+	std::cout << conjure_enum::add_scope<component>("path"sv) << '\n';
+	std::cout << conjure_enum::add_scope<component>("component::path"sv) << '\n';
+	std::cout << conjure_enum::add_scope<component1>("path"sv) << '\n';
 	return 0;
 }

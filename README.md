@@ -177,30 +177,6 @@ path
 query
 fragment
 ```
-## `enum_scoped_entries`
-```c++
-static constexpr std::array<std::tuple<std::string_view, std::string_view>, std::size_t> enum_scoped_entries;
-```
-This static member is generated for your type. It is a `std::array` of a tuple of `std::string_view` pairs.
-It contains pairs of scoped and their unscoped string version. This array is sorted by unscoped name.
-For unscoped enums, these are identical.
-```c++
-for(const auto [a, b] : conjure_enum<component>::enum_scoped_entries)
-   std::cout << a << ' ' << b << '\n';
-```
-_output_
-```CSV
-authority component::authority
-fragment component::fragment
-host component::host
-password component::password
-path component::path
-port component::port
-query component::query
-scheme component::scheme
-user component::user
-userinfo component::userinfo
-```
 ## `enum_values`
 ```c++
 static constexpr std::array<T, std::size_t> enum_values;
@@ -244,6 +220,30 @@ _output_
 12 component::path
 13 component::query
 14 component::fragment
+```
+## `enum_scoped_entries`
+```c++
+static constexpr std::array<std::tuple<std::string_view, std::string_view>, std::size_t> enum_scoped_entries;
+```
+This static member is generated for your type. It is a `std::array` of a tuple of `std::string_view` pairs.
+It contains pairs of scoped and their unscoped string version. This array is sorted by unscoped name.
+For unscoped enums, these are identical.
+```c++
+for(const auto [a, b] : conjure_enum<component>::enum_scoped_entries)
+   std::cout << a << ' ' << b << '\n';
+```
+_output_
+```CSV
+authority component::authority
+fragment component::fragment
+host component::host
+password component::password
+path component::path
+port component::port
+query component::query
+scheme component::scheme
+user component::user
+userinfo component::userinfo
 ```
 ## `for_each`
 ```c++

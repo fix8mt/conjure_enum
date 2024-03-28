@@ -9,7 +9,7 @@
 ------------------------------------------------------------------------
 [![Ubuntu](https://github.com/fix8mt/conjure_enum/actions/workflows/cmake-single-platform.yml/badge.svg)](https://github.com/fix8mt/conjure_enum/actions/workflows/cmake-single-platform.yml)
 <a href="https://en.wikipedia.org/wiki/C%2B%2B20"><img src="https://github.com/fix8mt/conjure_enum/blob/master/assets/badgecpprequired.svg"></a>
-<a href="https://http://www.boost.org/LICENSE_1_0.txt"><img src="https://github.com/fix8mt/conjure_enum/blob/master/assets/badgeboostlic.svg"></a>
+<a href="https://http://www.boost.org/LICENSE_1_0.txt"><img src="https://github.com/fix8mt/conjure_enum/blob/master/assets/badgemitlic.svg"></a>
 
 # Quick links
 |**Link**|**Description**|

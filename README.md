@@ -9,7 +9,7 @@
 ------------------------------------------------------------------------
 [![Ubuntu](https://github.com/fix8mt/conjure_enum/actions/workflows/cmake-single-platform.yml/badge.svg)](https://github.com/fix8mt/conjure_enum/actions/workflows/cmake-single-platform.yml)
 <a href="https://en.wikipedia.org/wiki/C%2B%2B20"><img src="https://github.com/fix8mt/conjure_enum/blob/master/assets/badgecpprequired.svg"></a>
-<a href="https://http://www.boost.org/LICENSE_1_0.txt"><img src="https://github.com/fix8mt/conjure_enum/blob/master/assets/badgemitlic.svg"></a>
+<a href="https://opensource.org/license/mit"><img src="https://github.com/fix8mt/conjure_enum/blob/master/assets/badgemitlic.svg"></a>
 
 # Quick links
 |**Link**|**Description**|
@@ -20,10 +20,24 @@
 
 ------------------------------------------------------------------------
 # Introduction
-This is a lightweight enum reflection class based on [magic_enum](https://github.com/Neargye/magic_enum).
-We reworked the core of the library, stripped back all but the most basic functionality that most
-developers look for. We updated the code to C++20, taking advantage of `std::source_location`, as well as other
-improvements only available in C++20 (such as `constexpr` algorithms, concepts, `to_array` and so forth).
+Introducing a Streamlined Enum Reflection Library!
+
+Built upon the foundation of [magic_enum](https://github.com/Neargye/magic_enum), this library offers a lightweight and powerful approach to enum reflection in C++.
+We've meticulously optimized the core functionality, streamlining what you need while enhancing features developers crave.
+
+## Embrace the Power of C++20:
+Leveraging the cutting-edge features of C++20, we've harnessed the convenience of `std::source_location` and unlocked the potential of `constexpr` algorithms,
+concepts, and the `to_array` function. This translates to a more robust, efficient, and expressive experience for you.
+
+## Key improvements:
+- Lightweight: Optimized for performance without unnecessary bloat.
+- Enhanced Functionality: Focused on the features developers truly need.
+- C++20 Integration: Unlocks the power of the latest C++ features for a more modern experience.
+
+This library empowers you to:
+- Seamlessly introspect your enums at runtime.
+- Leverage powerful metaprogramming capabilities.
+- Write more expressive and efficient C++ code.
 
 ## Motivation
 - header-only
@@ -48,15 +62,16 @@ All examples refer to the following enums:
 ```c++
 enum class component : int { scheme, authority, userinfo, user, password, host, port, path=12, test=path, query, fragment };
 enum component1 : int { scheme, authority, userinfo, user, password, host, port, path=12, query, fragment };
+enum class numbers : int { zero, one, two, three, four, five, six, seven, eight, nine };
 ```
 
 ### `enum_to_string`
 Returns a `std::string_view` (empty if not found)
 ```c++
-auto name { conjure_enum::enum_to_string(component::path) };
-auto name_trim { conjure_enum::enum_to_string(component::path, true) }; // optionally remove scope in result
-auto alias_name { conjure_enum::enum_to_string(component::test) }; // alias
-auto noscope_name { conjure_enum::enum_to_string(path) };
+auto name { conjure_enum<component>::enum_to_string(component::path) };
+auto name_trim { conjure_enum<component>::enum_to_string(component::path, true) }; // optionally remove scope in result
+auto alias_name { conjure_enum<component>::enum_to_string(component::test) }; // alias
+auto noscope_name { conjure_enum<component1>::enum_to_string(path) };
 std::cout << name << '\n' << name_trim << '\n' << alias_name << '\n' << noscope_name << '\n';
 ```
 _output_
@@ -66,14 +81,25 @@ path
 component::path
 path
 ```
+### `get_name`
+Returns a `std::string_view` (empty if not found). This is the template version of `enum_to_string`.
+```c++
+std::cout << conjure_enum<component>::get_name<component::scheme>() << '\n';
+std::cout << conjure_enum<component1>::get_name<scheme>() << '\n';
+```
+_output_
+```CSV
+component::scheme
+scheme
+```
 
 ### `string_to_enum`
 Returns a `std::optional<T>`
 ```c++
-int value { static_cast<int>(conjure_enum::string_to_enum<component>("component::path").value()) };
-int value_trim { static_cast<int>(conjure_enum::string_to_enum<component>("path", true).value()) }; // optionally remove scope in test
-int noscope_value { static_cast<int>(conjure_enum::string_to_enum<component1>("path").value()) };
-int bad_value { static_cast<int>(conjure_enum::string_to_enum<component>("bad_string").value_or(component(100))) };
+int value { static_cast<int>(conjure_enum<component>::string_to_enum("component::path").value()) };
+int value_trim { static_cast<int>(conjure_enum<component>::string_to_enum("path", true).value()) }; // optionally remove scope in test
+int noscope_value { static_cast<int>(conjure_enum<component1>::string_to_enum("path").value()) };
+int bad_value { static_cast<int>(conjure_enum<component>::string_to_enum("bad_string").value_or(component(100))) };
 std::cout << value << '\n' << value_trim << '\n' << noscope_value << '\n' << bad_value << '\n';
 ```
 _output_
@@ -86,9 +112,9 @@ _output_
 ### `int_to_enum`
 Returns a `std::optional<T>`
 ```c++
-int value { static_cast<int>(conjure_enum::int_to_enum<component>(12).value()) };
-int noscope_value { static_cast<int>(conjure_enum::int_to_enum<component1>(12).value()) };
-int bad_value { static_cast<int>(conjure_enum::int_to_enum<component>(100).value_or(component(100))) };
+int value { static_cast<int>(conjure_enum<component>::int_to_enum(12).value()) };
+int noscope_value { static_cast<int>(conjure_enum<component1>::int_to_enum(12).value()) };
+int bad_value { static_cast<int>(conjure_enum<component>::int_to_enum(100).value_or(component(100))) };
 std::cout << value << '\n' << noscope_value << '\n' << bad_value << '\n';
 ```
 _output_
@@ -100,7 +126,7 @@ _output_
 ### `count`
 Returns a `std::size_t`
 ```c++
-std::cout << conjure_enum::count<component>()  << '\n';
+std::cout << conjure_enum<component>::count()  << '\n';
 ```
 _output_
 ```CSV
@@ -109,9 +135,9 @@ _output_
 ### `enum_names`
 Returns a `std::array<std::string_view, count>`
 ```c++
-for(const auto ev : conjure_enum::enum_names<component>) // scoped
+for(const auto ev : conjure_enum<component>::enum_names) // scoped
    std::cout << ev << '\n';
-for(const auto ev : conjure_enum::enum_names<component1>) // unscoped
+for(const auto ev : conjure_enum<component1>::enum_names) // unscoped
    std::cout << ev << '\n';
 ```
 _output_
@@ -140,7 +166,7 @@ fragment
 ### `enum_values`
 Returns a `std::array<T, count>`
 ```c++
-for(const auto ev : conjure_enum::enum_values<component>) // scoped
+for(const auto ev : conjure_enum<component>::enum_values) // scoped
    std::cout << static_cast<int>(ev) << '\n';
 ```
 _output_
@@ -159,7 +185,7 @@ _output_
 ### `enum_entries`
 Returns a `std::array<std::tuple<T, std::string_view>, count>`
 ```c++
-for(const auto [value, str] : conjure_enum::enum_entries<component>) // scoped
+for(const auto [value, str] : conjure_enum<component>::enum_entries) // scoped
    std::cout << value << ' ' str << '\n';
 ```
 _output_
@@ -183,7 +209,7 @@ passed by your call must be the `this` pointer of the object. If you wish to pas
 
 Returns `std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...)` which can be stored or immediately invoked.
 ```c++
-conjure_enum::for_each<component>([](component val, int other)
+conjure_enum<component>::for_each([](component val, int other)
 {
    std::cout << static_cast<int>(val) << ' ' << other << '\n';
 }, 10);
@@ -204,7 +230,7 @@ _output_
 Example using returned object:
 ```c++
 int total{};
-auto myfunc { conjure_enum::for_each<component>([](component val, int other, int& tot)
+auto myfunc { conjure_enum<component>::for_each([](component val, int other, int& tot)
 {
    std::cout << static_cast<int>(val) << ' ' << other << '\n';
    tot += static_cast<int>(val);
@@ -230,8 +256,8 @@ _output_
 ### `is_scoped`
 Returns a `bool`
 ```c++
-std::cout << std::boolalpha << conjure_enum::is_scoped<component>() << '\n';
-std::cout << std::boolalpha << conjure_enum::is_scoped<component1>() << '\n';
+std::cout << std::boolalpha << conjure_enum<component>::is_scoped() << '\n';
+std::cout << std::boolalpha << conjure_enum<component1>::is_scoped() << '\n';
 ```
 _output_
 ```CSV
@@ -241,8 +267,8 @@ false
 ### `is_valid`
 Returns a `bool`
 ```c++
-std::cout << std::boolalpha << conjure_enum::is_valid<component, component::password>() << '\n';
-std::cout << std::boolalpha << conjure_enum::is_valid<component, static_cast<component>(16)>() << '\n';
+std::cout << std::boolalpha << conjure_enum<component>::is_valid<component::password>() << '\n';
+std::cout << std::boolalpha << conjure_enum<component>::is_valid<static_cast<component>(16)>() << '\n';
 ```
 _output_
 ```CSV
@@ -252,8 +278,8 @@ false
 ### `get_type`
 Returns a `std::string_view`
 ```c++
-std::cout << conjure_enum::get_type<component>() << '\n';
-std::cout << conjure_enum::get_type<component1>() << '\n';
+std::cout << conjure_enum<component>::get_type() << '\n';
+std::cout << conjure_enum<component1>::get_type() << '\n';
 ```
 _output_
 ```CSV
@@ -263,8 +289,8 @@ component1
 ### `remove_scope`
 Returns a `std::string_view` with scope removed; for unscoped returns unchanged
 ```c++
-for(const auto ev : conjure_enum::enum_names<component>) // scoped
-   std::cout << conjure_enum::remove_scope<component>(ev) << '\n';
+for(const auto ev : conjure_enum<component>::enum_names) // scoped
+   std::cout << conjure_enum<component>::remove_scope(ev) << '\n';
 ```
 _output_
 ```CSV
@@ -278,6 +304,15 @@ port
 path
 query
 fragment
+```
+### `add_scope`
+Returns a `std::string_view` with scope added to the enum if the supplied enum string is valid but missing scope; for unscoped returns unchanged
+```c++
+std::cout << conjure_enum::add_scope<component>("path"sv) << '\n';
+```
+_output_
+```CSV
+component::path
 ```
 # Building
 This implementation is header only. Apart from standard C++20 includes there are no external dependencies needed in your application.
@@ -294,7 +329,10 @@ cmake ..
 make -j4
 make test (or ctest)
 ```
-
+By default the unit tests are built (will download Catch2). To prevent this, pass the following to cmake:
+```bash
+cmake -DBUILD_UNITTESTS=false ..
+```
 ## Using in your application with cmake
 In `CMakeLists.txt` set your include path to:
 ```cmake

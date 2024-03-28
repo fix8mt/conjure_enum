@@ -80,7 +80,7 @@ component::path
 path
 ""
 ```
-Because `conjure_enum` is class based instead of namespaced, you can reduce your typing with aliases:
+Because `conjure_enum` is _class_ based instead of namespaced, you can reduce your typing with aliases:
 ```c++
 using cn = conjure_enum<component>;
 std::cout << cn::enum_to_string(component::path) << '\n';

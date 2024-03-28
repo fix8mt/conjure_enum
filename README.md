@@ -23,7 +23,7 @@
 Introducing a Streamlined Enum Reflection Library!
 
 Built upon the foundation of [magic_enum](https://github.com/Neargye/magic_enum), this library offers a lightweight and powerful approach to enum reflection in C++.
-We've meticulously optimized the core functionality, streamlining what you need while enhancing features developers crave.
+We've optimized the core functionality, streamlining what you need while enhancing features developers crave.
 
 ## Embrace the Power of C++20:
 Leveraging the cutting-edge features of C++20, we've harnessed the convenience of `std::source_location` and unlocked the potential of `constexpr` algorithms,
@@ -33,8 +33,6 @@ concepts, and the `to_array` function. This translates to a more robust, efficie
 - Lightweight: Optimized for performance without unnecessary bloat.
 - Enhanced Functionality: Focused on the features developers truly need.
 - C++20 Integration: Unlocks the power of the latest C++ features for a more modern experience.
-
-This library empowers you to:
 - Seamlessly introspect your enums at runtime.
 - Leverage powerful metaprogramming capabilities.
 - Write more expressive and efficient C++ code.

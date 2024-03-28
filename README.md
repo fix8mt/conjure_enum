@@ -58,7 +58,7 @@ enum component1 : int { scheme, authority, userinfo, user, password, host, port,
 enum class numbers : int { zero, one, two, three, four, five, six, seven, eight, nine };
 ```
 
-### `enum_to_string`
+## `enum_to_string`
 ```c++
 static constexpr std::string_view enum_to_string(T value, bool noscope=false);
 ```
@@ -80,7 +80,7 @@ component::path
 path
 ""
 ```
-### `get_name`
+## `get_name`
 ```c++
 static constexpr std::string_view get_name();
 ```
@@ -95,7 +95,7 @@ component::scheme
 scheme
 ```
 
-### `string_to_enum`
+## `string_to_enum`
 ```c++
 static constexpr std::optional<T> string_to_enum(std::string_view str);
 ```
@@ -114,7 +114,7 @@ _output_
 12
 100
 ```
-### `int_to_enum`
+## `int_to_enum`
 ```c++
 static constexpr std::optional<T> int_to_enum(int value);
 ```
@@ -131,7 +131,7 @@ _output_
 12
 100
 ```
-### `count`
+## `count`
 ```c++
 static constexpr std::size_t count();
 ```
@@ -143,7 +143,7 @@ _output_
 ```CSV
 10
 ```
-### `enum_names`
+## `enum_names`
 ```c++
 static constexpr std::array<std::string_view, std::size_t> enum_names;
 ```
@@ -177,7 +177,7 @@ path
 query
 fragment
 ```
-### `enum_scoped_entries`
+## `enum_scoped_entries`
 ```c++
 static constexpr std::array<std::tuple<std::string_view, std::string_view>, std::size_t> enum_scoped_entries;
 ```
@@ -201,7 +201,7 @@ scheme component::scheme
 user component::user
 userinfo component::userinfo
 ```
-### `enum_values`
+## `enum_values`
 ```c++
 static constexpr std::array<T, std::size_t> enum_values;
 ```
@@ -223,7 +223,7 @@ _output_
 13
 14
 ```
-### `enum_entries`
+## `enum_entries`
 ```c++
 static constexpr std::array<std::tuple<T, std::string_view>, std::size_t> enum_entries;
 ```
@@ -245,7 +245,7 @@ _output_
 13 component::query
 14 component::fragment
 ```
-### `for_each`
+## `for_each`
 ```c++
 template<typename Fn, typename... Args>
 requires std::invocable<Fn&&, T, Args...>
@@ -302,7 +302,7 @@ _output_
 14 10 <== invoked with returned object
 74
 ```
-### `is_scoped`
+## `is_scoped`
 ```c++
 struct is_scoped : std::integral_constant<bool, requires
    { requires !std::is_convertible_v<T, std::underlying_type_t<T>>; }>{};
@@ -317,7 +317,7 @@ _output_
 true
 false
 ```
-### `is_valid`
+## `is_valid`
 ```c++
 template<T e>
 static constexpr bool is_valid();
@@ -332,7 +332,7 @@ _output_
 true
 false
 ```
-### `get_type`
+## `get_type`
 ```c++
 static constexpr std::string_view get_type();
 ```
@@ -346,7 +346,7 @@ _output_
 component
 component1
 ```
-### `remove_scope`
+## `remove_scope`
 ```c++
 static constexpr std::string_view remove_scope(std::string_view what);
 ```
@@ -368,7 +368,7 @@ path
 query
 fragment
 ```
-### `add_scope`
+## `add_scope`
 ```c++
 static constexpr std::string_view add_scope(std::string_view what);
 ```
@@ -380,7 +380,7 @@ _output_
 ```CSV
 component::path
 ```
-### `has_scope`
+## `has_scope`
 ```c++
 static constexpr bool has_scope(std::string_view what);
 ```
@@ -396,7 +396,7 @@ true
 false
 false
 ```
-### `epeek, tpeek`
+## `epeek, tpeek`
 ```c++
 static consteval const char *tpeek();
 template<T e>

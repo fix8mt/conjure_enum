@@ -156,7 +156,7 @@ path
 query
 fragment
 ```
-### `enum_values`
+### `enum_entries`
 Returns a `std::array<T, count>`
 ```c++
 for(const auto ev : conjure_enum<component>::enum_values) // scoped
@@ -306,6 +306,36 @@ std::cout << conjure_enum::add_scope<component>("path"sv) << '\n';
 _output_
 ```CSV
 component::path
+```
+### `has_scope`
+Returns a `true` if the supplied string is scoped (and is valid).
+```c++
+std::cout << std::boolalpha << conjure_enum<component>::has_scope("component::scheme") << '\n';
+std::cout << std::boolalpha << conjure_enum<component>::has_scope("scheme") << '\n';
+std::cout << std::boolalpha << conjure_enum<component1>::has_scope("scheme") << '\n';
+```
+_output_
+```CSV
+true
+false
+false
+```
+### `epeek, tpeek`
+```c++
+template<T e>
+static consteval const char *epeek();
+static consteval const char *tpeek();
+```
+These functions return the templated `std::source_location` `const char*` strings for the enum type or enum values. When reporting an issue
+please include the output of these methods.
+```c++
+std::cout << std::boolalpha << conjure_enum<component>::epeek<component::scheme>() << '\n';
+std::cout << std::boolalpha << conjure_enum<component>::tpeek() << '\n';
+```
+_output_
+```CSV
+static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::scheme; T = component]
+static consteval const char* FIX8::conjure_enum<T>::tpeek() [with T = component]
 ```
 # Building
 This implementation is header only. Apart from standard C++20 includes there are no external dependencies needed in your application.

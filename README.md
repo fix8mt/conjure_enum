@@ -59,6 +59,9 @@ enum class numbers : int { zero, one, two, three, four, five, six, seven, eight,
 ```
 
 ### `enum_to_string`
+```c++
+static constexpr std::string_view enum_to_string(T value, bool noscope=false);
+```
 Returns a `std::string_view` (empty if not found)
 ```c++
 auto name { conjure_enum<component>::enum_to_string(component::path) };
@@ -75,6 +78,9 @@ component::path
 path
 ```
 ### `get_name`
+```c++
+static constexpr std::string_view get_name();
+```
 Returns a `std::string_view` (empty if not found). This is the template version of `enum_to_string`.
 ```c++
 std::cout << conjure_enum<component>::get_name<component::scheme>() << '\n';
@@ -87,6 +93,9 @@ scheme
 ```
 
 ### `string_to_enum`
+```c++
+static constexpr std::optional<T> string_to_enum(std::string_view str);
+```
 Returns a `std::optional<T>`
 ```c++
 int value { static_cast<int>(conjure_enum<component>::string_to_enum("component::path").value()) };
@@ -103,6 +112,9 @@ _output_
 100
 ```
 ### `int_to_enum`
+```c++
+static constexpr std::optional<T> int_to_enum(int value);
+```
 Returns a `std::optional<T>`
 ```c++
 int value { static_cast<int>(conjure_enum<component>::int_to_enum(12).value()) };
@@ -117,6 +129,9 @@ _output_
 100
 ```
 ### `count`
+```c++
+static constexpr auto count();
+```
 Returns a `std::size_t`
 ```c++
 std::cout << conjure_enum<component>::count()  << '\n';
@@ -126,7 +141,10 @@ _output_
 10
 ```
 ### `enum_names`
-Returns a `std::array<std::string_view, count>`
+```c++
+static constexpr std::array<std::string_view>, std::size_t> enum_names;
+```
+This static member is generated for your type. It is a `std::array` of the `std::string_view` strings.
 ```c++
 for(const auto ev : conjure_enum<component>::enum_names) // scoped
    std::cout << ev << '\n';
@@ -156,8 +174,35 @@ path
 query
 fragment
 ```
-### `enum_entries`
-Returns a `std::array<T, count>`
+### `enum_scoped_entries`
+```c++
+static constexpr std::array<std::tuple<std::string_view, std::string_view>, std::size_t> enum_scoped_entries;
+```
+This static member is generated for your type. It is a `std::array` of a tuple of `std::string_view` pairs.
+It contains pairs of scoped and their unscoped string version. This array is sorted by scoped name.
+For unscoped enums, these are identical.
+```c++
+for(const auto [a, b] : conjure_enum<component>::enum_scoped_entries)
+	std::cout << a << ' ' << b << '\n';
+```
+_output_
+```CSV
+authority component::authority
+fragment component::fragment
+host component::host
+password component::password
+path component::path
+port component::port
+query component::query
+scheme component::scheme
+user component::user
+userinfo component::userinfo
+```
+### `enum_values`
+```c++
+static constexpr std::array<T, std::size_t> enum_values;
+```
+This static member is generated for your type. It is a `std::array` of the `T` values.
 ```c++
 for(const auto ev : conjure_enum<component>::enum_values) // scoped
    std::cout << static_cast<int>(ev) << '\n';
@@ -176,7 +221,10 @@ _output_
 14
 ```
 ### `enum_entries`
-Returns a `std::array<std::tuple<T, std::string_view>, count>`
+```c++
+static constexpr std::array<std::tuple<T, std::string_view>, std::size_t> enum_entries;
+```
+This static member is generated for your type. It is a `std::array` of tuples of `T` and `std::string_view`.
 ```c++
 for(const auto [value, str] : conjure_enum<component>::enum_entries) // scoped
    std::cout << value << ' ' str << '\n';
@@ -195,6 +243,11 @@ _output_
 14 component::fragment
 ```
 ### `for_each`
+```c++
+template<typename Fn, typename... Args>
+requires std::invocable<Fn&&, T, Args...>
+[[maybe_unused]] static constexpr auto for_each(Fn&& func, Args&&... args);
+```
 Call supplied invocable for each enum. Similar to `std::for_each` except first parameter of your invocable must accept an enum value (passed by `for_each`).
 Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. When using a member function, the _first_ parameter
 passed by your call must be the `this` pointer of the object. If you wish to pass a `reference` parameter, you must wrap it in
@@ -247,6 +300,10 @@ _output_
 74
 ```
 ### `is_scoped`
+```c++
+struct is_scoped : std::integral_constant<bool, requires
+	{ requires !std::is_convertible_v<T, std::underlying_type_t<T>>; }>{};
+```
 Returns a `bool`
 ```c++
 std::cout << std::boolalpha << conjure_enum<component>::is_scoped() << '\n';
@@ -258,6 +315,10 @@ true
 false
 ```
 ### `is_valid`
+```c++
+template<T e>
+static constexpr bool is_valid();
+```
 Returns a `bool`
 ```c++
 std::cout << std::boolalpha << conjure_enum<component>::is_valid<component::password>() << '\n';
@@ -269,6 +330,9 @@ true
 false
 ```
 ### `get_type`
+```c++
+static constexpr std::string_view get_type();
+```
 Returns a `std::string_view`
 ```c++
 std::cout << conjure_enum<component>::get_type() << '\n';
@@ -280,6 +344,9 @@ component
 component1
 ```
 ### `remove_scope`
+```c++
+static constexpr std::string_view remove_scope(std::string_view what);
+```
 Returns a `std::string_view` with scope removed; for unscoped returns unchanged
 ```c++
 for(const auto ev : conjure_enum<component>::enum_names) // scoped
@@ -299,6 +366,9 @@ query
 fragment
 ```
 ### `add_scope`
+```c++
+static constexpr std::string_view add_scope(std::string_view what);
+```
 Returns a `std::string_view` with scope added to the enum if the supplied enum string is valid but missing scope; for unscoped returns unchanged
 ```c++
 std::cout << conjure_enum::add_scope<component>("path"sv) << '\n';
@@ -308,6 +378,9 @@ _output_
 component::path
 ```
 ### `has_scope`
+```c++
+static constexpr bool has_scope(std::string_view what);
+```
 Returns a `true` if the supplied string is scoped (and is valid).
 ```c++
 std::cout << std::boolalpha << conjure_enum<component>::has_scope("component::scheme") << '\n';
@@ -322,20 +395,20 @@ false
 ```
 ### `epeek, tpeek`
 ```c++
+static consteval const char *tpeek();
 template<T e>
 static consteval const char *epeek();
-static consteval const char *tpeek();
 ```
 These functions return the templated `std::source_location` `const char*` strings for the enum type or enum values. When reporting an issue
 please include the output of these methods.
 ```c++
-std::cout << std::boolalpha << conjure_enum<component>::epeek<component::scheme>() << '\n';
-std::cout << std::boolalpha << conjure_enum<component>::tpeek() << '\n';
+std::cout << conjure_enum<component>::tpeek() << '\n';
+std::cout << conjure_enum<component>::epeek<component::scheme>() << '\n';
 ```
 _output_
 ```CSV
-static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::scheme; T = component]
 static consteval const char* FIX8::conjure_enum<T>::tpeek() [with T = component]
+static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::scheme; T = component]
 ```
 # Building
 This implementation is header only. Apart from standard C++20 includes there are no external dependencies needed in your application.

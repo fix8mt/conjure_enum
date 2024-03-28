@@ -55,11 +55,11 @@ int main(int argc, char *argv[])
 	/*
 	std::cout << get_name(epeek<component, component::user>()) << '\n';
 	*/
-	if (conjure_enum::is_valid<component, component::password>())
+	if (conjure_enum<component>::is_valid<component::password>())
 		std::cout << "valid\n";
 	else
 		std::cout << "not valid\n";
-	if (conjure_enum::is_valid<component, static_cast<component>(16)>())
+	if (conjure_enum<component>::is_valid<static_cast<component>(16)>())
 		std::cout << "valid\n";
 	else
 		std::cout << "not valid\n";
@@ -154,15 +154,17 @@ int main(int argc, char *argv[])
 	std::cout << ec << '\n';
 	ec.flip();
 	std::cout << ec << '\n';
-	*/
-	std::cout << std::boolalpha << conjure_enum::enum_contains<component>("component::path"sv) << '\n';
-	std::cout << std::boolalpha << conjure_enum::enum_contains<component>(argv[1]) << '\n';
-	for(const auto [a, b] : conjure_enum::enum_entries_sorted<component>)
-		std::cout << conjure_enum::remove_scope<component>(b) << ' ' << static_cast<int>(a) << '\n';
-	for(const auto [a, b] : conjure_enum::enum_entries<numbers1>)
+	std::cout << std::boolalpha << conjure_enum<component>::enum_contains("component::path"sv) << '\n';
+	std::cout << std::boolalpha << conjure_enum<component>::enum_contains(argv[1]) << '\n';
+	for(const auto [a, b] : conjure_enum<component>::enum_entries_sorted)
+		std::cout << conjure_enum<component>::remove_scope(b) << ' ' << static_cast<int>(a) << '\n';
+	for(const auto [a, b] : conjure_enum<numbers1>::enum_entries)
 		std::cout << b << ' ' << static_cast<int>(a) << '\n';
-	std::cout << conjure_enum::add_scope<component>("path"sv) << '\n';
-	std::cout << conjure_enum::add_scope<component>("component::path"sv) << '\n';
-	std::cout << conjure_enum::add_scope<component1>("path"sv) << '\n';
+	*/
+	std::cout << conjure_enum<component>::add_scope("path"sv) << '\n';
+	std::cout << conjure_enum<component>::add_scope("component::path"sv) << '\n';
+	std::cout << conjure_enum<component1>::add_scope("path"sv) << '\n';
+	std::cout << conjure_enum<component>::epeek<component::path>() << '\n';
+	std::cout << conjure_enum<component>::tpeek() << '\n';
 	return 0;
 }

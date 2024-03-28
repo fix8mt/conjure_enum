@@ -76,56 +76,61 @@ public:
 	friend std::ostream& operator<<(std::ostream& os, const fixed_string& what) { return os << what.get(); }
 };
 
+template<typename T>
+requires std::is_enum_v<T>
 class conjure_enum
 {
 	static constexpr int enum_min_value{ENUM_MIN_VALUE}, enum_max_value{ENUM_MAX_VALUE};
 
-	template<typename T>
 	using enum_tuple = std::tuple<T, std::string_view>;
-
-	template<typename T>
 	using scoped_tuple = std::tuple<std::string_view, std::string_view>;
 
-	template<typename T, T e>
-	requires std::is_enum_v<T>
-	static consteval const char *epeek() noexcept { return std::source_location::current().function_name(); }
-
-	template<typename T>
-	requires std::is_enum_v<T>
-	static consteval const char *tpeek() noexcept { return std::source_location::current().function_name(); }
-
-	template<typename T, std::size_t... I>
+	template<std::size_t... I>
 	static constexpr auto entries(std::index_sequence<I...>) noexcept
 	{
-		return std::array<enum_tuple<T>, sizeof...(I)>{{{ enum_values<T>[I], enum_name_v<T, enum_values<T>[I]>}...}};
+		return std::array<enum_tuple, sizeof...(I)>{{{ enum_values[I], enum_name_v<enum_values[I]>}...}};
 	}
 
-	template<typename T, std::size_t... I>
+public:
+	template<T e>
+	static constexpr auto enum_name() noexcept
+	{
+		constexpr auto result { get_name<e>() };
+		return fixed_string<result.size()>(result);
+	}
+	template<T e>
+	static constexpr auto enum_name_v { enum_name<e>() };
+
+	static consteval const char *tpeek() noexcept { return std::source_location::current().function_name(); }
+	template<T e>
+	static consteval const char *epeek() noexcept { return std::source_location::current().function_name(); }
+
+private:
+	template<std::size_t... I>
 	static constexpr auto scoped_entries(std::index_sequence<I...>) noexcept
 	{
-		std::array<scoped_tuple<T>, sizeof...(I)> tmp{{{ remove_scope<T>(enum_name_v<T, enum_values<T>[I]>), enum_name_v<T, enum_values<T>[I]>}...}};
-		std::sort(tmp.begin(), tmp.end(), scoped_comp<T>);
+		std::array<scoped_tuple, sizeof...(I)> tmp{{{ remove_scope(enum_name_v<enum_values[I]>), enum_name_v<enum_values[I]>}...}};
+		std::sort(tmp.begin(), tmp.end(), scoped_comp);
 		return tmp;
 	}
 
-	template<typename T>
 	static constexpr auto entries_sorted() noexcept
 	{
-		auto tmp { enum_entries<T> };
-		std::sort(tmp.begin(), tmp.end(), tuple_comp_rev<T>);
+		auto tmp { enum_entries };
+		std::sort(tmp.begin(), tmp.end(), tuple_comp_rev);
 		return tmp;
 	}
 
-	template<typename T, std::size_t... I>
+	template< std::size_t... I>
 	static constexpr auto names(std::index_sequence<I...>) noexcept
 	{
-		return std::array<std::string_view, sizeof...(I)>{{{ enum_name_v<T, enum_values<T>[I]>}...}};
+		return std::array<std::string_view, sizeof...(I)>{{{ enum_name_v<enum_values[I]>}...}};
 	}
 
-	template<typename T, std::size_t... I>
+	template<std::size_t... I>
 	static constexpr auto values(std::index_sequence<I...>) noexcept
 	{
-		constexpr std::array<bool, sizeof...(I)> valid { is_valid<T, static_cast<T>(enum_min_value + I)>()... };
+		constexpr std::array<bool, sizeof...(I)> valid { is_valid<static_cast<T>(enum_min_value + I)>()... };
 		constexpr auto num_valid { std::count_if(valid.cbegin(), valid.cend(), [](bool val) noexcept { return val; }) };
 		static_assert(num_valid > 0, "empty enums not supported");
 		std::array<T, num_valid> vals{};
@@ -135,23 +140,19 @@ class conjure_enum
 		return vals;
 	}
 
-	template<typename T>
 	static constexpr bool value_comp(const T& pl, const T& pr) noexcept
 	{
 		return static_cast<int>(pl) < static_cast<int>(pr);
 	}
-	template<typename T>
-	static constexpr bool tuple_comp(const enum_tuple<T>& pl, const enum_tuple<T>& pr) noexcept
+	static constexpr bool tuple_comp(const enum_tuple& pl, const enum_tuple& pr) noexcept
 	{
 		return static_cast<int>(std::get<T>(pl)) < static_cast<int>(std::get<T>(pr));
 	}
-	template<typename T>
-	static constexpr bool tuple_comp_rev(const enum_tuple<T>& pl, const enum_tuple<T>& pr) noexcept
+	static constexpr bool tuple_comp_rev(const enum_tuple& pl, const enum_tuple& pr) noexcept
 	{
 		return std::get<std::string_view>(pl) < std::get<std::string_view>(pr);
 	}
-	template<typename T>
-	static constexpr bool scoped_comp(const scoped_tuple<T>& pl, const scoped_tuple<T>& pr) noexcept
+	static constexpr bool scoped_comp(const scoped_tuple& pl, const scoped_tuple& pr) noexcept
 	{
 		return std::get<0>(pl) < std::get<0>(pr);
 	}
@@ -159,21 +160,29 @@ class conjure_enum
 public:
 	conjure_enum() = delete;
 
-	template<typename T, T e>
-	requires std::is_enum_v<T>
+	template<T e>
 	static constexpr std::string_view get_name() noexcept
 	{
-		/*
-			static consteval const char* epeek() [with T = unscoped name; T e = <value>]
-			static consteval const char* epeek() [with T = scoped name; T e = <scoped::value>]
+		/* clang
+				static const char *FIX8::conjure_enum<component>::epeek() [T = component, e = component::path]
+																												  |<--				-->|
+			gcc
+				static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::path; T = component]
+																										  |<--				-->|
 		*/
-		constexpr std::string_view from{epeek<T, e>()};
+		constexpr std::string_view from{epeek<e>()};
 #if defined(__clang__) || defined(__GNUC__)
 		if (constexpr auto ep { from.rfind("e = ") }; ep != std::string_view::npos && from[ep + 4] != '(')
 		{
 			std::string_view result { from.substr(ep + 4) };
-			if (auto lc { result.find_first_of(']') }; lc != std::string_view::npos)
+#if defined(__clang__)
+# define ptrm (']')
+#else
+# define ptrm (';')
+#endif
+			if (auto lc { result.find_first_of(ptrm) }; lc != std::string_view::npos)
 				return result.substr(0, lc);
+#undef ptrm
 		}
 #elif defined(_MSC_VER)
 # error "incomplete"
@@ -183,14 +192,16 @@ public:
 		return {};
 	}
 
-	template<typename T>
-	requires std::is_enum_v<T>
 	static constexpr std::string_view get_type() noexcept
 	{
-		/*
-			static consteval const char* conjure_enum::tpeek() [with T = <type>]
+		/* clang
+				static const char *FIX8::conjure_enum<component>::tpeek() [T = component]
+																							  |<--		-->|
+			gcc
+				static consteval const char* FIX8::conjure_enum<T>::tpeek() [with T = component]
+																							  			|<--		 -->|
 		*/
-		constexpr std::string_view from{tpeek<T>()};
+		constexpr std::string_view from{tpeek()};
 #if defined(__clang__) || defined(__GNUC__)
 		if (constexpr auto ep { from.rfind("T = ") }; ep != std::string_view::npos)
 		{
@@ -206,36 +217,23 @@ public:
 		return {};
 	}
 
-	template<typename T>
 	struct is_scoped : std::integral_constant<bool, requires
-	{
-		requires std::is_enum_v<T>;
-		requires !std::is_convertible_v<T, std::underlying_type_t<T>>;
-	}>{};
+		{ requires !std::is_convertible_v<T, std::underlying_type_t<T>>; }>
+	{};
 
-	template<typename T, T e>
-	static constexpr bool is_valid() noexcept { return !get_name<T, e>().empty(); }
+	template<T e>
+	static constexpr bool is_valid() noexcept { return !get_name<e>().empty(); }
 
-	template<typename T>
 	static constexpr auto values() noexcept
 	{
-		return values<T>(std::make_index_sequence<enum_max_value - enum_min_value + 1>({}));
+		return values(std::make_index_sequence<enum_max_value - enum_min_value + 1>({}));
 	}
 
-	template<typename T>
-	static constexpr auto count() noexcept { return enum_values<T>.size(); }
+	static constexpr auto count() noexcept { return enum_values.size(); }
 
-	template<typename T, T e>
-	static constexpr auto enum_name() noexcept
-	{
-		constexpr auto result { get_name<T, e>() };
-		return fixed_string<result.size()>(result);
-	}
-
-	template<typename T>
 	static constexpr std::string_view remove_scope(std::string_view what) noexcept
 	{
-		if constexpr (is_scoped<T>())
+		if constexpr (is_scoped())
 		{
 			if (auto lc { what.find_last_of(':') }; lc != std::string_view::npos)
 				return what.substr(lc + 1);
@@ -243,89 +241,68 @@ public:
 		return what;
 	}
 
-	template<typename T>
 	static constexpr std::string_view add_scope(std::string_view what) noexcept
 	{
-		if constexpr (is_scoped<T>())
+		if constexpr (is_scoped())
 		{
-			if (const auto result { std::equal_range(enum_scoped_entries<T>.cbegin(),
-				enum_scoped_entries<T>.cend(), scoped_tuple<T>(what, std::string_view()), scoped_comp<T>) };
+			if (const auto result { std::equal_range(enum_scoped_entries.cbegin(),
+				enum_scoped_entries.cend(), scoped_tuple(what, std::string_view()), scoped_comp) };
 					result.first != result.second)
 						return std::get<1>(*result.first);
 		}
 		return what;
 	}
 
-	template<typename T>
-	static constexpr auto cbegin() noexcept { return enum_entries<T>.cbegin(); }
+	static constexpr auto cbegin() noexcept { return enum_entries.cbegin(); }
+	static constexpr auto cend() noexcept { return enum_entries.cend(); }
+	static constexpr auto crbegin() noexcept { return enum_entries.crbegin(); }
+	static constexpr auto crend() noexcept { return enum_entries.crend(); }
+	static constexpr auto front() noexcept { return *enum_entries.cbegin(); }
+	static constexpr auto back() noexcept { return *std::prev(enum_entries.cend()); }
 
-	template<typename T>
-	static constexpr auto cend() noexcept { return enum_entries<T>.cend(); }
-
-	template<typename T>
 	static constexpr std::optional<T> int_to_enum(int value) noexcept
 	{
-		if (const auto result { std::equal_range(enum_values<T>.cbegin(), enum_values<T>.cend(), static_cast<T>(value), value_comp<T>) };
+		if (const auto result { std::equal_range(enum_values.cbegin(), enum_values.cend(), static_cast<T>(value), value_comp) };
 			result.first != result.second)
 				return *result.first;
 		return {};
 	}
-
-	template<typename T>
 	static constexpr bool enum_contains(T value) noexcept
 	{
-		const auto result { std::equal_range(enum_values<T>.cbegin(), enum_values<T>.cend(), value, value_comp<T>) };
+		const auto result { std::equal_range(enum_values.cbegin(), enum_values.cend(), value, value_comp) };
 		return result.first != result.second;
    }
-
-	template<typename T>
 	static constexpr bool enum_contains(std::string_view str) noexcept
 	{
-		const auto result { std::equal_range(enum_entries_sorted<T>.cbegin(), enum_entries_sorted<T>.cend(), enum_tuple<T>(T{}, str), tuple_comp_rev<T>) };
+		const auto result { std::equal_range(enum_entries_sorted.cbegin(), enum_entries_sorted.cend(), enum_tuple(T{}, str), tuple_comp_rev) };
 		return result.first != result.second;
 	}
-
-	template<typename T>
 	static constexpr std::string_view enum_to_string(T value) noexcept
 	{
-		if (const auto result { std::equal_range(enum_entries<T>.cbegin(), enum_entries<T>.cend(), enum_tuple<T>(value, std::string_view()), tuple_comp<T>) };
+		if (const auto result { std::equal_range(enum_entries.cbegin(), enum_entries.cend(), enum_tuple(value, std::string_view()), tuple_comp) };
 			result.first != result.second)
 				return std::get<std::string_view>(*result.first);
 		return {};
 	}
-
-	template<typename T>
 	static constexpr std::optional<T> string_to_enum(std::string_view str) noexcept
 	{
-		if (const auto result { std::equal_range(enum_entries_sorted<T>.cbegin(), enum_entries_sorted<T>.cend(), enum_tuple<T>(T{}, str), tuple_comp_rev<T>) };
+		if (const auto result { std::equal_range(enum_entries_sorted.cbegin(), enum_entries_sorted.cend(), enum_tuple(T{}, str), tuple_comp_rev) };
 			result.first != result.second)
 				return std::get<T>(*result.first);
 		return {};
 	}
 
-	template<typename T>
-	static constexpr auto enum_values { values<T>() };
+	static constexpr auto enum_values { values() };
+	static constexpr auto enum_entries { entries(std::make_index_sequence<enum_values.size()>()) };
+	static constexpr auto enum_scoped_entries { scoped_entries(std::make_index_sequence<enum_values.size()>()) };
+	static constexpr auto enum_entries_sorted { entries_sorted() };
+	static constexpr auto enum_names { names(std::make_index_sequence<enum_values.size()>()) };
 
-	template<typename T>
-	static constexpr auto enum_entries { entries<T>(std::make_index_sequence<enum_values<T>.size()>()) };
-
-	template<typename T>
-	static constexpr auto enum_scoped_entries { scoped_entries<T>(std::make_index_sequence<enum_values<T>.size()>()) };
-
-	template<typename T>
-	static constexpr auto enum_entries_sorted { entries_sorted<T>() };
-
-	template<typename T>
-	static constexpr auto enum_names { names<T>(std::make_index_sequence<enum_values<T>.size()>()) };
-
-	template<typename T, T e>
-	static constexpr auto enum_name_v { enum_name<T, e>() };
-
-	template<typename T, typename Fn, typename... Args>
+	template<typename Fn, typename... Args>
 	requires std::invocable<Fn&&, T, Args...>
 	[[maybe_unused]] static constexpr auto for_each(Fn&& func, Args&&... args) noexcept
 	{
-		for (const auto ev : enum_values<T>)
+		for (const auto ev : enum_values)
 			std::invoke(std::forward<Fn>(func), ev, std::forward<Args>(args)...);
 		return std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...);
 	}
@@ -335,8 +312,8 @@ public:
 // bitset based on supplied enum
 // Note: the enum sequence must be contiguous with the last enum value < count of enumerations
 //-----------------------------------------------------------------------------------------
-template<typename T, std::size_t countof=conjure_enum::count<T>()>
-requires (std::is_enum_v<T> && countof > 0 && static_cast<std::size_t>(conjure_enum::enum_values<T>.back()) < countof)
+template<typename T, std::size_t countof=conjure_enum<T>::count()>
+requires (std::is_enum_v<T> && countof > 0 && static_cast<std::size_t>(conjure_enum<T>::enum_values.back()) < countof)
 class enum_bitset
 {
 	using U = std::underlying_type_t<T>;
@@ -369,7 +346,7 @@ public:
 	template<T... comp>
 	static constexpr U bitsum() noexcept { return (... | (1 << comp)); }
 
-	constexpr void set(std::size_t pos) noexcept { _present |= (1 << pos); }
+	constexpr void set(U pos) noexcept { _present |= (1 << pos); }
 	constexpr void set(T what) noexcept { set(as_U(what)); }
 	constexpr void set() noexcept { _present = all_bits; }
 	template<T what>
@@ -390,7 +367,7 @@ public:
 			_present ^= (1 << uu);
 	}
 	constexpr void flip() noexcept { _present = ~_present & all_bits; }
-	constexpr void flip(std::size_t pos) noexcept { _present ^= (1 << pos); }
+	constexpr void flip(U pos) noexcept { _present ^= (1 << pos); }
 	constexpr void flip(T what) noexcept { flip(as_U(what)); }
 
 	template<T what>
@@ -400,12 +377,12 @@ public:
 			_present &= ~(1 << uu);
 	}
 	constexpr void clear() noexcept { _present = 0; }
-	constexpr void clear(std::size_t pos) noexcept { _present &= ~(1 << pos); }
+	constexpr void clear(U pos) noexcept { _present &= ~(1 << pos); }
 	constexpr void clear(T what) noexcept { clear(as_U(what)); }
 	template<T... comp>
 	constexpr void clear_all() noexcept { (clear<comp>(),...); }
 
-	constexpr bool test(std::size_t pos) const noexcept { return _present & (1 << pos); }
+	constexpr bool test(U pos) const noexcept { return _present & (1 << pos); }
 	constexpr bool test(T what) const noexcept { return test(as_U(what)); }
 	constexpr bool test() const noexcept { return _present; }
 	template<T what>
@@ -444,7 +421,7 @@ public:
 	requires std::invocable<Fn&&, T, Args...>
 	[[maybe_unused]] constexpr auto for_each(Fn&& func, Args&&... args) noexcept
 	{
-		for (const auto ev : conjure_enum::enum_values<T>)
+		for (const auto ev : conjure_enum<T>::enum_values)
 			if (test(ev))
 				std::invoke(std::forward<Fn>(func), ev, std::forward<Args>(args)...);
 		return std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...);

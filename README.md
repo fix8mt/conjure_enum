@@ -24,23 +24,23 @@
 
 Based on the awesome work of [magic_enum](https://github.com/Neargye/magic_enum), this library offers a streamlined and powerful
 way to add reflection capabilities to your C++ enums. We've optimized the core functionality, focusing on the
-features developers truly need while enhancing them for a more efficient and expressive experience.
+features developers really need while enhancing them for a more efficient and expressive experience.
 
 ## Embrace the Future with C++20:
 
 This library takes full advantage of the latest C++20 features. We've leveraged the convenience of `std::source_location` and
 unlocked the potential of `constexpr` algorithms and concepts. This translates to:
 
-- Improved Performance: Optimized code for faster and smoother operation.
+- Improved Performance: Optimized code for faster and smoother operation - get the compiler to do more!
 - Enhanced Developer Experience: Write cleaner, more concise, and more powerful C++ code.
 
 ## Key Benefits:
 
 - Lightweight: Designed for performance without unnecessary overhead.
 - Header-Only: No external dependencies, simplifying integration into your project.
-- Modern C++20: Entirely constexpr for compile-time safety and efficiency.
+- Modern C++20: Entirely constexpr for compile-time safety, efficiency and performance.
 - Simple & Easy to Use: Class-based approach with intuitive syntax.
-- Broad Support: Works with scoped and unscoped enums, enum aliases, and gaps.
+- Broad Support: Works with scoped and unscoped enums, enum aliases, and even with gaps.
 - Wide Compiler Compatibility: Supports GCC, Clang, and upcoming MSVC support.
 - Confidence in Quality: Includes built-in unit tests for reliable functionality.
 

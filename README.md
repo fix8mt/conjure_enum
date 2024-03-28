@@ -399,8 +399,9 @@ static consteval const char *tpeek();
 template<T e>
 static consteval const char *epeek();
 ```
-These functions return the templated `std::source_location` `const char*` strings for the enum type or enum values. When reporting an issue
-please include the output of these methods.
+These functions return the templated `std::source_location` `const char*` strings for the enum type or enum values.
+The actual output is implementation dependent. When reporting an issue please include the output of these methods.
+The following is the output with GCC 13.
 ```c++
 std::cout << conjure_enum<component>::tpeek() << '\n';
 std::cout << conjure_enum<component>::epeek<component::scheme>() << '\n';

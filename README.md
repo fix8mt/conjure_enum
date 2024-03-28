@@ -96,7 +96,7 @@ scheme
 ```c++
 static constexpr std::optional<T> string_to_enum(std::string_view str);
 ```
-Returns a `std::optional<T>`
+Returns a `std::optional<T>`. Empty if string was not valid.
 ```c++
 int value { static_cast<int>(conjure_enum<component>::string_to_enum("component::path").value()) };
 int value_trim { static_cast<int>(conjure_enum<component>::string_to_enum("path", true).value()) }; // optionally remove scope in test
@@ -115,7 +115,7 @@ _output_
 ```c++
 static constexpr std::optional<T> int_to_enum(int value);
 ```
-Returns a `std::optional<T>`
+Returns a `std::optional<T>`. Empty if value was not valid.
 ```c++
 int value { static_cast<int>(conjure_enum<component>::int_to_enum(12).value()) };
 int noscope_value { static_cast<int>(conjure_enum<component1>::int_to_enum(12).value()) };
@@ -130,9 +130,9 @@ _output_
 ```
 ### `count`
 ```c++
-static constexpr auto count();
+static constexpr std::size_t count();
 ```
-Returns a `std::size_t`
+Returns number of enumerations.
 ```c++
 std::cout << conjure_enum<component>::count()  << '\n';
 ```
@@ -183,7 +183,7 @@ It contains pairs of scoped and their unscoped string version. This array is sor
 For unscoped enums, these are identical.
 ```c++
 for(const auto [a, b] : conjure_enum<component>::enum_scoped_entries)
-	std::cout << a << ' ' << b << '\n';
+   std::cout << a << ' ' << b << '\n';
 ```
 _output_
 ```CSV

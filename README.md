@@ -69,8 +69,11 @@ auto name_trim { conjure_enum<component>::enum_to_string(component::path, true) 
 auto alias_name { conjure_enum<component>::enum_to_string(component::test) }; // alias
 auto noscope_name { conjure_enum<component1>::enum_to_string(path) };
 std::cout << name << '\n' << name_trim << '\n' << alias_name << '\n' << noscope_name << '\n';
-
-std::cout << std::format(R"("{}")", conjure_enum<component>::enum_to_string(static_cast<component>(100))) << '\n';
+```
+Because `conjure_enum` is _class_ based instead of namespaced, you can reduce your typing with aliases:
+```c++
+using ec = conjure_enum<component>;
+std::cout << std::format(R"("{}")", ec::enum_to_string(static_cast<component>(100))) << '\n';
 ```
 _output_
 ```CSV
@@ -79,11 +82,6 @@ path
 component::path
 path
 ""
-```
-Because `conjure_enum` is _class_ based instead of namespaced, you can reduce your typing with aliases:
-```c++
-using ec = conjure_enum<component>;
-std::cout << ec::enum_to_string(component::path) << '\n';
 ```
 ## `get_name`
 ```c++

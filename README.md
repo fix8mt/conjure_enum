@@ -62,13 +62,15 @@ enum class numbers : int { zero, one, two, three, four, five, six, seven, eight,
 ```c++
 static constexpr std::string_view enum_to_string(T value, bool noscope=false);
 ```
-Returns a `std::string_view` (empty if not found)
+Returns a `std::string_view` (empty if not found). Optionally pass `true` will remove scope in result if present.
 ```c++
 auto name { conjure_enum<component>::enum_to_string(component::path) };
 auto name_trim { conjure_enum<component>::enum_to_string(component::path, true) }; // optionally remove scope in result
 auto alias_name { conjure_enum<component>::enum_to_string(component::test) }; // alias
 auto noscope_name { conjure_enum<component1>::enum_to_string(path) };
+auto invalid_name { conjure_enum<component>::enum_to_string(static_cast<component>(100)) };
 std::cout << name << '\n' << name_trim << '\n' << alias_name << '\n' << noscope_name << '\n';
+std::cout << std::format(R"("{}")", conjure_enum<component>::enum_to_string(static_cast<component>(100))) << '\n';
 ```
 _output_
 ```CSV
@@ -76,6 +78,7 @@ component::path
 path
 component::path
 path
+""
 ```
 ### `get_name`
 ```c++

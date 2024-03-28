@@ -22,8 +22,8 @@
 # Introduction
 ## Supercharge Your C++ Enums with This Lightweight Reflection Library!
 
-Built on the shoulders of [magic_enum](https://github.com/Neargye/magic_enum), this library offers a streamlined and powerful
-way to add reflection capabilities to your C++ enums. We've meticulously optimized the core functionality, focusing on the
+Based on the awesome work of [magic_enum](https://github.com/Neargye/magic_enum), this library offers a streamlined and powerful
+way to add reflection capabilities to your C++ enums. We've optimized the core functionality, focusing on the
 features developers truly need while enhancing them for a more efficient and expressive experience.
 
 ## Embrace the Future with C++20:
@@ -49,24 +49,6 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
 - Gain deep insights into your enums at runtime.
 - Unlock the power of metaprogramming for advanced code generation techniques.
 - Write more expressive and efficient C++ code.
-
-## Motivation
-- header-only
-- no external dependencies
-- simplicity, lightweight
-- make use of C++20 features
-- entirely `constexpr`
-
-## Features
-- single _header-only_
-- all methods `static constexpr`; no virtual methods
-- implements subset of the most used features
-- no macros (`__PRETTY_FUNCTION__`, `__FUNCTION__` or `__FUNCSIG__`), pure c++20
-- class based
-- support for scoped and unscoped enums
-- support for enum aliases, gaps
-- support for GCC, Clang; MSVC (TBA)
-- built-in unit tests
 
 # Examples
 All examples refer to the following enums:

@@ -142,7 +142,7 @@ _output_
 ```
 ### `enum_names`
 ```c++
-static constexpr std::array<std::string_view>, std::size_t> enum_names;
+static constexpr std::array<std::string_view, std::size_t> enum_names;
 ```
 This static member is generated for your type. It is a `std::array` of the `std::string_view` strings.
 ```c++
@@ -179,7 +179,7 @@ fragment
 static constexpr std::array<std::tuple<std::string_view, std::string_view>, std::size_t> enum_scoped_entries;
 ```
 This static member is generated for your type. It is a `std::array` of a tuple of `std::string_view` pairs.
-It contains pairs of scoped and their unscoped string version. This array is sorted by scoped name.
+It contains pairs of scoped and their unscoped string version. This array is sorted by unscoped name.
 For unscoped enums, these are identical.
 ```c++
 for(const auto [a, b] : conjure_enum<component>::enum_scoped_entries)
@@ -227,7 +227,7 @@ static constexpr std::array<std::tuple<T, std::string_view>, std::size_t> enum_e
 This static member is generated for your type. It is a `std::array` of tuples of `T` and `std::string_view`.
 ```c++
 for(const auto [value, str] : conjure_enum<component>::enum_entries) // scoped
-   std::cout << value << ' ' str << '\n';
+   std::cout << static_cast<int>(value) << ' ' str << '\n';
 ```
 _output_
 ```CSV
@@ -273,7 +273,7 @@ _output_
 13 10
 14 10
 ```
-Example using returned object:
+Example using returned object and additional reference parameter:
 ```c++
 int total{};
 auto myfunc { conjure_enum<component>::for_each([](component val, int other, int& tot)
@@ -302,7 +302,7 @@ _output_
 ### `is_scoped`
 ```c++
 struct is_scoped : std::integral_constant<bool, requires
-	{ requires !std::is_convertible_v<T, std::underlying_type_t<T>>; }>{};
+   { requires !std::is_convertible_v<T, std::underlying_type_t<T>>; }>{};
 ```
 Returns a `bool`
 ```c++
@@ -319,7 +319,7 @@ false
 template<T e>
 static constexpr bool is_valid();
 ```
-Returns a `bool`
+Returns `true` if enum value is valid.
 ```c++
 std::cout << std::boolalpha << conjure_enum<component>::is_valid<component::password>() << '\n';
 std::cout << std::boolalpha << conjure_enum<component>::is_valid<static_cast<component>(16)>() << '\n';
@@ -333,7 +333,7 @@ false
 ```c++
 static constexpr std::string_view get_type();
 ```
-Returns a `std::string_view`
+Returns a `std::string_view` of `T`.
 ```c++
 std::cout << conjure_enum<component>::get_type() << '\n';
 std::cout << conjure_enum<component1>::get_type() << '\n';

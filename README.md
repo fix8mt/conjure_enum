@@ -80,6 +80,11 @@ component::path
 path
 ""
 ```
+Because `conjure_enum` is class based instead of namespaced, you can reduce your typing with aliases:
+```c++
+using cn = conjure_enum<component>;
+std::cout << cn::enum_to_string(component::path) << '\n';
+```
 ## `get_name`
 ```c++
 static constexpr std::string_view get_name();
@@ -102,14 +107,12 @@ static constexpr std::optional<T> string_to_enum(std::string_view str);
 Returns a `std::optional<T>`. Empty if string was not valid.
 ```c++
 int value { static_cast<int>(conjure_enum<component>::string_to_enum("component::path").value()) };
-int value_trim { static_cast<int>(conjure_enum<component>::string_to_enum("path", true).value()) }; // optionally remove scope in test
 int noscope_value { static_cast<int>(conjure_enum<component1>::string_to_enum("path").value()) };
 int bad_value { static_cast<int>(conjure_enum<component>::string_to_enum("bad_string").value_or(component(100))) };
-std::cout << value << '\n' << value_trim << '\n' << noscope_value << '\n' << bad_value << '\n';
+std::cout << value << '\n' << noscope_value << '\n' << bad_value << '\n';
 ```
 _output_
 ```CSV
-12
 12
 12
 100
@@ -384,7 +387,7 @@ component::path
 ```c++
 static constexpr bool has_scope(std::string_view what);
 ```
-Returns a `true` if the supplied string is scoped (and is valid).
+Returns `true` if the supplied string is scoped (and is valid).
 ```c++
 std::cout << std::boolalpha << conjure_enum<component>::has_scope("component::scheme") << '\n';
 std::cout << std::boolalpha << conjure_enum<component>::has_scope("scheme") << '\n';
@@ -402,7 +405,7 @@ static consteval const char *tpeek();
 template<T e>
 static consteval const char *epeek();
 ```
-These functions return the templated `std::source_location` `const char*` strings for the enum type or enum values.
+These functions return the `std::source_location` `const char*` strings for the enum type or enum values.
 The actual output is implementation dependent. When reporting an issue please include the output of these methods.
 The following is the output with GCC 13.
 ```c++

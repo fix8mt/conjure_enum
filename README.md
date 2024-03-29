@@ -207,17 +207,17 @@ static constexpr std::array<std::tuple<T, std::string_view>, std::size_t> enum_e
 This static member is generated for your type. It is a `std::array` of tuples of `T` and `std::string_view`.
 ```c++
 for(const auto [value, str] : conjure_enum<component>::enum_entries) // scoped
-   std::cout << static_cast<int>(value) << ' ' str << '\n';
+   std::cout << std::format("{:<2} {}\n", static_cast<int>(value), str);
 ```
 _output_
 ```CSV
-0 component::scheme
-1 component::authority
-2 component::userinfo
-3 component::user
-4 component::password
-5 component::host
-6 component::port
+0  component::scheme
+1  component::authority
+2  component::userinfo
+3  component::user
+4  component::password
+5  component::host
+6  component::port
 12 component::path
 13 component::query
 14 component::fragment
@@ -231,20 +231,20 @@ It contains pairs of scoped and their unscoped string version. This array is sor
 For unscoped enums, these are identical.
 ```c++
 for(const auto [a, b] : conjure_enum<component>::enum_scoped_entries)
-   std::cout << a << ' ' << b << '\n';
+   std::cout << std::format("{:9} {}\n", a, b);
 ```
 _output_
 ```CSV
 authority component::authority
-fragment component::fragment
-host component::host
-password component::password
-path component::path
-port component::port
-query component::query
-scheme component::scheme
-user component::user
-userinfo component::userinfo
+fragment  component::fragment
+host      component::host
+password  component::password
+path      component::path
+port      component::port
+query     component::query
+scheme    component::scheme
+user      component::user
+userinfo  component::userinfo
 ```
 ## `for_each`
 ```c++

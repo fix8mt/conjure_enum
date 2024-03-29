@@ -16,7 +16,7 @@
 --|--
 |[Here](https://github.com/fix8mt/conjure_enum/blob/master/include/fix8/conjure_enum.hpp)| For implementation|
 |[Examples](#examples)| For examples|
-|[Examples with enum_bitset](#examples_using_enum_bitset)| For enum_bitset examples|
+|[Examples with enum_bitset](#examples-using_enum_bitset)| For enum_bitset examples|
 |[Building](#building)| How to build or include|
 
 ------------------------------------------------------------------------

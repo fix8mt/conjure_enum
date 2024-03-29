@@ -22,7 +22,7 @@
 # Introduction
 ## Supercharge Your C++ Enums with This Lightweight Reflection Library!
 
-Based on the awesome work of [magic_enum[^2]](https://github.com/Neargye/magic_enum), this library offers a streamlined and powerful
+Based on the awesome work of [magic_enum](https://github.com/Neargye/magic_enum)[^2], this library offers a streamlined and powerful
 way to add reflection capabilities to your C++ enums. We've optimized the core functionality, focusing on the
 features developers really need while enhancing them for a more efficient and expressive experience.
 

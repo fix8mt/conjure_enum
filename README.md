@@ -73,7 +73,7 @@ std::cout << name << '\n' << name_trim << '\n' << alias_name << '\n' << noscope_
 Because all methods in `conjure_enum` are with a `class` instead of individual template functions in a `namespace`, you can reduce your typing with aliases:
 ```c++
 using ec = conjure_enum<component>;
-std::cout << std::format(R"("{}")", ec::enum_to_string(static_cast<component>(100))) << '\n';
+std::cout << std::format(R"("{}")\n", ec::enum_to_string(static_cast<component>(100)));
 ```
 _output_
 ```CSV
@@ -89,13 +89,13 @@ static constexpr std::string_view get_name();
 ```
 Returns a `std::string_view` (empty if not found). This is the template version of `enum_to_string`.
 ```c++
-std::cout << conjure_enum<component>::get_name<component::scheme>() << '\n';
-std::cout << conjure_enum<component1>::get_name<scheme>() << '\n';
+std::cout << std::format(R"("{}")\n", ec::get_name<component::scheme>());
+std::cout << std::format(R"("{}")\n", ec::get_name<scheme>());
 ```
 _output_
 ```CSV
-component::scheme
-scheme
+"component::scheme"
+"scheme"
 ```
 
 ## `string_to_enum`

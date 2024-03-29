@@ -70,7 +70,8 @@ auto alias_name { conjure_enum<component>::enum_to_string(component::test) }; //
 auto noscope_name { conjure_enum<component1>::enum_to_string(path) };
 std::cout << name << '\n' << name_trim << '\n' << alias_name << '\n' << noscope_name << '\n';
 ```
-Because all methods in `conjure_enum` are within a `class` instead of individual template functions in a `namespace`, you can reduce your typing with aliases:
+Because all methods in `conjure_enum` are within a `class` instead of individual template functions in a `namespace`, you can reduce your
+typing with standard aliases:
 ```c++
 using ec = conjure_enum<component>;
 std::cout << std::format("\"{}\"\n", ec::enum_to_string(static_cast<component>(100)));

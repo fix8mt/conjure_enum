@@ -418,6 +418,13 @@ _output_
 static consteval const char* FIX8::conjure_enum<T>::tpeek() [with T = component]
 static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::scheme; T = component]
 ```
+# Examples using `enum_bitset`
+`enum_bitset` is a convenient and useful way of creating bitsets and is based on `std::bitset` except it uses your enum (scoped or unscoped)
+for the bit positions (and names).
+> [!NOTE]
+> Your enum must start at 0 and be continuous. The last value must be less than the count of enumerations.
+We decided on this restriction for both simplicity and practicality - bitsets only really make sense when represented in this manner.
+
 # Building
 This implementation is header only. Apart from standard C++20 includes there are no external dependencies needed in your application.
 [Catch2](https://github.com/catchorg/Catch2.git) is used for the built-in unit tests.

@@ -477,8 +477,8 @@ is invalid:
 ```c++
 try
 {
-	enum_bitset<numbers> b("numbers::zero,numbers::twenty,numbers::two,numbers::three", true, ',', true);
-	std::cout << b << '\n';
+   enum_bitset<numbers> b("numbers::zero,numbers::twenty,numbers::two,numbers::three", false, ',', false);
+   std::cout << b << '\n';
 }
 catch(const std::invalid_argument& e)
 {

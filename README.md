@@ -482,7 +482,7 @@ try
 }
 catch(const std::invalid_argument& e)
 {
-	std::cerr << "exception: " << e.what() << '\n';
+   std::cerr << "exception: " << e.what() << '\n';
 }
 ```
 _output_

@@ -62,7 +62,7 @@ enum class numbers : int { zero, one, two, three, four, five, six, seven, eight,
 ```c++
 static constexpr std::string_view enum_to_string(T value, bool noscope=false);
 ```
-Returns a `std::string_view` (empty if not found). Optionally pass `true` will remove scope in result if present.
+Returns a `std::string_view` (empty if not found). Optionally passing `true` will remove scope in result if present.
 ```c++
 auto name { conjure_enum<component>::enum_to_string(component::path) };
 auto name_trim { conjure_enum<component>::enum_to_string(component::path, true) }; // optionally remove scope in result
@@ -70,7 +70,7 @@ auto alias_name { conjure_enum<component>::enum_to_string(component::test) }; //
 auto noscope_name { conjure_enum<component1>::enum_to_string(path) };
 std::cout << name << '\n' << name_trim << '\n' << alias_name << '\n' << noscope_name << '\n';
 ```
-Because `conjure_enum` is _class_ based instead of namespaced, you can reduce your typing with aliases:
+Because `conjure_enum` is _class_ based instead of in a `namespace`, you can reduce your typing with aliases:
 ```c++
 using ec = conjure_enum<component>;
 std::cout << std::format(R"("{}")", ec::enum_to_string(static_cast<component>(100))) << '\n';

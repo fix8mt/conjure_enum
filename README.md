@@ -22,7 +22,7 @@
 # Introduction
 ## Supercharge Your C++ Enums with This Lightweight Reflection Library!
 
-Based on the awesome work of [magic_enum](https://github.com/Neargye/magic_enum), this library offers a streamlined and powerful
+Based on the awesome work of [magic_enum[^2]](https://github.com/Neargye/magic_enum), this library offers a streamlined and powerful
 way to add reflection capabilities to your C++ enums. We've optimized the core functionality, focusing on the
 features developers really need while enhancing them for a more efficient and expressive experience.
 
@@ -466,3 +466,4 @@ target_include_directories(myproj PRIVATE ${conjure_enum_SOURCE_DIR}/include)
 ```
 
 [^1]:&copy; 2024 Fix8 Market Technologies Pty Ltd, David L. Dight. Released under the [MIT License](https://opensource.org/license/mit).
+[^2]:&copy; 2019 - 2024 Daniil Goncharov

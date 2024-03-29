@@ -403,7 +403,7 @@ static consteval const char *tpeek();
 template<T e>
 static consteval const char *epeek();
 ```
-These functions return the `std::source_location` `const char*` strings for the enum type or enum values.
+These functions return the `std::source_location` `const char*` strings for the enum type or enum value.
 The actual output is implementation dependent. When reporting an issue please include the output of these methods.
 The following is the output with GCC 13.
 ```c++
@@ -464,3 +464,5 @@ FetchContent_Declare(conjure_enum GIT_REPOSITORY https://github.com/fix8mt/conju
 FetchContent_MakeAvailable(conjure_enum)
 target_include_directories(myproj PRIVATE ${conjure_enum_SOURCE_DIR}/include)
 ```
+
+&copy; 2024 Fix8 Market Technologies Pty Ltd, David L. Dight

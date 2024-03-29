@@ -457,6 +457,21 @@ _output_
 ```CSV
 0000001111
 ```
+You can even use a delimeted string based on your enum names:
+```c++
+enum_bitset<numbers> b("numbers::zero,numbers::one,numbers::two,numbers::three");
+std::cout << b << '\n';
+enum_bitset<numbers> b1("zero,one,two,three", true);
+std::cout << b1 << '\n';
+enum_bitset<numbers> b1("zero|one|two|three", true, '|');
+std::cout << b2 << '\n';
+```
+_output_
+```CSV
+0000001111
+0000001111
+0000001111
+```
 
 # Building
 This implementation is header only. Apart from standard C++20 includes there are no external dependencies needed in your application.

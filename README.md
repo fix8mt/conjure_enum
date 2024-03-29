@@ -423,6 +423,7 @@ static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = componen
 for the bit positions (and names).
 > [!NOTE]
 > Your enum must start at 0 and be continuous. The last value must be less than the count of enumerations.
+
 We decided on this restriction for both simplicity and practicality - bitsets only really make sense when represented in this manner.
 
 # Building

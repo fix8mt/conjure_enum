@@ -88,7 +88,7 @@ path
 ```c++
 static constexpr std::string_view get_name();
 ```
-Returns a `std::string_view` (empty if not found). This is the template version of `enum_to_string`.
+Returns a `std::string_view` or empty if not found. This is the template version of `enum_to_string`.
 ```c++
 std::cout << std::format("\"{}\"\n", conjure_enum<component>::get_name<component::scheme>());
 std::cout << std::format("\"{}\"\n", conjure_enum<component1>::get_name<scheme>());
@@ -103,7 +103,8 @@ _output_
 ```c++
 static constexpr std::optional<T> string_to_enum(std::string_view str);
 ```
-Returns a `std::optional<T>`. Empty if string was not valid.
+Returns a `std::optional<T>`. Empty if string was not valid. Use `std::optional<T>::value_or()` to set an error value
+and avoid throwing an exception.
 ```c++
 int value { static_cast<int>(conjure_enum<component>::string_to_enum("component::path").value()) };
 int noscope_value { static_cast<int>(conjure_enum<component1>::string_to_enum("path").value()) };
@@ -114,13 +115,14 @@ _output_
 ```CSV
 12
 12
-100
+100 <-- invalid, error value
 ```
 ## `int_to_enum`
 ```c++
 static constexpr std::optional<T> int_to_enum(int value);
 ```
-Returns a `std::optional<T>`. Empty if value was not valid.
+Returns a `std::optional<T>`. Empty if value was not valid. Use `std::optional<T>::value_or()` to set an error value
+and avoid throwing an exception.
 ```c++
 int value { static_cast<int>(conjure_enum<component>::int_to_enum(12).value()) };
 int noscope_value { static_cast<int>(conjure_enum<component1>::int_to_enum(12).value()) };
@@ -131,7 +133,7 @@ _output_
 ```CSV
 12
 12
-100
+100 <-- invalid, error value
 ```
 ## `count`
 ```c++

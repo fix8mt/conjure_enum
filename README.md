@@ -46,7 +46,7 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
 
 ## This library empowers you to:
 
-- Gain deep insights into your enums at runtime.
+- Gain deeper insights into your enums at runtime.
 - Unlock the power of metaprogramming for advanced code generation techniques.
 - Write more expressive and efficient C++ code.
 
@@ -70,7 +70,7 @@ auto alias_name { conjure_enum<component>::enum_to_string(component::test) }; //
 auto noscope_name { conjure_enum<component1>::enum_to_string(path) };
 std::cout << name << '\n' << name_trim << '\n' << alias_name << '\n' << noscope_name << '\n';
 ```
-Because `conjure_enum` is `class` based instead of in a `namespace` you can reduce your typing with aliases:
+Because all methods in `conjure_enum` are with a `class` instead of individual template functions in a `namespace`, you can reduce your typing with aliases:
 ```c++
 using ec = conjure_enum<component>;
 std::cout << std::format(R"("{}")", ec::enum_to_string(static_cast<component>(100))) << '\n';

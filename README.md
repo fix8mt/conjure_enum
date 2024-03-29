@@ -457,7 +457,7 @@ _output_
 ```CSV
 0000001111
 ```
-You can even use a delimeted string based on your enum names:
+You can even use a delimited string based on your enum names. Optionally omit the scope and even specify your own delimiter:
 ```c++
 enum_bitset<numbers> b("numbers::zero,numbers::one,numbers::two,numbers::three");
 std::cout << b << '\n';

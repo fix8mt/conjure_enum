@@ -310,8 +310,8 @@ struct is_scoped : std::integral_constant<bool, requires
 ```
 Returns a `bool`
 ```c++
-std::cout << std::boolalpha << conjure_enum<component>::is_scoped() << '\n';
-std::cout << std::boolalpha << conjure_enum<component1>::is_scoped() << '\n';
+std::cout << std::format("{}\n", conjure_enum<component>::is_scoped());
+std::cout << std::format("{}\n", conjure_enum<component1>::is_scoped());
 ```
 _output_
 ```CSV
@@ -325,8 +325,8 @@ static constexpr bool is_valid();
 ```
 Returns `true` if enum value is valid.
 ```c++
-std::cout << std::boolalpha << conjure_enum<component>::is_valid<component::password>() << '\n';
-std::cout << std::boolalpha << conjure_enum<component>::is_valid<static_cast<component>(16)>() << '\n';
+std::cout << std::format("{}\n", conjure_enum<component>::is_valid<component::password>());
+std::cout << std::format("{}\n", conjure_enum<component1>::is_valid<static_cast<component>(16)>());
 ```
 _output_
 ```CSV
@@ -387,9 +387,9 @@ static constexpr bool has_scope(std::string_view what);
 ```
 Returns `true` if the supplied string is scoped (and is valid).
 ```c++
-std::cout << std::boolalpha << conjure_enum<component>::has_scope("component::scheme") << '\n';
-std::cout << std::boolalpha << conjure_enum<component>::has_scope("scheme") << '\n';
-std::cout << std::boolalpha << conjure_enum<component1>::has_scope("scheme") << '\n';
+std::cout << std::format("{}\n", conjure_enum<component>::has_scope("component::scheme"));
+std::cout << std::format("{}\n", conjure_enum<component>::has_scope("scheme"));
+std::cout << std::format("{}\n", conjure_enum<component1>::has_scope("scheme"));
 ```
 _output_
 ```CSV

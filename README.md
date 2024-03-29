@@ -62,7 +62,7 @@ enum class numbers : int { zero, one, two, three, four, five, six, seven, eight,
 ```c++
 static constexpr std::string_view enum_to_string(T value, bool noscope=false);
 ```
-Returns a `std::string_view` (empty if not found). Optionally passing `true` will remove scope in result if present.
+Returns a `std::string_view` or empty if not found. Optionally passing `true` will remove scope in result if present.
 ```c++
 auto name { conjure_enum<component>::enum_to_string(component::path) };
 auto name_trim { conjure_enum<component>::enum_to_string(component::path, true) }; // optionally remove scope in result
@@ -70,10 +70,10 @@ auto alias_name { conjure_enum<component>::enum_to_string(component::test) }; //
 auto noscope_name { conjure_enum<component1>::enum_to_string(path) };
 std::cout << name << '\n' << name_trim << '\n' << alias_name << '\n' << noscope_name << '\n';
 ```
-Because all methods in `conjure_enum` are with a `class` instead of individual template functions in a `namespace`, you can reduce your typing with aliases:
+Because all methods in `conjure_enum` are within a `class` instead of individual template functions in a `namespace`, you can reduce your typing with aliases:
 ```c++
 using ec = conjure_enum<component>;
-std::cout << std::format(R"("{}")\n", ec::enum_to_string(static_cast<component>(100)));
+std::cout << std::format("\"{}\"\n", ec::enum_to_string(static_cast<component>(100)));
 ```
 _output_
 ```CSV
@@ -227,7 +227,7 @@ _output_
 static constexpr std::array<std::tuple<std::string_view, std::string_view>, std::size_t> enum_scoped_entries;
 ```
 This static member is generated for your type. It is a `std::array` of a tuple of `std::string_view` pairs.
-It contains pairs of scoped and their unscoped string version. This array is sorted by unscoped name.
+It contains pairs of unscoped and their scoped string version. This array is sorted by unscoped name.
 For unscoped enums, these are identical.
 ```c++
 for(const auto [a, b] : conjure_enum<component>::enum_scoped_entries)

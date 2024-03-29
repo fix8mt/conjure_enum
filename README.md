@@ -448,6 +448,15 @@ _output_
 ```CSV
 0000001111
 ```
+You can use a bitset int too:
+```c++
+enum_bitset<numbers> b(15);
+std::cout << b << '\n';
+```
+_output_
+```CSV
+0000001111
+```
 
 # Building
 This implementation is header only. Apart from standard C++20 includes there are no external dependencies needed in your application.

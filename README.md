@@ -38,9 +38,9 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
 
 - Lightweight: Designed for performance without unnecessary overhead.
 - Header-Only: No external dependencies, simplifying integration into your project.
-- Modern C++20: Entirely constexpr for compile-time safety, efficiency and performance.
+- Modern C++20: Entirely `constexpr` for compile-time safety, efficiency and performance.
 - Simple & Easy to Use: Class-based approach with intuitive syntax.
-- Broad Support: Works with scoped and unscoped enums, enum aliases, and even with gaps.
+- Broad Support: Works with scoped and unscoped enums, enum aliases and even with gaps.
 - Wide Compiler Compatibility: Supports GCC, Clang, and upcoming MSVC support.
 - Confidence in Quality: Includes built-in unit tests for reliable functionality.
 

@@ -42,6 +42,7 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
 - Header-Only: No external dependencies, simplifying integration into your project.
 - Modern C++20: Entirely `constexpr` for compile-time safety, efficiency and performance.
 - Simple & Easy to Use: Class-based approach with intuitive syntax.
+- Convenient: `enum_bitsets` enhance `std::bitset`.
 - Broad Support: Works with scoped and unscoped enums, enum aliases and even with gaps.
 - Wide Compiler Compatibility: Supports GCC, Clang, and upcoming MSVC support.
 - Confidence in Quality: Includes built-in unit tests for reliable functionality.
@@ -428,6 +429,24 @@ for the bit positions (and names).
 
 We decided on this restriction for both simplicity and practicality - bitsets only really make sense when represented in this manner.
 
+## Creating an `enum_bitset`
+```c++
+enum_bitset<numbers> b(numbers::zero, numbers::one, numbers::two, numbers::three);
+std::cout << b << '\n';
+```
+_output_
+```CSV
+0000001111
+```
+```c++
+enum_bitset<numbers> b(0,1,2,3);
+std::cout << b << '\n';
+```
+_output_
+```CSV
+0000001111
+```
+
 # Building
 This implementation is header only. Apart from standard C++20 includes there are no external dependencies needed in your application.
 [Catch2](https://github.com/catchorg/Catch2.git) is used for the built-in unit tests.
@@ -477,6 +496,8 @@ FetchContent_Declare(conjure_enum GIT_REPOSITORY https://github.com/fix8mt/conju
 FetchContent_MakeAvailable(conjure_enum)
 target_include_directories(myproj PRIVATE ${conjure_enum_SOURCE_DIR}/include)
 ```
+
+# Notes
 
 [^1]:&copy; 2024 Fix8 Market Technologies Pty Ltd, David L. Dight.
 [^2]:&copy; 2019 - 2024 Daniil Goncharov

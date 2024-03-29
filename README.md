@@ -465,5 +465,4 @@ FetchContent_MakeAvailable(conjure_enum)
 target_include_directories(myproj PRIVATE ${conjure_enum_SOURCE_DIR}/include)
 ```
 
-[^1]:&copy; 2024 Fix8 Market Technologies Pty Ltd, David L. Dight. Released under the [MIT License](https://opensource.org/license/mit).
-[^2]:&copy; 2019 - 2024 Daniil Goncharov
+[^1]:&copy; 2024 Fix8 Market Technologies Pty Ltd, David L. Dight. Released under the [MIT License](https://opensource.org/license/mit) [^2]:&copy; 2019 - 2024 Daniil Goncharov

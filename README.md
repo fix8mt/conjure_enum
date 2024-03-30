@@ -496,17 +496,17 @@ All of the standard operators are supported. Assignment operators return a `enum
 
 | Operator | Description |
 | --- | --- |
-| <<= | right shift assign |
-| >>= | left shift assign |
-| &= | and assign |
-| \|= | or shift assign |
-| ^= | xor shift assign |
-| << | left shift |
-| >> | right shift |
-| & | and |
-| \| | or |
-| ^ | xor |
-| ~ | not |
+| `<<=` | right shift assign |
+| `>>=` | left shift assign |
+| `&=` | and assign |
+| `\|=` | or shift assign |
+| `^=` | xor shift assign |
+| `<<` | left shift |
+| `>>` | right shift |
+| `&` | and |
+| `\|` | or |
+| `^` | xor |
+| `~` | not |
 
 Operators work with enum values or integers:
 ```c++
@@ -527,17 +527,17 @@ All of the standard accessors and mutators are supported.
 
 | Method | Description |
 | --- | --- |
-| <<= | right shift assign |
-| >>= | left shift assign |
-| &= | and assign |
-| \|= | or shift assign |
-| ^= | xor shift assign |
-| << | left shift |
-| >> | right shift |
-| & | and |
-| \| | or |
-| ^ | xor |
-| ~ | not |
+| `test` | test for bit|
+| `set` | set bit(s)|
+| `clear` | clear bits(s)|
+| `flip` | flip bits(s)|
+| `to_ulong` | convert to `unsigned long` |
+| `to_ullong` | convert to `unsigned long long` |
+| `count` | count of bits on |
+| `size` | number of bits in bitset |
+| `operator[]` | test bitat position |
+| `test_any` | test for one or more bits |
+| `test_all` | test for all specified bits |
 
 Operators work with enum values or integers:
 

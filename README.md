@@ -7,8 +7,8 @@
 ### Lightweight header-only C++20 enum reflection
 
 ------------------------------------------------------------------------
-[![clang](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-CMake-clang-latest.yml/badge.svg)](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-CMake-clang-latest.yml)
-[![gcc](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-CMake-gcc-latest.yml/badge.svg)](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-CMake-gcc-latest.yml)
+[![clang](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-clang-latest.yml/badge.svg)](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-clang-latest.yml)
+[![gcc](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-gcc-latest.yml/badge.svg)](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-gcc-latest.yml)
 <a href="https://en.wikipedia.org/wiki/C%2B%2B20"><img src="https://github.com/fix8mt/conjure_enum/blob/master/assets/badgecpprequired.svg"></a>
 <a href="https://opensource.org/license/mit"><img src="https://github.com/fix8mt/conjure_enum/blob/master/assets/badgemitlic.svg"></a>
 
@@ -597,7 +597,7 @@ _output_
 ## `std::ostream& operator<<`, `to_string`
 ```c++
 friend constexpr std::ostream& operator<<(std::ostream& os, const enum_bitset& what);
-constexpr std::string to_string(char zero='0', char one='1') const noexcept
+constexpr std::string to_string(char zero='0', char one='1') const;
 ```
 Inserts default string representation into `std::ostream`.<br>
 Returns a `std::string` representation of the bitset. Optionally specify which characters to use for `0` and `1`.

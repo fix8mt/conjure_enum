@@ -91,8 +91,8 @@ path
 ```
 Also supplied is a template version of `enum_to_string`.
 ```c++
-std::cout << std::format("\"{}\"\n", conjure_enum<component>::enum_to_string<component::scheme>());
-std::cout << std::format("\"{}\"\n", conjure_enum<component1>::enum_to_string<scheme>());
+std::cout << std::format("\"{}\"\n", ec::enum_to_string<component::scheme>());
+std::cout << std::format("\"{}\"\n", ec::enum_to_string<scheme>());
 ```
 _output_
 ```CSV

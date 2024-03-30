@@ -605,7 +605,7 @@ target_include_directories(myproj PRIVATE ${conjure_enum_SOURCE_DIR}/include)
 # Notes
 ## Use of `std::string_view`
 All of the generated static strings and generated static tables obtained by `std::source_location` use `std::string_view`. No string copying is done, resulting in
-a single static string in your application. To demonstrate this, the default build of `examples` performs a [strip](https://en.wikipedia.org/wiki/Strip_(Unix)) on the executable.
+a single static string in your application. To demonstrate this, the default build of `example` performs a [strip](https://en.wikipedia.org/wiki/Strip_(Unix)) on the executable.
 
 <details><summary><i>output</i></summary>
 <p>

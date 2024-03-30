@@ -12,8 +12,8 @@ on:
 
 env:
   BUILD_TYPE: Release
-  CC: gcc-13
-  CXX: g++-13
+  CC: gcc-latest
+  CXX: g++-latest
 
 jobs:
   linux:

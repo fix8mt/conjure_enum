@@ -709,11 +709,11 @@ These definitions set the minimum and maximum enum values that are supported. Yo
 All methods in this class are _static_. You cannot instantiate an object of this type.
 
 ## Compiler support
-| Compiler | Version(s) | Notes |
-| :--- | :--- | :--- |
-| gcc | 11,12,13| `std::format` not complete in 11, 12; <= 10 unsupported|
-| clang | 15,16| <=14 unsupported |
-| msvc | ?| TBA |
+| Compiler | Version(s) | Notes | Unsupported |
+| :--- | :--- | :--- | :--- |
+| gcc | 11,12,13| `std::format` not complete in 11, 12 | <= 10 |
+| clang | 15,16| | <=14 |
+| msvc | ?| TBA | |
 
 ## Use of `std::string_view`
 All of the generated static strings and generated static tables obtained by `std::source_location` use the library defined `fixed_string`. No string copying is done at runtime, resulting in

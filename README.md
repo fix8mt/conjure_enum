@@ -712,6 +712,12 @@ All methods in this class are _static_. You cannot instantiate an object of this
 - Sharing static data and maintaining state across function calls.
 - Avoiding namespace pollution by encapsulating within a class.
 
+## Compiler support
+| Compiler | Version | Notes |
+| :--- | :--- | :--- |
+| gcc | 11,12,13| `std::format` not complete in 11, 12 so comment out in example.cpp |
+| clang | 15,16| catch2 fails in 15 so build without unittest
+
 ## Use of `std::string_view`
 All of the generated static strings and generated static tables obtained by `std::source_location` use the library defined `fixed_string`. No string copying is done at runtime, resulting in
 a single static string in your application. All `conjure_enum` methods that return strings _only_ return `std::string_view`.

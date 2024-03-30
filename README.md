@@ -610,7 +610,7 @@ a single static string in your application. To demonstrate this, the default bui
 <details><summary><i>output</i></summary>
 <p>
 
-```bash
+```CSV
 $ strings example
 /lib64/ld-linux-x86-64.so.2
 m.w(

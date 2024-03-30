@@ -444,7 +444,7 @@ _output_
 ```CSV
 0000001111
 ```
-You can use the underlying types as well:
+You can use the underlying type as well:
 ```c++
 enum_bitset<numbers> b(0,1,2,3);
 std::cout << b << '\n';
@@ -479,7 +479,7 @@ _output_
 0000001111
 0000001111
 ```
-A typical use of above is for parsing configuration bitsets. Here you can tell the contructor to throw an exception if a substring
+A typical use of the above is for parsing configuration bitsets. Here you can tell the contructor to throw an exception if a substring
 is invalid:
 ```c++
 try
@@ -684,6 +684,19 @@ target_include_directories(myproj PRIVATE ${conjure_enum_SOURCE_DIR}/include)
 ```
 
 # Notes
+## Limitations
+### `ENUM_MIN_VALUE`, `ENUM_MAX_VALUE`
+These are set by default unless you overrride them by defining them in your application. If you do define them they must appear before you include `conjure.hpp`.
+```c++
+#if not defined ENUM_MIN_VALUE
+# define ENUM_MIN_VALUE -128
+#endif
+#if not defined ENUM_MAX_VALUE
+# define ENUM_MAX_VALUE 127
+#endif
+```
+These definitions set the minimum and maximum enum values that are supported. You can adjust them to suit your requirements but for most use cases the defaults are sufficient.
+
 ## Use of `std::string_view`
 All of the generated static strings and generated static tables obtained by `std::source_location` use `std::string_view`. No string copying is done, resulting in
 a single static string in your application. To demonstrate this, the default build of `example` performs a [strip](https://en.wikipedia.org/wiki/Strip_(Unix)) on the executable.

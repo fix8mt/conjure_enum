@@ -532,7 +532,6 @@ _output_
 ```
 ## Standard accessors and mutators
 All of the standard accessors and mutators are supported.
-
 | Method | Description |
 | :--- | :--- |
 | `test` | test for bit(s)|
@@ -544,6 +543,11 @@ All of the standard accessors and mutators are supported.
 | `count` | count of bits on |
 | `size` | number of bits in bitset |
 | `operator[]` | test bit at position |
+
+Additional methods
+| Method | Description |
+| `set_all` | set all specified bits |
+| `clear_all` | clear all specified bits |
 | `test_any` | test for one or more bits |
 | `test_all` | test for all specified bits |
 

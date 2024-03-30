@@ -546,6 +546,7 @@ All of the standard accessors and mutators are supported.
 
 Additional methods
 | Method | Description |
+| :--- | :--- |
 | `set_all` | set all specified bits |
 | `clear_all` | clear all specified bits |
 | `test_any` | test for one or more bits |

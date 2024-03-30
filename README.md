@@ -503,7 +503,7 @@ exception: twenty
 All of the standard operators are supported. Assignment operators return a `enum_bitset&`, non-assigment operators return a `enum_bitset`.
 
 | Operator | Description |
-| --- | --- |
+| --- | :--- |
 | `<<=` | right shift assign |
 | `>>=` | left shift assign |
 | `&=` | and assign |
@@ -534,7 +534,7 @@ _output_
 All of the standard accessors and mutators are supported.
 
 | Method | Description |
-| --- | --- |
+| --- | :--- |
 | `test` | test for bit(s)|
 | `set` | set bit(s)|
 | `clear` | clear bits(s)|

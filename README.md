@@ -356,21 +356,13 @@ static constexpr std::string_view remove_scope(std::string_view what);
 ```
 Returns a `std::string_view` with scope removed; for unscoped returns unchanged
 ```c++
-for(const auto ev : conjure_enum<component>::enum_names) // scoped
-   std::cout << conjure_enum<component>::remove_scope(ev) << '\n';
+std::cout << conjure_enum::remove_scope<component>("component::path"sv) << '\n';
+std::cout << conjure_enum::remove_scope<component1>("path"sv) << '\n';
 ```
 _output_
 ```CSV
-scheme
-authority
-userinfo
-user
-password
-host
-port
 path
-query
-fragment
+path
 ```
 ## `add_scope`
 ```c++
@@ -379,10 +371,12 @@ static constexpr std::string_view add_scope(std::string_view what);
 Returns a `std::string_view` with scope added to the enum if the supplied enum string is valid but missing scope; for unscoped returns unchanged
 ```c++
 std::cout << conjure_enum::add_scope<component>("path"sv) << '\n';
+std::cout << conjure_enum::add_scope<component1>("path"sv) << '\n';
 ```
 _output_
 ```CSV
 component::path
+path
 ```
 ## `has_scope`
 ```c++
@@ -609,6 +603,255 @@ target_include_directories(myproj PRIVATE ${conjure_enum_SOURCE_DIR}/include)
 ```
 
 # Notes
+## Use of `std::string_view`
+Since all operations are using `std::string_view` no string copying is done. All of the static strings and generated static tables obtained by `std::source_location` result in
+a single static string in your application. To demonstrate this, the default build of `examples` performs a [`strip`](https://en.wikipedia.org/wiki/Strip_(Unix\)) on the executable.
+If you run the following linux command:
+
+```CSV
+$ strings example
+```
+<details><summary><i>output</i></summary>
+<p>
+
+```CSV
+/lib64/ld-linux-x86-64.so.2
+m.w(
+__gmon_start__
+_ITM_deregisterTMCloneTable
+_ITM_registerTMCloneTable
+_ZNKSt6locale4nameB5cxx11Ev
+_ZNSt6localeD1Ev
+_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_c
+_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE6insertEmmc
+_ZSt20__throw_length_errorPKc
+_ZNSo9_M_insertIbEERSoT_
+_ZNSt6locale7classicEv
+_ZSt9terminatev
+_ZNSt13runtime_errorD2Ev
+_ZSt8to_charsPcS_fSt12chars_format
+_ZNKSt6locale2id5_M_idEv
+_ZNSolsEi
+_ZSt8to_charsPcS_dSt12chars_formati
+_ZSt8to_charsPcS_dSt12chars_format
+_ZNSt6localeC1ERKS_
+_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE7reserveEm
+_ZNKSt13runtime_error4whatEv
+_ZSt8to_charsPcS_eSt12chars_formati
+_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE15_M_replace_coldEPcmPKcmm
+_ZNSt16invalid_argumentD1Ev
+_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE10_M_replaceEmmPKcm
+_ZSt8to_charsPcS_d
+_ZSt8to_charsPcS_e
+_ZSt8to_charsPcS_f
+_ZSt8to_charsPcS_fSt12chars_formati
+_ZNSt16invalid_argumentC1EPKc
+_ZNSt6localeC1Ev
+_ZNKSt6localeeqERKS_
+__cxa_throw
+_ZTVN10__cxxabiv117__class_type_infoE
+_ZSt9use_facetINSt7__cxx118numpunctIcEEERKT_RKSt6locale
+_ZSt17__throw_bad_allocv
+_ZTVN10__cxxabiv120__si_class_type_infoE
+__cxa_begin_catch
+_ZTISt13runtime_error
+_ZSt4cerr
+_ZdlPv
+_ZNSt13runtime_errorC2EPKc
+_ZSt16__throw_bad_castv
+_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEaSEOS4_
+_ZNSt6localeaSERKS_
+__cxa_allocate_exception
+_ZSt21ios_base_library_initv
+__gxx_personality_v0
+_ZNSt7__cxx118numpunctIcE2idE
+_ZSt16__ostream_insertIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_PKS3_l
+_ZNSo3putEc
+__cxa_demangle
+_ZTISt16invalid_argument
+_ZSt8to_charsPcS_eSt12chars_format
+_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc
+_Znwm
+_ZSt24__throw_out_of_range_fmtPKcz
+_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE9_M_mutateEmmPKcm
+_ZSt4cout
+__cxa_end_catch
+_ZSt19__throw_logic_errorPKc
+__cxa_free_exception
+frexp
+frexpf
+frexpl
+_Unwind_Resume
+__udivti3
+__cxa_finalize
+memmove
+__libc_start_main
+memset
+memchr
+free
+toupper
+strlen
+memcmp
+memcpy
+libstdc++.so.6
+libm.so.6
+libgcc_s.so.1
+libc.so.6
+GLIBC_2.14
+GLIBC_2.34
+GLIBC_2.2.5
+GCC_3.0
+GLIBCXX_3.4.32
+GLIBCXX_3.4.20
+GLIBCXX_3.4.31
+GLIBCXX_3.4.9
+GLIBCXX_3.4.21
+CXXABI_1.3
+GLIBCXX_3.4.29
+GLIBCXX_3.4
+T$(I9
+L$(H9
+D$(I9
+D$ H
+t$(H
+L$PH9
+H9l$PH
+l$8u[H
+\$ L
+T$(H9
+L$(I9
+t$ H
+\$ H
+H;D$HH
+L$(H9
+D$(I9
+L4#H
+D$#L
+L$#L)
+[A\A]A^A_]
+	w=E
+wdfD
+:t	@
+0123456789abcdef
+component::path
+component::scheme
+static const char *FIX8::conjure_enum<component>::epeek() [T = component, e = component::path]
+static const char *FIX8::conjure_enum<component>::tpeek() [T = component]
+"{}"
+{:9} {}
+{:<2} {}
+"{}"
+numbers::zero |numbers::two      |numbers::five| numbers::nine
+zero|two|five|	nine
+twenty,two,rubbish,nine
+exception:
+one|three|four|eight
+one 		three four eight
+basic_string::_M_replace_aux
+basic_string::_M_create
+basic_string_view::substr
+%s: __pos (which is %zu) > __size (which is %zu)
+static const char *FIX8::conjure_enum<component>::epeek() [T = component, e = component::scheme]
+static const char *FIX8::conjure_enum<component1>::epeek() [T = component1, e = scheme]
+basic_string: construction from null is not valid
+memory allocation failiure
+invalid mangled name
+invalid argument
+basic_string::append
+basic_string_view::copy
+format error: invalid arg-id in format string
+format error: format-spec contains invalid formatting options for 'bool'
+format error: width must be non-zero in format string
+format error: invalid width or precision in format-spec
+format error: unmatched '{' in format string
+format error: conflicting indexing style in format string
+format error: failed to parse format-spec
+true
+false
+format error: integer not representable as character
+format error: argument used for width or precision must be a non-negative integer
+basic_string::_M_replace
+format error: format-spec contains invalid formatting options for 'charT'
+format error: missing precision after '.' in format string
+basic_string::insert
+%s: __pos (which is %zu) > this->size() (which is %zu)
+format error: unmatched '}' in format string
+component::authority
+component::fragment
+component::host
+component::password
+component::path
+component::port
+component::query
+component::scheme
+component::user
+component::userinfo
+numbers1::two
+numbers1::one
+numbers1::zero
+numbers1::five
+numbers1::six
+numbers1::seven
+numbers1::eight
+numbers1::nine
+numbers::eight
+numbers::five
+numbers::four
+numbers::nine
+numbers::one
+numbers::seven
+numbers::six
+numbers::three
+numbers::two
+numbers::zero
+St5arrayISt5tupleIJSt17basic_string_viewIcSt11char_traitsIcEES4_EELm10EE
+NSt8__format9_Seq_sinkINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEEE
+NSt8__format9_Buf_sinkIcEE
+NSt8__format5_SinkIcEE
+NSt8__format10_Iter_sinkIcNS_10_Sink_iterIcEEEE
+NSt8__format19_Formatting_scannerINS_10_Sink_iterIcEEcEE
+NSt8__format8_ScannerIcEE
+St12format_error
+ !"#
+ !"#
+00010203040506070809101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899
+;*3$"
+zPLR
+GCC: (Ubuntu 13.2.0-4ubuntu3) 13.2.0
+Ubuntu clang version 16.0.6 (15)
+.shstrtab
+.interp
+.note.gnu.property
+.note.gnu.build-id
+.note.ABI-tag
+.gnu.hash
+.dynsym
+.dynstr
+.gnu.version
+.gnu.version_r
+.rela.dyn
+.rela.plt
+.init
+.plt.got
+.text
+.fini
+.rodata
+.eh_frame_hdr
+.eh_frame
+.gcc_except_table
+.init_array
+.fini_array
+.data.rel.ro
+.dynamic
+.got.plt
+.data
+.bss
+.comment
+```
+</p>
+</details>
+
+
 
 [^1]:&copy; 2024 Fix8 Market Technologies Pty Ltd, David L. Dight.
 [^2]:&copy; 2019 - 2024 Daniil Goncharov

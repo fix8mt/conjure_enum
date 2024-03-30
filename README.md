@@ -421,7 +421,20 @@ for the bit positions (and names).
 We decided on this restriction for both simplicity and practicality - bitsets only really make sense when represented in this manner.
 
 ## Creating an `enum_bitset`
-You can use the enum values directly. No need to `|` them - this is assumed. Just supply them comma seperated:
+```c++
+constexpr enum_bitset() = default;
+constexpr enum_bitset(U bits) noexcept : _present(bits) {}
+constexpr enum_bitset(std::string_view from, bool anyscope=false, char sep='|', bool ignore_errors=true);
+
+template<typename... E>
+requires(std::is_enum_v<E> && ...)
+constexpr enum_bitset(E... comp);
+
+template<typename... I>
+requires(std::is_integral_v<I> && ...)
+constexpr enum_bitset(I... comp);
+```
+You can use the enum values directly in your constructor. No need to `|` them - this is assumed. Just supply them comma seperated:
 ```c++
 enum_bitset<numbers> b(numbers::zero, numbers::one, numbers::two, numbers::three);
 std::cout << b << '\n';
@@ -449,7 +462,7 @@ _output_
 0000001111
 ```
 You can even use a delimited string based on your enum names.
-Optionally omit the scope and even specify your own delimiter:
+Optionally omit the scope and even specify your own delimiter.
 Substrings are trimmed of whitespace before lookup.
 ```c++
 enum_bitset<numbers> b("numbers::zero,numbers::one,numbers::two,numbers::three");
@@ -564,7 +577,7 @@ Return true if _any_ bits are on.
 
 ```c++
 if (enum_bitset<numbers> ec(15); ec)
-	std::cout << ec << '\n';
+   std::cout << ec << '\n';
 ```
 _output_
 ```CSV

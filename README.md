@@ -711,8 +711,8 @@ All methods in this class are _static_. You cannot instantiate an object of this
 ## Compiler support
 | Compiler | Version(s) | Notes |
 | :--- | :--- | :--- |
-| gcc | 11,12,13| `std::format` not complete in 11, 12 so comment out in example.cpp |
-| clang | 15,16| catch2 fails in 15 so build without unittest
+| gcc | 11,12,13| `std::format` not complete in 11, 12|
+| clang | 15,16| 14 unsuported }
 | msvc | ?| TBA |
 
 ## Use of `std::string_view`

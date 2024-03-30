@@ -430,7 +430,7 @@ for the bit positions (and names).
 We decided on this restriction for both simplicity and practicality - bitsets only really make sense when represented in this manner.
 
 ## Creating an `enum_bitset`
-You can use the enum values directly. No need to '|' them - this is assumed. Just supply them comma seperated:
+You can use the enum values directly. No need to `|` them - this is assumed. Just supply them comma seperated:
 ```c++
 enum_bitset<numbers> b(numbers::zero, numbers::one, numbers::two, numbers::three);
 std::cout << b << '\n';

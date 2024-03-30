@@ -1,4 +1,4 @@
-name: Ubuntu-CMake-gcc-latest
+name: Ubuntu-gcc-latest
 
 on:
   push:

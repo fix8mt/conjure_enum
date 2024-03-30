@@ -73,6 +73,7 @@ auto alias_name { conjure_enum<component>::enum_to_string(component::test) }; //
 auto noscope_name { conjure_enum<component1>::enum_to_string(path) };
 std::cout << name << '\n' << name_trim << '\n' << alias_name << '\n' << noscope_name << '\n';
 ```
+### Aliases
 Because all methods in `conjure_enum` are within a `class` instead of individual template functions in a `namespace`, you can reduce your
 typing with standard aliases:
 ```c++
@@ -335,14 +336,14 @@ _output_
 true
 false
 ```
-## `get_type`
+## `enum_type`
 ```c++
-static constexpr std::string_view get_type();
+static constexpr std::string_view enum_type();
 ```
 Returns a `std::string_view` of `T`.
 ```c++
-std::cout << conjure_enum<component>::get_type() << '\n';
-std::cout << conjure_enum<component1>::get_type() << '\n';
+std::cout << conjure_enum<component>::enum_type() << '\n';
+std::cout << conjure_enum<component1>::enum_type() << '\n';
 ```
 _output_
 ```CSV

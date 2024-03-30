@@ -7,8 +7,8 @@
 ### Lightweight header-only C++20 enum reflection
 
 ------------------------------------------------------------------------
-[![Ubuntu](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-CMake-clang-latest.yml)](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-CMake-clang-latest.yml)
-[![Ubuntu](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-CMake-gcc-latest.yml)](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-CMake-gcc-latest.yml)
+[![clang](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-CMake-clang-latest.yml/badge.svg)](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-CMake-clang-latest.yml)
+[![gcc](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-CMake-gcc-latest.yml/badge.svg)](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-CMake-gcc-latest.yml)
 <a href="https://en.wikipedia.org/wiki/C%2B%2B20"><img src="https://github.com/fix8mt/conjure_enum/blob/master/assets/badgecpprequired.svg"></a>
 <a href="https://opensource.org/license/mit"><img src="https://github.com/fix8mt/conjure_enum/blob/master/assets/badgemitlic.svg"></a>
 

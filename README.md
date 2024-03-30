@@ -695,7 +695,7 @@ target_include_directories(myproj PRIVATE ${conjure_enum_SOURCE_DIR}/include)
 ## enum limits
 ### `ENUM_MIN_VALUE`, `ENUM_MAX_VALUE`
 These are set by default unless you overrride them by defining them in your application.
-> [!NOTE]
+> [!TIP]
 > If you want to define these values they must appear _before_ you include `conjure_enum.hpp`.
 
 The following are the default settings:

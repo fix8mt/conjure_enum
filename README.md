@@ -697,6 +697,7 @@ target_include_directories(myproj PRIVATE ${conjure_enum_SOURCE_DIR}/include)
 These are set by default unless you overrride them by defining them in your application.
 > [!NOTE]
 > If you want to define these values they must appear _before_ you include `conjure_enum.hpp`.
+
 The following are the default settings:
 ```c++
 #if not defined ENUM_MIN_VALUE

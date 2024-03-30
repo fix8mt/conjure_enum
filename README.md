@@ -709,7 +709,7 @@ These definitions set the minimum and maximum enum values that are supported. Yo
 All methods in this class are _static_. You cannot instantiate an object of this type.
 
 ## Compiler support
-| Compiler | Version | Notes |
+| Compiler | Version(s) | Notes |
 | :--- | :--- | :--- |
 | gcc | 11,12,13| `std::format` not complete in 11, 12 so comment out in example.cpp |
 | clang | 15,16| catch2 fails in 15 so build without unittest

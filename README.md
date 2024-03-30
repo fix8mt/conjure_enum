@@ -425,7 +425,7 @@ We decided on this restriction for both simplicity and practicality - bitsets on
 constexpr enum_bitset() = default;
 constexpr enum_bitset(U bits);
 constexpr enum_bitset(std::string_view from, bool anyscope=false,
-	char sep='|', bool ignore_errors=true);
+   char sep='|', bool ignore_errors=true);
 
 template<typename... E>
 requires(std::is_enum_v<E> && ...)
@@ -435,7 +435,7 @@ template<typename... I>
 requires(std::is_integral_v<I> && ...)
 constexpr enum_bitset(I... comp);
 ```
-You can use the enum values directly in your constructor. No need to `|` them - this is assumed. Just supply them comma seperated:
+You can use the enum values directly in your constructor. No need to `|` them - this is assumed. Just supply them comma separated:
 ```c++
 enum_bitset<numbers> b(numbers::zero, numbers::one, numbers::two, numbers::three);
 std::cout << b << '\n';

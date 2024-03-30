@@ -424,7 +424,8 @@ We decided on this restriction for both simplicity and practicality - bitsets on
 ```c++
 constexpr enum_bitset() = default;
 constexpr enum_bitset(U bits);
-constexpr enum_bitset(std::string_view from, bool anyscope=false, char sep='|', bool ignore_errors=true);
+constexpr enum_bitset(std::string_view from, bool anyscope=false,
+	char sep='|', bool ignore_errors=true);
 
 template<typename... E>
 requires(std::is_enum_v<E> && ...)

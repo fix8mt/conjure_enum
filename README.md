@@ -555,8 +555,8 @@ true
 1000000001
 0000000001
 ```
-## Other functions
-# `operator bool`
+# Other functions
+## `operator bool`
 ```c++
 constexpr operator bool() const;
 ```
@@ -571,7 +571,7 @@ _output_
 0001001111
 ```
 
-# `std::ostream& operator<<`, `to_string`
+## `std::ostream& operator<<`, `to_string`
 ```c++
 friend constexpr std::ostream& operator<<(std::ostream& os, const enum_bitset& what);
 constexpr std::string to_string(char zero='0', char one='1') const noexcept

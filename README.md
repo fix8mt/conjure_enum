@@ -707,7 +707,8 @@ These definitions set the minimum and maximum enum values that are supported. Yo
 
 ## Use of `std::string_view`
 All of the generated static strings and generated static tables obtained by `std::source_location` use the library defined `fixed_string`. No string copying is done at runtime, resulting in
-a single static string in your application. To demonstrate this, the default build of `example` performs a [strip](https://en.wikipedia.org/wiki/Strip_(Unix)) on the executable.
+a single static string in your application. All `conjure_enum` methods that return strings _only_ return `std::string_view`.
+To demonstrate this, the default build of `example` performs a [strip](https://en.wikipedia.org/wiki/Strip_(Unix)) on the executable.
 
 <details><summary><i>shell output</i></summary>
 <p>

@@ -44,6 +44,7 @@
 #include <cstddef>
 #include <exception>
 #include <bitset>
+#include <bit>
 #include <array>
 
 //-----------------------------------------------------------------------------------------
@@ -141,11 +142,15 @@ private:
 	static constexpr std::string_view get_name() noexcept
 	{
 	/* clang
-		static const char *FIX8::conjure_enum<component>::epeek() [T = component, e = component::path]
+		static const char *FIX8::conjure_enum<component>::epeek() [T = component, e = component::path] // valid
 																										  |<--				-->|
+		static const char *FIX8::conjure_enum<component>::epeek() [T = component, e = (component)100] // invalid
+																								        |<--           -->|
 		gcc
-		static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::path; T = component]
+		static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::path; T = component] // valid
 																								  |<--				-->|
+		static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = (component)100; T = component] // invalid
+																								  |<--           -->|
 	*/
 		constexpr std::string_view from{epeek<e>()};
 #if defined(__clang__) || defined(__GNUC__)
@@ -318,13 +323,20 @@ public:
 
 //-----------------------------------------------------------------------------------------
 // bitset based on supplied enum
-// Note: the enum sequence must be continuous with the last enum value < count of enumerations
+// Note: your enum sequence must be continuous with the last enum value < count of enumerations
 //-----------------------------------------------------------------------------------------
-template<typename T, std::size_t countof=conjure_enum<T>::count()>
-requires (std::is_enum_v<T> && countof > 0 && static_cast<std::size_t>(conjure_enum<T>::enum_values.back()) < countof)
+template<typename T>
+concept valid_bitset_enum = std::is_enum_v<T> && requires(T)
+{
+	requires conjure_enum<T>::count() > 0;
+	requires static_cast<std::size_t>(conjure_enum<T>::enum_values.back()) < conjure_enum<T>::count();
+};
+
+template<valid_bitset_enum T>
 class enum_bitset
 {
 	using U = std::underlying_type_t<T>;
+	static constexpr auto countof { conjure_enum<T>::count() };
 
 	template<T val>
 	static constexpr U to_underlying() noexcept { return static_cast<U>(val); } // C++23: upgrade to std::to_underlying

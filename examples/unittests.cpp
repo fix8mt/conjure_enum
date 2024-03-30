@@ -32,6 +32,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include <string_view>
 #include <iostream>
+#include <sstream>
 #include <fix8/conjure_enum.hpp>
 
 //-----------------------------------------------------------------------------------------

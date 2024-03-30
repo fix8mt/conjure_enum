@@ -32,7 +32,9 @@
 #include <iostream>
 #include <iomanip>
 #include <memory>
-#include <format>
+#if __has_include(<format>)
+# include <format>
+#endif
 #if defined(__clang__) || defined(__GNUC__)
 #include <cxxabi.h>
 #endif
@@ -120,23 +122,29 @@ int main(int argc, char *argv[])
 	std::cout << std::boolalpha << cje::has_scope("scheme") << '\n';
 	std::cout << conjure_enum<component>::epeek<component::path>() << '\n';
 	std::cout << conjure_enum<component>::tpeek() << '\n';
+	std::cout << conjure_enum<component>::epeek<static_cast<component>(100)>() << '\n';
 	std::cout << demangle<decltype(conjure_enum<component>::enum_scoped_entries)>() << '\n';
 	for(const auto [a, b] : conjure_enum<component>::enum_scoped_entries)
 		std::cout << a << ' ' << b << '\n';
+	std::cout << "*******************************\n";
+#if __has_include(<format>)
 	std::cout << std::format(R"("{}")", conjure_enum<component>::enum_to_string(static_cast<component>(100))) << '\n';
 	std::cout << std::format(R"("{}")", conjure_enum<component>::enum_to_string(static_cast<component>(100))) << '\n';
+#endif
 	enum_bitset<numbers> a(0, 1, 2, 3);
 	std::cout << a << '\n';
 	enum_bitset<numbers> b(numbers::zero, numbers::one, numbers::two, numbers::three);
 	std::cout << b << '\n';
 	enum_bitset<numbers> c(15);
 	std::cout << c << '\n';
+#if __has_include(<format>)
 	for(const auto [a, b] : conjure_enum<component>::enum_scoped_entries)
 		std::cout << std::format("{:9} {}\n", a, b);
 	for(const auto [value, str] : conjure_enum<component>::enum_entries) // scoped
 		std::cout << std::format("{:<2} {}\n", static_cast<int>(value), str);
 	std::cout << std::format("{}\n", conjure_enum<component>::enum_contains("component::path"sv));
 	std::cout << std::format("\"{}\"\n", conjure_enum<component>::enum_to_string<component::scheme>());
+#endif
 	auto printer([](numbers val)
 	{
 		std::cout << conjure_enum<numbers>::enum_to_string(val) << '\n';
@@ -170,5 +178,6 @@ int main(int argc, char *argv[])
 	std::cout << ek << '\n';
 	enum_bitset<numbers> eh("one 		three four eight		"sv, true, ' ');
 	std::cout << eh << '\n';
+	//enum_bitset<component> et;
 	return 0;
 }

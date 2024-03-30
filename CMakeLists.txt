@@ -50,6 +50,7 @@ if(BUILD_UNITTESTS)
 	)
 	FetchContent_MakeAvailable(Catch2)
 	list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
+	target_compile_features(Catch2 PRIVATE cxx_std_20)
 endif()
 
 set(files example.cpp)

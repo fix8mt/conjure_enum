@@ -28,7 +28,7 @@ Based on the awesome work of [`magic_enum`](https://github.com/Neargye/magic_enu
 way to add reflection capabilities to your C++ enums. We've optimized the core functionality, focusing on the
 features developers really need while enhancing them for a more efficient and expressive experience.
 
-## Embrace the Future with C++20:
+## Embrace the Future with C++20
 
 `conjure_enum`[^1] takes full advantage of the latest C++20 features. We've leveraged the convenience of `std::source_location` and
 unlocked the potential of `constexpr` algorithms and concepts. This translates to:
@@ -36,7 +36,7 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
 - Improved Performance: Optimized code for faster and smoother operation - get the compiler to do more!
 - Enhanced Developer Experience: Write cleaner, more concise, and more powerful C++ code.
 
-## Key Benefits:
+## Key Benefits
 
 - Lightweight: Designed for performance without unnecessary overhead.
 - Header-Only: No external dependencies, simplifying integration into your project.
@@ -47,7 +47,7 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
 - Wide Compiler Compatibility: Supports GCC, Clang, and upcoming MSVC support.
 - Confidence in Quality: Includes built-in unit tests for reliable functionality.
 
-## This library empowers you to:
+## This library empowers you to
 
 - Gain deeper insights into your enums at runtime.
 - Unlock the power of metaprogramming for advanced code generation techniques.

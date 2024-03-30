@@ -404,6 +404,7 @@ These functions return the `std::source_location` `const char*` strings for the 
 The actual output is implementation dependent.
 > [!TIP]
 > When reporting an issue please include the output of these methods.
+
 The following is the output with GCC 13.
 ```c++
 std::cout << conjure_enum<component>::tpeek() << '\n';

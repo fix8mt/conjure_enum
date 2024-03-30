@@ -561,8 +561,7 @@ true
 friend constexpr std::ostream& operator<<(std::ostream& os, const enum_bitset& what);
 constexpr std::string to_string(char zero='0', char one='1') const noexcept
 ```
-Inserts default string representation into `std::ostream`.
-
+Inserts default string representation into `std::ostream`.<br>
 Returns a `std::string` representation of the bitset. Optionally specify which characters to use for `0` and `1`.
 
 ```c++

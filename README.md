@@ -425,7 +425,7 @@ static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = componen
 `enum_bitset` is a convenient and useful way of creating bitsets and is based on `std::bitset` except it uses your enum (scoped or unscoped)
 for the bit positions (and names).
 > [!NOTE]
-> Your enum must start at 0 and be continuous. The last value must be less than the count of enumerations.
+> Your enum must start at `0` and be continuous. The last value must be less than the count of enumerations.
 
 We decided on this restriction for both simplicity and practicality - bitsets only really make sense when represented in this manner.
 
@@ -491,6 +491,25 @@ _output_
 ```CSV
 exception: twenty
 ```
+## Standard bit operators
+All of the standard operators are supported:
+```c++
+<<=,>>=,&=,|=,^=,&=,|=,^=
+<<,>>,&,|,^,&,|,^,~
+```
+Operators work with enum values or integers:
+```c++
+try
+{
+   enum_bitset<numbers> b("zero,twenty,two,three", true, ',', false);
+   std::cout << b << '\n';
+}
+catch(const std::invalid_argument& e)
+{
+   std::cerr << "exception: " << e.what() << '\n';
+}
+```
+_output_
 
 # Building
 This implementation is header only. Apart from standard C++20 includes there are no external dependencies needed in your application.

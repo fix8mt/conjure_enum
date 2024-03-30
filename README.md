@@ -694,7 +694,7 @@ target_include_directories(myproj PRIVATE ${conjure_enum_SOURCE_DIR}/include)
 # Notes
 ## Limitations
 ### `ENUM_MIN_VALUE`, `ENUM_MAX_VALUE`
-These are set by default unless you overrride them by defining them in your application. If you do define them they must appear before you include `conjure.hpp`.
+These are set by default unless you overrride them by defining them in your application. If you do define them they must appear _before_ you include `conjure_enum.hpp`.
 ```c++
 #if not defined ENUM_MIN_VALUE
 # define ENUM_MIN_VALUE -128
@@ -947,6 +947,7 @@ Ubuntu clang version 16.0.6 (15)
 .data
 .bss
 .comment
+$
 ```
 </p>
 </details>

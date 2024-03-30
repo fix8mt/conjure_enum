@@ -555,6 +555,22 @@ true
 1000000001
 0000000001
 ```
+## Other functions
+# `to__string`
+```c++
+constexpr std::string to_string(char zero='0', char one='1') const noexcept
+```
+Returns a `std::string` representation of the bitset. Optionally specify which characters to use for `0` and `1`.
+```c++
+enum_bitset<numbers> ec(numbers::one,numbers::three,numbers::six);
+std::cout << ec << '\n';
+std::cout << ec.to_string('-', '+') << '\n';
+```
+_output_
+```CSV
+0001001010
+---+--+-+-
+```
 
 # Building
 This implementation is header only. Apart from standard C++20 includes there are no external dependencies needed in your application.

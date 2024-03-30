@@ -423,7 +423,7 @@ We decided on this restriction for both simplicity and practicality - bitsets on
 ## Creating an `enum_bitset`
 ```c++
 constexpr enum_bitset() = default;
-constexpr enum_bitset(U bits) noexcept : _present(bits) {}
+constexpr enum_bitset(U bits);
 constexpr enum_bitset(std::string_view from, bool anyscope=false, char sep='|', bool ignore_errors=true);
 
 template<typename... E>

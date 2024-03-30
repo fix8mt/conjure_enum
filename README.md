@@ -574,6 +574,35 @@ _output_
 0001001010
 ---+--+-+-
 ```
+## `for_each`
+```c++
+template<typename Fn, typename... Args>
+requires std::invocable<Fn&&, T, Args...>
+[[maybe_unused]] constexpr auto for_each(Fn&& func, Args&&... args);
+```
+Call supplied invocable for _each bit that is on_. Similar to `std::for_each` except first parameter of your invocable must accept an enum value (passed by `for_each`).
+Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. When using a member function, the _first_ parameter
+passed by your call must be the `this` pointer of the object. If you wish to pass a `reference` parameter, you must wrap it in
+`std::ref`.
+
+Returns `std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...)` which can be stored or immediately invoked.
+```c++
+auto printer([](numbers val)
+{
+	std::cout << conjure_enum<numbers>::enum_to_string(val) << '\n';
+});
+enum_bitset<numbers> ec(numbers::zero,numbers::two,numbers::five,numbers::nine);
+std::cout << ec << '\n';
+ec.for_each(printer);
+```
+_output_
+```CSV
+1000100101
+numbers::zero
+numbers::two
+numbers::five
+numbers::nine
+```
 
 # Building
 This implementation is header only. Apart from standard C++20 includes there are no external dependencies needed in your application.
@@ -623,35 +652,6 @@ include(FetchContent)
 FetchContent_Declare(conjure_enum GIT_REPOSITORY https://github.com/fix8mt/conjure_enum.git)
 FetchContent_MakeAvailable(conjure_enum)
 target_include_directories(myproj PRIVATE ${conjure_enum_SOURCE_DIR}/include)
-```
-## `for_each`
-```c++
-template<typename Fn, typename... Args>
-requires std::invocable<Fn&&, T, Args...>
-[[maybe_unused]] constexpr auto for_each(Fn&& func, Args&&... args);
-```
-Call supplied invocable for _each bit that is on_. Similar to `std::for_each` except first parameter of your invocable must accept an enum value (passed by `for_each`).
-Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. When using a member function, the _first_ parameter
-passed by your call must be the `this` pointer of the object. If you wish to pass a `reference` parameter, you must wrap it in
-`std::ref`.
-
-Returns `std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...)` which can be stored or immediately invoked.
-```c++
-auto printer([](numbers val)
-{
-	std::cout << conjure_enum<numbers>::enum_to_string(val) << '\n';
-});
-enum_bitset<numbers> ec(numbers::zero,numbers::two,numbers::five,numbers::nine);
-std::cout << ec << '\n';
-ec.for_each(printer);
-```
-_output_
-```CSV
-1000100101
-numbers::zero
-numbers::two
-numbers::five
-numbers::nine
 ```
 
 # Notes

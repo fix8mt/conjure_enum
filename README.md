@@ -18,7 +18,7 @@
 |[Examples](#examples)| General examples|
 |[Examples with enum_bitset](#examples-using-enum_bitset)| `enum_bitset` examples|
 |[Building](#building)| How to build or include|
-|[Notes](#notes)| Notes on the implementation, restrictions and caveats|
+|[Notes](#notes)| Notes on the implementation, limits, etc|
 
 ------------------------------------------------------------------------
 # Introduction
@@ -692,11 +692,12 @@ target_include_directories(myproj PRIVATE ${conjure_enum_SOURCE_DIR}/include)
 ```
 
 # Notes
-## Limitations
+## enum limits
 ### `ENUM_MIN_VALUE`, `ENUM_MAX_VALUE`
 These are set by default unless you overrride them by defining them in your application.
 > [!NOTE]
 > If you want to define these values they must appear _before_ you include `conjure_enum.hpp`.
+The following are the default settings:
 ```c++
 #if not defined ENUM_MIN_VALUE
 # define ENUM_MIN_VALUE -128

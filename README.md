@@ -457,8 +457,9 @@ _output_
 ```CSV
 0000001111
 ```
-You can even use a delimited string based on your enum names. Substrings are trimmed before lookup.
+You can even use a delimited string based on your enum names.
 Optionally omit the scope and even specify your own delimiter:
+Substrings are trimmed of whitespace before lookup.
 ```c++
 enum_bitset<numbers> b("numbers::zero,numbers::one,numbers::two,numbers::three");
 std::cout << b << '\n';
@@ -478,7 +479,7 @@ is invalid:
 ```c++
 try
 {
-   enum_bitset<numbers> b("numbers::zero,numbers::twenty,numbers::two,numbers::three", false, ',', false);
+   enum_bitset<numbers> b("zero,twenty,two,three", true, ',', false);
    std::cout << b << '\n';
 }
 catch(const std::invalid_argument& e)
@@ -488,7 +489,7 @@ catch(const std::invalid_argument& e)
 ```
 _output_
 ```CSV
-exception: numbers::twenty
+exception: twenty
 ```
 
 # Building

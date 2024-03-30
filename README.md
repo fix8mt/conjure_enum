@@ -656,7 +656,7 @@ cmake ..
 make -j4
 make test (or ctest)
 ```
-By default the unit tests are built (will download Catch2). To prevent this, pass the following to cmake:
+By default the unit tests are built (which will download Catch2). To prevent this, pass the following to cmake:
 ```bash
 cmake -DBUILD_UNITTESTS=false ..
 ```
@@ -704,6 +704,13 @@ These are set by default unless you overrride them by defining them in your appl
 #endif
 ```
 These definitions set the minimum and maximum enum values that are supported. You can adjust them to suit your requirements but for most use cases the defaults are sufficient.
+
+## `class conjure_enum` is not constructible
+All methods in this class are static. You cannot instantiate an object of this type. This is preferable to using a namespace:
+- Grouping Related Functionality: by encapsulating related functions within this class, we can group them logically, providing better organization and encapsulation.
+- Encapsulation: Using a class with static members allows us to encapsulate related functionality together and control access to it. We can make certain members private or protected to hide implementation details.
+- Data Sharing: Static members within the class can share static data, providing a way to maintain state across multiple function calls.
+- Namespace Pollution: If you have many related functions within a namespace, it can lead to namespace pollution and potential name clashes. By encapsulating them within a class, you can avoid polluting the global namespace.
 
 ## Use of `std::string_view`
 All of the generated static strings and generated static tables obtained by `std::source_location` use the library defined `fixed_string`. No string copying is done at runtime, resulting in

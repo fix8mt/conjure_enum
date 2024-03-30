@@ -556,6 +556,7 @@ true
 0000000001
 ```
 ## Other functions
+# `operator bool`
 ```c++
 constexpr operator bool() const;
 ```

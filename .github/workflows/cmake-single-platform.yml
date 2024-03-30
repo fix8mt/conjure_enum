@@ -14,8 +14,17 @@ on:
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
-  CC: gcc-13
-  CXX: g++-13
+  
+strategy:
+    matrix:
+      include:
+          - cpp_compiler: g++-latest
+            c_compiler: gcc-latest
+          - cpp_compiler: clang++-latest
+            c_compiler: clang-latest
+
+  #CC: gcc-latest
+  #CXX: g++-latest
 
 jobs:
   linux:

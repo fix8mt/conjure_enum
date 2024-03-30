@@ -493,10 +493,21 @@ exception: twenty
 ```
 ## Standard bit operators
 All of the standard operators are supported:
-```c++
-<<=,>>=,&=,|=,^=,&=,|=,^=
-<<,>>,&,|,^,&,|,^,~
-```
+
+| Operator | Description |
+| --- | --- |
+| <<= | right shift assign |
+| >>= | left shift assign |
+| &= | and assign |
+| |= | or shift assign |
+| ^= | xor shift assign |
+| << | left shift |
+| >> | right shift |
+| & | and |
+| || | or |
+| ^ | xor |
+| ~ | not |
+
 Operators work with enum values or integers:
 ```c++
 try

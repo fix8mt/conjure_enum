@@ -556,11 +556,14 @@ true
 0000000001
 ```
 ## Other functions
-# `to__string`
+# `std::ostream& operator<<`, `to_string`
 ```c++
+friend constexpr std::ostream& operator<<(std::ostream& os, const enum_bitset& what);
 constexpr std::string to_string(char zero='0', char one='1') const noexcept
 ```
+Inserts default string representation into `std::ostream`.
 Returns a `std::string` representation of the bitset. Optionally specify which characters to use for `0` and `1`.
+
 ```c++
 enum_bitset<numbers> ec(numbers::one,numbers::three,numbers::six);
 std::cout << ec << '\n';

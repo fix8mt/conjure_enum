@@ -556,6 +556,20 @@ true
 0000000001
 ```
 ## Other functions
+```c++
+constexpr operator bool() const;
+```
+Return true if _any_ bits are on.
+
+```c++
+if (enum_bitset<numbers> ec(15); ec)
+	std::cout << ec << '\n';
+```
+_output_
+```CSV
+0001001111
+```
+
 # `std::ostream& operator<<`, `to_string`
 ```c++
 friend constexpr std::ostream& operator<<(std::ostream& os, const enum_bitset& what);
@@ -589,7 +603,7 @@ Returns `std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<A
 ```c++
 auto printer([](numbers val)
 {
-	std::cout << conjure_enum<numbers>::enum_to_string(val) << '\n';
+   std::cout << conjure_enum<numbers>::enum_to_string(val) << '\n';
 });
 enum_bitset<numbers> ec(numbers::zero,numbers::two,numbers::five,numbers::nine);
 std::cout << ec << '\n';

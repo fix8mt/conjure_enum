@@ -403,7 +403,7 @@ static consteval const char *epeek();
 These functions return the `std::source_location` `const char*` strings for the enum type or enum value.
 The actual output is implementation dependent.
 > [!TIP]
-> When reporting an issue please include the output of these methods.
+> If you want to report an issue please include the output of these methods.
 
 The following is the output with GCC 13.
 ```c++
@@ -704,7 +704,7 @@ These definitions set the minimum and maximum enum values that are supported. Yo
 All of the generated static strings and generated static tables obtained by `std::source_location` use the library defined `fixed_string`. No string copying is done at runtime, resulting in
 a single static string in your application. To demonstrate this, the default build of `example` performs a [strip](https://en.wikipedia.org/wiki/Strip_(Unix)) on the executable.
 
-<details><summary><i>output</i></summary>
+<details><summary><i>shell output</i></summary>
 <p>
 
 ```CSV

@@ -499,12 +499,12 @@ All of the standard operators are supported:
 | <<= | right shift assign |
 | >>= | left shift assign |
 | &= | and assign |
-| |= | or shift assign |
+| \|= | or shift assign |
 | ^= | xor shift assign |
 | << | left shift |
 | >> | right shift |
 | & | and |
-| || | or |
+| \| | or |
 | ^ | xor |
 | ~ | not |
 

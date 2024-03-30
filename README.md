@@ -705,7 +705,7 @@ These are set by default unless you overrride them by defining them in your appl
 ```
 These definitions set the minimum and maximum enum values that are supported. You can adjust them to suit your requirements but for most use cases the defaults are sufficient.
 
-## `class conjure_enum` is not constructible
+## class `conjure_enum` is not constructible
 All methods in this class are _static_. You cannot instantiate an object of this type.
 
 ## Compiler support

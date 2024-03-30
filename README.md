@@ -707,10 +707,10 @@ These definitions set the minimum and maximum enum values that are supported. Yo
 
 ## `class conjure_enum` is not constructible
 All methods in this class are _static_. You cannot instantiate an object of this type. This is preferable to using a namespace because:
-- Grouping related functionality: by encapsulating related functions within this class, we can group them logically, providing better organization and encapsulation.
-- Encapsulation: Using a class with static members allows us to encapsulate related functionality together and control access to it. We can make certain members private or protected to hide implementation details.
-- Data sharing: Static members within the class can share static data, providing a way to maintain state across multiple function calls.
-- Namespace pollution: If you have many related functions within a namespace, it can lead to namespace pollution and potential name clashes. By encapsulating them within a class, you can avoid this.
+- Grouping related functionality and providing better organization.
+- Encapsulation by controlling access to members.
+- Sharing static data and maintaining state across function calls.
+- Avoiding namespace pollution by encapsulating within a class.
 
 ## Use of `std::string_view`
 All of the generated static strings and generated static tables obtained by `std::source_location` use the library defined `fixed_string`. No string copying is done at runtime, resulting in

@@ -492,7 +492,7 @@ _output_
 exception: twenty
 ```
 ## Standard bit operators
-All of the standard operators are supported:
+All of the standard operators are supported. Assignment operators return a `enum_bitset&`, non-assigment operators return a `enum_bitset`.
 
 | Operator | Description |
 | --- | --- |
@@ -510,17 +510,17 @@ All of the standard operators are supported:
 
 Operators work with enum values or integers:
 ```c++
-try
-{
-   enum_bitset<numbers> b("zero,twenty,two,three", true, ',', false);
-   std::cout << b << '\n';
-}
-catch(const std::invalid_argument& e)
-{
-   std::cerr << "exception: " << e.what() << '\n';
-}
+enum_bitset<numbers> b(numbers::zero, numbers::one, numbers::two, numbers::three);
+std::cout << b << '\n';
+std::cout << (b & 0b111) << '\n';
+b ^= numbers::two;
+std::cout << b << '\n';
 ```
 _output_
+0000001111
+0000000111
+0000001011
+```
 
 # Building
 This implementation is header only. Apart from standard C++20 includes there are no external dependencies needed in your application.

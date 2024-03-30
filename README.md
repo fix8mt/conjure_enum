@@ -24,13 +24,13 @@
 # Introduction
 ## Supercharge Your C++ Enums with This Lightweight Reflection Library!
 
-Based on the awesome work of [magic_enum](https://github.com/Neargye/magic_enum)[^2], this library offers a streamlined and powerful
+Based on the awesome work of [`magic_enum`](https://github.com/Neargye/magic_enum)[^2], this library offers a streamlined and powerful
 way to add reflection capabilities to your C++ enums. We've optimized the core functionality, focusing on the
 features developers really need while enhancing them for a more efficient and expressive experience.
 
 ## Embrace the Future with C++20:
 
-conjure_enum[^1] takes full advantage of the latest C++20 features. We've leveraged the convenience of `std::source_location` and
+`conjure_enum`[^1] takes full advantage of the latest C++20 features. We've leveraged the convenience of `std::source_location` and
 unlocked the potential of `constexpr` algorithms and concepts. This translates to:
 
 - Improved Performance: Optimized code for faster and smoother operation - get the compiler to do more!
@@ -522,6 +522,24 @@ _output_
 0000000111
 0000001011
 ```
+## Standard accessors and mutators
+All of the standard accessors and mutators are supported.
+
+| Method | Description |
+| --- | --- |
+| <<= | right shift assign |
+| >>= | left shift assign |
+| &= | and assign |
+| \|= | or shift assign |
+| ^= | xor shift assign |
+| << | left shift |
+| >> | right shift |
+| & | and |
+| \| | or |
+| ^ | xor |
+| ~ | not |
+
+Operators work with enum values or integers:
 
 # Building
 This implementation is header only. Apart from standard C++20 includes there are no external dependencies needed in your application.

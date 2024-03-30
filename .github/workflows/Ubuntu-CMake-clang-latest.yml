@@ -12,8 +12,8 @@ on:
 
 env:
   BUILD_TYPE: Release
-  CC: clang-16
-  CXX: clang++-16
+  CC: clang-15
+  CXX: clang++-15
 
 jobs:
   linux:

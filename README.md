@@ -605,12 +605,13 @@ target_include_directories(myproj PRIVATE ${conjure_enum_SOURCE_DIR}/include)
 # Notes
 ## Use of `std::string_view`
 Since all operations are using `std::string_view` no string copying is done. All of the static strings and generated static tables obtained by `std::source_location` result in
-a single static string in your application. To demonstrate this, the default build of `examples` performs a [`strip`](https://en.wikipedia.org/wiki/Strip_(Unix\)) on the executable.
+a single static string in your application. To demonstrate this, the default build of `examples` performs a [strip](https://en.wikipedia.org/wiki/Strip_(Unix)) on the executable.
 If you run the following linux command:
 
 ```CSV
 $ strings example
 ```
+And it can be observed that there is only one copy of the scoped or unscoped enum string in the executable:
 <details><summary><i>output</i></summary>
 <p>
 

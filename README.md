@@ -401,7 +401,9 @@ template<T e>
 static consteval const char *epeek();
 ```
 These functions return the `std::source_location` `const char*` strings for the enum type or enum value.
-The actual output is implementation dependent. When reporting an issue please include the output of these methods.
+The actual output is implementation dependent.
+> [!TIP]
+> When reporting an issue please include the output of these methods.
 The following is the output with GCC 13.
 ```c++
 std::cout << conjure_enum<component>::tpeek() << '\n';
@@ -698,7 +700,7 @@ These are set by default unless you overrride them by defining them in your appl
 These definitions set the minimum and maximum enum values that are supported. You can adjust them to suit your requirements but for most use cases the defaults are sufficient.
 
 ## Use of `std::string_view`
-All of the generated static strings and generated static tables obtained by `std::source_location` use `std::string_view`. No string copying is done, resulting in
+All of the generated static strings and generated static tables obtained by `std::source_location` use the library defined `fixed_string`. No string copying is done at runtime, resulting in
 a single static string in your application. To demonstrate this, the default build of `example` performs a [strip](https://en.wikipedia.org/wiki/Strip_(Unix)) on the executable.
 
 <details><summary><i>output</i></summary>

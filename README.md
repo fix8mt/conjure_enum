@@ -544,6 +544,7 @@ All of the standard accessors and mutators are supported.
 | `count` | count of bits on |
 | `size` | number of bits in bitset |
 | `operator[]` | test bit at position |
+| :--- | :--- |
 | `test_any` | test for one or more bits |
 | `test_all` | test for all specified bits |
 

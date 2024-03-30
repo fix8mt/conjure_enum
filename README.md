@@ -715,8 +715,8 @@ All methods in this class are _static_. You cannot instantiate an object of this
 ## Compiler support
 | Compiler | Version(s) | Notes | Unsupported |
 | :--- | :--- | :--- | ---: |
-| gcc | `11`, `12`, `13`| `std::format` not complete in `11`, `12` | `<=10` |
-| clang | `15`, `16`| | `<=14` |
+| gcc | `11`, `12`, `13`| `std::format` not complete in `11`, `12` | `<= 10` |
+| clang | `15`, `16`| Catch2 needs `cxx_std_20` in `15` | `<= 14` |
 | msvc | TBA| | |
 
 ## Use of `std::string_view`

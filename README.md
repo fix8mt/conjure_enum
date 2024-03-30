@@ -536,20 +536,24 @@ as variadic arguments:
 enum_bitset<numbers> eb;
 eb.set_all<numbers::zero,numbers::two,numbers::five,numbers::nine>();
 std::cout << eb << '\n';
-std::cout << eb.test_all<numbers::zero,numbers::two,numbers::five,numbers::nine>() << '\n';
-eb.clear_all<numbers::five>();
-std::cout << eb.test_all<numbers::zero,numbers::two,numbers::five,numbers::nine>() << '\n';
+std::cout << std::boolalpha << eb.test_all<numbers::zero,numbers::two,numbers::five,numbers::nine>() << '\n';
+eb.clear_all<numbers::five,numbers::two>();
+std::cout << std::boolalpha << eb.test_all(0, 2, 5, 9) << '\n';
+std::cout << std::boolalpha << eb.test_any(0, 2, 5, 9) << '\n';
+std::cout << std::boolalpha << eb.test_all(numbers::zero,numbers::nine) << '\n';
 std::cout << eb << '\n';
-eb.clear(numbers::nine);
-std::cout << eb << '\n';
-enum_bitset<numbers> ec(numbers::one,numbers::three,numbers::six);
+eb.clear(numbers::nine)
 std::cout << ec << '\n';
 ```
 _output_
 ```
-0000001111
-0000000111
-0000001011
+1000100101
+true
+false
+true
+true
+1000000001
+0000000001
 ```
 
 # Building

@@ -706,11 +706,7 @@ These are set by default unless you overrride them by defining them in your appl
 These definitions set the minimum and maximum enum values that are supported. You can adjust them to suit your requirements but for most use cases the defaults are sufficient.
 
 ## `class conjure_enum` is not constructible
-All methods in this class are _static_. You cannot instantiate an object of this type. This is preferable to using a namespace because:
-- Grouping related functionality and providing better organization.
-- Encapsulation by controlling access to members.
-- Sharing static data and maintaining state across function calls.
-- Avoiding namespace pollution by encapsulating within a class.
+All methods in this class are _static_. You cannot instantiate an object of this type.
 
 ## Compiler support
 | Compiler | Version | Notes |

@@ -527,7 +527,7 @@ All of the standard accessors and mutators are supported.
 
 | Method | Description |
 | --- | --- |
-| `test` | test for bit|
+| `test` | test for bit(s)|
 | `set` | set bit(s)|
 | `clear` | clear bits(s)|
 | `flip` | flip bits(s)|
@@ -535,11 +535,31 @@ All of the standard accessors and mutators are supported.
 | `to_ullong` | convert to `unsigned long long` |
 | `count` | count of bits on |
 | `size` | number of bits in bitset |
-| `operator[]` | test bitat position |
+| `operator[]` | test bit at position |
 | `test_any` | test for one or more bits |
 | `test_all` | test for all specified bits |
 
-Operators work with enum values or integers:
+All accessors and mutators work with enum values or integers as with operators. They also work with multiple values, either as template paramters or
+as variadic arguments:
+```c++
+enum_bitset<numbers> eb;
+eb.set_all<numbers::zero,numbers::two,numbers::five,numbers::nine>();
+std::cout << eb << '\n';
+std::cout << eb.test_all<numbers::zero,numbers::two,numbers::five,numbers::nine>() << '\n';
+eb.clear_all<numbers::five>();
+std::cout << eb.test_all<numbers::zero,numbers::two,numbers::five,numbers::nine>() << '\n';
+std::cout << eb << '\n';
+eb.clear(numbers::nine);
+std::cout << eb << '\n';
+enum_bitset<numbers> ec(numbers::one,numbers::three,numbers::six);
+std::cout << ec << '\n';
+```
+_output_
+```
+0000001111
+0000000111
+0000001011
+```
 
 # Building
 This implementation is header only. Apart from standard C++20 includes there are no external dependencies needed in your application.

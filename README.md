@@ -87,14 +87,10 @@ component::path
 path
 ""
 ```
-## `get_name`
+Also supplied is a template version of `enum_to_string`.
 ```c++
-static constexpr std::string_view get_name();
-```
-Returns a `std::string_view` or empty if not found. This is the template version of `enum_to_string`.
-```c++
-std::cout << std::format("\"{}\"\n", conjure_enum<component>::get_name<component::scheme>());
-std::cout << std::format("\"{}\"\n", conjure_enum<component1>::get_name<scheme>());
+std::cout << std::format("\"{}\"\n", conjure_enum<component>::enum_to_string<component::scheme>());
+std::cout << std::format("\"{}\"\n", conjure_enum<component1>::enum_to_string<scheme>());
 ```
 _output_
 ```CSV

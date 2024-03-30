@@ -405,12 +405,12 @@ The actual output is implementation dependent.
 > [!TIP]
 > If you want to report an issue please include the output of these methods.
 
-The following is the output with GCC 13.
+The following code:
 ```c++
 std::cout << conjure_enum<component>::tpeek() << '\n';
 std::cout << conjure_enum<component>::epeek<component::scheme>() << '\n';
 ```
-_output_
+Generates this output:
 ```CSV
 static consteval const char* FIX8::conjure_enum<T>::tpeek() [with T = component]
 static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::scheme; T = component]

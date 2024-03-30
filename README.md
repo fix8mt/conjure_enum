@@ -609,7 +609,8 @@ a single static string in your application. To demonstrate this, the default bui
 
 <details><summary><i>output</i></summary>
 <p>
-```CSV
+
+```bash
 $ strings example
 /lib64/ld-linux-x86-64.so.2
 m.w(
@@ -846,7 +847,7 @@ Ubuntu clang version 16.0.6 (15)
 ```
 </p>
 </details>
-It can be observed that there is only one copy of the scoped or unscoped enum value string in the executable:
+It can be observed that there is only one copy of the scoped or unscoped enum value string in the executable.
 
 [^1]:&copy; 2024 Fix8 Market Technologies Pty Ltd, David L. Dight.
 [^2]:&copy; 2019 - 2024 Daniil Goncharov

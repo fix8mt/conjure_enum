@@ -43,7 +43,7 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
 - Header-Only: No external dependencies, simplifying integration into your project.
 - Modern C++20: Entirely `constexpr` for compile-time safety, efficiency and performance.
 - Simple & Easy to Use: Class-based approach with intuitive syntax.
-- Convenient: `enum_bitsets` enhance `std::bitset`.
+- Convenient: `enum_bitsets` enhances `std::bitset`.
 - Broad Support: Works with scoped and unscoped enums, enum aliases and even with gaps.
 - Wide Compiler Compatibility: Supports GCC, Clang, and upcoming MSVC support.
 - Confidence in Quality: Includes built-in unit tests for reliable functionality.
@@ -891,7 +891,7 @@ format error: missing precision after '.' in format string
 basic_string::insert
 %s: __pos (which is %zu) > this->size() (which is %zu)
 format error: unmatched '}' in format string
-component::authority
+component::authority                 <-- start conjure_enum
 component::fragment
 component::host
 component::password
@@ -918,7 +918,7 @@ numbers::seven
 numbers::six
 numbers::three
 numbers::two
-numbers::zero
+numbers::zero                        <-- end conjure_enum
 St5arrayISt5tupleIJSt17basic_string_viewIcSt11char_traitsIcEES4_EELm10EE
 NSt8__format9_Seq_sinkINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEEE
 NSt8__format9_Buf_sinkIcEE

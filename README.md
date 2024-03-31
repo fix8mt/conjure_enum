@@ -39,14 +39,14 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
 
 ## Key Benefits
 
-- Lightweight: Designed for performance without unnecessary overhead.
-- Header-Only: No external dependencies, simplifying integration into your project.
-- Modern C++20: Entirely `constexpr` for compile-time safety, efficiency and performance.
-- Simple & Easy to Use: Class-based approach with intuitive syntax.
-- Convenient: `enum_bitsets` enhances `std::bitset`.
-- Broad Support: Works with scoped and unscoped enums, enum aliases and even with gaps.
-- Wide Compiler Compatibility: Supports GCC, Clang, and upcoming MSVC support.
-- Confidence in Quality: Includes built-in unit tests for reliable functionality.
+- _Lightweight:_ Designed for performance without unnecessary overhead.
+- _Header-Only:_ No external dependencies, simplifying integration into your project.
+- _Modern C++20:_ Entirely `constexpr` for compile-time safety, efficiency and performance.
+- _Simple & Easy to Use:_ Class-based approach with intuitive syntax.
+- _Convenient:_ `enum_bitsets` enhances `std::bitset`.
+- _Broad Support:_ Works with scoped and unscoped enums, enum aliases and even with gaps.
+- _Wide Compiler Compatibility:_ Supports GCC, Clang, and upcoming MSVC support.
+- _Confidence in Quality:_ Includes built-in unit tests for reliable functionality.
 
 ## This library empowers you to
 

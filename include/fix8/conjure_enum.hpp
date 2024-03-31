@@ -164,11 +164,11 @@ private:
 																			  	|<--		 		 -->|
 	*/
 		constexpr std::string_view from{epeek<e>()};
-#if defined(__clang__) || defined(__GNUC__)
+#if defined __clang__  || defined __GNUC__
 		if (constexpr auto ep { from.rfind("e = ") }; ep != std::string_view::npos && from[ep + 4] != '(')
 		{
 			constexpr std::string_view result { from.substr(ep + 4) };
-#if defined(__clang__)
+#if defined __clang__
 # define ptrm (']')
 #else
 # define ptrm (';')
@@ -177,7 +177,7 @@ private:
 				return result.substr(0, lc);
 #undef ptrm
 		}
-#elif defined(_MSC_VER)
+#elif defined _MSC_VER
 		if (constexpr auto ep { from.find("epeek<") }; ep != std::string_view::npos && from[ep + 6] != '(')
 		{
 			constexpr std::string_view result { from.substr(ep + 6) };
@@ -228,14 +228,14 @@ public:
 											     		   |<--   	-->|
 	*/
 		constexpr std::string_view from{tpeek()};
-#if defined(__clang__) || defined(__GNUC__)
+#if defined __clang__  || defined __GNUC__
 		if (constexpr auto ep { from.rfind("T = ") }; ep != std::string_view::npos)
 		{
 			constexpr std::string_view result { from.substr(ep + 4) };
 			if (constexpr auto lc { result.find_first_of(']') }; lc != std::string_view::npos)
 				return result.substr(0, lc);
 		}
-#elif defined(_MSC_VER)
+#elif defined _MSC_VER
 		if (constexpr auto ep { from.find("enum ") }; ep != std::string_view::npos)
 		{
 			constexpr std::string_view result { from.substr(ep + 5) };

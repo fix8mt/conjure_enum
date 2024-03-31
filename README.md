@@ -34,19 +34,19 @@ features developers really need while enhancing them for a more efficient and ex
 `conjure_enum`[^1] takes full advantage of the latest C++20 features. We've leveraged the convenience of `std::source_location` and
 unlocked the potential of `constexpr` algorithms and concepts. This translates to:
 
-- _Improved Performance_ Optimized code for faster and smoother operation - get the compiler to do more!
-- _Enhanced Developer Experience_ Write cleaner, more concise, and more powerful C++ code.
+- ***Improved Performance***  Optimized code for faster and smoother operation - get the compiler to do more!
+- ***Enhanced Developer Experience***  Write cleaner, more concise, and more powerful C++ code.
 
 ## Key Benefits
 
-- _Lightweight_ Designed for performance without unnecessary overhead.
-- _Header-Only_ No external dependencies, simplifying integration into your project.
-- _Modern C++20_ Entirely `constexpr` for compile-time safety, efficiency and performance.
-- _Simple & Easy to Use_ Class-based approach with intuitive syntax.
-- _Convenient_ `enum_bitsets` enhances `std::bitset`.
-- _Broad Support_ Works with scoped and unscoped enums, enum aliases and even with gaps.
-- _Wide Compiler Compatibility_ Supports GCC, Clang, and upcoming MSVC support.
-- _Confidence in Quality_ Includes built-in unit tests for reliable functionality.
+- ***Lightweight***  Designed for performance without unnecessary overhead.
+- ***eader-Only***  No external dependencies, simplifying integration into your project.
+- ***Modern C++20***  Entirely `constexpr` for compile-time safety, efficiency and performance.
+- ***Simple & Easy to Use***  Class-based approach with intuitive syntax.
+- ***Convenient***  `enum_bitsets` enhances `std::bitset`.
+- ***Broad Support***  Works with scoped and unscoped enums, enum aliases and even with gaps.
+- ***Wide Compiler Compatibility***  Supports GCC, Clang, and upcoming MSVC support.
+- ***Confidence in Quality***  Includes built-in unit tests for reliable functionality.
 
 ## This library empowers you to
 

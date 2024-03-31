@@ -398,7 +398,7 @@ static consteval const char *tpeek();
 template<T e>
 static consteval const char *epeek();
 ```
-These functions return the `std::source_location` `const char*` strings for the enum type or enum value.
+These functions return `std::source_location::current().function_name()` as `const char*` strings for the enum type or enum value.
 The actual output is implementation dependent.
 > [!TIP]
 > If you want to report an issue please include the output of these methods.
@@ -408,7 +408,7 @@ The following code:
 std::cout << conjure_enum<component>::tpeek() << '\n';
 std::cout << conjure_enum<component>::epeek<component::scheme>() << '\n';
 ```
-Generates this output:
+Generates this output with gcc:
 ```CSV
 static consteval const char* FIX8::conjure_enum<T>::tpeek() [with T = component]
 static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::scheme; T = component]

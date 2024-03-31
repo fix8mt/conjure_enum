@@ -436,7 +436,7 @@ template<typename... I>
 requires(std::is_integral_v<I> && ...)
 constexpr enum_bitset(I... comp);
 ```
-You can use the enum values directly in your constructor. No need to `|` them - this is assumed. Just supply them comma separated:
+You can use the enum values directly in your constructor. _No_ need to `|` them - this is assumed. Just supply them comma separated:
 ```c++
 enum_bitset<numbers> b(numbers::zero, numbers::one, numbers::two, numbers::three);
 std::cout << b << '\n';
@@ -454,7 +454,7 @@ _output_
 ```CSV
 0000001111
 ```
-You can use an int initialiser too:
+You can use an `int` initialiser too:
 ```c++
 enum_bitset<numbers> b(15);
 std::cout << b << '\n';

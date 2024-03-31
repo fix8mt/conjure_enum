@@ -17,9 +17,11 @@
 --|--
 |[Here](https://github.com/fix8mt/conjure_enum/blob/master/include/fix8/conjure_enum.hpp)| For implementation|
 |[Examples](#examples)| General examples|
-|[Examples with enum_bitset](#examples-using-enum_bitset)| `enum_bitset` examples|
+|[Examples with `enum_bitset`](#examples-using-enum_bitset)| `std::bitset` replacement examples|
 |[Building](#building)| How to build or include|
 |[Notes](#notes)| Notes on the implementation, limits, etc|
+> [!TIP]
+> Use the built-in [table of contents](https://github.blog/changelog/2021-04-13-table-of-contents-support-in-markdown-files/) to navigate this guide.
 
 ------------------------------------------------------------------------
 # Introduction

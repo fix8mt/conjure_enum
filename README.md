@@ -20,6 +20,7 @@
 |[Examples with `enum_bitset`](#examples-using-enum_bitset)| `std::bitset` replacement examples|
 |[Building](#building)| How to build or include|
 |[Notes](#notes)| Notes on the implementation, limits, etc|
+|[Compilers](#compiler-support)| Supported compilers|
 > [!TIP]
 > Use the built-in [table of contents](https://github.blog/changelog/2021-04-13-table-of-contents-support-in-markdown-files/) to navigate this guide.
 
@@ -709,13 +710,6 @@ These definitions set the minimum and maximum enum values that are supported. Yo
 ## class `conjure_enum` is not constructible
 All methods in this class are _static_. You cannot instantiate an object of this type.
 
-## Compiler support
-| Compiler | Version(s) | Notes | Unsupported |
-| :--- | :--- | :--- | ---: |
-| gcc | `11`, `12`, `13`| `std::format` not complete in `11`, `12` | `<= 10` |
-| clang | `15`, `16`| Catch2 needs `cxx_std_20` in `15` | `<= 14` |
-| msvc | `17` | Visual Studio 2022, `17.9.5`| `<= 16`|
-
 ## Use of `std::string_view`
 All of the generated static strings and generated static tables obtained by `std::source_location` use the library defined `fixed_string`. No string copying is done at runtime, resulting in
 a single static string in your application. All `conjure_enum` methods that return strings _only_ return `std::string_view`.
@@ -963,6 +957,13 @@ $
 </p>
 </details>
 It can be observed that there is only one copy of the scoped or unscoped enum value string in the executable.
+
+# Compiler support
+| Compiler | Version(s) | Notes | Unsupported |
+| :--- | :--- | :--- | ---: |
+| gcc | `11`, `12`, `13`| `std::format` not complete in `11`, `12` | `<= 10` |
+| clang | `15`, `16`| Catch2 needs `cxx_std_20` in `15` | `<= 14` |
+| msvc | `17` | Visual Studio 2022, `17.9.5`| `<= 16`|
 
 [^1]:&copy; 2024 Fix8 Market Technologies Pty Ltd, David L. Dight.
 [^2]:&copy; 2019 - 2024 Daniil Goncharov

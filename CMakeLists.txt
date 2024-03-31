@@ -7,8 +7,8 @@
 #
 # Lightweight header-only C++20 enum reflection
 #
-#		Based on magic_enum <https://github.com/Neargye/magic_enum>
-#		Copyright (c) 2019 - 2024 Daniil Goncharov <neargye@gmail.com>.
+#   Parts based on magic_enum <https://github.com/Neargye/magic_enum>
+#   Copyright (c) 2019 - 2024 Daniil Goncharov <neargye@gmail.com>.
 #
 # Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 #

@@ -34,19 +34,19 @@ features developers really need while enhancing them for a more efficient and ex
 `conjure_enum`[^1] takes full advantage of the latest C++20 features. We've leveraged the convenience of `std::source_location` and
 unlocked the potential of `constexpr` algorithms and concepts. This translates to:
 
-- Improved Performance: Optimized code for faster and smoother operation - get the compiler to do more!
-- Enhanced Developer Experience: Write cleaner, more concise, and more powerful C++ code.
+- _Improved Performance_ Optimized code for faster and smoother operation - get the compiler to do more!
+- _Enhanced Developer Experience_ Write cleaner, more concise, and more powerful C++ code.
 
 ## Key Benefits
 
-- _Lightweight:_ Designed for performance without unnecessary overhead.
-- _Header-Only:_ No external dependencies, simplifying integration into your project.
-- _Modern C++20:_ Entirely `constexpr` for compile-time safety, efficiency and performance.
-- _Simple & Easy to Use:_ Class-based approach with intuitive syntax.
-- _Convenient:_ `enum_bitsets` enhances `std::bitset`.
-- _Broad Support:_ Works with scoped and unscoped enums, enum aliases and even with gaps.
-- _Wide Compiler Compatibility:_ Supports GCC, Clang, and upcoming MSVC support.
-- _Confidence in Quality:_ Includes built-in unit tests for reliable functionality.
+- _Lightweight_ Designed for performance without unnecessary overhead.
+- _Header-Only_ No external dependencies, simplifying integration into your project.
+- _Modern C++20_ Entirely `constexpr` for compile-time safety, efficiency and performance.
+- _Simple & Easy to Use_ Class-based approach with intuitive syntax.
+- _Convenient_ `enum_bitsets` enhances `std::bitset`.
+- _Broad Support_ Works with scoped and unscoped enums, enum aliases and even with gaps.
+- _Wide Compiler Compatibility_ Supports GCC, Clang, and upcoming MSVC support.
+- _Confidence in Quality_ Includes built-in unit tests for reliable functionality.
 
 ## This library empowers you to
 

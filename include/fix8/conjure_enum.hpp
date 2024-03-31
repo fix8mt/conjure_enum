@@ -146,11 +146,18 @@ private:
 																										  |<--				-->|
 		static const char *FIX8::conjure_enum<component>::epeek() [T = component, e = (component)100] // invalid
 																								        |<--           -->|
+
 		gcc
 		static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::path; T = component] // valid
 																								  |<--				-->|
 		static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = (component)100; T = component] // invalid
 																								  |<--           -->|
+
+		msvc
+		const char *__cdecl FIX8::conjure_enum<enum numbers>::epeek<numbers::two>(void) noexcept			// valid
+																						|<--		-->|
+		const char *__cdecl FIX8::conjure_enum<enum numbers>::epeek<(enum numbers)0xa>(void) noexcept	// invalid
+																			  	|<--		 		 -->|
 	*/
 		constexpr std::string_view from{epeek<e>()};
 #if defined(__clang__) || defined(__GNUC__)
@@ -167,7 +174,12 @@ private:
 #undef ptrm
 		}
 #elif defined(_MSC_VER)
-# error "incomplete"
+		if (constexpr auto ep { from.find("epeek<") }; ep != std::string_view::npos && from[ep + 6] != '(')
+		{
+			constexpr std::string_view result { from.substr(ep + 6) };
+			if (constexpr auto lc { result.find_first_of('>') }; lc != std::string_view::npos)
+				return result.substr(0, lc);
+		}
 #else
 # error "compiler not supported"
 #endif
@@ -202,9 +214,14 @@ public:
 	/* clang
 		static const char *FIX8::conjure_enum<component>::tpeek() [T = component]
 																					  |<--		-->|
+
 		gcc
 		static consteval const char* FIX8::conjure_enum<T>::tpeek() [with T = component]
 																								|<--		 -->|
+
+		msvc
+		const char *__cdecl FIX8::conjure_enum<enum numbers>::tpeek(void) noexcept
+											     		   |<--   	-->|
 	*/
 		constexpr std::string_view from{tpeek()};
 #if defined(__clang__) || defined(__GNUC__)
@@ -215,7 +232,12 @@ public:
 				return result.substr(0, lc);
 		}
 #elif defined(_MSC_VER)
-# error "incomplete"
+		if (constexpr auto ep { from.find("enum ") }; ep != std::string_view::npos)
+		{
+			constexpr std::string_view result { from.substr(ep + 5) };
+			if (constexpr auto lc { result.find_first_of('>') }; lc != std::string_view::npos)
+				return result.substr(0, lc);
+		}
 #else
 # error "compiler not supported"
 #endif

@@ -47,7 +47,7 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
 - ***Simple & Easy to Use***  Class-based approach with intuitive syntax.
 - ***Convenient***  `enum_bitsets` enhances `std::bitset`.
 - ***Broad Support***  Works with scoped and unscoped enums, enum aliases and even with gaps.
-- ***Wide Compiler Compatibility***  Supports GCC, Clang, and upcoming MSVC support.
+- ***Wide Compiler Compatibility***  Supports GCC, Clang and MSVC.
 - ***Confidence in Quality***  Includes built-in unit tests for reliable functionality.
 
 ## This library empowers you to
@@ -720,7 +720,7 @@ All methods in this class are _static_. You cannot instantiate an object of this
 | :--- | :--- | :--- | ---: |
 | gcc | `11`, `12`, `13`| `std::format` not complete in `11`, `12` | `<= 10` |
 | clang | `15`, `16`| Catch2 needs `cxx_std_20` in `15` | `<= 14` |
-| msvc | TBA| | |
+| msvc | Visual Studio Community 2022| Version 17.9.5| |
 
 ## Use of `std::string_view`
 All of the generated static strings and generated static tables obtained by `std::source_location` use the library defined `fixed_string`. No string copying is done at runtime, resulting in

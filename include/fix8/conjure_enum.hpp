@@ -62,9 +62,12 @@ namespace FIX8 {
 template<std::size_t N>
 class fixed_string final
 {
-	std::array<char, N + 1> _buff{};
+	std::array<char, N + 1> _buff;
+	template <char... I>
+	constexpr fixed_string(std::string_view sv, std::integer_sequence<char, I...>) noexcept : _buff{sv[I]..., 0} {}
+
 public:
-	constexpr fixed_string(std::string_view sv) noexcept { std::copy(sv.cbegin(), sv.cend(), _buff.begin()); }
+	constexpr fixed_string(std::string_view sv) noexcept : fixed_string{sv.data(), std::make_integer_sequence<char, N>{}} {}
 	constexpr fixed_string() = delete;
 	constexpr std::string_view get() const noexcept { return { _buff.data(), N }; }
 	constexpr operator std::string_view() const noexcept { return get(); }
@@ -78,6 +81,7 @@ requires std::is_enum_v<T>
 class conjure_enum
 {
 	static constexpr int enum_min_value{ENUM_MIN_VALUE}, enum_max_value{ENUM_MAX_VALUE};
+	static_assert(enum_max_value > enum_min_value, "enum_max_value must be greater than enum_min_value");
 
 	template<T e>
 	static constexpr auto enum_name() noexcept
@@ -130,7 +134,7 @@ private:
 	{
 		constexpr std::array<bool, sizeof...(I)> valid { is_valid<static_cast<T>(enum_min_value + I)>()... };
 		constexpr auto num_valid { std::count_if(valid.cbegin(), valid.cend(), [](bool val) noexcept { return val; }) };
-		static_assert(num_valid > 0, "empty enums not supported");
+		static_assert(num_valid > 0, "conjure_enum requires non-empty enum");
 		std::array<T, num_valid> vals{};
 		for(std::size_t offset{}, nn{}; nn < num_valid; ++offset)
 			if (valid[offset])

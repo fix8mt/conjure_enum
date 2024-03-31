@@ -50,12 +50,6 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
 - ***Wide Compiler Compatibility***  Supports GCC, Clang and MSVC.
 - ***Confidence in Quality***  Includes built-in unit tests for reliable functionality.
 
-## This library empowers you to
-
-- Gain deeper insights into your enums at runtime.
-- Unlock the power of metaprogramming for advanced code generation techniques.
-- Write more expressive and efficient C++ code.
-
 # Examples
 All examples refer to the following enums:
 ```c++

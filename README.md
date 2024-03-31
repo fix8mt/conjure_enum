@@ -354,8 +354,8 @@ static constexpr std::string_view remove_scope(std::string_view what);
 ```
 Returns a `std::string_view` with scope removed; for unscoped returns unchanged
 ```c++
-std::cout << conjure_enum::remove_scope<component>("component::path"sv) << '\n';
-std::cout << conjure_enum::remove_scope<component1>("path"sv) << '\n';
+std::cout << conjure_enum<component>::remove_scope("component::path"sv) << '\n';
+std::cout << conjure_enum<component>::remove_scope("path"sv) << '\n';
 ```
 _output_
 ```CSV
@@ -368,8 +368,8 @@ static constexpr std::string_view add_scope(std::string_view what);
 ```
 Returns a `std::string_view` with scope added to the enum if the supplied enum string is valid but missing scope; for unscoped returns unchanged
 ```c++
-std::cout << conjure_enum::add_scope<component>("path"sv) << '\n';
-std::cout << conjure_enum::add_scope<component1>("path"sv) << '\n';
+std::cout << conjure_enum<component>::add_scope("path"sv) << '\n';
+std::cout << conjure_enum<component1>::add_scope("path"sv) << '\n';
 ```
 _output_
 ```CSV

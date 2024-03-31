@@ -29,6 +29,28 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //----------------------------------------------------------------------------------------
+// clang
+// static const char *FIX8::conjure_enum<component>::epeek() [T = component, e = component::path] // valid
+// 																								  |<--				-->|
+// static const char *FIX8::conjure_enum<component>::epeek() [T = component, e = (component)100] // invalid
+//																									  |<--           -->|
+// static const char *FIX8::conjure_enum<component>::tpeek() [T = component]
+//																				  |<--		-->|
+// gcc
+// static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::path; T = component] // valid
+//																							  |<--				-->|
+// static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = (component)100; T = component] // invalid
+//																							  |<--           -->|
+// static consteval const char* FIX8::conjure_enum<T>::tpeek() [with T = component]
+//																							|<--		 -->|
+// msvc
+// const char *__cdecl FIX8::conjure_enum<enum numbers>::epeek<numbers::two>(void) noexcept			// valid
+//																					|<--		-->|
+// const char *__cdecl FIX8::conjure_enum<enum numbers>::epeek<(enum numbers)0xa>(void) noexcept	// invalid
+//																			|<--		 		 -->|
+// const char *__cdecl FIX8::conjure_enum<enum numbers>::tpeek(void) noexcept
+//														|<--   	-->|
+//----------------------------------------------------------------------------------------
 #ifndef FIX8_CONJURE_ENUM_HPP_
 #define FIX8_CONJURE_ENUM_HPP_
 
@@ -78,7 +100,7 @@ public:
 //-----------------------------------------------------------------------------------------
 template<typename T>
 requires std::is_enum_v<T>
-class conjure_enum
+class conjure_enum final
 {
 	static constexpr int enum_min_value{ENUM_MIN_VALUE}, enum_max_value{ENUM_MAX_VALUE};
 	static_assert(enum_max_value > enum_min_value, "enum_max_value must be greater than enum_min_value");
@@ -163,24 +185,6 @@ private:
 	template<T e>
 	static constexpr std::string_view get_name() noexcept
 	{
-	/* clang
-		static const char *FIX8::conjure_enum<component>::epeek() [T = component, e = component::path] // valid
-																										  |<--				-->|
-		static const char *FIX8::conjure_enum<component>::epeek() [T = component, e = (component)100] // invalid
-																								        |<--           -->|
-
-		gcc
-		static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::path; T = component] // valid
-																								  |<--				-->|
-		static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = (component)100; T = component] // invalid
-																								  |<--           -->|
-
-		msvc
-		const char *__cdecl FIX8::conjure_enum<enum numbers>::epeek<numbers::two>(void) noexcept			// valid
-																						|<--		-->|
-		const char *__cdecl FIX8::conjure_enum<enum numbers>::epeek<(enum numbers)0xa>(void) noexcept	// invalid
-																			  	|<--		 		 -->|
-	*/
 		constexpr std::string_view from{epeek<e>()};
 		if (constexpr auto ep { from.rfind(gpos<0,0>()) }; ep != std::string_view::npos && from[ep + gpos<0,0>().size()] != '(')
 		{
@@ -216,18 +220,6 @@ public:
 
 	static constexpr std::string_view enum_type() noexcept
 	{
-	/* clang
-		static const char *FIX8::conjure_enum<component>::tpeek() [T = component]
-																					  |<--		-->|
-
-		gcc
-		static consteval const char* FIX8::conjure_enum<T>::tpeek() [with T = component]
-																								|<--		 -->|
-
-		msvc
-		const char *__cdecl FIX8::conjure_enum<enum numbers>::tpeek(void) noexcept
-											     		   |<--   	-->|
-	*/
 		constexpr std::string_view from{tpeek()};
 		if (constexpr auto ep { from.rfind(gpos<0,1>()) }; ep != std::string_view::npos)
 		{

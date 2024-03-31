@@ -83,6 +83,24 @@ class conjure_enum
 	static constexpr int enum_min_value{ENUM_MIN_VALUE}, enum_max_value{ENUM_MAX_VALUE};
 	static_assert(enum_max_value > enum_min_value, "enum_max_value must be greater than enum_min_value");
 
+	static constexpr auto specifics
+	{
+      std::to_array<std::tuple<std::string_view, char>>
+      ({
+#if defined __clang__
+			{ "e = ", ']' }, { "T = ", ']' },
+#elif defined __GNUC__
+			{ "e = ", ';' }, { "T = ", ']' },
+#elif defined _MSC_VER
+			{ "epeek<", '>' }, { "enum ", '>' },
+#else
+# error "compiler not supported"
+#endif
+      })
+   };
+	template<int N, int V> // can't have constexpr decompositions! (but why?)
+	static constexpr auto gpos() noexcept { return std::get<N>(specifics[V]); }
+
 	template<T e>
 	static constexpr auto enum_name() noexcept
 	{
@@ -164,29 +182,12 @@ private:
 																			  	|<--		 		 -->|
 	*/
 		constexpr std::string_view from{epeek<e>()};
-#if defined __clang__  || defined __GNUC__
-		if (constexpr auto ep { from.rfind("e = ") }; ep != std::string_view::npos && from[ep + 4] != '(')
+		if (constexpr auto ep { from.rfind(gpos<0,0>()) }; ep != std::string_view::npos && from[ep + gpos<0,0>().size()] != '(')
 		{
-			constexpr std::string_view result { from.substr(ep + 4) };
-#if defined __clang__
-# define ptrm (']')
-#else
-# define ptrm (';')
-#endif
-			if (constexpr auto lc { result.find_first_of(ptrm) }; lc != std::string_view::npos)
-				return result.substr(0, lc);
-#undef ptrm
-		}
-#elif defined _MSC_VER
-		if (constexpr auto ep { from.find("epeek<") }; ep != std::string_view::npos && from[ep + 6] != '(')
-		{
-			constexpr std::string_view result { from.substr(ep + 6) };
-			if (constexpr auto lc { result.find_first_of('>') }; lc != std::string_view::npos)
+			constexpr std::string_view result { from.substr(ep + gpos<0,0>().size()) };
+			if (constexpr auto lc { result.find_first_of(gpos<1,0>()) }; lc != std::string_view::npos)
 				return result.substr(0, lc);
 		}
-#else
-# error "compiler not supported"
-#endif
 		return {};
 	}
 
@@ -228,23 +229,12 @@ public:
 											     		   |<--   	-->|
 	*/
 		constexpr std::string_view from{tpeek()};
-#if defined __clang__  || defined __GNUC__
-		if (constexpr auto ep { from.rfind("T = ") }; ep != std::string_view::npos)
+		if (constexpr auto ep { from.rfind(gpos<0,1>()) }; ep != std::string_view::npos)
 		{
-			constexpr std::string_view result { from.substr(ep + 4) };
-			if (constexpr auto lc { result.find_first_of(']') }; lc != std::string_view::npos)
+			constexpr std::string_view result { from.substr(ep + gpos<0,1>().size()) };
+			if (constexpr auto lc { result.find_first_of(gpos<1,1>()) }; lc != std::string_view::npos)
 				return result.substr(0, lc);
 		}
-#elif defined _MSC_VER
-		if (constexpr auto ep { from.find("enum ") }; ep != std::string_view::npos)
-		{
-			constexpr std::string_view result { from.substr(ep + 5) };
-			if (constexpr auto lc { result.find_first_of('>') }; lc != std::string_view::npos)
-				return result.substr(0, lc);
-		}
-#else
-# error "compiler not supported"
-#endif
 		return {};
 	}
 

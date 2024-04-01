@@ -252,13 +252,18 @@ userinfo  component::userinfo
 template<typename Fn, typename... Args>
 requires std::invocable<Fn&&, T, Args...>
 [[maybe_unused]] static constexpr auto for_each(Fn&& func, Args&&... args);
+
+template<typename C, typename Fn, typename... Args> // specialisation for member function with object
+requires std::invocable<Fn&&, C, T, Args...>
+[[maybe_unused]] constexpr auto for_each(Fn&& func, C *obj, Args&&... args);
 ```
 Call supplied invocable for each enum. Similar to `std::for_each` except first parameter of your invocable must accept an enum value (passed by `for_each`).
-Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. When using a member function, the _first_ parameter
-passed by your call must be the `this` pointer of the object (use `std::bind`). If you wish to pass a `reference` parameter, you must wrap it in
-`std::ref`.
+Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. The second version is intended to be used
+When using a member function, the _first_ parameter passed by your call must be the `this` pointer of the object.
+If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
 
-Returns `std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...)` which can be stored or immediately invoked.
+Returns `std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...)`
+or `std::bind(std::forward<Fn>(func), obj, std::placeholders::_1, std::forward<Args>(args)...)` which can be stored or immediately invoked.
 ```c++
 conjure_enum<component>::for_each([](component val, int other)
 {
@@ -658,32 +663,42 @@ _output_
 template<typename Fn, typename... Args>
 requires std::invocable<Fn&&, T, Args...>
 [[maybe_unused]] constexpr auto for_each(Fn&& func, Args&&... args);
+
+template<typename C, typename Fn, typename... Args> // specialisation for member function with object
+requires std::invocable<Fn&&, C, T, Args...>
+[[maybe_unused]] static constexpr auto for_each(Fn&& func, C *obj, Args&&... args);
 ```
 Call supplied invocable for _each bit that is on_. Similar to `std::for_each` except first parameter of your invocable must accept an enum value (passed by `for_each`).
-Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. When using a member function, the _first_ parameter
-passed by your call must be the `this` pointer of the object (use `std::bind`). If you wish to pass a `reference` parameter, you must wrap it in
+Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. The second version is intended to be used
+When using a member function, the _first_ parameter passed by your call must be the `this` pointer of the object.
+passed by your call must be the `this` pointer of the object. If you wish to pass a `reference` parameter, you must wrap it in
 `std::ref`.
 
-Returns `std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...)` which can be stored or immediately invoked.
+Returns `std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...)` or
+`std::bind(std::forward<Fn>(func), obj, std::placeholders::_1, std::forward<Args>(args)...)` which can be stored or immediately invoked.
 
 To iterate over each bit regardless of whether it is on or not, use `conjure_enum<T>::for_each`.
 
 ```c++
-auto printer([](numbers val)
+struct foo
 {
-   std::cout << conjure_enum<numbers>::enum_to_string(val) << '\n';
-});
+   void printer(numbers val, int other)
+   {
+      std::cout << conjure_enum<numbers>::enum_to_string(val) << ' ' << other << '\n';
+   }
+};
 enum_bitset<numbers> ec(numbers::zero,numbers::two,numbers::five,numbers::nine);
+foo bar;
 std::cout << ec << '\n';
-ec.for_each(printer);
+ec.for_each(&foo::printer, &bar, 10);
 ```
 _output_
 ```CSV
 1000100101
-numbers::zero
-numbers::two
-numbers::five
-numbers::nine
+numbers::zero 10
+numbers::two 10
+numbers::five 10
+numbers::nine 10
 ```
 Example using member function:
 ```c++

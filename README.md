@@ -679,6 +679,7 @@ Returns `std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<A
 
 To iterate over each bit regardless of whether it is on or not, use `conjure_enum<T>::for_each`.
 
+Example using member function:
 ```c++
 struct foo
 {
@@ -697,22 +698,6 @@ numbers::zero 10
 numbers::two 10
 numbers::five 10
 numbers::nine 10
-```
-Example using member function:
-```c++
-struct foo
-{
-   void printer(numbers val) { std::cout << conjure_enum<numbers>::enum_to_string(val) << '\n'; }
-};
-foo bar;
-enum_bitset<numbers> ek(0, 1, 3);
-ek.for_each(std::bind(&foo::printer, &bar, std::placeholders::_1));
-```
-_output_
-```CSV
-numbers::zero
-numbers::one
-numbers::three
 ```
 
 # Building

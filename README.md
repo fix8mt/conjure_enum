@@ -399,7 +399,7 @@ static constexpr auto cend();
 static constexpr auto crbegin();
 static constexpr auto crend();
 ```
-These methods return `const_iterator`, `const_reverse_iterator`, `*cbegin()` and `*std::prev(cend())` respectively all from `enum_entries`
+These methods return `const_iterator` and `const_reverse_iterator` respectively all from `enum_entries`
 defined above.
 ```c++
 using en = conjure_enum<numbers>;

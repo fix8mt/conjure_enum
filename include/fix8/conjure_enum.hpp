@@ -105,7 +105,7 @@ class conjure_enum final
 	static constexpr int enum_min_value{ENUM_MIN_VALUE}, enum_max_value{ENUM_MAX_VALUE};
 	static_assert(enum_max_value > enum_min_value, "enum_max_value must be greater than enum_min_value");
 
-	static constexpr auto specifics
+	static constexpr auto _specifics
 	{
       std::to_array<std::tuple<std::string_view, char>>
       ({
@@ -121,12 +121,12 @@ class conjure_enum final
       })
    };
 	template<int N, int V> // can't have constexpr decompositions! (but why?)
-	static constexpr auto gpos() noexcept { return std::get<N>(specifics[V]); }
+	static constexpr auto _gpos() noexcept { return std::get<N>(_specifics[V]); }
 
 	template<T e>
-	static constexpr auto enum_name() noexcept
+	static constexpr auto _enum_name() noexcept
 	{
-		constexpr auto result { get_name<e>() };
+		constexpr auto result { _get_name<e>() };
 		return fixed_string<result.size()>(result);
 	}
 
@@ -135,7 +135,7 @@ public:
 	using scoped_tuple = std::tuple<std::string_view, std::string_view>;
 
 	template<T e>
-	static constexpr auto enum_name_v { enum_name<e>() };
+	static constexpr auto enum_name_v { _enum_name<e>() };
 
 	static consteval const char *tpeek() noexcept { return std::source_location::current().function_name(); }
 	template<T e>
@@ -143,20 +143,20 @@ public:
 
 private:
 	template<std::size_t... I>
-	static constexpr auto entries(std::index_sequence<I...>) noexcept
+	static constexpr auto _entries(std::index_sequence<I...>) noexcept
 	{
 		return std::array<enum_tuple, sizeof...(I)>{{{ enum_values[I], enum_name_v<enum_values[I]>}...}};
 	}
 
 	template<std::size_t... I>
-	static constexpr auto scoped_entries(std::index_sequence<I...>) noexcept
+	static constexpr auto _scoped_entries(std::index_sequence<I...>) noexcept
 	{
 		std::array<scoped_tuple, sizeof...(I)> tmp{{{ remove_scope(enum_name_v<enum_values[I]>), enum_name_v<enum_values[I]>}...}};
 		std::sort(tmp.begin(), tmp.end(), scoped_comp);
 		return tmp;
 	}
 
-	static constexpr auto entries_sorted() noexcept
+	static constexpr auto _entries_sorted() noexcept
 	{
 		auto tmp { enum_entries };
 		std::sort(tmp.begin(), tmp.end(), tuple_comp_rev);
@@ -164,13 +164,13 @@ private:
 	}
 
 	template< std::size_t... I>
-	static constexpr auto names(std::index_sequence<I...>) noexcept
+	static constexpr auto _names(std::index_sequence<I...>) noexcept
 	{
 		return std::array<std::string_view, sizeof...(I)>{{{ enum_name_v<enum_values[I]>}...}};
 	}
 
 	template<std::size_t... I>
-	static constexpr auto values(std::index_sequence<I...>) noexcept
+	static constexpr auto _values(std::index_sequence<I...>) noexcept
 	{
 		constexpr std::array<bool, sizeof...(I)> valid { is_valid<static_cast<T>(enum_min_value + I)>()... };
 		constexpr auto num_valid { std::count_if(valid.cbegin(), valid.cend(), [](bool val) noexcept { return val; }) };
@@ -183,13 +183,13 @@ private:
 	}
 
 	template<T e>
-	static constexpr std::string_view get_name() noexcept
+	static constexpr std::string_view _get_name() noexcept
 	{
 		constexpr std::string_view from{epeek<e>()};
-		if (constexpr auto ep { from.rfind(gpos<0,0>()) }; ep != std::string_view::npos && from[ep + gpos<0,0>().size()] != '(')
+		if (constexpr auto ep { from.rfind(_gpos<0,0>()) }; ep != std::string_view::npos && from[ep + _gpos<0,0>().size()] != '(')
 		{
-			constexpr std::string_view result { from.substr(ep + gpos<0,0>().size()) };
-			if (constexpr auto lc { result.find_first_of(gpos<1,0>()) }; lc != std::string_view::npos)
+			constexpr std::string_view result { from.substr(ep + _gpos<0,0>().size()) };
+			if (constexpr auto lc { result.find_first_of(_gpos<1,0>()) }; lc != std::string_view::npos)
 				return result.substr(0, lc);
 		}
 		return {};
@@ -216,15 +216,15 @@ public:
 	conjure_enum() = delete;
 
 	template<T e>
-	static constexpr std::string_view enum_to_string() noexcept { return get_name<e>(); }
+	static constexpr std::string_view enum_to_string() noexcept { return _get_name<e>(); }
 
 	static constexpr std::string_view enum_type() noexcept
 	{
 		constexpr std::string_view from{tpeek()};
-		if (constexpr auto ep { from.rfind(gpos<0,1>()) }; ep != std::string_view::npos)
+		if (constexpr auto ep { from.rfind(_gpos<0,1>()) }; ep != std::string_view::npos)
 		{
-			constexpr std::string_view result { from.substr(ep + gpos<0,1>().size()) };
-			if (constexpr auto lc { result.find_first_of(gpos<1,1>()) }; lc != std::string_view::npos)
+			constexpr std::string_view result { from.substr(ep + _gpos<0,1>().size()) };
+			if (constexpr auto lc { result.find_first_of(_gpos<1,1>()) }; lc != std::string_view::npos)
 				return result.substr(0, lc);
 		}
 		return {};
@@ -235,11 +235,11 @@ public:
 	{};
 
 	template<T e>
-	static constexpr bool is_valid() noexcept { return !get_name<e>().empty(); }
+	static constexpr bool is_valid() noexcept { return !_get_name<e>().empty(); }
 
-	static constexpr auto values() noexcept
+	static constexpr auto _values() noexcept
 	{
-		return values(std::make_index_sequence<enum_max_value - enum_min_value + 1>({}));
+		return _values(std::make_index_sequence<enum_max_value - enum_min_value + 1>({}));
 	}
 
 	static constexpr auto count() noexcept { return enum_values.size(); }
@@ -313,11 +313,11 @@ public:
 		return {};
 	}
 
-	static constexpr auto enum_values { values() };
-	static constexpr auto enum_entries { entries(std::make_index_sequence<enum_values.size()>()) };
-	static constexpr auto enum_scoped_entries { scoped_entries(std::make_index_sequence<enum_values.size()>()) };
-	static constexpr auto enum_entries_sorted { entries_sorted() };
-	static constexpr auto enum_names { names(std::make_index_sequence<enum_values.size()>()) };
+	static constexpr auto enum_values { _values() };
+	static constexpr auto enum_entries { _entries(std::make_index_sequence<enum_values.size()>()) };
+	static constexpr auto enum_scoped_entries { _scoped_entries(std::make_index_sequence<enum_values.size()>()) };
+	static constexpr auto enum_entries_sorted { _entries_sorted() };
+	static constexpr auto enum_names { _names(std::make_index_sequence<enum_values.size()>()) };
 
 	template<typename Fn, typename... Args>
 	requires std::invocable<Fn&&, T, Args...>

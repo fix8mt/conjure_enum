@@ -183,6 +183,17 @@ int main(int argc, char *argv[])
 		std::cout << static_cast<int>(std::get<0>(*itr)) << ' ' << std::get<1>(*itr) << '\n';
 	std::cout << static_cast<int>(std::get<0>(en::front())) << ' ' << std::get<1>(en::front()) << '\n';
 	std::cout << static_cast<int>(std::get<0>(en::back())) << ' ' << std::get<1>(en::back()) << '\n';
+
+	struct foo
+	{
+		void printer(numbers val, int other)
+		{
+			std::cout << conjure_enum<numbers>::enum_to_string(val) << ' ' << other << '\n';
+		}
+	};
+	foo bar;
+	ek.for_each(std::bind(&foo::printer, &bar, std::placeholders::_1, 10));
+	ek.for_each(&foo::printer, &bar, 10);
 	//enum_bitset<component> et;
 	return 0;
 }

@@ -689,12 +689,10 @@ struct foo
 };
 enum_bitset<numbers> ec(numbers::zero,numbers::two,numbers::five,numbers::nine);
 foo bar;
-std::cout << ec << '\n';
 ec.for_each(&foo::printer, &bar, 10);
 ```
 _output_
 ```CSV
-1000100101
 numbers::zero 10
 numbers::two 10
 numbers::five 10

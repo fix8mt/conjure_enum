@@ -255,7 +255,7 @@ requires std::invocable<Fn&&, T, Args...>
 ```
 Call supplied invocable for each enum. Similar to `std::for_each` except first parameter of your invocable must accept an enum value (passed by `for_each`).
 Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. When using a member function, the _first_ parameter
-passed by your call must be the `this` pointer of the object. If you wish to pass a `reference` parameter, you must wrap it in
+passed by your call must be the `this` pointer of the object (use `std::bind`). If you wish to pass a `reference` parameter, you must wrap it in
 `std::ref`.
 
 Returns `std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...)` which can be stored or immediately invoked.
@@ -661,10 +661,13 @@ requires std::invocable<Fn&&, T, Args...>
 ```
 Call supplied invocable for _each bit that is on_. Similar to `std::for_each` except first parameter of your invocable must accept an enum value (passed by `for_each`).
 Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. When using a member function, the _first_ parameter
-passed by your call must be the `this` pointer of the object. If you wish to pass a `reference` parameter, you must wrap it in
+passed by your call must be the `this` pointer of the object (use `std::bind`). If you wish to pass a `reference` parameter, you must wrap it in
 `std::ref`.
 
 Returns `std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...)` which can be stored or immediately invoked.
+
+To iterate over each bit regardless of whether it is on or not, use `conjure_enum<T>::for_each`.
+
 ```c++
 auto printer([](numbers val)
 {
@@ -681,6 +684,22 @@ numbers::zero
 numbers::two
 numbers::five
 numbers::nine
+```
+Example using member function:
+```c++
+struct foo
+{
+   void printer(numbers val) { std::cout << conjure_enum<numbers>::enum_to_string(val) << '\n'; }
+};
+foo bar;
+enum_bitset<numbers> ek(0, 1, 3);
+ek.for_each(std::bind(&foo::printer, &bar, std::placeholders::_1));
+```
+_output_
+```CSV
+numbers::zero
+numbers::one
+numbers::three
 ```
 
 # Building

@@ -332,9 +332,7 @@ public:
 	requires std::invocable<Fn&&, C, T, Args...>
 	[[maybe_unused]] static constexpr auto for_each(Fn&& func, C *obj, Args&&... args) noexcept // specialisation for member function with object
 	{
-		for (const auto ev : conjure_enum<T>::enum_values)
-			std::invoke(std::forward<Fn>(func), obj, ev, std::forward<Args>(args)...);
-		return std::bind(std::forward<Fn>(func), obj, std::placeholders::_1, std::forward<Args>(args)...);
+		return for_each(std::bind(std::forward<Fn>(func), obj, std::placeholders::_1, std::forward<Args>(args)...));
 	}
 };
 
@@ -486,10 +484,7 @@ public:
 	requires std::invocable<Fn&&, C, T, Args...>
 	[[maybe_unused]] constexpr auto for_each(Fn&& func, C *obj, Args&&... args) noexcept
 	{
-		for (const auto ev : conjure_enum<T>::enum_values)
-			if (test(ev))
-				std::invoke(std::forward<Fn>(func), obj, ev, std::forward<Args>(args)...);
-		return std::bind(std::forward<Fn>(func), obj, std::placeholders::_1, std::forward<Args>(args)...);
+		return for_each(std::bind(std::forward<Fn>(func), obj, std::placeholders::_1, std::forward<Args>(args)...));
 	}
 
 	/// create a bitset from enum separated enum string

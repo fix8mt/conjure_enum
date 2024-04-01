@@ -85,8 +85,8 @@ template<std::size_t N>
 class fixed_string final
 {
 	std::array<char, N + 1> _buff;
-	template <char... I>
-	constexpr fixed_string(std::string_view sv, std::integer_sequence<char, I...>) noexcept : _buff{sv[I]..., 0} {}
+	template<char... C>
+	constexpr fixed_string(std::string_view sv, std::integer_sequence<char, C...>) noexcept : _buff{sv[C]..., 0} {}
 
 public:
 	constexpr fixed_string(std::string_view sv) noexcept : fixed_string{sv.data(), std::make_integer_sequence<char, N>{}} {}
@@ -103,7 +103,7 @@ requires std::is_enum_v<T>
 class conjure_enum final
 {
 	static constexpr int enum_min_value{ENUM_MIN_VALUE}, enum_max_value{ENUM_MAX_VALUE};
-	static_assert(enum_max_value > enum_min_value, "enum_max_value must be greater than enum_min_value");
+	static_assert(enum_max_value > enum_min_value, "ENUM_MAX_VALUE must be greater than ENUM_MIN_VALUE");
 
 	static constexpr auto _specifics
 	{

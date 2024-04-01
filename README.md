@@ -392,6 +392,39 @@ true
 false
 false
 ```
+## `iterators`
+```c++
+static constexpr auto cbegin();
+static constexpr auto cend();
+static constexpr auto crbegin();
+static constexpr auto crend();
+static constexpr auto front();
+static constexpr auto back();
+```
+These methods return `const_iterator`, `const_reverse_iterator`, `*cbegin()` and `*std::prev(cend())` respectively all from `enum_entries`
+defined above.
+```c++
+using en = conjure_enum<numbers>;
+for (auto itr{en::cbegin()}; itr != en::cend(); ++itr)
+   std::cout << static_cast<int>(std::get<0>(*itr)) << ' ' << std::get<1>(*itr) << '\n';
+std::cout << static_cast<int>(std::get<0>(en::front())) << ' ' << std::get<1>(en::front()) << '\n';
+std::cout << static_cast<int>(std::get<0>(en::back())) << ' ' << std::get<1>(en::back()) << '\n';
+```
+_output_
+```CSV
+0 numbers::zero
+1 numbers::one
+2 numbers::two
+3 numbers::three
+4 numbers::four
+5 numbers::five
+6 numbers::six
+7 numbers::seven
+8 numbers::eight
+9 numbers::nine
+0 numbers::zero
+9 numbers::nine
+```
 ## `epeek, tpeek`
 ```c++
 static consteval const char *tpeek();

@@ -51,6 +51,7 @@ enum class numbers { zero, one, two, three, four, five, FIVE=five, six, seven, e
 TEST_CASE("is_valid")
 {
 	REQUIRE(conjure_enum<component>::is_valid<component::password>());
+	REQUIRE(conjure_enum<component&>::is_valid<component::password>());
 	REQUIRE(!conjure_enum<component>::is_valid<static_cast<component>(100)>());
 	REQUIRE(conjure_enum<component1>::is_valid<password>());
 	REQUIRE(!conjure_enum<component1>::is_valid<static_cast<component1>(100)>());
@@ -244,12 +245,25 @@ TEST_CASE("for_each")
 	}, std::ref(total)) };
 	myfunc(component::fragment);
 	REQUIRE(total == 74);
+
+	struct foo
+	{
+		void process(component val, int& tot)
+		{
+			tot += static_cast<int>(val);
+		}
+	};
+	foo bar;
+	total = 0;
+	conjure_enum<component>::for_each(&foo::process, &bar, std::ref(total));
+	REQUIRE(total == 60);
 }
 
 //-----------------------------------------------------------------------------------------
 TEST_CASE("enum_bitset")
 {
 	enum_bitset<numbers> eb;
+	enum_bitset<numbers&> ebr;
 	eb.set_all<numbers::zero,numbers::two,numbers::five,numbers::nine>();
 	REQUIRE(eb.test_all<numbers::zero,numbers::two,numbers::five,numbers::nine>());
 	eb.clear_all<numbers::FIVE>(); // use alias

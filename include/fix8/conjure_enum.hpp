@@ -98,7 +98,7 @@ public:
 };
 
 //-----------------------------------------------------------------------------------------
-template<typename T>
+template<typename E, typename T=std::decay_t<E>>
 requires std::is_enum_v<T>
 class conjure_enum final
 {
@@ -124,9 +124,9 @@ class conjure_enum final
 	static constexpr auto _gpos() noexcept { return std::get<N>(_specifics[V]); }
 
 	template<T e>
-	static constexpr auto _enum_name() noexcept
+	static constexpr auto enum_name() noexcept
 	{
-		constexpr auto result { _get_name<e>() };
+		constexpr auto result { get_name<e>() };
 		return fixed_string<result.size()>(result);
 	}
 
@@ -134,29 +134,29 @@ public:
 	using enum_tuple = std::tuple<T, std::string_view>;
 	using scoped_tuple = std::tuple<std::string_view, std::string_view>;
 
-	template<T e>
-	static constexpr auto enum_name_v { _enum_name<e>() };
-
 	static consteval const char *tpeek() noexcept { return std::source_location::current().function_name(); }
 	template<T e>
 	static consteval const char *epeek() noexcept { return std::source_location::current().function_name(); }
 
 private:
+	template<T e>
+	static constexpr auto _enum_name_v { enum_name<e>() };
+
 	template<std::size_t... I>
-	static constexpr auto _entries(std::index_sequence<I...>) noexcept
+	static constexpr auto entries(std::index_sequence<I...>) noexcept
 	{
-		return std::array<enum_tuple, sizeof...(I)>{{{ enum_values[I], enum_name_v<enum_values[I]>}...}};
+		return std::array<enum_tuple, sizeof...(I)>{{{ enum_values[I], _enum_name_v<enum_values[I]>}...}};
 	}
 
 	template<std::size_t... I>
-	static constexpr auto _scoped_entries(std::index_sequence<I...>) noexcept
+	static constexpr auto scoped_entries(std::index_sequence<I...>) noexcept
 	{
-		std::array<scoped_tuple, sizeof...(I)> tmp{{{ remove_scope(enum_name_v<enum_values[I]>), enum_name_v<enum_values[I]>}...}};
+		std::array<scoped_tuple, sizeof...(I)> tmp{{{ remove_scope(_enum_name_v<enum_values[I]>), _enum_name_v<enum_values[I]>}...}};
 		std::sort(tmp.begin(), tmp.end(), scoped_comp);
 		return tmp;
 	}
 
-	static constexpr auto _entries_sorted() noexcept
+	static constexpr auto entries_sorted() noexcept
 	{
 		auto tmp { enum_entries };
 		std::sort(tmp.begin(), tmp.end(), tuple_comp_rev);
@@ -164,13 +164,13 @@ private:
 	}
 
 	template< std::size_t... I>
-	static constexpr auto _names(std::index_sequence<I...>) noexcept
+	static constexpr auto names(std::index_sequence<I...>) noexcept
 	{
-		return std::array<std::string_view, sizeof...(I)>{{{ enum_name_v<enum_values[I]>}...}};
+		return std::array<std::string_view, sizeof...(I)>{{{ _enum_name_v<enum_values[I]>}...}};
 	}
 
 	template<std::size_t... I>
-	static constexpr auto _values(std::index_sequence<I...>) noexcept
+	static constexpr auto values(std::index_sequence<I...>) noexcept
 	{
 		constexpr std::array<bool, sizeof...(I)> valid { is_valid<static_cast<T>(enum_min_value + I)>()... };
 		constexpr auto num_valid { std::count_if(valid.cbegin(), valid.cend(), [](bool val) noexcept { return val; }) };
@@ -183,7 +183,7 @@ private:
 	}
 
 	template<T e>
-	static constexpr std::string_view _get_name() noexcept
+	static constexpr std::string_view get_name() noexcept
 	{
 		constexpr std::string_view from{epeek<e>()};
 		if (constexpr auto ep { from.rfind(_gpos<0,0>()) }; ep != std::string_view::npos && from[ep + _gpos<0,0>().size()] != '(')
@@ -216,7 +216,7 @@ public:
 	conjure_enum() = delete;
 
 	template<T e>
-	static constexpr std::string_view enum_to_string() noexcept { return _get_name<e>(); }
+	static constexpr std::string_view enum_to_string() noexcept { return get_name<e>(); }
 
 	static constexpr std::string_view enum_type() noexcept
 	{
@@ -235,11 +235,11 @@ public:
 	{};
 
 	template<T e>
-	static constexpr bool is_valid() noexcept { return !_get_name<e>().empty(); }
+	static constexpr bool is_valid() noexcept { return !get_name<e>().empty(); }
 
-	static constexpr auto _values() noexcept
+	static constexpr auto values() noexcept
 	{
-		return _values(std::make_index_sequence<enum_max_value - enum_min_value + 1>({}));
+		return values(std::make_index_sequence<enum_max_value - enum_min_value + 1>({}));
 	}
 
 	static constexpr auto count() noexcept { return enum_values.size(); }
@@ -313,11 +313,11 @@ public:
 		return {};
 	}
 
-	static constexpr auto enum_values { _values() };
-	static constexpr auto enum_entries { _entries(std::make_index_sequence<enum_values.size()>()) };
-	static constexpr auto enum_scoped_entries { _scoped_entries(std::make_index_sequence<enum_values.size()>()) };
-	static constexpr auto enum_entries_sorted { _entries_sorted() };
-	static constexpr auto enum_names { _names(std::make_index_sequence<enum_values.size()>()) };
+	static constexpr auto enum_values { values() };
+	static constexpr auto enum_entries { entries(std::make_index_sequence<enum_values.size()>()) };
+	static constexpr auto enum_scoped_entries { scoped_entries(std::make_index_sequence<enum_values.size()>()) };
+	static constexpr auto enum_entries_sorted { entries_sorted() };
+	static constexpr auto enum_names { names(std::make_index_sequence<enum_values.size()>()) };
 
 	template<typename Fn, typename... Args>
 	requires std::invocable<Fn&&, T, Args...>
@@ -328,7 +328,7 @@ public:
 		return std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...);
 	}
 
-	template<typename C, typename Fn, typename... Args>
+	template<typename Fn, typename C, typename... Args>
 	requires std::invocable<Fn&&, C, T, Args...>
 	[[maybe_unused]] static constexpr auto for_each(Fn&& func, C *obj, Args&&... args) noexcept // specialisation for member function with object
 	{
@@ -341,7 +341,7 @@ public:
 // Note: your enum sequence must be continuous with the last enum value < count of enumerations
 //-----------------------------------------------------------------------------------------
 template<typename T>
-concept valid_bitset_enum = std::is_enum_v<T> && requires(T)
+concept valid_bitset_enum = std::is_enum_v<std::decay_t<T>> && requires(T)
 {
 	requires conjure_enum<T>::count() > 0;
 	requires static_cast<std::size_t>(conjure_enum<T>::enum_values.back()) < conjure_enum<T>::count();
@@ -350,7 +350,7 @@ concept valid_bitset_enum = std::is_enum_v<T> && requires(T)
 template<valid_bitset_enum T>
 class enum_bitset
 {
-	using U = std::underlying_type_t<T>;
+	using U = std::underlying_type_t<std::decay_t<T>>;
 	static constexpr auto countof { conjure_enum<T>::count() };
 
 	template<T val>

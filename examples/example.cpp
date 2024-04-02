@@ -195,5 +195,6 @@ int main(int argc, char *argv[])
 	ek.for_each(std::bind(&foo::printer, &bar, std::placeholders::_1, 10));
 	ek.for_each(&foo::printer, &bar, 10);
 	//enum_bitset<component> et;
+	enum_bitset<numbers&> er("one|three|four|eight"sv, true);
 	return 0;
 }

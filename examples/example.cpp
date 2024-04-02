@@ -186,15 +186,14 @@ int main(int argc, char *argv[])
 
 	struct foo
 	{
-		void printer(numbers val, int other)
+		void printer(numbers val, int other) const
 		{
 			std::cout << conjure_enum<numbers>::enum_to_string(val) << ' ' << other << '\n';
 		}
 	};
-	foo bar;
+	const foo bar;
 	ek.for_each(std::bind(&foo::printer, &bar, std::placeholders::_1, 10));
 	ek.for_each(&foo::printer, &bar, 10);
-	//enum_bitset<component> et;
 	enum_bitset<numbers&> er("one|three|four|eight"sv, true);
 
 	for (const auto pp : iterator_adaptor<numbers>())

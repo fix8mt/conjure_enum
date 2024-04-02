@@ -326,7 +326,7 @@ _output_
 14 10 <== invoked with returned object
 74
 ```
-Example with pointer to member function with addiitonal parameters:
+Example with pointer to member function with additional parameters:
 ```c++
 struct foo
 {
@@ -588,7 +588,7 @@ _output_
 0000001111
 0000001111
 ```
-A typical use of the above is for parsing configuration bitsets. Here you can tell the contructor to throw an exception if a substring
+A typical use of the above is for parsing configuration bitsets. Here you can tell the constructor to throw an exception if a substring
 is invalid:
 ```c++
 try
@@ -606,7 +606,7 @@ _output_
 exception: twenty
 ```
 ## Standard bit operators
-All of the standard operators are supported. Assignment operators return a `enum_bitset&`, non-assigment operators return a `enum_bitset`.
+All of the standard operators are supported. Assignment operators return a `enum_bitset&`, non-assignment operators return a `enum_bitset`.
 
 | Operator | Description |
 | :--- | :--- |
@@ -658,7 +658,7 @@ Additional methods
 | `test_any` | test for one or more bits |
 | `test_all` | test for all specified bits |
 
-All accessors and mutators work with enum values or integers as with operators. They also work with multiple values, either as template paramters or
+All accessors and mutators work with enum values or integers as with operators. They also work with multiple values, either as template parameters or
 as variadic arguments:
 ```c++
 enum_bitset<numbers> eb;
@@ -817,7 +817,7 @@ target_include_directories(myproj PRIVATE ${conjure_enum_SOURCE_DIR}/include)
 # Notes
 ## enum limits
 ### `ENUM_MIN_VALUE`, `ENUM_MAX_VALUE`
-These are set by default unless you overrride them by defining them in your application.
+These are set by default unless you override them by defining them in your application.
 > [!TIP]
 > If you want to define these values they must appear _before_ you include `conjure_enum.hpp`.
 

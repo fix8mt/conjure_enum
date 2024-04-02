@@ -309,6 +309,24 @@ _output_
 14 10 <== invoked with returned object
 74
 ```
+Example with pointer to member function with addiitonal parameters:
+```c++
+struct foo
+{
+   void process(component val, int offset, int& tot)
+   {
+      tot += offset + static_cast<int>(val);
+   }
+};
+int total{};
+foo bar;
+conjure_enum<component>::for_each(&foo::process, &bar, 10, std::ref(total));
+std::cout << total << '\n';
+```
+_output_
+```CSV
+160
+```
 ## `is_scoped`
 ```c++
 struct is_scoped : std::integral_constant<bool, requires

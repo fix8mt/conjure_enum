@@ -671,8 +671,7 @@ requires std::invocable<Fn&&, C, T, Args...>
 Call supplied invocable for _each bit that is on_. Similar to `std::for_each` except first parameter of your invocable must accept an enum value (passed by `for_each`).
 Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. The second version is intended to be used
 when using a member function, the _first_ parameter passed by your call must be the `this` pointer of the object.
-passed by your call must be the `this` pointer of the object. If you wish to pass a `reference` parameter, you must wrap it in
-`std::ref`.
+If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
 
 Returns `std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...)` or
 `std::bind(std::forward<Fn>(func), obj, std::placeholders::_1, std::forward<Args>(args)...)` which can be stored or immediately invoked.

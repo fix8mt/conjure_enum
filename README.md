@@ -43,7 +43,7 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
 ## Key Benefits
 
 - ***Lightweight***  Designed for performance without unnecessary overhead.
-- ***eader-Only***  No external dependencies, simplifying integration into your project.
+- ***Header-Only***  No external dependencies, simplifying integration into your project.
 - ***Modern C++20***  Entirely `constexpr` for compile-time safety, efficiency and performance.
 - ***Simple & Easy to Use***  Class-based approach with intuitive syntax.
 - ***Convenient***  `enum_bitsets` enhances `std::bitset`.

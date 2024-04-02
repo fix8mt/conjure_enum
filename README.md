@@ -374,14 +374,14 @@ _output_
 true
 false
 ```
-## `enum_type`
+## `type_name`
 ```c++
-static constexpr std::string_view enum_type();
+static constexpr std::string_view type_name();
 ```
 Returns a `std::string_view` of `T`.
 ```c++
-std::cout << conjure_enum<component>::enum_type() << '\n';
-std::cout << conjure_enum<component1>::enum_type() << '\n';
+std::cout << conjure_enum<component>::type_name() << '\n';
+std::cout << conjure_enum<component1>::type_name() << '\n';
 ```
 _output_
 ```CSV

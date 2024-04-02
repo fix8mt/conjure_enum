@@ -253,7 +253,7 @@ template<typename Fn, typename... Args>
 requires std::invocable<Fn&&, T, Args...>
 [[maybe_unused]] static constexpr auto for_each(Fn&& func, Args&&... args);
 
-template<typename C, typename Fn, typename... Args> // specialisation for member function with object
+template<typename Fn, typename C, typename... Args> // specialisation for member function with object
 requires std::invocable<Fn&&, C, T, Args...>
 [[maybe_unused]] constexpr auto for_each(Fn&& func, C *obj, Args&&... args);
 ```

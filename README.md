@@ -145,15 +145,15 @@ _output_
 ```CSV
 10
 ```
-## `enum_names`
+## `names`
 ```c++
-static constexpr std::array<std::string_view, std::size_t> enum_names;
+static constexpr std::array<std::string_view, std::size_t> names;
 ```
 This static member is generated for your type. It is a `std::array` of the `std::string_view` strings.
 ```c++
-for(const auto ev : conjure_enum<component>::enum_names) // scoped
+for(const auto ev : conjure_enum<component>::names) // scoped
    std::cout << ev << '\n';
-for(const auto ev : conjure_enum<component1>::enum_names) // unscoped
+for(const auto ev : conjure_enum<component1>::names) // unscoped
    std::cout << ev << '\n';
 ```
 _output_
@@ -179,13 +179,13 @@ path
 query
 fragment
 ```
-## `enum_values`
+## `values`
 ```c++
-static constexpr std::array<T, std::size_t> enum_values;
+static constexpr std::array<T, std::size_t> values;
 ```
 This static member is generated for your type. It is a `std::array` of the `T` values.
 ```c++
-for(const auto ev : conjure_enum<component>::enum_values) // scoped
+for(const auto ev : conjure_enum<component>::values) // scoped
    std::cout << static_cast<int>(ev) << '\n';
 ```
 _output_
@@ -201,13 +201,15 @@ _output_
 13
 14
 ```
-## `enum_entries`
+## `entries`, `sorted_entries`
 ```c++
-static constexpr std::array<std::tuple<T, std::string_view>, std::size_t> enum_entries;
+static constexpr std::array<std::tuple<T, std::string_view>, std::size_t> entries;
+static constexpr std::array<std::tuple<T, std::string_view>, std::size_t> sorted_entries;
 ```
 This static member is generated for your type. It is a `std::array` of tuples of `T` and `std::string_view`.
+`sorted_entries` is the same as `entries` except the array is sorted by the `std::string_view` name.
 ```c++
-for(const auto [value, str] : conjure_enum<component>::enum_entries) // scoped
+for(const auto [value, str] : conjure_enum<component>::entries) // scoped
    std::cout << std::format("{:<2} {}\n", static_cast<int>(value), str);
 ```
 _output_
@@ -223,15 +225,15 @@ _output_
 13 component::query
 14 component::fragment
 ```
-## `enum_scoped_entries`
+## `scoped_entries`
 ```c++
-static constexpr std::array<std::tuple<std::string_view, std::string_view>, std::size_t> enum_scoped_entries;
+static constexpr std::array<std::tuple<std::string_view, std::string_view>, std::size_t> scoped_entries;
 ```
 This static member is generated for your type. It is a `std::array` of a tuple of `std::string_view` pairs.
 It contains pairs of unscoped and their scoped string version. This array is sorted by unscoped name.
 For unscoped enums, these are identical.
 ```c++
-for(const auto [a, b] : conjure_enum<component>::enum_scoped_entries)
+for(const auto [a, b] : conjure_enum<component>::scoped_entries)
    std::cout << std::format("{:9} {}\n", a, b);
 ```
 _output_
@@ -246,6 +248,21 @@ query     component::query
 scheme    component::scheme
 user      component::user
 userinfo  component::userinfo
+```
+## `contains`
+```c++
+static constexpr bool contains(T value);
+static constexpr bool contains(std::string_view str);
+```
+Returns `true` if the enum contains the given value or string.
+```c++
+std::cout << std::format("{}\n", conjure_enum<component>::contains(component::path));
+std::cout << std::format("{}\n", conjure_enum<component1>::contains("nothing"));
+```
+_output_
+```CSV
+true
+false
 ```
 ## `for_each`
 ```c++
@@ -422,7 +439,7 @@ static constexpr auto cend();
 static constexpr auto crbegin();
 static constexpr auto crend();
 ```
-These methods return `const_iterator` and `const_reverse_iterator` respectively all from `enum_entries`
+These methods return `const_iterator` and `const_reverse_iterator` respectively all from `entries`
 defined above.
 ```c++
 using en = conjure_enum<numbers>;
@@ -471,7 +488,7 @@ _output_
 static constexpr auto front();
 static constexpr auto back();
 ```
-These methods return `*cbegin()` and `*std::prev(cend())` respectively all from `enum_entries`
+These methods return `*cbegin()` and `*std::prev(cend())` respectively all from `entries`
 defined above.
 ```c++
 using en = conjure_enum<numbers>;

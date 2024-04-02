@@ -442,6 +442,30 @@ _output_
 8 numbers::eight
 9 numbers::nine
 ```
+## `iterator_adaptor`
+```c++
+template<typename E, typename T=std::decay_t<E>>
+requires std::is_enum_v<T>
+struct iterator_adaptor;
+```
+This class can be used to wrap `conjure_enum<T>` to allow use in range based for loops:
+```c++
+for (const auto pp : iterator_adaptor<numbers>())
+   std::cout << static_cast<int>(std::get<0>(pp)) << '\n';
+```
+_output_
+```CSV
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+```
 ## `front, back`
 ```c++
 static constexpr auto front();

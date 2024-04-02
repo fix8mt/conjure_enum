@@ -336,6 +336,15 @@ public:
 	}
 };
 
+// allow range based for
+template<typename E, typename T=std::decay_t<E>>
+requires std::is_enum_v<T>
+struct iterator_adaptor
+{
+	constexpr auto begin() noexcept { return conjure_enum<T>::enum_entries.cbegin(); }
+	constexpr auto end() noexcept { return conjure_enum<T>::enum_entries.cend(); }
+};
+
 //-----------------------------------------------------------------------------------------
 // bitset based on supplied enum
 // Note: your enum sequence must be continuous with the last enum value < count of enumerations

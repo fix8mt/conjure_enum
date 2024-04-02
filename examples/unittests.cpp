@@ -248,15 +248,15 @@ TEST_CASE("for_each")
 
 	struct foo
 	{
-		void process(component val, int& tot)
+		void process(component val, int offset, int& tot)
 		{
-			tot += static_cast<int>(val);
+			tot += offset + static_cast<int>(val);
 		}
 	};
 	foo bar;
 	total = 0;
-	conjure_enum<component>::for_each(&foo::process, &bar, std::ref(total));
-	REQUIRE(total == 60);
+	conjure_enum<component>::for_each(&foo::process, &bar, 10, std::ref(total));
+	REQUIRE(total == 160);
 }
 
 //-----------------------------------------------------------------------------------------

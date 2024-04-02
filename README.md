@@ -465,7 +465,7 @@ template<typename E, typename T=std::decay_t<E>>
 requires std::is_enum_v<T>
 struct iterator_adaptor;
 ```
-This class can be used to wrap `conjure_enum<T>` to allow use in range based for loops:
+This class wraps `conjure_enum<T>` allowing it to be used in range based for loops:
 ```c++
 for (const auto pp : iterator_adaptor<numbers>())
    std::cout << static_cast<int>(std::get<0>(pp)) << '\n';
@@ -741,13 +741,13 @@ Example using member function:
 ```c++
 struct foo
 {
-   void printer(numbers val, int other)
+   void printer(numbers val, int other) const
    {
       std::cout << conjure_enum<numbers>::enum_to_string(val) << ' ' << other << '\n';
    }
 };
 enum_bitset<numbers> ec(numbers::zero,numbers::two,numbers::five,numbers::nine);
-foo bar;
+const foo bar;
 ec.for_each(&foo::printer, &bar, 10);
 ```
 _output_

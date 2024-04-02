@@ -124,9 +124,9 @@ class conjure_enum final
 	static constexpr auto _gpos() noexcept { return std::get<N>(_specifics[V]); }
 
 	template<T e>
-	static constexpr auto enum_name() noexcept
+	static constexpr auto _enum_name() noexcept
 	{
-		constexpr auto result { get_name<e>() };
+		constexpr auto result { _get_name<e>() };
 		return fixed_string<result.size()>(result);
 	}
 
@@ -140,37 +140,37 @@ public:
 
 private:
 	template<T e>
-	static constexpr auto _enum_name_v { enum_name<e>() };
+	static constexpr auto _enum_name_v { _enum_name<e>() };
 
 	template<std::size_t... I>
-	static constexpr auto entries(std::index_sequence<I...>) noexcept
+	static constexpr auto _entries(std::index_sequence<I...>) noexcept
 	{
-		return std::array<enum_tuple, sizeof...(I)>{{{ enum_values[I], _enum_name_v<enum_values[I]>}...}};
+		return std::array<enum_tuple, sizeof...(I)>{{{ values[I], _enum_name_v<values[I]>}...}};
 	}
 
 	template<std::size_t... I>
-	static constexpr auto scoped_entries(std::index_sequence<I...>) noexcept
+	static constexpr auto _scoped_entries(std::index_sequence<I...>) noexcept
 	{
-		std::array<scoped_tuple, sizeof...(I)> tmp{{{ remove_scope(_enum_name_v<enum_values[I]>), _enum_name_v<enum_values[I]>}...}};
+		std::array<scoped_tuple, sizeof...(I)> tmp{{{ remove_scope(_enum_name_v<values[I]>), _enum_name_v<values[I]>}...}};
 		std::sort(tmp.begin(), tmp.end(), scoped_comp);
 		return tmp;
 	}
 
-	static constexpr auto entries_sorted() noexcept
+	static constexpr auto _sorted_entries() noexcept
 	{
-		auto tmp { enum_entries };
+		auto tmp { entries };
 		std::sort(tmp.begin(), tmp.end(), tuple_comp_rev);
 		return tmp;
 	}
 
 	template< std::size_t... I>
-	static constexpr auto names(std::index_sequence<I...>) noexcept
+	static constexpr auto _names(std::index_sequence<I...>) noexcept
 	{
-		return std::array<std::string_view, sizeof...(I)>{{{ _enum_name_v<enum_values[I]>}...}};
+		return std::array<std::string_view, sizeof...(I)>{{{ _enum_name_v<values[I]>}...}};
 	}
 
 	template<std::size_t... I>
-	static constexpr auto values(std::index_sequence<I...>) noexcept
+	static constexpr auto _values(std::index_sequence<I...>) noexcept
 	{
 		constexpr std::array<bool, sizeof...(I)> valid { is_valid<static_cast<T>(enum_min_value + I)>()... };
 		constexpr auto num_valid { std::count_if(valid.cbegin(), valid.cend(), [](bool val) noexcept { return val; }) };
@@ -182,8 +182,13 @@ private:
 		return vals;
 	}
 
+	static constexpr auto _values() noexcept
+	{
+		return _values(std::make_index_sequence<enum_max_value - enum_min_value + 1>({}));
+	}
+
 	template<T e>
-	static constexpr std::string_view get_name() noexcept
+	static constexpr std::string_view _get_name() noexcept
 	{
 		constexpr std::string_view from{epeek<e>()};
 		if (constexpr auto ep { from.rfind(_gpos<0,0>()) }; ep != std::string_view::npos && from[ep + _gpos<0,0>().size()] != '(')
@@ -216,9 +221,9 @@ public:
 	conjure_enum() = delete;
 
 	template<T e>
-	static constexpr std::string_view enum_to_string() noexcept { return get_name<e>(); }
+	static constexpr std::string_view enum_to_string() noexcept { return _get_name<e>(); }
 
-	static constexpr std::string_view enum_type() noexcept
+	static constexpr std::string_view type_name() noexcept
 	{
 		constexpr std::string_view from{tpeek()};
 		if (constexpr auto ep { from.rfind(_gpos<0,1>()) }; ep != std::string_view::npos)
@@ -235,14 +240,9 @@ public:
 	{};
 
 	template<T e>
-	static constexpr bool is_valid() noexcept { return !get_name<e>().empty(); }
+	static constexpr bool is_valid() noexcept { return !_get_name<e>().empty(); }
 
-	static constexpr auto values() noexcept
-	{
-		return values(std::make_index_sequence<enum_max_value - enum_min_value + 1>({}));
-	}
-
-	static constexpr auto count() noexcept { return enum_values.size(); }
+	static constexpr auto count() noexcept { return values.size(); }
 
 	static constexpr std::string_view remove_scope(std::string_view what) noexcept
 	{
@@ -258,8 +258,8 @@ public:
 	{
 		if constexpr (is_scoped())
 		{
-			if (const auto result { std::equal_range(enum_scoped_entries.cbegin(),
-				enum_scoped_entries.cend(), scoped_tuple(what, std::string_view()), scoped_comp) };
+			if (const auto result { std::equal_range(scoped_entries.cbegin(),
+				scoped_entries.cend(), scoped_tuple(what, std::string_view()), scoped_comp) };
 					result.first != result.second)
 						return std::get<1>(*result.first);
 		}
@@ -269,61 +269,61 @@ public:
 	static constexpr bool has_scope(std::string_view what) noexcept
 	{
 		if constexpr (is_scoped())
-			return enum_contains(what);
+			return contains(what);
 		else
 			return false;
 	}
 
-	static constexpr auto cbegin() noexcept { return enum_entries.cbegin(); }
-	static constexpr auto cend() noexcept { return enum_entries.cend(); }
-	static constexpr auto crbegin() noexcept { return enum_entries.crbegin(); }
-	static constexpr auto crend() noexcept { return enum_entries.crend(); }
-	static constexpr auto front() noexcept { return *enum_entries.cbegin(); }
-	static constexpr auto back() noexcept { return *std::prev(enum_entries.cend()); }
+	static constexpr auto cbegin() noexcept { return entries.cbegin(); }
+	static constexpr auto cend() noexcept { return entries.cend(); }
+	static constexpr auto crbegin() noexcept { return entries.crbegin(); }
+	static constexpr auto crend() noexcept { return entries.crend(); }
+	static constexpr auto front() noexcept { return *entries.cbegin(); }
+	static constexpr auto back() noexcept { return *std::prev(entries.cend()); }
 
 	static constexpr std::optional<T> int_to_enum(int value) noexcept
 	{
-		if (const auto result { std::equal_range(enum_values.cbegin(), enum_values.cend(), static_cast<T>(value), value_comp) };
+		if (const auto result { std::equal_range(values.cbegin(), values.cend(), static_cast<T>(value), value_comp) };
 			result.first != result.second)
 				return *result.first;
 		return {};
 	}
-	static constexpr bool enum_contains(T value) noexcept
+	static constexpr bool contains(T value) noexcept
 	{
-		const auto result { std::equal_range(enum_values.cbegin(), enum_values.cend(), value, value_comp) };
+		const auto result { std::equal_range(values.cbegin(), values.cend(), value, value_comp) };
 		return result.first != result.second;
    }
-	static constexpr bool enum_contains(std::string_view str) noexcept
+	static constexpr bool contains(std::string_view str) noexcept
 	{
-		const auto result { std::equal_range(enum_entries_sorted.cbegin(), enum_entries_sorted.cend(), enum_tuple(T{}, str), tuple_comp_rev) };
+		const auto result { std::equal_range(sorted_entries.cbegin(), sorted_entries.cend(), enum_tuple(T{}, str), tuple_comp_rev) };
 		return result.first != result.second;
 	}
 	static constexpr std::string_view enum_to_string(T value, bool noscope=false) noexcept
 	{
-		if (const auto result { std::equal_range(enum_entries.cbegin(), enum_entries.cend(), enum_tuple(value, std::string_view()), tuple_comp) };
+		if (const auto result { std::equal_range(entries.cbegin(), entries.cend(), enum_tuple(value, std::string_view()), tuple_comp) };
 			result.first != result.second)
 				return noscope ? remove_scope(std::get<std::string_view>(*result.first)) : std::get<std::string_view>(*result.first);
 		return {};
 	}
 	static constexpr std::optional<T> string_to_enum(std::string_view str) noexcept
 	{
-		if (const auto result { std::equal_range(enum_entries_sorted.cbegin(), enum_entries_sorted.cend(), enum_tuple(T{}, str), tuple_comp_rev) };
+		if (const auto result { std::equal_range(sorted_entries.cbegin(), sorted_entries.cend(), enum_tuple(T{}, str), tuple_comp_rev) };
 			result.first != result.second)
 				return std::get<T>(*result.first);
 		return {};
 	}
 
-	static constexpr auto enum_values { values() };
-	static constexpr auto enum_entries { entries(std::make_index_sequence<enum_values.size()>()) };
-	static constexpr auto enum_scoped_entries { scoped_entries(std::make_index_sequence<enum_values.size()>()) };
-	static constexpr auto enum_entries_sorted { entries_sorted() };
-	static constexpr auto enum_names { names(std::make_index_sequence<enum_values.size()>()) };
+	static constexpr auto values { _values() };
+	static constexpr auto entries { _entries(std::make_index_sequence<values.size()>()) };
+	static constexpr auto scoped_entries { _scoped_entries(std::make_index_sequence<values.size()>()) };
+	static constexpr auto sorted_entries { _sorted_entries() };
+	static constexpr auto names { _names(std::make_index_sequence<values.size()>()) };
 
 	template<typename Fn, typename... Args>
 	requires std::invocable<Fn&&, T, Args...>
 	[[maybe_unused]] static constexpr auto for_each(Fn&& func, Args&&... args) noexcept
 	{
-		for (const auto ev : enum_values)
+		for (const auto ev : values)
 			std::invoke(std::forward<Fn>(func), ev, std::forward<Args>(args)...);
 		return std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...);
 	}
@@ -341,8 +341,8 @@ template<typename E, typename T=std::decay_t<E>>
 requires std::is_enum_v<T>
 struct iterator_adaptor
 {
-	constexpr auto begin() noexcept { return conjure_enum<T>::enum_entries.cbegin(); }
-	constexpr auto end() noexcept { return conjure_enum<T>::enum_entries.cend(); }
+	constexpr auto begin() noexcept { return conjure_enum<T>::entries.cbegin(); }
+	constexpr auto end() noexcept { return conjure_enum<T>::entries.cend(); }
 };
 
 //-----------------------------------------------------------------------------------------
@@ -353,7 +353,7 @@ template<typename T>
 concept valid_bitset_enum = std::is_enum_v<std::decay_t<T>> && requires(T)
 {
 	requires conjure_enum<T>::count() > 0;
-	requires static_cast<std::size_t>(conjure_enum<T>::enum_values.back()) < conjure_enum<T>::count();
+	requires static_cast<std::size_t>(conjure_enum<T>::values.back()) < conjure_enum<T>::count();
 };
 
 template<valid_bitset_enum T>
@@ -483,7 +483,7 @@ public:
 	requires std::invocable<Fn&&, T, Args...>
 	[[maybe_unused]] constexpr auto for_each(Fn&& func, Args&&... args) noexcept
 	{
-		for (const auto ev : conjure_enum<T>::enum_values)
+		for (const auto ev : conjure_enum<T>::values)
 			if (test(ev))
 				std::invoke(std::forward<Fn>(func), ev, std::forward<Args>(args)...);
 		return std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...);

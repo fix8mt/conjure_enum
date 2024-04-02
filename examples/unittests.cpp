@@ -72,7 +72,7 @@ TEST_CASE("count")
 }
 
 //-----------------------------------------------------------------------------------------
-TEST_CASE("enum_names")
+TEST_CASE("names")
 {
 	static constexpr auto compnames
 	{
@@ -89,12 +89,12 @@ TEST_CASE("enum_names")
 			"scheme", "authority", "userinfo", "user", "password", "host", "port", "path", "query", "fragment"
       })
    };
-	REQUIRE(conjure_enum<component>::enum_names == compnames);
-	REQUIRE(conjure_enum<component1>::enum_names == compnames1);
+	REQUIRE(conjure_enum<component>::names == compnames);
+	REQUIRE(conjure_enum<component1>::names == compnames1);
 }
 
 //-----------------------------------------------------------------------------------------
-TEST_CASE("enum_values")
+TEST_CASE("values")
 {
 	static constexpr std::array compvalues
 	{
@@ -105,12 +105,12 @@ TEST_CASE("enum_values")
 	{
 		scheme, authority, userinfo, user, password, host, port, path, query, fragment
 	};
-	REQUIRE(conjure_enum<component>::enum_values == compvalues);
-	REQUIRE(conjure_enum<component1>::enum_values == compvalues1);
+	REQUIRE(conjure_enum<component>::values == compvalues);
+	REQUIRE(conjure_enum<component1>::values == compvalues1);
 }
 
 //-----------------------------------------------------------------------------------------
-TEST_CASE("enum_entries")
+TEST_CASE("entries")
 {
 	static constexpr auto compentries
 	{
@@ -144,19 +144,19 @@ TEST_CASE("enum_entries")
 			{ fragment, "fragment" }
       })
    };
-	REQUIRE(conjure_enum<component>::enum_entries == compentries);
-	REQUIRE(conjure_enum<component1>::enum_entries == compentries1);
+	REQUIRE(conjure_enum<component>::entries == compentries);
+	REQUIRE(conjure_enum<component1>::entries == compentries1);
 }
 
 //-----------------------------------------------------------------------------------------
-TEST_CASE("enum_contains")
+TEST_CASE("contains")
 {
-	REQUIRE(conjure_enum<component>::enum_contains(component::path));
-	REQUIRE(conjure_enum<component>::enum_contains(component::test)); // alias
-	REQUIRE(conjure_enum<component1>::enum_contains(path));
-	REQUIRE(!conjure_enum<component>::enum_contains(static_cast<component>(100)));
-	REQUIRE(conjure_enum<component>::enum_contains("component::path"sv));
-	REQUIRE(conjure_enum<component1>::enum_contains("path"sv));
+	REQUIRE(conjure_enum<component>::contains(component::path));
+	REQUIRE(conjure_enum<component>::contains(component::test)); // alias
+	REQUIRE(conjure_enum<component1>::contains(path));
+	REQUIRE(!conjure_enum<component>::contains(static_cast<component>(100)));
+	REQUIRE(conjure_enum<component>::contains("component::path"sv));
+	REQUIRE(conjure_enum<component1>::contains("path"sv));
 }
 
 //-----------------------------------------------------------------------------------------
@@ -229,10 +229,10 @@ TEST_CASE("get_name")
 }
 
 //-----------------------------------------------------------------------------------------
-TEST_CASE("enum_type")
+TEST_CASE("type_name")
 {
-	REQUIRE(conjure_enum<component>::enum_type() == "component");
-	REQUIRE(conjure_enum<component1>::enum_type() == "component1");
+	REQUIRE(conjure_enum<component>::type_name() == "component");
+	REQUIRE(conjure_enum<component1>::type_name() == "component1");
 }
 
 //-----------------------------------------------------------------------------------------

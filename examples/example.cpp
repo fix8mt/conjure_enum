@@ -105,11 +105,11 @@ int main(int argc, char *argv[])
 	std::cout << ec << '\n';
 	ec.flip();
 	std::cout << ec << '\n';
-	std::cout << std::boolalpha << conjure_enum<component>::enum_contains("component::path"sv) << '\n';
-	//std::cout << std::boolalpha << conjure_enum<component>::enum_contains(argv[1]) << '\n';
-	for(const auto [a, b] : conjure_enum<component>::enum_entries_sorted)
+	std::cout << std::boolalpha << conjure_enum<component>::contains("component::path"sv) << '\n';
+	//std::cout << std::boolalpha << conjure_enum<component>::contains(argv[1]) << '\n';
+	for(const auto [a, b] : conjure_enum<component>::sorted_entries)
 		std::cout << conjure_enum<component>::remove_scope(b) << ' ' << static_cast<int>(a) << '\n';
-	for(const auto [a, b] : conjure_enum<numbers1>::enum_entries)
+	for(const auto [a, b] : conjure_enum<numbers1>::entries)
 		std::cout << b << ' ' << static_cast<int>(a) << '\n';
 	std::cout << conjure_enum<component>::add_scope("path"sv) << '\n';
 	std::cout << conjure_enum<component>::add_scope("component::path"sv) << '\n';
@@ -123,8 +123,8 @@ int main(int argc, char *argv[])
 	std::cout << conjure_enum<component>::epeek<component::path>() << '\n';
 	std::cout << conjure_enum<component>::tpeek() << '\n';
 	std::cout << conjure_enum<component>::epeek<static_cast<component>(100)>() << '\n';
-	std::cout << demangle<decltype(conjure_enum<component>::enum_scoped_entries)>() << '\n';
-	for(const auto [a, b] : conjure_enum<component>::enum_scoped_entries)
+	std::cout << demangle<decltype(conjure_enum<component>::scoped_entries)>() << '\n';
+	for(const auto [a, b] : conjure_enum<component>::scoped_entries)
 		std::cout << a << ' ' << b << '\n';
 	std::cout << "*******************************\n";
 #if __has_include(<format>)
@@ -138,11 +138,11 @@ int main(int argc, char *argv[])
 	enum_bitset<numbers> c(15);
 	std::cout << c << '\n';
 #if __has_include(<format>)
-	for(const auto [a, b] : conjure_enum<component>::enum_scoped_entries)
+	for(const auto [a, b] : conjure_enum<component>::scoped_entries)
 		std::cout << std::format("{:9} {}\n", a, b);
-	for(const auto [value, str] : conjure_enum<component>::enum_entries) // scoped
+	for(const auto [value, str] : conjure_enum<component>::entries) // scoped
 		std::cout << std::format("{:<2} {}\n", static_cast<int>(value), str);
-	std::cout << std::format("{}\n", conjure_enum<component>::enum_contains("component::path"sv));
+	std::cout << std::format("{}\n", conjure_enum<component>::contains("component::path"sv));
 	std::cout << std::format("\"{}\"\n", conjure_enum<component>::enum_to_string<component::scheme>());
 #endif
 	auto printer([](numbers val)

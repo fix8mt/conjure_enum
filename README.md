@@ -654,7 +654,7 @@ Additional methods
 | Method | Description |
 | :--- | :--- |
 | `set_all` | set all specified bits |
-| `reset` | reset all specified bits |
+| `reset_all` | reset all specified bits |
 | `test_any` | test for one or more bits |
 | `test_all` | test for all specified bits |
 

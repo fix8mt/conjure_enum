@@ -211,6 +211,9 @@ This static member is generated for your type. It is a `std::array` of tuples of
 ```c++
 for(const auto [value, str] : conjure_enum<component>::entries) // scoped
    std::cout << std::format("{:<2} {}\n", static_cast<int>(value), str);
+std::cout << '\n';
+for(const auto [value, str] : conjure_enum<component>::sorted_entries) // scoped
+   std::cout << std::format("{:<2} {}\n", static_cast<int>(value), str);
 ```
 _output_
 ```CSV
@@ -224,6 +227,17 @@ _output_
 12 component::path
 13 component::query
 14 component::fragment
+
+1  component::authority
+14 component::fragment
+5  component::host
+4  component::password
+12 component::path
+6  component::port
+13 component::query
+0  component::scheme
+3  component::user
+2  component::userinfo
 ```
 ## `scoped_entries`
 ```c++

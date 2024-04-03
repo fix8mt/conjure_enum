@@ -266,9 +266,9 @@ TEST_CASE("enum_bitset")
 	enum_bitset<numbers&> ebr;
 	eb.set_all<numbers::zero,numbers::two,numbers::five,numbers::nine>();
 	REQUIRE(eb.test_all<numbers::zero,numbers::two,numbers::five,numbers::nine>());
-	eb.clear_all<numbers::FIVE>(); // use alias
+	eb.reset<numbers::FIVE>(); // use alias
 	REQUIRE(!eb.test_all<numbers::zero,numbers::two,numbers::five,numbers::nine>());
-	eb.clear(numbers::nine);
+	eb.reset(numbers::nine);
 	REQUIRE(!eb.test(numbers::nine));
 
 	enum_bitset<numbers> ec(numbers::one,numbers::three,numbers::six);
@@ -285,11 +285,11 @@ TEST_CASE("enum_bitset")
 	ec.flip();
 	REQUIRE(ec.to_ulong() == 0b1110110101);
 	REQUIRE(ec.count() == 7);
-	ec.clear<numbers::three>();
+	ec.reset<numbers::three>();
 	REQUIRE(!ec.test<numbers::three>());
 	ec.set<numbers::three>();
 	REQUIRE(ec.test<numbers::three>());
-	ec.clear(numbers::three);
+	ec.reset(numbers::three);
 	REQUIRE(!ec.test<numbers::three>());
 	ec.set(numbers::three);
 	REQUIRE(ec.test<numbers::three>());
@@ -312,7 +312,7 @@ TEST_CASE("enum_bitset")
 	REQUIRE(ed.to_ulong() == 0b10);
 	//std::cerr << ed << '\n';
 
-	ed.clear();
+	ed.reset();
 	REQUIRE(!ed);
 	REQUIRE((ed ^ numbers::one).to_ulong()  == 0b010);
 	ed ^= numbers::one;

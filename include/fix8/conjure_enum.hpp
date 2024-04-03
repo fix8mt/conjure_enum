@@ -131,6 +131,13 @@ class conjure_enum final
 	}
 
 public:
+	conjure_enum() = delete;
+	~conjure_enum() = delete;
+	conjure_enum(const conjure_enum&) = delete;
+	conjure_enum& operator=(const conjure_enum&) = delete;
+	conjure_enum(conjure_enum&&) = delete;
+	conjure_enum& operator=(conjure_enum&&) = delete;
+
 	using enum_tuple = std::tuple<T, std::string_view>;
 	using scoped_tuple = std::tuple<std::string_view, std::string_view>;
 
@@ -218,8 +225,6 @@ private:
 	}
 
 public:
-	conjure_enum() = delete;
-
 	template<T e>
 	static constexpr std::string_view enum_to_string() noexcept { return _get_name<e>(); }
 
@@ -418,19 +423,19 @@ public:
 	constexpr void flip(T what) noexcept { flip(to_underlying(what)); }
 
 	template<T what>
-	constexpr void clear() noexcept
+	constexpr void reset() noexcept
 	{
 		if constexpr (constexpr auto uu{to_underlying<what>()}; uu < countof)
 			_present &= ~(1 << uu);
 	}
-	constexpr void clear() noexcept { _present = 0; }
-	constexpr void clear(U pos) noexcept { _present &= ~(1 << pos); }
-	constexpr void clear(T what) noexcept { clear(to_underlying(what)); }
+	constexpr void reset() noexcept { _present = 0; }
+	constexpr void reset(U pos) noexcept { _present &= ~(1 << pos); }
+	constexpr void reset(T what) noexcept { reset(to_underlying(what)); }
 	template<T... comp>
-	constexpr void clear_all() noexcept { (clear<comp>(),...); }
+	constexpr void reset_all() noexcept { (reset<comp>(),...); }
 	template<typename... I>
 	requires(std::is_integral_v<I> && ...)
-	constexpr void clear_all(I...comp) noexcept { (clear(comp),...); };
+	constexpr void reset_all(I...comp) noexcept { (reset(comp),...); };
 
 	constexpr bool test(U pos) const noexcept { return _present & (1 << pos); }
 	constexpr bool test(T what) const noexcept { return test(to_underlying(what)); }

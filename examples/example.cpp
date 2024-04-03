@@ -86,12 +86,12 @@ int main(int argc, char *argv[])
 	eb.set_all<numbers::zero,numbers::two,numbers::five,numbers::nine>();
 	std::cout << eb << '\n';
 	std::cout << std::boolalpha << eb.test_all<numbers::zero,numbers::two,numbers::five,numbers::nine>() << '\n';
-	eb.clear_all<numbers::five,numbers::two>();
+	eb.reset_all<numbers::five,numbers::two>();
 	std::cout << std::boolalpha << eb.test_all(0, 2, 5, 9) << '\n';
 	std::cout << std::boolalpha << eb.test_any(0, 2, 5, 9) << '\n';
 	std::cout << std::boolalpha << eb.test_all(numbers::zero,numbers::nine) << '\n';
 	std::cout << eb << '\n';
-	eb.clear(numbers::nine);
+	eb.reset(numbers::nine);
 	std::cout << eb << '\n';
 	enum_bitset<numbers> ec(numbers::one,numbers::three,numbers::six);
 	std::cout << ec << '\n';

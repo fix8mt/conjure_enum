@@ -28,9 +28,9 @@
 # Introduction
 ## Supercharge Your C++ Enums with This Lightweight Reflection Library!
 
-Based on the awesome work of [`magic_enum`](https://github.com/Neargye/magic_enum)[^2], this library offers a streamlined and powerful
-way to add reflection capabilities to your C++ enums. We've optimized the core functionality, focusing on the main
-features developers usually need while enhancing them for a more efficient and expressive experience.
+Based on the awesome work of [`magic_enum`](https://github.com/Neargye/magic_enum)[^2] and [`boost::desribe`](https://github.com/boostorg/describe),
+this library offers a streamlined and powerful way to add reflection capabilities to your C++ enums. We've optimized the core functionality,
+focusing on the main features developers usually need while enhancing them for a more efficient and expressive experience.
 
 ## Embrace the Future with C++20
 
@@ -642,7 +642,7 @@ All of the standard accessors and mutators are supported.
 | :--- | :--- |
 | `test` | test for bit(s)|
 | `set` | set bit(s)|
-| `clear` | clear bits(s)|
+| `reset` | reset bits(s)|
 | `flip` | flip bits(s)|
 | `to_ulong` | convert to `unsigned long` |
 | `to_ullong` | convert to `unsigned long long` |
@@ -654,7 +654,7 @@ Additional methods
 | Method | Description |
 | :--- | :--- |
 | `set_all` | set all specified bits |
-| `clear_all` | clear all specified bits |
+| `reset` | reset all specified bits |
 | `test_any` | test for one or more bits |
 | `test_all` | test for all specified bits |
 
@@ -665,12 +665,12 @@ enum_bitset<numbers> eb;
 eb.set_all<numbers::zero,numbers::two,numbers::five,numbers::nine>();
 std::cout << eb << '\n';
 std::cout << std::boolalpha << eb.test_all<numbers::zero,numbers::two,numbers::five,numbers::nine>() << '\n';
-eb.clear_all<numbers::five,numbers::two>();
+eb.reset<numbers::five,numbers::two>();
 std::cout << std::boolalpha << eb.test_all(0, 2, 5, 9) << '\n';
 std::cout << std::boolalpha << eb.test_any(0, 2, 5, 9) << '\n';
 std::cout << std::boolalpha << eb.test_all(numbers::zero,numbers::nine) << '\n';
 std::cout << eb << '\n';
-eb.clear(numbers::nine)
+eb.reset(numbers::nine)
 std::cout << ec << '\n';
 ```
 _output_

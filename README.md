@@ -272,11 +272,11 @@ requires std::invocable<Fn&&, T, Args...>
 
 template<typename Fn, typename C, typename... Args> // specialisation for member function with object
 requires std::invocable<Fn&&, C, T, Args...>
-[[maybe_unused]] constexpr auto for_each(Fn&& func, C *obj, Args&&... args);
+[[maybe_unused]] static constexpr auto for_each(Fn&& func, C *obj, Args&&... args);
 ```
-Call supplied invocable for each enum. Similar to `std::for_each` except first parameter of your invocable must accept an enum value (passed by `for_each`).
+Call supplied invocable for _each_ enum. Similar to `std::for_each` except first parameter of your invocable must accept an enum value (passed by `for_each`).
 Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. The second version is intended to be used
-when using a member function, the _first_ parameter passed by your call must be the `this` pointer of the object.
+when using a member function - the _second_ parameter passed by your call must be the `this` pointer of the object.
 If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
 
 Returns `std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...)`
@@ -518,14 +518,14 @@ std::cout << conjure_enum<component>::epeek<component::scheme>() << '\n';
 ```
 Generates this output with gcc:
 ```CSV
-static consteval const char* FIX8::conjure_enum<T>::tpeek() [with T = component]
-static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::scheme; T = component]
+static consteval const char* FIX8::conjure_enum<E, T>::epeek() [with T e = component::path; E = component; T = component]
+static consteval const char* FIX8::conjure_enum<E, T>::tpeek() [with E = component; T = component]
 ```
 # Examples using `enum_bitset`
-`enum_bitset` is a convenient and useful way of creating bitsets and is based on `std::bitset` except it uses your enum (scoped or unscoped)
+`enum_bitset` is a convenient way of creating bitsets based on `std::bitset`. It uses your enum (scoped or unscoped)
 for the bit positions (and names).
 > [!NOTE]
-> Your enum must start at `0` and be continuous. The last value must be less than the count of enumerations.
+> Your enum should be continuous. The last value must be less than the count of enumerations.
 
 We decided on this restriction for both simplicity and practicality - bitsets only really make sense when represented in this manner.
 
@@ -725,11 +725,11 @@ requires std::invocable<Fn&&, T, Args...>
 
 template<typename C, typename Fn, typename... Args> // specialisation for member function with object
 requires std::invocable<Fn&&, C, T, Args...>
-[[maybe_unused]] static constexpr auto for_each(Fn&& func, C *obj, Args&&... args);
+[[maybe_unused]] constexpr auto for_each(Fn&& func, C *obj, Args&&... args);
 ```
 Call supplied invocable for _each bit that is on_. Similar to `std::for_each` except first parameter of your invocable must accept an enum value (passed by `for_each`).
 Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. The second version is intended to be used
-when using a member function, the _first_ parameter passed by your call must be the `this` pointer of the object.
+when using a member function - the _second_ parameter passed by your call must be the `this` pointer of the object.
 If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
 
 Returns `std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...)` or

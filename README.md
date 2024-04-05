@@ -778,7 +778,6 @@ numbers::nine 10
 # Examples using `conjure_type`
 `conjure_type` is a general purpose class allowing you to extract a string representation of any type.
 The string will be stored statically by the compiler, so use the statically generated value `name` for your type.
-you
 ```c++
 template<typename T>
 class conjure_type;

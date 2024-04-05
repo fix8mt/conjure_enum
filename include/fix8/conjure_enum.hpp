@@ -182,7 +182,7 @@ private:
 
 #if defined(__clang__) && defined(__apple_build_version__) // std::count_if not constexpr in xcode/clang
 	template<std::size_t N>
-	static constexpr auto count_if_constexpr(const std::array<bool, N>& valid) noexcept
+	static constexpr auto count_if_constexpr(const bool (&valid)[N]) noexcept
 	{
 		std::size_t cnt{};
 		for(std::size_t nn{}; nn < N; ++nn)
@@ -195,10 +195,11 @@ private:
 	template<std::size_t... I>
 	static constexpr auto _values(std::index_sequence<I...>) noexcept
 	{
-		constexpr std::array<bool, sizeof...(I)> valid { is_valid<static_cast<T>(enum_min_value + I)>()... };
 #if defined(__clang__) && defined(__apple_build_version__)
+		constexpr bool valid[sizeof...(I)] { is_valid<static_cast<T>(enum_min_value + I)>()... };
 		constexpr auto num_valid { count_if_constexpr(valid) };
 #else
+		constexpr std::array<bool, sizeof...(I)> valid { is_valid<static_cast<T>(enum_min_value + I)>()... };
 		constexpr auto num_valid { std::count_if(valid.cbegin(), valid.cend(), [](bool val) noexcept { return val; }) };
 #endif
 		static_assert(num_valid > 0, "conjure_enum requires non-empty enum");

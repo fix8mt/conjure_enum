@@ -7,9 +7,6 @@
 //
 // Lightweight header-only C++20 enum reflection
 //
-//   Parts based on magic_enum <https://github.com/Neargye/magic_enum>
-//   Copyright (c) 2019 - 2024 Daniil Goncharov <neargye@gmail.com>.
-//
 // Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -71,7 +68,7 @@ const std::string demangle() noexcept
 	return typeid(T).name();
 }
 
-int main(int argc, char *argv[])
+int main(void)
 {
 	int total{};
 	auto myfunc { conjure_enum<component>::for_each([](component val, int other, int& tot)
@@ -197,7 +194,7 @@ int main(int argc, char *argv[])
 	const foo bar;
 	ek.for_each(std::bind(&foo::printer, &bar, std::placeholders::_1, 10));
 	ek.for_each(&foo::printer, &bar, 10);
-	enum_bitset<numbers&> er("one|three|four|eight"sv, true);
+	//enum_bitset<numbers&> er("one|three|four|eight"sv, true);
 
 	for (const auto pp : iterator_adaptor<numbers>())
 		std::cout << static_cast<int>(std::get<0>(pp)) << '\n';

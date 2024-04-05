@@ -7,9 +7,6 @@
 //
 // Lightweight header-only C++20 enum reflection
 //
-//   Parts based on magic_enum <https://github.com/Neargye/magic_enum>
-//   Copyright (c) 2019 - 2024 Daniil Goncharov <neargye@gmail.com>.
-//
 // Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -263,7 +260,7 @@ TEST_CASE("for_each")
 TEST_CASE("enum_bitset")
 {
 	enum_bitset<numbers> eb;
-	enum_bitset<numbers&> ebr;
+	//enum_bitset<numbers&> ebr;
 	eb.set_all<numbers::zero,numbers::two,numbers::five,numbers::nine>();
 	REQUIRE(eb.test_all<numbers::zero,numbers::two,numbers::five,numbers::nine>());
 	eb.reset<numbers::FIVE>(); // use alias

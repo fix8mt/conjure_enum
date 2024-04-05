@@ -7,9 +7,6 @@
 #
 # Lightweight header-only C++20 enum reflection
 #
-#   Parts based on magic_enum <https://github.com/Neargye/magic_enum>
-#   Copyright (c) 2019 - 2024 Daniil Goncharov <neargye@gmail.com>.
-#
 # Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -37,10 +34,16 @@ project (conjure_enum
    VERSION 1.0.0
 )
 
+# to disable warnings:
+# cmake -DBUILD_ALL_WARNINGS=false ..
+option(BUILD_ALL_WARNINGS "enable building with all warnings" true)
+message("-- Build with all warnings : ${BUILD_ALL_WARNINGS}")
+
 # to disable building unit tests:
 # cmake -DBUILD_UNITTESTS=false ..
 option(BUILD_UNITTESTS "enable building unit tests" true)
 message("-- Build unit tests: ${BUILD_UNITTESTS}")
+
 if(BUILD_UNITTESTS)
 	include(FetchContent)
 	FetchContent_Declare(Catch2
@@ -62,6 +65,11 @@ foreach(x IN LISTS files)
 	add_executable(${target} examples/${x})
 	set_target_properties(${target} PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED true)
 	target_include_directories(${target} PRIVATE include examples)
+	if(BUILD_ALL_WARNINGS)
+		target_compile_options(${target} PRIVATE
+			$<$<CXX_COMPILER_ID:MSVC>:/W4>
+			$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic>)
+	endif()
 	if(BUILD_UNITTESTS)
 		target_link_libraries(${target} PRIVATE Catch2::Catch2WithMain)
 	endif()

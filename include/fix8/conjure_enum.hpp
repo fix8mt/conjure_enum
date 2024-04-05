@@ -304,8 +304,8 @@ public:
 	static constexpr auto cend() noexcept { return entries.cend(); }
 	static constexpr auto crbegin() noexcept { return entries.crbegin(); }
 	static constexpr auto crend() noexcept { return entries.crend(); }
-	static constexpr auto front() noexcept { return *entries.cbegin(); }
-	static constexpr auto back() noexcept { return *std::prev(entries.cend()); }
+	static constexpr auto front() noexcept { return *cbegin(); }
+	static constexpr auto back() noexcept { return *std::prev(cend()); }
 
 	static constexpr std::optional<T> int_to_enum(int value) noexcept
 	{
@@ -395,7 +395,7 @@ class enum_bitset
 	U _present{};
 
 public:
-	constexpr enum_bitset(U bits) noexcept : _present(bits) {}
+	explicit constexpr enum_bitset(U bits) noexcept : _present(bits) {}
 	constexpr enum_bitset(std::string_view from, bool anyscope=false, char sep='|', bool ignore_errors=true)
 		: _present(factory(from, anyscope, sep, ignore_errors)) {}
 
@@ -456,7 +456,7 @@ public:
 	constexpr void reset_all() noexcept { (reset<comp>(),...); }
 	template<typename... I>
 	requires(std::is_integral_v<I> && ...)
-	constexpr void reset_all(I...comp) noexcept { (reset(comp),...); };
+	constexpr void reset_all(I...comp) noexcept { (reset(comp),...); }
 
 	constexpr bool test(U pos) const noexcept { return _present & (1 << pos); }
 	constexpr bool test(T what) const noexcept { return test(to_underlying(what)); }

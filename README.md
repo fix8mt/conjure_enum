@@ -395,7 +395,7 @@ false
 ```c++
 static constexpr std::string_view type_name();
 ```
-Returns a `std::string_view` of `T`.
+Returns a `std::string_view` of `T`. Uses `conjure_type<T>::name`.
 ```c++
 std::cout << conjure_enum<component>::type_name() << '\n';
 std::cout << conjure_enum<component1>::type_name() << '\n';
@@ -810,6 +810,14 @@ std::cout << conjure_type<conjure_type<conjure_enum<numbers&>>>::name << '\n';
 ```
 ```CSV
 conjure_type<conjure_enum<numbers&, numbers> >
+```
+If you need to explicitly obtain a `std::string_view`, use the `get()` method on `name`:
+```c++
+auto strv { conjure_type<test>::name.get() };
+std::cout << conjure_type<decltype(strv)>::name << '\n';
+```
+```CSV
+std::basic_string_view<char>
 ```
 
 # Building

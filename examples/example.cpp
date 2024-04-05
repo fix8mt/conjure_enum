@@ -44,10 +44,10 @@ using namespace std::literals::string_literals;
 using namespace FIX8;
 
 //-----------------------------------------------------------------------------------------
-enum class component : int { scheme, authority, userinfo, user, password, host, port, path=12, test=path, query, fragment };
-enum component1 : int { scheme, authority, userinfo, user, password, host, port, path=12, query, fragment };
-enum class numbers : int { zero, one, two, three, four, five, six, seven, eight, nine };
-enum class numbers1 : int { zero1=4, one1=3, two1=2, three1, four1, five1, six1, seven1, eight1, nine1 };
+enum class component { scheme, authority, userinfo, user, password, host, port, path=12, test=path, query, fragment };
+enum component1 { scheme, authority, userinfo, user, password, host, port, path=12, query, fragment };
+enum class numbers { zero, one, two, three, four, five, six, seven, eight, nine };
+enum class numbers1 { zero1=4, one1=3, two1=2, three1, four1, five1, six1, seven1, eight1, nine1 };
 
 //-----------------------------------------------------------------------------------------
 template<typename T>
@@ -136,8 +136,8 @@ int main(void)
 	enum_bitset<numbers> c(15);
 	std::cout << c << '\n';
 #if __has_include(<format>)
-	for(const auto [a, b] : conjure_enum<component>::scoped_entries)
-		std::cout << std::format("{:9} {}\n", a, b);
+	for(const auto [a2, b2] : conjure_enum<component>::scoped_entries)
+		std::cout << std::format("{:9} {}\n", a2, b2);
 	for(const auto [value, str] : conjure_enum<component>::entries) // scoped
 		std::cout << std::format("{:<2} {}\n", static_cast<int>(value), str);
 	for(const auto [value, str] : conjure_enum<component>::sorted_entries) // scoped

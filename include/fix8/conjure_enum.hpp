@@ -89,7 +89,7 @@ class fixed_string final
 	constexpr fixed_string(std::string_view sv, std::integer_sequence<char, C...>) noexcept : _buff{sv[C]..., 0} {}
 
 public:
-	constexpr fixed_string(std::string_view sv) noexcept : fixed_string{sv.data(), std::make_integer_sequence<char, N>{}} {}
+	explicit constexpr fixed_string(std::string_view sv) noexcept : fixed_string{sv.data(), std::make_integer_sequence<char, N>{}} {}
 	constexpr fixed_string() = delete;
 	constexpr std::string_view get() const noexcept { return { _buff.data(), N }; }
 	constexpr operator std::string_view() const noexcept { return get(); }
@@ -222,7 +222,7 @@ private:
 		if (constexpr auto ep { from.rfind(get_spec<0,0>()) }; ep != std::string_view::npos && from[ep + get_spec<0,0>().size()] != '(')
 		{
 			constexpr std::string_view result { from.substr(ep + get_spec<0,0>().size()) };
-			if (constexpr auto lc { result.find_first_of(get_spec<1,0>()) }; lc != std::string_view::npos)
+			if constexpr (constexpr auto lc { result.find_first_of(get_spec<1,0>()) }; lc != std::string_view::npos)
 				return result.substr(0, lc);
 		}
 		return {};
@@ -252,10 +252,10 @@ public:
 	static constexpr std::string_view type_name() noexcept
 	{
 		constexpr std::string_view from{tpeek()};
-		if (constexpr auto ep { from.rfind(get_spec<0,1>()) }; ep != std::string_view::npos)
+		if constexpr (constexpr auto ep { from.rfind(get_spec<0,1>()) }; ep != std::string_view::npos)
 		{
 			constexpr std::string_view result { from.substr(ep + get_spec<0,1>().size()) };
-			if (constexpr auto lc { result.find_first_of(get_spec<1,1>()) }; lc != std::string_view::npos)
+			if constexpr (constexpr auto lc { result.find_first_of(get_spec<1,1>()) }; lc != std::string_view::npos)
 				return result.substr(0, lc);
 		}
 		return {};

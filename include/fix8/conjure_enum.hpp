@@ -37,11 +37,11 @@
 // static const char *FIX8::conjure_enum<component>::tpeek() [T = component]
 //																				  |<--		-->|
 // gcc
-// static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::path; T = component] // valid
-//																							  |<--				-->|
-// static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = (component)100; T = component] // invalid
-//																							  |<--           -->|
-// static consteval const char* FIX8::conjure_enum<T>::tpeek() [with T = component]
+// static consteval const char* FIX8::conjure_enum<E, T>::epeek() [with T e = component::path; E = component; T = component] // valid
+//																							     |<--				-->|
+// static consteval const char* FIX8::conjure_enum<E, T>::epeek() [with T e = (component)100; E = component; T = component] // invalid
+//																			 					  |<--           -->|
+// static consteval const char* FIX8::conjure_type<T>::tpeek() [with T = component]
 //																							|<--		 -->|
 // msvc
 // const char *__cdecl FIX8::conjure_enum<enum numbers>::epeek<numbers::two>(void) noexcept			// valid

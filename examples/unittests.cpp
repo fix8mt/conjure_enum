@@ -38,9 +38,9 @@ using namespace std::literals::string_view_literals;
 using namespace std::literals::string_literals;
 
 //-----------------------------------------------------------------------------------------
-enum class component { scheme, authority, userinfo, user, password, host, port, path=12, test=path, query, fragment };
-enum component1 { scheme, authority, userinfo, user, password, host, port, path=12, query, fragment };
-enum class numbers { zero, one, two, three, four, five, FIVE=five, six, seven, eight, nine };
+enum class component : int { scheme, authority, userinfo, user, password, host, port, path=12, test=path, query, fragment };
+enum component1 : int { scheme, authority, userinfo, user, password, host, port, path=12, query, fragment };
+enum class numbers : int { zero, one, two, three, four, five, FIVE=five, six, seven, eight, nine };
 
 //-----------------------------------------------------------------------------------------
 // run as: ctest --output-on-failure

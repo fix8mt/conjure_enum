@@ -64,7 +64,7 @@ foreach(x IN LISTS files)
 	cmake_path(GET x STEM LAST_ONLY target)
 	add_executable(${target} examples/${x})
 	set_target_properties(${target} PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED true)
-	target_include_directories(${target} PRIVATE include examples)
+	target_include_directories(${target} PRIVATE include)
 	if(BUILD_ALL_WARNINGS)
 		target_compile_options(${target} PRIVATE
 			$<$<CXX_COMPILER_ID:MSVC>:/W4>
@@ -76,7 +76,7 @@ foreach(x IN LISTS files)
 	add_custom_command(TARGET ${target} POST_BUILD COMMAND ${CMAKE_STRIP} ${target})
 	cmake_path(GET x FILENAME fname)
 	get_target_property(cppstd ${target} CXX_STANDARD)
-	message("-- adding ${fname} cxx std: C++${cppstd}")
+	message("-- adding ${fname} CXX_STANDARD: C++${cppstd} (${CMAKE_CXX_COMPILER_ID})")
 endforeach()
 
 if(BUILD_UNITTESTS)

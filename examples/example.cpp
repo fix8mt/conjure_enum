@@ -44,10 +44,10 @@ using namespace std::literals::string_literals;
 using namespace FIX8;
 
 //-----------------------------------------------------------------------------------------
-enum class component { scheme, authority, userinfo, user, password, host, port, path=12, test=path, query, fragment };
-enum component1 { scheme, authority, userinfo, user, password, host, port, path=12, query, fragment };
-enum class numbers { zero, one, two, three, four, five, six, seven, eight, nine };
-enum class numbers1 { zero1=4, one1=3, two1=2, three1, four1, five1, six1, seven1, eight1, nine1 };
+enum class component : int { scheme, authority, userinfo, user, password, host, port, path=12, test=path, query, fragment };
+enum component1 : int { scheme, authority, userinfo, user, password, host, port, path=12, query, fragment };
+enum class numbers : int { zero, one, two, three, four, five, six, seven, eight, nine };
+enum class numbers1 : int { zero1=4, one1=3, two1=2, three1, four1, five1, six1, seven1, eight1, nine1 };
 
 //-----------------------------------------------------------------------------------------
 template<typename T>

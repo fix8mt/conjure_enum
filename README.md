@@ -789,6 +789,10 @@ cmake ..
 make -j4
 make test (or ctest)
 ```
+By default all warnings are enabled. To prevent this, pass the following to cmake:
+```bash
+cmake -DBUILD_ALL_WARNINGS=false ..
+```
 By default the unit tests are built (which will download Catch2). To prevent this, pass the following to cmake:
 ```bash
 cmake -DBUILD_UNITTESTS=false ..

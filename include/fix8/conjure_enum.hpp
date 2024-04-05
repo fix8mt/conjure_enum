@@ -34,21 +34,21 @@
 // 																								  |<--				-->|
 // static const char *FIX8::conjure_enum<component>::epeek() [T = component, e = (component)100] // invalid
 //																									  |<--           -->|
-// static const char *FIX8::conjure_type<component>::tpeek() [T = component]
+// static const char *FIX8::conjure_enum<component>::tpeek() [T = component]
 //																				  |<--		-->|
 // gcc
-// static consteval const char* FIX8::conjure_enum<E, T>::epeek() [with T e = component::path; E = component; T = component] // valid
-//																							     |<--				-->|
-// static consteval const char* FIX8::conjure_enum<E, T>::epeek() [with T e = (component)100; E = component; T = component] // invalid
-//																			 					  |<--           -->|
-// static consteval const char* FIX8::conjure_type<T>::tpeek() [with T = component]
+// static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::path; T = component] // valid
+//																							  |<--				-->|
+// static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = (component)100; T = component] // invalid
+//																							  |<--           -->|
+// static consteval const char* FIX8::conjure_enum<T>::tpeek() [with T = component]
 //																							|<--		 -->|
 // msvc
 // const char *__cdecl FIX8::conjure_enum<enum numbers>::epeek<numbers::two>(void) noexcept			// valid
 //																					|<--		-->|
 // const char *__cdecl FIX8::conjure_enum<enum numbers>::epeek<(enum numbers)0xa>(void) noexcept	// invalid
 //																			|<--		 		 -->|
-// const char *__cdecl FIX8::conjure_type<enum numbers>::tpeek(void) noexcept
+// const char *__cdecl FIX8::conjure_enum<enum numbers>::tpeek(void) noexcept
 //														|<--   	-->|
 //----------------------------------------------------------------------------------------
 #ifndef FIX8_CONJURE_ENUM_HPP_
@@ -120,39 +120,6 @@ constexpr auto get_spec() noexcept
 }
 
 //-----------------------------------------------------------------------------------------
-template<typename T>
-class conjure_type final
-{
-	static constexpr std::string_view _get_name() noexcept
-	{
-		constexpr std::string_view from{tpeek()};
-		if (constexpr auto ep { from.rfind(get_spec<0,1>()) }; ep != std::string_view::npos)
-		{
-			constexpr std::string_view result { from.substr(ep + get_spec<0,1>().size()) };
-			if (constexpr auto lc { result.find_first_of(get_spec<1,1>()) }; lc != std::string_view::npos)
-				return result.substr(0, lc);
-		}
-		return {};
-	}
-	static constexpr auto _type_name() noexcept
-	{
-		constexpr auto result { _get_name() };
-		return fixed_string<result.size()>(result);
-	}
-
-public:
-	conjure_type() = delete;
-	~conjure_type() = delete;
-	conjure_type(const conjure_type&) = delete;
-	conjure_type& operator=(const conjure_type&) = delete;
-	conjure_type(conjure_type&&) = delete;
-	conjure_type& operator=(conjure_type&&) = delete;
-
-	static consteval const char *tpeek() noexcept { return std::source_location::current().function_name(); }
-	static constexpr auto name { _type_name() };
-};
-
-//-----------------------------------------------------------------------------------------
 template<typename E, typename T=std::decay_t<E>>
 requires std::is_enum_v<T>
 class conjure_enum final
@@ -178,6 +145,7 @@ public:
 	using enum_tuple = std::tuple<T, std::string_view>;
 	using scoped_tuple = std::tuple<std::string_view, std::string_view>;
 
+	static consteval const char *tpeek() noexcept { return std::source_location::current().function_name(); }
 	template<T e>
 	static consteval const char *epeek() noexcept { return std::source_location::current().function_name(); }
 
@@ -214,7 +182,7 @@ private:
 
 #if defined(__clang__) && defined(__apple_build_version__) // std::count_if not constexpr in xcode/clang
 	template<std::size_t N>
-	static constexpr auto count_if_constexpr(const bool (&valid)[N]) noexcept
+	static constexpr auto count_if_constexpr(const std::array<bool, N>& valid) noexcept
 	{
 		std::size_t cnt{};
 		for(std::size_t nn{}; nn < N; ++nn)
@@ -227,11 +195,10 @@ private:
 	template<std::size_t... I>
 	static constexpr auto _values(std::index_sequence<I...>) noexcept
 	{
+		constexpr std::array<bool, sizeof...(I)> valid { is_valid<static_cast<T>(enum_min_value + I)>()... };
 #if defined(__clang__) && defined(__apple_build_version__)
-		constexpr bool valid[sizeof...(I)] { is_valid<static_cast<T>(enum_min_value + I)>()... };
 		constexpr auto num_valid { count_if_constexpr(valid) };
 #else
-		constexpr std::array<bool, sizeof...(I)> valid { is_valid<static_cast<T>(enum_min_value + I)>()... };
 		constexpr auto num_valid { std::count_if(valid.cbegin(), valid.cend(), [](bool val) noexcept { return val; }) };
 #endif
 		static_assert(num_valid > 0, "conjure_enum requires non-empty enum");
@@ -281,7 +248,17 @@ public:
 	template<T e>
 	static constexpr std::string_view enum_to_string() noexcept { return _get_name<e>(); }
 
-	static constexpr std::string_view type_name() noexcept { return conjure_type<T>::name; }
+	static constexpr std::string_view type_name() noexcept
+	{
+		constexpr std::string_view from{tpeek()};
+		if (constexpr auto ep { from.rfind(get_spec<0,1>()) }; ep != std::string_view::npos)
+		{
+			constexpr std::string_view result { from.substr(ep + get_spec<0,1>().size()) };
+			if (constexpr auto lc { result.find_first_of(get_spec<1,1>()) }; lc != std::string_view::npos)
+				return result.substr(0, lc);
+		}
+		return {};
+	}
 
 	struct is_scoped : std::integral_constant<bool, requires
 		{ requires !std::is_convertible_v<T, std::underlying_type_t<T>>; }>

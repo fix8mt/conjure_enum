@@ -32,6 +32,7 @@
 #include <iostream>
 #include <iomanip>
 #include <memory>
+#include <map>
 #if __has_include(<format>)
 # include <format>
 #endif
@@ -50,7 +51,14 @@ using namespace FIX8;
 enum class component : int { scheme, authority, userinfo, user, password, host, port, path=12, test=path, query, fragment };
 enum component1 : int { scheme, authority, userinfo, user, password, host, port, path=12, query, fragment };
 enum class numbers : int { zero, one, two, three, four, five, six, seven, eight, nine };
-enum class numbers1 : int { zero=4, one=3, two=2, three, four, five, six, seven, eight, nine };
+enum class numbers1 : int { zero1=4, one1=3, two1=2, three1, four1, five1, six1, seven1, eight1, nine1 };
+
+struct blah
+{
+   bool what;
+   blah() = default;
+   int doit(int) { return 0; };
+};
 
 //-----------------------------------------------------------------------------------------
 template<typename T>
@@ -109,6 +117,7 @@ int main(int argc, char *argv[])
 	//std::cout << std::boolalpha << conjure_enum<component>::contains(argv[1]) << '\n';
 	for(const auto [a, b] : conjure_enum<component>::sorted_entries)
 		std::cout << conjure_enum<component>::remove_scope(b) << ' ' << static_cast<int>(a) << '\n';
+		//std::cout << conjure_enum<component>::remove_scope(b) << ' ' << static_cast<int>(a) << '\n';
 	for(const auto [a, b] : conjure_enum<numbers1>::entries)
 		std::cout << b << ' ' << static_cast<int>(a) << '\n';
 	std::cout << conjure_enum<component>::add_scope("path"sv) << '\n';
@@ -121,7 +130,7 @@ int main(int argc, char *argv[])
 	std::cout << std::boolalpha << cje::has_scope("scheme") << '\n';
 	std::cout << std::boolalpha << cje::has_scope("scheme") << '\n';
 	std::cout << conjure_enum<component>::epeek<component::path>() << '\n';
-	std::cout << conjure_enum<component>::tpeek() << '\n';
+	std::cout << conjure_type<component>::tpeek() << '\n';
 	std::cout << conjure_enum<component>::epeek<static_cast<component>(100)>() << '\n';
 	std::cout << demangle<decltype(conjure_enum<component>::scoped_entries)>() << '\n';
 	for(const auto [a, b] : conjure_enum<component>::scoped_entries)
@@ -141,6 +150,8 @@ int main(int argc, char *argv[])
 	for(const auto [a, b] : conjure_enum<component>::scoped_entries)
 		std::cout << std::format("{:9} {}\n", a, b);
 	for(const auto [value, str] : conjure_enum<component>::entries) // scoped
+		std::cout << std::format("{:<2} {}\n", static_cast<int>(value), str);
+	for(const auto [value, str] : conjure_enum<component>::sorted_entries) // scoped
 		std::cout << std::format("{:<2} {}\n", static_cast<int>(value), str);
 	std::cout << std::format("{}\n", conjure_enum<component>::contains("component::path"sv));
 	std::cout << std::format("\"{}\"\n", conjure_enum<component>::enum_to_string<component::scheme>());
@@ -198,5 +209,23 @@ int main(int argc, char *argv[])
 
 	for (const auto pp : iterator_adaptor<numbers>())
 		std::cout << static_cast<int>(std::get<0>(pp)) << '\n';
+
+	//static constexpr auto ns1 { conjure_type<conjure_enum<numbers&>>::get_fixed_name() };
+	//std::cout << ns1.get() << '\n';
+	//std::cout << conjure_type<enum_bitset<numbers&>>::get_name() << '\n';
+	//std::cout << conjure_enum<numbers>::type_name() << '\n';
+	//std::cout << conjure_type<numbers>::tpeek() << '\n';
+	std::cout << '\'' << conjure_type<numbers>::name << '\'' << '\n';
+	std::cout << '\'' << conjure_type<conjure_enum<numbers&>>::name << '\'' << '\n';
+
+
+	using test = std::map<std::size_t, std::string_view>;
+	using test1 = std::map<std::size_t, blah>;
+	std::cout << '\'' << conjure_type<test>::name << '\'' << '\n';
+	std::cout << '\'' << conjure_type<test1>::name << '\'' << '\n';
+	std::cout << '\'' << conjure_type<conjure_type<conjure_enum<numbers>>>::name << '\'' << '\n';
+
+	auto strv { conjure_type<test>::name.get() };
+	std::cout << conjure_type<decltype(strv)>::name << '\n';
 	return 0;
 }

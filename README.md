@@ -776,9 +776,8 @@ numbers::nine 10
 ```
 
 # Examples using `conjure_type`
-`conjure_type` is a general purpose class allowing you to extract a string representation of any type. The string will be stored statically by the compiler, but if you need to
-construct any static data objects that use these values, use the suppled `fixed_string` class which ensures both trimming and an ASCIIZ string.
-For most purposes, use the statically generated value `name` for your type.
+`conjure_type` is a general purpose class allowing you to extract a string representation of any type.
+The string will be stored statically by the compiler, so use the statically generated value `name` for your type.
 you
 ```c++
 template<typename T>
@@ -811,7 +810,7 @@ Works with its own types too:
 std::cout << conjure_type<conjure_type<conjure_enum<numbers&>>>::name << '\n';
 ```
 ```CSV
-conjure_type<FIX8::conjure_enum<numbers&, numbers> >
+conjure_type<conjure_enum<numbers&, numbers> >
 ```
 
 # Building

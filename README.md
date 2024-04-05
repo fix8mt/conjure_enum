@@ -813,10 +813,13 @@ conjure_type<conjure_enum<numbers&, numbers> >
 ```
 If you need to explicitly obtain a `std::string_view`, use the `get()` method on `name`:
 ```c++
+auto fstrv { conjure_type<test>::name };
 auto strv { conjure_type<test>::name.get() };
+std::cout << conjure_type<decltype(fstrv)>::name << '\n';
 std::cout << conjure_type<decltype(strv)>::name << '\n';
 ```
 ```CSV
+fixed_string<58>
 std::basic_string_view<char>
 ```
 

@@ -18,7 +18,6 @@
 |[Here](https://github.com/fix8mt/conjure_enum/blob/master/include/fix8/conjure_enum.hpp)| For implementation|
 |[Examples](#examples)| General examples|
 |[Examples with `enum_bitset`](#examples-using-enum_bitset)| `std::bitset` replacement examples|
-|[Examples with `conjure_type`](#examples-using-conjure_type)| any type string extractor examples|
 |[Building](#building)| How to build or include|
 |[Notes](#notes)| Notes on the implementation, limits, etc|
 |[Compilers](#compiler-support)| Supported compilers|
@@ -48,7 +47,6 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
 - ***Modern C++20***  Entirely `constexpr` for compile-time safety, efficiency and performance.
 - ***Simple & Easy to Use***  Class-based approach with intuitive syntax.
 - ***Convenient***  `enum_bitsets` enhances `std::bitset`.
-- ***Useful***  `conjure_type` lets you obtain the type string of any type!
 - ***Broad Support***  Works with scoped and unscoped enums, enum aliases and even with gaps.
 - ***Wide Compiler Compatibility***  Supports GCC, Clang, MSVC and XCode/Clang.
 - ***Confidence in Quality***  Includes built-in unit tests for reliable functionality.
@@ -395,7 +393,7 @@ false
 ```c++
 static constexpr std::string_view type_name();
 ```
-Returns a `std::string_view` of `T`. Uses `conjure_type<T>::name`.
+Returns a `std::string_view` of `T`.
 ```c++
 std::cout << conjure_enum<component>::type_name() << '\n';
 std::cout << conjure_enum<component1>::type_name() << '\n';
@@ -530,13 +528,13 @@ The actual output is implementation dependent.
 
 The following code:
 ```c++
-std::cout << conjure_type<component>::tpeek() << '\n';
+std::cout << conjure_enum<component>::tpeek() << '\n';
 std::cout << conjure_enum<component>::epeek<component::scheme>() << '\n';
 ```
 Generates this output with gcc:
 ```CSV
-static consteval const char* FIX8::conjure_type<T>::tpeek() [with T = numbers]
 static consteval const char* FIX8::conjure_enum<E, T>::epeek() [with T e = component::path; E = component; T = component]
+static consteval const char* FIX8::conjure_enum<E, T>::tpeek() [with E = component; T = component]
 ```
 # Examples using `enum_bitset`
 `enum_bitset` is a convenient way of creating bitsets based on `std::bitset`. It uses your enum (scoped or unscoped)
@@ -775,54 +773,6 @@ numbers::five 10
 numbers::nine 10
 ```
 
-# Examples using `conjure_type`
-`conjure_type` is a general purpose class allowing you to extract a string representation of any type.
-The string will be stored statically by the compiler, so use the statically generated value `name` for your type.
-```c++
-template<typename T>
-class conjure_type;
-static constexpr fixed_string name;
-```
-This static member is generated for your type. It is a `fixed_string` but has a built-in `std::string_view` operator.
-
-```c++
-class foo;
-std::cout << std::format("\"{}\"\n", conjure_type<foo>::name);
-```
-_output_
-```CSV
-"foo"
-```
-Works with aliases:
-```c++
-using test = std::map<std::size_t, std::string_view>;
-using test1 = std::map<std::size_t, foo>;
-std::cout << conjure_type<test>::name << '\n';
-std::cout << conjure_type<test1>::name << '\n';
-```
-```CSV
-std::map<long unsigned int, std::basic_string_view<char> >
-std::map<long unsigned int, foo>
-```
-Works with its own types too:
-```c++
-std::cout << conjure_type<conjure_type<conjure_enum<numbers&>>>::name << '\n';
-```
-```CSV
-conjure_type<conjure_enum<numbers&, numbers> >
-```
-If you need to explicitly obtain a `std::string_view`, use the `get()` method on `name`:
-```c++
-auto fstrv { conjure_type<test>::name };
-auto strv { conjure_type<test>::name.get() };
-std::cout << conjure_type<decltype(fstrv)>::name << '\n';
-std::cout << conjure_type<decltype(strv)>::name << '\n';
-```
-```CSV
-fixed_string<58>
-std::basic_string_view<char>
-```
-
 # Building
 This implementation is header only. Apart from standard C++20 includes there are no external dependencies needed in your application.
 [Catch2](https://github.com/catchorg/Catch2.git) is used for the built-in unit tests.
@@ -897,9 +847,8 @@ The following are the default settings:
 ```
 These definitions set the minimum and maximum enum values that are supported. You can adjust them to suit your requirements but for most use cases the defaults are sufficient.
 
-## class `conjure_enum` and `conjure_type`
-- These classes are not constructible. All methods in these classes are _static_. You cannot instantiate objects of these types.
-- These classes are marked `final`. You cannot derive from them. This is required because of the way `std::source_location` encodes the current location.
+## class `conjure_enum` is not constructible
+All methods in this class are _static_. You cannot instantiate an object of this type.
 
 ## Use of `std::string_view`
 All of the generated static strings and generated static tables obtained by `std::source_location` use the library defined `fixed_string`. No string copying is done at runtime, resulting in
@@ -1156,7 +1105,7 @@ It can be observed that there is only one copy of the scoped or unscoped enum va
 | [gcc](https://gcc.gnu.org/projects/cxx-status.html) | `11`, `12`, `13`| `std::format` not complete in `11`, `12` | `<= 10` |
 | [clang](https://clang.llvm.org/cxx_status.html) | `15`, `16`| Catch2 needs `cxx_std_20` in `15` | `<= 14` |
 | [msvc](https://learn.microsoft.com/en-us/cpp/overview/visual-cpp-language-conformance) | `16`, `17` | Visual Studio 2019,2022, latest `17.9.5`| `<= 16.9`|
-| [xcode](https://developer.apple.com/support/xcode/) | `15` | Some issues with `constexpr`, workarounds| `<= 14`|
+| [xcode](https://developer.apple.com/support/xcode/) | `15` | Some clang issues| `<= 14`|
 
 [^1]:&copy; 2024 Fix8 Market Technologies Pty Ltd, David L. Dight.
 [^2]:&copy; 2019 - 2024 Daniil Goncharov

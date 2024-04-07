@@ -2,7 +2,7 @@
   <a href="https://www.fix8mt.com"><img src="https://github.com/fix8mt/conjure_enum/blob/master/assets/fix8mt_Master_Logo_Green_Trans.png" width="200"></a>
 </p>
 
-# conjure_enum
+# `conjure_enum`
 
 ### Lightweight header-only C++20 enum reflection
 
@@ -21,6 +21,7 @@
 |[Building](#building)| How to build or include|
 |[Notes](#notes)| Notes on the implementation, limits, etc|
 |[Compilers](#compiler-support)| Supported compilers|
+|[Compiler issues](#compiler-issues)| Workarounds for various compiler issues|
 > [!TIP]
 > Use the built-in [table of contents](https://github.blog/changelog/2021-04-13-table-of-contents-support-in-markdown-files/) to navigate this guide.
 
@@ -1110,6 +1111,11 @@ It can be observed that there is only one copy of the scoped or unscoped enum va
 | [clang](https://clang.llvm.org/cxx_status.html) | `15`, `16`| Catch2 needs `cxx_std_20` in `15` | `<= 14` |
 | [msvc](https://learn.microsoft.com/en-us/cpp/overview/visual-cpp-language-conformance) | `16`, `17` | Visual Studio 2019,2022, latest `17.9.5`| `<= 16.9`|
 | [xcode](https://developer.apple.com/support/xcode/) | `15` | Some issues with `constexpr`, workarounds| `<= 14`|
+
+# Compiler issues
+| Compiler | Version(s) | Issues | Workaround |
+| :--- | :--- | :--- | ---: |
+| clang | `16`| Compiler reports integers outside valid range [x,y]| specify underlying type when declaring enum eg. `enum class foo : int` |
 
 [^1]:&copy; 2024 Fix8 Market Technologies Pty Ltd, David L. Dight.
 [^2]:&copy; 2019 - 2024 Daniil Goncharov

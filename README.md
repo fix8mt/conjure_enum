@@ -534,8 +534,8 @@ std::cout << conjure_enum<component>::epeek<component::scheme>() << '\n';
 ```
 Generates this output with gcc:
 ```CSV
-static consteval const char* FIX8::conjure_enum<E, T>::epeek() [with T e = component::path; E = component; T = component]
-static consteval const char* FIX8::conjure_enum<E, T>::tpeek() [with E = component; T = component]
+static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::path; T = component]
+static consteval const char* FIX8::conjure_enum<T>::tpeek() [with T = component]
 ```
 # Examples using `enum_bitset`
 `enum_bitset` is a convenient way of creating bitsets based on `std::bitset`. It uses your enum (scoped or unscoped)

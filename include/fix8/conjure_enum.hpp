@@ -37,10 +37,10 @@
 // static const char *FIX8::conjure_enum<component>::tpeek() [T = component]
 //																				  |<--		-->|
 // gcc
-// static consteval const char* FIX8::conjure_enum<E, T>::epeek() [with T e = component::path; E = component; T = component] // valid
-//																							     |<--				-->|
-// static consteval const char* FIX8::conjure_enum<E, T>::epeek() [with T e = (component)100; E = component; T = component] // invalid
-//																			 					  |<--           -->|
+// static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::path; T = component] // valid
+//																						     |<--				-->|
+// static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = (component)100; T = component] // invalid
+//																		 					  |<--           -->|
 // static consteval const char* FIX8::conjure_type<T>::tpeek() [with T = component]
 //																							|<--		 -->|
 // msvc
@@ -120,8 +120,8 @@ constexpr auto get_spec() noexcept
 }
 
 //-----------------------------------------------------------------------------------------
-template<typename E, typename T=std::decay_t<E>>
-requires std::is_enum_v<T>
+template<typename T>
+requires std::same_as<T, std::decay_t<T>> && std::is_enum_v<T>
 class conjure_enum final
 {
 	static constexpr int enum_min_value{ENUM_MIN_VALUE}, enum_max_value{ENUM_MAX_VALUE};
@@ -219,7 +219,7 @@ private:
 	static constexpr std::string_view _get_name() noexcept
 	{
 		constexpr std::string_view from{epeek<e>()};
-		if (constexpr auto ep { from.rfind(get_spec<0,0>()) }; ep != std::string_view::npos && from[ep + get_spec<0,0>().size()] != '(')
+		if constexpr (constexpr auto ep { from.rfind(get_spec<0,0>()) }; ep != std::string_view::npos && from[ep + get_spec<0,0>().size()] != '(')
 		{
 			constexpr std::string_view result { from.substr(ep + get_spec<0,0>().size()) };
 			if constexpr (constexpr auto lc { result.find_first_of(get_spec<1,0>()) }; lc != std::string_view::npos)
@@ -262,8 +262,9 @@ public:
 	}
 
 	struct is_scoped : std::integral_constant<bool, requires
-		{ requires !std::is_convertible_v<T, std::underlying_type_t<T>>; }>
-	{};
+	{
+		requires !std::convertible_to<T, std::underlying_type_t<T>>;
+	}>{};
 
 	template<T e>
 	static constexpr bool is_valid() noexcept { return !_get_name<e>().empty(); }
@@ -376,8 +377,10 @@ struct iterator_adaptor
 // Note: your enum sequence must be continuous with the last enum value < count of enumerations
 //-----------------------------------------------------------------------------------------
 template<typename T>
-concept valid_bitset_enum = std::is_enum_v<std::decay_t<T>> && requires(T)
+concept valid_bitset_enum = requires(T)
 {
+	requires std::is_enum_v<T>;
+	requires std::same_as<T, std::decay_t<T>>;
 	requires conjure_enum<T>::count() > 0;
 	requires static_cast<std::size_t>(conjure_enum<T>::values.back()) < conjure_enum<T>::count();
 };

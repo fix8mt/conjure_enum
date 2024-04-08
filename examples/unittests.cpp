@@ -48,7 +48,6 @@ enum class numbers : int { zero, one, two, three, four, five, FIVE=five, six, se
 TEST_CASE("is_valid")
 {
 	REQUIRE(conjure_enum<component>::is_valid<component::password>());
-	REQUIRE(conjure_enum<component&>::is_valid<component::password>());
 	REQUIRE(!conjure_enum<component>::is_valid<static_cast<component>(100)>());
 	REQUIRE(conjure_enum<component1>::is_valid<password>());
 	REQUIRE(!conjure_enum<component1>::is_valid<static_cast<component1>(100)>());
@@ -260,7 +259,6 @@ TEST_CASE("for_each")
 TEST_CASE("enum_bitset")
 {
 	enum_bitset<numbers> eb;
-	//enum_bitset<numbers&> ebr;
 	eb.set_all<numbers::zero,numbers::two,numbers::five,numbers::nine>();
 	REQUIRE(eb.test_all<numbers::zero,numbers::two,numbers::five,numbers::nine>());
 	eb.reset<numbers::FIVE>(); // use alias

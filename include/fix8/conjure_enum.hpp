@@ -180,6 +180,17 @@ private:
 		return std::array<std::string_view, sizeof...(I)>{{{ _enum_name_v<values[I]>}...}};
 	}
 
+	template<T e>
+	static constexpr bool _is_valid() noexcept
+	{
+		constexpr std::string_view from{epeek<e>()};
+		if constexpr (constexpr auto ep { from.rfind(get_spec<0,0>()) }; ep != std::string_view::npos && from[ep + get_spec<0,0>().size()] != '('
+			&& from.substr(ep + get_spec<0,0>().size()).find_first_of(get_spec<1,0>()) != std::string_view::npos)
+				return true;
+		else
+			return false;
+	}
+
 #if defined(__clang__) && defined(__apple_build_version__) // std::count_if not constexpr in xcode/clang
 	template<std::size_t N>
 	static constexpr auto count_if_constexpr(const bool (&valid)[N]) noexcept
@@ -196,10 +207,10 @@ private:
 	static constexpr auto _values(std::index_sequence<I...>) noexcept
 	{
 #if defined(__clang__) && defined(__apple_build_version__)
-		constexpr bool valid[sizeof...(I)] { is_valid<static_cast<T>(enum_min_value + I)>()... };
+		constexpr bool valid[sizeof...(I)] { _is_valid<static_cast<T>(enum_min_value + I)>()... };
 		constexpr auto num_valid { count_if_constexpr(valid) };
 #else
-		constexpr std::array<bool, sizeof...(I)> valid { is_valid<static_cast<T>(enum_min_value + I)>()... };
+		constexpr std::array<bool, sizeof...(I)> valid { _is_valid<static_cast<T>(enum_min_value + I)>()... };
 		constexpr auto num_valid { std::count_if(valid.cbegin(), valid.cend(), [](bool val) noexcept { return val; }) };
 #endif
 		static_assert(num_valid > 0, "conjure_enum requires non-empty enum");
@@ -225,7 +236,8 @@ private:
 			if constexpr (constexpr auto lc { result.find_first_of(get_spec<1,0>()) }; lc != std::string_view::npos)
 				return result.substr(0, lc);
 		}
-		return {};
+		else
+			return {};
 	}
 
 	static constexpr bool value_comp(const T& pl, const T& pr) noexcept
@@ -258,7 +270,8 @@ public:
 			if constexpr (constexpr auto lc { result.find_first_of(get_spec<1,1>()) }; lc != std::string_view::npos)
 				return result.substr(0, lc);
 		}
-		return {};
+		else
+			return {};
 	}
 
 	struct is_scoped : std::integral_constant<bool, requires
@@ -267,7 +280,7 @@ public:
 	}>{};
 
 	template<T e>
-	static constexpr bool is_valid() noexcept { return !_get_name<e>().empty(); }
+	static constexpr bool is_valid() noexcept { return _is_valid<e>(); }
 
 	static constexpr auto count() noexcept { return values.size(); }
 

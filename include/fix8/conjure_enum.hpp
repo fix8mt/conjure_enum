@@ -184,7 +184,8 @@ private:
 	static constexpr bool _is_valid() noexcept
 	{
 		constexpr std::string_view from{epeek<e>()};
-		if constexpr (constexpr auto ep { from.rfind(get_spec<0,0>()) }; ep != std::string_view::npos && from[ep + get_spec<0,0>().size()] != '('
+		constexpr auto ep { from.rfind(get_spec<0,0>()) };
+		if constexpr (ep != std::string_view::npos && from[ep + get_spec<0,0>().size()] != '('
 			&& from.substr(ep + get_spec<0,0>().size()).find_first_of(get_spec<1,0>()) != std::string_view::npos)
 				return true;
 		else

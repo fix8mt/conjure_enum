@@ -194,7 +194,7 @@ int main(void)
 	const foo bar;
 	ek.for_each(std::bind(&foo::printer, &bar, std::placeholders::_1, 10));
 	ek.for_each(&foo::printer, &bar, 10);
-	//enum_bitset<numbers&> er("one|three|four|eight"sv, true);
+	enum_bitset<numbers> er("one|three|four|eight"sv, true);
 
 	for (const auto pp : iterator_adaptor<numbers>())
 		std::cout << static_cast<int>(std::get<0>(pp)) << '\n';

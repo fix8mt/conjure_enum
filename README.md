@@ -791,15 +791,15 @@ make -j4
 make test (or ctest)
 ```
 By default all warnings are enabled. To prevent this, pass the following to cmake:
-```bash
+```cmake
 cmake -DBUILD_ALL_WARNINGS=false ..
 ```
 By default the unit tests are built (which will download Catch2). To prevent this, pass the following to cmake:
-```bash
+```cmake
 cmake -DBUILD_UNITTESTS=false ..
 ```
 To disable certain C++20 features that cause issues with some builds:
-```bash
+```cmake
 cmake -DBUILD_CONSRVCPP20=true ..
 ```
 ### Windows environments

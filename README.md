@@ -798,6 +798,10 @@ By default the unit tests are built (which will download Catch2). To prevent thi
 ```bash
 cmake -DBUILD_UNITTESTS=false ..
 ```
+To disable certain C++20 features that cause issues with some builds:
+```bash
+cmake -DBUILD_CONSRVCPP20=true ..
+```
 ### Windows environments
 Create a new console project. Add the repo `https://github.com/fix8mt/conjure_enum.git` and clone the source.
 Make sure you set the C++ language to C++20 in the project preferences. The project should build and run the unit tests

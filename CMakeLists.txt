@@ -34,6 +34,11 @@ project (conjure_enum
    VERSION 1.0.0
 )
 
+# to enable conservative C++20 build:
+# cmake -DBUILD_CONSRVCPP20=true ..
+option(BUILD_CONSRVCPP20 "enable conservative C++20 build" false)
+message("-- Build conservative C++20: ${BUILD_CONSRVCPP20}")
+
 # to disable warnings:
 # cmake -DBUILD_ALL_WARNINGS=false ..
 option(BUILD_ALL_WARNINGS "enable building with all warnings" true)
@@ -65,6 +70,9 @@ foreach(x IN LISTS files)
 	add_executable(${target} examples/${x})
 	set_target_properties(${target} PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED true)
 	target_include_directories(${target} PRIVATE include)
+	if (BUILD_CONSRVCPP20)
+		target_compile_definitions(${target} PRIVATE BUILD_CONSRVCPP20)
+	endif()
 	if(BUILD_ALL_WARNINGS)
 		target_compile_options(${target} PRIVATE
 			$<$<CXX_COMPILER_ID:MSVC>:/W4>

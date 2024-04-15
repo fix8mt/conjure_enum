@@ -192,7 +192,7 @@ private:
 			return false;
 	}
 
-#if defined(__clang__) && defined(__apple_build_version__) // std::count_if not constexpr in xcode/clang
+#if defined BUILD_CONSRVCPP20
 	template<std::size_t N>
 	static constexpr auto count_if_constexpr(const bool (&valid)[N]) noexcept
 	{
@@ -207,7 +207,7 @@ private:
 	template<std::size_t... I>
 	static constexpr auto _values(std::index_sequence<I...>) noexcept
 	{
-#if defined(__clang__) && defined(__apple_build_version__)
+#if defined BUILD_CONSRVCPP20
 		constexpr bool valid[sizeof...(I)] { _is_valid<static_cast<T>(enum_min_value + I)>()... };
 		constexpr auto num_valid { count_if_constexpr(valid) };
 #else

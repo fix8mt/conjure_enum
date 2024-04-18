@@ -623,7 +623,7 @@ public:
 	conjure_type& operator=(conjure_type&&) = delete;
 
 	static consteval const char *tpeek() noexcept { return std::source_location::current().function_name(); }
-	static constexpr auto name { get_name() };
+	static constexpr auto name { _get_name() };
 };
 
 //-----------------------------------------------------------------------------------------

@@ -227,11 +227,11 @@ TEST_CASE("get_name")
 //-----------------------------------------------------------------------------------------
 TEST_CASE("type_name")
 {
-	REQUIRE(conjure_type<component>::name.get() == "component");
-	REQUIRE(conjure_type<component1>::name.get() == "component1");
+	REQUIRE(conjure_type<component>::name == "component");
+	REQUIRE(conjure_type<component1>::name == "component1");
 	REQUIRE(conjure_enum<component>::type_name() == "component");
 	REQUIRE(conjure_enum<component1>::type_name() == "component1");
-	REQUIRE(conjure_type<numbers>::name.get() == "numbers");
+	REQUIRE(conjure_type<numbers>::name == "numbers");
 	REQUIRE(conjure_enum<numbers>::type_name() == "numbers");
 }
 

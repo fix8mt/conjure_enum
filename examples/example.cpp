@@ -205,11 +205,11 @@ int main(void)
 
 	using test = std::map<std::size_t, std::string_view>;
 	using test1 = std::map<std::size_t, foo>;
-	std::cout << '\'' << conjure_type<test>::get_name << '\'' << '\n';
+	std::cout << '\'' << conjure_type<test>::name << '\'' << '\n';
 	std::cout << '\'' << conjure_type<test1>::name << '\'' << '\n';
 	std::cout << '\'' << conjure_type<conjure_type<conjure_enum<numbers>>>::name << '\'' << '\n';
 
-	auto strv { conjure_type<test>::name.get() };
+	auto strv { conjure_type<test>::name };
 	std::cout << conjure_type<decltype(strv)>::name << '\n';
 	return 0;
 }

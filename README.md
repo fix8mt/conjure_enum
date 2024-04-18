@@ -44,22 +44,22 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
 
 ## Key Benefits
 
-- ***Lightweight***  Designed for performance without unnecessary overhead.
-- ***Header-Only***  No external dependencies, simplifying integration into your project.
-- ***Modern C++20***  Entirely `constexpr` for compile-time safety, efficiency and performance.
-- ***Simple & Easy to Use***  Class-based approach with intuitive syntax.
-- ***Convenient***  `enum_bitsets` enhances `std::bitset`.
-- ***Useful***  `conjure_type` lets you obtain the type string of any type!
-- ***Broad Support***  Works with scoped and unscoped enums, enum aliases and even with gaps.
-- ***Wide Compiler Compatibility***  Supports GCC, Clang, MSVC and XCode/Clang.
-- ***Confidence in Quality***  Includes built-in unit tests for reliable functionality.
+- ***Lightweight***:  Designed for performance without unnecessary overhead.
+- ***Header-Only***:  No external dependencies, simplifying integration into your project.
+- ***Modern C++20***:  Entirely `constexpr` for compile-time safety, efficiency and performance.
+- ***Simple & Easy to Use***:  Class-based approach with intuitive syntax.
+- ***Convenient***:  `enum_bitsets` offers an enhanced `std::bitset`.
+- ***Useful***:  `conjure_type` lets you obtain the type string of _any type!_
+- ***Broad Support***:  Works with scoped and unscoped enums, enum aliases and even with gaps.
+- ***Wide Compiler Compatibility***:  Supports GCC, Clang, MSVC and XCode/Clang.
+- ***Confidence in Quality***:  Includes built-in unit tests for reliable functionality.
 
 # API and Examples
 All examples refer to the following enums:
 ```c++
-enum class component : int { scheme, authority, userinfo, user, password, host, port, path=12, test=path, query, fragment };
-enum component1 : int { scheme, authority, userinfo, user, password, host, port, path=12, query, fragment };
-enum class numbers : int { zero, one, two, three, four, five, six, seven, eight, nine };
+enum class component { scheme, authority, userinfo, user, password, host, port, path=12, test=path, query, fragment };
+enum component1 { scheme, authority, userinfo, user, password, host, port, path=12, query, fragment };
+enum class numbers { zero, one, two, three, four, five, six, seven, eight, nine };
 ```
 
 ## `enum_to_string`
@@ -74,6 +74,13 @@ auto alias_name { conjure_enum<component>::enum_to_string(component::test) }; //
 auto noscope_name { conjure_enum<component1>::enum_to_string(path) };
 std::cout << name << '\n' << name_trim << '\n' << alias_name << '\n' << noscope_name << '\n';
 ```
+_output_
+```CSV
+component::path
+path
+component::path
+path
+```
 ### Aliases
 Because all methods in `conjure_enum` are within a `class` instead of individual template functions in a `namespace`, you can reduce your
 typing with standard aliases:
@@ -83,10 +90,6 @@ std::cout << std::format("\"{}\"\n", ec::enum_to_string(static_cast<component>(1
 ```
 _output_
 ```CSV
-component::path
-path
-component::path
-path
 ""
 ```
 Also supplied is a template version of `enum_to_string`.
@@ -152,7 +155,7 @@ _output_
 ```c++
 static constexpr std::array<std::string_view, std::size_t> names;
 ```
-This static member is generated for your type. It is a `std::array` of the `std::string_view` strings.
+This static member is generated for your type. It is a `std::array` of the `std::string_view` strings in enum order.
 ```c++
 for(const auto ev : conjure_enum<component>::names) // scoped
    std::cout << ev << '\n';
@@ -186,7 +189,7 @@ fragment
 ```c++
 static constexpr std::array<T, std::size_t> values;
 ```
-This static member is generated for your type. It is a `std::array` of the `T` values.
+This static member is generated for your type. It is a `std::array` of the `T` values in enum order.
 ```c++
 for(const auto ev : conjure_enum<component>::values) // scoped
    std::cout << static_cast<int>(ev) << '\n';
@@ -247,7 +250,7 @@ _output_
 ```c++
 static constexpr std::array<std::tuple<std::string_view, std::string_view>, std::size_t> scoped_entries;
 ```
-This static member is generated for your type. It is a `std::array` of a tuple of `std::string_view` pairs.
+This static member is generated for your type. It is a `std::array` of a tuple of `std::string_view` pairs in enum order.
 It contains pairs of unscoped and their scoped string version. This array is sorted by unscoped name.
 For unscoped enums, these are identical.
 ```c++
@@ -367,7 +370,7 @@ _output_
 struct is_scoped : std::integral_constant<bool, requires
    { requires !std::is_convertible_v<T, std::underlying_type_t<T>>; }>{};
 ```
-Returns a `bool`
+Returns `true` if the specified enum type is scoped.
 ```c++
 std::cout << std::format("{}\n", conjure_enum<component>::is_scoped());
 std::cout << std::format("{}\n", conjure_enum<component1>::is_scoped());
@@ -590,10 +593,10 @@ _output_
 0000001111
 ```
 You can even use a delimited string based on your enum names.
-Optionally omit the scope and even specify your own delimiter.
+Optionally omit the scope and even specify your own delimiter (default is `|`).
 Substrings are trimmed of whitespace before lookup.
 ```c++
-enum_bitset<numbers> b("numbers::zero,numbers::one,numbers::two,numbers::three");
+enum_bitset<numbers> b("numbers::zero|numbers::one|numbers::two|numbers::three");
 std::cout << b << '\n';
 enum_bitset<numbers> b1("zero,one  ,two,  three", true, ',');
 std::cout << b1 << '\n';
@@ -606,8 +609,8 @@ _output_
 0000001111
 0000001111
 ```
-A typical use of the above is for parsing configuration bitsets. Here you can tell the constructor to throw an exception if a substring
-is invalid:
+A typical use of the above is for parsing configuration bitsets. Here you can tell the constructor to throw an `std::invalid_argument`
+if a substring is invalid:
 ```c++
 try
 {
@@ -801,6 +804,7 @@ using test1 = std::map<std::size_t, foo>;
 std::cout << conjure_type<test>::name << '\n';
 std::cout << conjure_type<test1>::name << '\n';
 ```
+_output_
 ```CSV
 std::map<long unsigned int, std::basic_string_view<char> >
 std::map<long unsigned int, foo>
@@ -809,6 +813,7 @@ Works with its own types too:
 ```c++
 std::cout << conjure_type<conjure_type<conjure_enum<numbers&>>>::name << '\n';
 ```
+_output_
 ```CSV
 conjure_type<conjure_enum<numbers&, numbers> >
 ```
@@ -819,6 +824,7 @@ auto strv { conjure_type<test>::name.get() };
 std::cout << conjure_type<decltype(fstrv)>::name << '\n';
 std::cout << conjure_type<decltype(strv)>::name << '\n';
 ```
+_output_
 ```CSV
 fixed_string<58>
 std::basic_string_view<char>

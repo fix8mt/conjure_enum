@@ -209,7 +209,7 @@ int main(void)
 	std::cout << '\'' << conjure_type<test1>::name << '\'' << '\n';
 	std::cout << '\'' << conjure_type<conjure_type<conjure_enum<numbers>>>::name << '\'' << '\n';
 
-	auto strv { conjure_type<test>::name };
+	auto strv { conjure_type<test>::name.get() };
 	std::cout << conjure_type<decltype(strv)>::name << '\n';
 	return 0;
 }

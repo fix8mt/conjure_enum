@@ -613,6 +613,13 @@ class conjure_type final
 		else
 			return {};
 	}
+#if !defined _MSC_VER
+	static constexpr auto _type_name() noexcept
+	{
+		constexpr auto result { _get_name() };
+		return fixed_string<result.size()>(result);
+	}
+#endif
 
 public:
 	conjure_type() = delete;
@@ -623,7 +630,14 @@ public:
 	conjure_type& operator=(conjure_type&&) = delete;
 
 	static consteval const char *tpeek() noexcept { return std::source_location::current().function_name(); }
-	static constexpr auto name { _get_name() };
+	static constexpr auto name
+	{
+#if defined _MSC_VER
+		_get_name()
+#else
+		_type_name()
+#endif
+	};
 };
 
 //-----------------------------------------------------------------------------------------

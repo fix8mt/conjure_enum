@@ -16,9 +16,9 @@
 |**Link**|**Description**|
 --|--
 |[Here](https://github.com/fix8mt/conjure_enum/blob/master/include/fix8/conjure_enum.hpp)| For implementation|
-|[Examples](#examples)| General examples|
-|[Examples with `enum_bitset`](#examples-using-enum_bitset)| `std::bitset` replacement examples|
-|[Examples with `conjure_type`](#examples-using-conjure_type)| any type string extractor examples|
+|[API and Examples](#api-and-examples)| General examples|
+|[API and Examples with `enum_bitset`](#api-and-examples-using-enum_bitset)| `std::bitset` replacement examples|
+|[API and Examples with `conjure_type`](#api-and-examples-using-conjure_type)| any type string extractor examples|
 |[Building](#building)| How to build or include|
 |[Notes](#notes)| Notes on the implementation, limits, etc|
 |[Compilers](#compiler-support)| Supported compilers|
@@ -31,7 +31,7 @@
 ## Supercharge Your C++ Enums with This Lightweight Reflection Library!
 
 Based on the awesome work of [`magic_enum`](https://github.com/Neargye/magic_enum)[^2] and [`boost::desribe`](https://github.com/boostorg/describe),
-this library offers a streamlined and powerful way to add reflection capabilities to your C++ enums. We've optimized the core functionality,
+this library offers a streamlined and powerful way to add reflection capabilities to your C++ enums and other types. We've optimized the core functionality,
 focusing on the main features developers usually need while enhancing and expanding them for a more efficient and expressive experience.
 
 ## Embrace the Future with C++20
@@ -54,7 +54,7 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
 - ***Wide Compiler Compatibility***  Supports GCC, Clang, MSVC and XCode/Clang.
 - ***Confidence in Quality***  Includes built-in unit tests for reliable functionality.
 
-# Examples
+# API and Examples
 All examples refer to the following enums:
 ```c++
 enum class component : int { scheme, authority, userinfo, user, password, host, port, path=12, test=path, query, fragment };
@@ -539,7 +539,7 @@ Generates this output with gcc:
 static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::path; T = component]
 static consteval const char* FIX8::conjure_enum<T>::tpeek() [with T = component]
 ```
-# Examples using `enum_bitset`
+# API and Examples using `enum_bitset`
 `enum_bitset` is a convenient way of creating bitsets based on `std::bitset`. It uses your enum (scoped or unscoped)
 for the bit positions (and names).
 > [!NOTE]
@@ -776,7 +776,7 @@ numbers::five 10
 numbers::nine 10
 ```
 
-# Examples using `conjure_type`
+# API and Examples using `conjure_type`
 `conjure_type` is a general purpose class allowing you to extract a string representation of any type.
 The string will be stored statically by the compiler, so use the statically generated value `name` for your type.
 ```c++

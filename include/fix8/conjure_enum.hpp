@@ -597,6 +597,42 @@ constexpr enum_bitset<T> operator^(const enum_bitset<T>& lh, const enum_bitset<T
 	{ return lh.operator^(rh.to_ulong()); }
 
 //-----------------------------------------------------------------------------------------
+template<typename T>
+class conjure_type final
+{
+	static constexpr std::string_view _get_name() noexcept
+	{
+		constexpr std::string_view from{tpeek()};
+		constexpr auto ep { from.rfind(get_spec<0,1>()) };
+		if constexpr (ep != std::string_view::npos)
+		{
+			constexpr std::string_view result { from.substr(ep + get_spec<0,1>().size()) };
+			if constexpr (constexpr auto lc { result.find_first_of(get_spec<1,1>()) }; lc != std::string_view::npos)
+				return result.substr(0, lc);
+			else
+				return {};
+		}
+		return {};
+	}
+	static constexpr auto _type_name() noexcept
+	{
+		constexpr auto result { _get_name() };
+		return fixed_string<result.size()>(result);
+	}
+
+public:
+	conjure_type() = delete;
+	~conjure_type() = delete;
+	conjure_type(const conjure_type&) = delete;
+	conjure_type& operator=(const conjure_type&) = delete;
+	conjure_type(conjure_type&&) = delete;
+	conjure_type& operator=(conjure_type&&) = delete;
+
+	static consteval const char *tpeek() noexcept { return std::source_location::current().function_name(); }
+	static constexpr auto name { _type_name() };
+};
+
+//-----------------------------------------------------------------------------------------
 } // FIX8
 
 #endif // FIX8_CONJURE_ENUM_HPP_

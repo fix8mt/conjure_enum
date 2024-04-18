@@ -609,10 +609,9 @@ class conjure_type final
 			constexpr std::string_view result { from.substr(ep + get_spec<0,1>().size()) };
 			if constexpr (constexpr auto lc { result.find_first_of(get_spec<1,1>()) }; lc != std::string_view::npos)
 				return result.substr(0, lc);
-			else
-				return {};
 		}
-		return {};
+		else
+			return {};
 	}
 	static constexpr auto _type_name() noexcept
 	{

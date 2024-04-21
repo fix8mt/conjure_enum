@@ -486,7 +486,7 @@ template<typename E, typename T=std::decay_t<E>>
 requires std::is_enum_v<T>
 struct iterator_adaptor;
 ```
-This class wraps `conjure_enum<T>` allowing it to be used in range based for loops:
+This class wraps `conjure_enum<T>::entries` allowing it to be used in range based for loops:
 ```c++
 for (const auto pp : iterator_adaptor<numbers>())
    std::cout << static_cast<int>(std::get<0>(pp)) << '\n';
@@ -633,15 +633,15 @@ All of the standard operators are supported. Assignment operators return a `enum
 | :--- | :--- |
 | `<<=` | right shift assign |
 | `>>=` | left shift assign |
-| `&=` | and assign |
-| `\|=` | or shift assign |
-| `^=` | xor shift assign |
+| `&=` | `and` assign |
+| `\|=` | `or` shift assign |
+| `^=` | `xor` shift assign |
 | `<<` | left shift |
 | `>>` | right shift |
-| `&` | and |
-| `\|` | or |
-| `^` | xor |
-| `~` | not |
+| `&` | `and` |
+| `\|` | `or` |
+| `^` | `xor` |
+| `~` | `not` |
 
 Operators work with enum values or integers:
 ```c++
@@ -762,21 +762,21 @@ Example using member function:
 ```c++
 struct foo
 {
-   void printer(numbers val, int other) const
+   void printer(numbers val, std::ostream& ostr) const
    {
-      std::cout << conjure_enum<numbers>::enum_to_string(val) << ' ' << other << '\n';
+      ostr << conjure_enum<numbers>::enum_to_string(val) << '\n';
    }
 };
 enum_bitset<numbers> ec(numbers::zero,numbers::two,numbers::five,numbers::nine);
 const foo bar;
-ec.for_each(&foo::printer, &bar, 10);
+ec.for_each(&foo::printer, &bar, std::ref(std::cout));
 ```
 _output_
 ```CSV
-numbers::zero 10
-numbers::two 10
-numbers::five 10
-numbers::nine 10
+numbers::zero
+numbers::two
+numbers::five
+numbers::nine
 ```
 
 # API and Examples using `conjure_type`
@@ -817,7 +817,7 @@ _output_
 ```CSV
 conjure_type<conjure_enum<numbers&, numbers> >
 ```
-If you need to explicitly obtain a `std::string_view`, use the `get()` method on `name`:
+If you need to explicitly obtain a `std::string_view`, use the `get()` method on `name` (not windows sorry):
 ```c++
 auto fstrv { conjure_type<test>::name };
 auto strv { conjure_type<test>::name.get() };

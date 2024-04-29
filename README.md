@@ -295,7 +295,7 @@ template<typename Fn, typename C, typename... Args> // specialisation for member
 requires std::invocable<Fn&&, C, T, Args...>
 [[maybe_unused]] static constexpr auto for_each(Fn&& func, C *obj, Args&&... args);
 ```
-Call supplied invocable for _each_ enum. Similar to `std::for_each` except first parameter of your invocable must accept an enum value (passed by `for_each`).
+Call supplied invocable for _each_ enum value. Similar to `std::for_each` except the first parameter of your invocable must accept an enum value (passed by `for_each`).
 Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. The second version is intended to be used
 when using a member function - the _second_ parameter passed by your call must be the `this` pointer of the object.
 If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
@@ -898,7 +898,7 @@ target_include_directories(myproj PRIVATE ${conjure_enum_SOURCE_DIR}/include)
 ## enum limits
 ### `ENUM_MIN_VALUE`, `ENUM_MAX_VALUE`
 These are set by default unless you override them by defining them in your application.
-> [!TIP]
+> [!NOTE]
 > If you want to define these values they must appear _before_ you include `conjure_enum.hpp`.
 
 The following are the default settings:

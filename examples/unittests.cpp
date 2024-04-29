@@ -27,6 +27,7 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //----------------------------------------------------------------------------------------
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_exception.hpp>
 #include <string_view>
 #include <iostream>
 #include <sstream>
@@ -337,5 +338,8 @@ numbers::seven(7)
 		tot += static_cast<int>(val);
 	}, std::ref(total));
 	REQUIRE(total == 16);
+
+	REQUIRE_THROWS_MATCHES(enum_bitset<numbers>("zero,twenty,two,three", true, ',', false),
+		std::invalid_argument, Catch::Matchers::Message("twenty"));
 }
 

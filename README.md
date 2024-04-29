@@ -51,7 +51,7 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
 - ***Convenient***:  `enum_bitsets` offers an enhanced `std::bitset`.
 - ***Useful***:  `conjure_type` lets you obtain the type string of _any type!_
 - ***Broad Support***:  Works with scoped and unscoped enums, enum aliases and even with gaps.
-- ***Wide Compiler Compatibility***:  Supports GCC, Clang, MSVC and XCode/Clang.
+- ***Wide Compiler Compatibility***:  Supports GCC, Clang, MSVC and XCode/Clang; `x86_64`, `AArch64`
 - ***Confidence in Quality***:  Includes built-in unit tests for reliable functionality.
 
 # API and Examples
@@ -925,239 +925,153 @@ To demonstrate this, the default build of `example` performs a [strip](https://e
 <p>
 
 ```CSV
-$ strings example
-/lib64/ld-linux-x86-64.so.2
-m.w(
-__gmon_start__
-_ITM_deregisterTMCloneTable
-_ITM_registerTMCloneTable
-_ZNKSt6locale4nameB5cxx11Ev
-_ZNSt6localeD1Ev
-_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_c
-_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE6insertEmmc
-_ZSt20__throw_length_errorPKc
-_ZNSo9_M_insertIbEERSoT_
-_ZNSt6locale7classicEv
-_ZSt9terminatev
-_ZNSt13runtime_errorD2Ev
-_ZSt8to_charsPcS_fSt12chars_format
-_ZNKSt6locale2id5_M_idEv
-_ZNSolsEi
-_ZSt8to_charsPcS_dSt12chars_formati
-_ZSt8to_charsPcS_dSt12chars_format
-_ZNSt6localeC1ERKS_
-_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE7reserveEm
-_ZNKSt13runtime_error4whatEv
-_ZSt8to_charsPcS_eSt12chars_formati
-_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE15_M_replace_coldEPcmPKcmm
-_ZNSt16invalid_argumentD1Ev
-_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE10_M_replaceEmmPKcm
-_ZSt8to_charsPcS_d
-_ZSt8to_charsPcS_e
-_ZSt8to_charsPcS_f
-_ZSt8to_charsPcS_fSt12chars_formati
-_ZNSt16invalid_argumentC1EPKc
-_ZNSt6localeC1Ev
-_ZNKSt6localeeqERKS_
-__cxa_throw
-_ZTVN10__cxxabiv117__class_type_infoE
-_ZSt9use_facetINSt7__cxx118numpunctIcEEERKT_RKSt6locale
-_ZSt17__throw_bad_allocv
-_ZTVN10__cxxabiv120__si_class_type_infoE
-__cxa_begin_catch
-_ZTISt13runtime_error
-_ZSt4cerr
-_ZdlPv
-_ZNSt13runtime_errorC2EPKc
-_ZSt16__throw_bad_castv
-_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEaSEOS4_
-_ZNSt6localeaSERKS_
-__cxa_allocate_exception
-_ZSt21ios_base_library_initv
-__gxx_personality_v0
-_ZNSt7__cxx118numpunctIcE2idE
-_ZSt16__ostream_insertIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_PKS3_l
-_ZNSo3putEc
-__cxa_demangle
-_ZTISt16invalid_argument
-_ZSt8to_charsPcS_eSt12chars_format
-_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc
-_Znwm
-_ZSt24__throw_out_of_range_fmtPKcz
-_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE9_M_mutateEmmPKcm
-_ZSt4cout
-__cxa_end_catch
-_ZSt19__throw_logic_errorPKc
-__cxa_free_exception
-frexp
-frexpf
-frexpl
-_Unwind_Resume
-__udivti3
-__cxa_finalize
-memmove
-__libc_start_main
-memset
-memchr
-free
-toupper
-strlen
-memcmp
-memcpy
-libstdc++.so.6
-libm.so.6
-libgcc_s.so.1
-libc.so.6
-GLIBC_2.14
-GLIBC_2.34
-GLIBC_2.2.5
-GCC_3.0
-GLIBCXX_3.4.32
-GLIBCXX_3.4.20
-GLIBCXX_3.4.31
-GLIBCXX_3.4.9
-GLIBCXX_3.4.21
-CXXABI_1.3
-GLIBCXX_3.4.29
-GLIBCXX_3.4
-T$(I9
-L$(H9
-D$(I9
-D$ H
-t$(H
-L$PH9
-H9l$PH
-l$8u[H
-\$ L
-T$(H9
-L$(I9
-t$ H
-\$ H
-H;D$HH
-L$(H9
-D$(I9
-L4#H
-D$#L
-L$#L)
-[A\A]A^A_]
-	w=E
-wdfD
-:t	@
-0123456789abcdef
-component::path
-component::scheme
-static const char *FIX8::conjure_enum<component>::epeek() [T = component, e = component::path]
-static const char *FIX8::conjure_enum<component>::tpeek() [T = component]
-"{}"
-{:9} {}
-{:<2} {}
-"{}"
-numbers::zero |numbers::two      |numbers::five| numbers::nine
-zero|two|five|	nine
-twenty,two,rubbish,nine
-exception:
-one|three|four|eight
-one 		three four eight
-basic_string::_M_replace_aux
-basic_string::_M_create
-basic_string_view::substr
-%s: __pos (which is %zu) > __size (which is %zu)
-static const char *FIX8::conjure_enum<component>::epeek() [T = component, e = component::scheme]
-static const char *FIX8::conjure_enum<component1>::epeek() [T = component1, e = scheme]
-basic_string: construction from null is not valid
-memory allocation failiure
-invalid mangled name
-invalid argument
-basic_string::append
-basic_string_view::copy
-format error: invalid arg-id in format string
-format error: format-spec contains invalid formatting options for 'bool'
-format error: width must be non-zero in format string
-format error: invalid width or precision in format-spec
-format error: unmatched '{' in format string
-format error: conflicting indexing style in format string
-format error: failed to parse format-spec
+$ ./example|strings
+0 10
+1 10
+2 10
+3 10
+4 10
+5 10
+6 10
+12 10
+13 10
+14 10
+14 10
+1000100101
 true
 false
-format error: integer not representable as character
-format error: argument used for width or precision must be a non-negative integer
-basic_string::_M_replace
-format error: format-spec contains invalid formatting options for 'charT'
-format error: missing precision after '.' in format string
-basic_string::insert
-%s: __pos (which is %zu) > this->size() (which is %zu)
-format error: unmatched '}' in format string
-component::authority                 <-- start conjure_enum
-component::fragment
-component::host
-component::password
+true
+true
+1000000001
+0000000001
+0001001010
+---+--+-+-
+0001001010
+0001001000
+0001001010
+1110110101
+0001001010
+true
+authority 1
+fragment 14
+host 5
+password 4
+path 12
+port 6
+query 13
+scheme 0
+user 3
+userinfo 2
+numbers1::two1 2
+numbers1::one1 3
+numbers1::zero1 4
+numbers1::five1 5
+numbers1::six1 6
+numbers1::seven1 7
+numbers1::eight1 8
+numbers1::nine1 9
 component::path
-component::port
-component::query
+component::path
+path
 component::scheme
-component::user
-component::userinfo
-numbers1::two
-numbers1::one
-numbers1::zero
-numbers1::five
-numbers1::six
-numbers1::seven
-numbers1::eight
-numbers1::nine
-numbers::eight
-numbers::five
-numbers::four
-numbers::nine
-numbers::one
-numbers::seven
-numbers::six
-numbers::three
+scheme
+true
+false
+false
+static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::path; T = component]
+static consteval const char* FIX8::conjure_enum<T>::tpeek() [with T = component]
+static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = (component)100; T = component]
+std::array<std::tuple<std::basic_string_view<char, std::char_traits<char> >, std::basic_string_view<char, std::char_traits<char> > >, 10ul>
+authority component::authority
+fragment component::fragment
+host component::host
+password component::password
+path component::path
+port component::port
+query component::query
+scheme component::scheme
+user component::user
+userinfo component::userinfo
+*******************************
+0000001111
+0000001111
+0000001111
+authority component::authority
+fragment  component::fragment
+host      component::host
+password  component::password
+path      component::path
+port      component::port
+query     component::query
+scheme    component::scheme
+user      component::user
+userinfo  component::userinfo
+0  component::scheme
+1  component::authority
+2  component::userinfo
+3  component::user
+4  component::password
+5  component::host
+6  component::port
+12 component::path
+13 component::query
+14 component::fragment
+1  component::authority
+14 component::fragment
+5  component::host
+4  component::password
+12 component::path
+6  component::port
+13 component::query
+0  component::scheme
+3  component::user
+2  component::userinfo
+true
+"component::scheme"
+1000100101
+numbers::zero
 numbers::two
-numbers::zero                        <-- end conjure_enum
-St5arrayISt5tupleIJSt17basic_string_viewIcSt11char_traitsIcEES4_EELm10EE
-NSt8__format9_Seq_sinkINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEEE
-NSt8__format9_Buf_sinkIcEE
-NSt8__format5_SinkIcEE
-NSt8__format10_Iter_sinkIcNS_10_Sink_iterIcEEEE
-NSt8__format19_Formatting_scannerINS_10_Sink_iterIcEEcEE
-NSt8__format8_ScannerIcEE
-St12format_error
- !"#
- !"#
-00010203040506070809101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899
-;*3$"
-zPLR
-GCC: (Ubuntu 13.2.0-4ubuntu3) 13.2.0
-Ubuntu clang version 16.0.6 (15)
-.shstrtab
-.interp
-.note.gnu.property
-.note.gnu.build-id
-.note.ABI-tag
-.gnu.hash
-.dynsym
-.dynstr
-.gnu.version
-.gnu.version_r
-.rela.dyn
-.rela.plt
-.init
-.plt.got
-.text
-.fini
-.rodata
-.eh_frame_hdr
-.eh_frame
-.gcc_except_table
-.init_array
-.fini_array
-.data.rel.ro
-.dynamic
-.got.plt
-.data
-.bss
-.comment
+numbers::five
+numbers::nine
+1000100101
+numbers::zero
+numbers::two
+numbers::five
+numbers::nine
+0100011010
+numbers::one
+numbers::three
+numbers::four
+numbers::eight
+0000001111
+0000001111
+0000000111
+0000001011
+0100011010
+0 numbers::zero
+1 numbers::one
+2 numbers::two
+3 numbers::three
+4 numbers::four
+5 numbers::five
+6 numbers::six
+7 numbers::seven
+8 numbers::eight
+9 numbers::nine
+0 numbers::zero
+9 numbers::nine
+numbers::zero 10
+numbers::one 10
+numbers::three 10
+numbers::zero 10
+numbers::one 10
+numbers::three 10
+'numbers'
+'FIX8::conjure_enum<numbers>'
+'std::map<long unsigned int, std::basic_string_view<char> >'
+'std::map<long unsigned int, main()::foo>'
+'FIX8::conjure_type<FIX8::conjure_enum<numbers> >'
+FIX8::fixed_string<58>
 $
 ```
 </p>

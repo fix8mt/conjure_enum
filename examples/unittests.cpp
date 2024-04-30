@@ -228,12 +228,17 @@ TEST_CASE("get_name")
 //-----------------------------------------------------------------------------------------
 TEST_CASE("type_name")
 {
-	REQUIRE(std::string_view(conjure_type<component>::name) == "component");
-	REQUIRE(std::string_view(conjure_type<component1>::name) == "component1");
 	REQUIRE(conjure_enum<component>::type_name() == "component");
 	REQUIRE(conjure_enum<component1>::type_name() == "component1");
-	REQUIRE(std::string_view(conjure_type<numbers>::name) == "numbers");
 	REQUIRE(conjure_enum<numbers>::type_name() == "numbers");
+}
+
+//-----------------------------------------------------------------------------------------
+TEST_CASE("conjure_type")
+{
+	REQUIRE(std::string_view(conjure_type<component>::name) == "component");
+	REQUIRE(std::string_view(conjure_type<component1>::name) == "component1");
+	REQUIRE(std::string_view(conjure_type<numbers>::name) == "numbers");
 }
 
 //-----------------------------------------------------------------------------------------
@@ -317,7 +322,20 @@ TEST_CASE("enum_bitset")
 	REQUIRE((ed ^ numbers::one).to_ulong()  == 0b010);
 	ed ^= numbers::one;
 	REQUIRE(ed.to_ulong() == 0b010);
+}
 
+//-----------------------------------------------------------------------------------------
+TEST_CASE("enum_bitset::enum_bitset(std::string_view")
+{
+	REQUIRE_THROWS_MATCHES(enum_bitset<numbers>("zero,twenty,two,three", true, ',', false),
+		std::invalid_argument, Catch::Matchers::Message("twenty"));
+	enum_bitset<numbers> sc("zero,two,three", true, ',');
+	REQUIRE(sc.to_ulong() == 0b1101);
+}
+
+//-----------------------------------------------------------------------------------------
+TEST_CASE("enum_bitset::for_each")
+{
 	enum_bitset<numbers> ee(0b10101010);
 	std::ostringstream ostr;
 	ee.for_each([&ostr](numbers val) noexcept
@@ -338,8 +356,5 @@ numbers::seven(7)
 		tot += static_cast<int>(val);
 	}, std::ref(total));
 	REQUIRE(total == 16);
-
-	REQUIRE_THROWS_MATCHES(enum_bitset<numbers>("zero,twenty,two,three", true, ',', false),
-		std::invalid_argument, Catch::Matchers::Message("twenty"));
 }
 

@@ -300,10 +300,10 @@ Optionally provide any additional parameters. Works with lambdas, member functio
 when using a member function - the _second_ parameter passed by your call must be the `this` pointer of the object.
 If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
 
-See `enum_bitset::for_each` to iterate through a bitset.
-
 Returns `std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...)`
 or `std::bind(std::forward<Fn>(func), obj, std::placeholders::_1, std::forward<Args>(args)...)` which can be stored or immediately invoked.
+
+See `enum_bitset::for_each` to iterate through a bitset.
 ```c++
 conjure_enum<component>::for_each([](component val, int other)
 {

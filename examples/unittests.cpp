@@ -325,7 +325,7 @@ TEST_CASE("enum_bitset")
 }
 
 //-----------------------------------------------------------------------------------------
-TEST_CASE("enum_bitset::enum_bitset(std::string_view")
+TEST_CASE("enum_bitset(std::string_view)")
 {
 	REQUIRE_THROWS_MATCHES(enum_bitset<numbers>("zero,twenty,two,three", true, ',', false),
 		std::invalid_argument, Catch::Matchers::Message("twenty"));

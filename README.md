@@ -212,7 +212,7 @@ _output_
 static constexpr std::array<std::tuple<T, std::string_view>, std::size_t> entries;
 static constexpr std::array<std::tuple<T, std::string_view>, std::size_t> sorted_entries;
 ```
-This static member is generated for your type. It is a `std::array` of tuples of `T` and `std::string_view`.
+These static members are generated for your type. They are `std::array` of tuples of `T` and `std::string_view`.
 `sorted_entries` is the same as `entries` except the array is sorted by the `std::string_view` name.
 ```c++
 using ec = conjure_enum<component>;
@@ -299,6 +299,8 @@ Call supplied invocable for _each_ enum value. Similar to `std::for_each` except
 Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. The second version is intended to be used
 when using a member function - the _second_ parameter passed by your call must be the `this` pointer of the object.
 If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
+
+See `enum_bitset::for_each` to iterate through a bitset.
 
 Returns `std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...)`
 or `std::bind(std::forward<Fn>(func), obj, std::placeholders::_1, std::forward<Args>(args)...)` which can be stored or immediately invoked.

@@ -17,8 +17,8 @@
 --|--
 |[Here](https://github.com/fix8mt/conjure_enum/blob/master/include/fix8/conjure_enum.hpp)| For implementation|
 |[API and Examples](#api-and-examples)| General examples|
-|[API and Examples with `enum_bitset`](#api-and-examples-using-enum_bitset)| `std::bitset` replacement examples|
-|[API and Examples with `conjure_type`](#api-and-examples-using-conjure_type)| any type string extractor examples|
+|[API and Examples for `enum_bitset`](#api-and-examples-using-enum_bitset)| `std::bitset` replacement|
+|[API and Examples for `conjure_type`](#api-and-examples-using-conjure_type)| any type string extractor|
 |[Building](#building)| How to build or include|
 |[Notes](#notes)| Notes on the implementation, limits, etc|
 |[Compilers](#compiler-support)| Supported compilers|
@@ -48,7 +48,7 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
 - ***Header-Only***:  No external dependencies, simplifying integration into your project.
 - ***Modern C++20***:  Entirely `constexpr` for compile-time safety, efficiency and performance.
 - ***Simple & Easy to Use***:  Class-based approach with intuitive syntax.
-- ***Convenient***:  `enum_bitsets` offers an enhanced `std::bitset`.
+- ***Convenient***:  `enum_bitset` offers an enhanced `std::bitset`.
 - ***Useful***:  `conjure_type` lets you obtain the type string of _any type!_
 - ***Broad Support***:  Works with scoped and unscoped enums, enum aliases and even with gaps.
 - ***Wide Compiler Compatibility***:  Supports GCC, Clang, MSVC and XCode/Clang; `x86_64`, `AArch64`

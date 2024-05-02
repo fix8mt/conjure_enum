@@ -139,17 +139,22 @@ _output_
 12
 100 <-- invalid, error value
 ```
-## `enum_to_int`
+## `enum_to_int`, `enum_to_underlying`
 ```c++
-static constexpr std::underlying_type_t<T> enum_to_int(T value);
+static constexpr int enum_to_int(T value);
+static constexpr std::underlying_type_t<T> enum_to_underlying(T value);
 ```
-Returns the underlying value for the given enum value.
+Returns an `int` or the `underlying` value for the given enum value.
 ```c++
 std::cout << conjure_enum<component>::enum_to_int(component::path) << '\n';
-std::cout<< conjure_enum<component1>::enum_to_int(path) << '\n';
+std::cout << conjure_enum<component>::enum_to_underlying(component::path) << '\n';
+std::cout << conjure_enum<component1>::enum_to_int(path) << '\n';
+std::cout << conjure_enum<component1>::enum_to_underlying(path) << '\n';
 ```
 _output_
 ```CSV
+12
+12
 12
 12
 ```

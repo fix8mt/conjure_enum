@@ -139,6 +139,20 @@ _output_
 12
 100 <-- invalid, error value
 ```
+## `enum_to_int`
+```c++
+static constexpr std::underlying_type_t<T> enum_to_int(T value);
+```
+Returns the underlying value for the given enum value.
+```c++
+std::cout << conjure_enum<component>::enum_to_int(component::path) << '\n';
+std::cout<< conjure_enum<component1>::enum_to_int(path) << '\n';
+```
+_output_
+```CSV
+12
+12
+```
 ## `count`
 ```c++
 static constexpr std::size_t count();

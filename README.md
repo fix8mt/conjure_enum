@@ -12,13 +12,13 @@
 <a href="https://en.wikipedia.org/wiki/C%2B%2B20"><img src="https://github.com/fix8mt/conjure_enum/blob/master/assets/badgecpprequired.svg"></a>
 <a href="https://opensource.org/license/mit"><img src="https://github.com/fix8mt/conjure_enum/blob/master/assets/badgemitlic.svg"></a>
 
-# Quick links
+# 1. Quick links
 |**Link**|**Description**|
 --|--
 |[Here](https://github.com/fix8mt/conjure_enum/blob/master/include/fix8/conjure_enum.hpp)| For implementation|
 |[API and Examples](#api-and-examples)| General examples|
-|[API and Examples for `enum_bitset`](#api-and-examples-using-enum_bitset)| `std::bitset` replacement|
-|[API and Examples for `conjure_type`](#api-and-examples-using-conjure_type)| any type string extractor|
+|[API and Examples for `enum_bitset`](#3-api-and-examples-using-enum_bitset)| `std::bitset` replacement|
+|[API and Examples for `conjure_type`](#4-api-and-examples-using-conjure_type)| any type string extractor|
 |[Building](#building)| How to build or include|
 |[Notes](#notes)| Notes on the implementation, limits, etc|
 |[Compilers](#compiler-support)| Supported compilers|
@@ -27,7 +27,7 @@
 > Use the built-in [table of contents](https://github.blog/changelog/2021-04-13-table-of-contents-support-in-markdown-files/) to navigate this guide.
 
 ---
-# Introduction
+# 2. Introduction
 ## Supercharge Your C++ Enums with This Lightweight Reflection Library!
 
 Based on the awesome work of [`magic_enum`](https://github.com/Neargye/magic_enum)[^2] and [`boost::desribe`](https://github.com/boostorg/describe),
@@ -55,7 +55,7 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
 - ***Confidence in Quality***:  Includes built-in unit tests for reliable functionality.
 
 ---
-# API and Examples
+# 3. API and Examples
 All examples refer to the following enums:
 ```c++
 enum class component { scheme, authority, userinfo, user, password, host, port, path=12, test=path, query, fragment };
@@ -649,7 +649,7 @@ static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = componen
 static consteval const char* FIX8::conjure_enum<T>::tpeek() [with T = component]
 ```
 ---
-# API and Examples using `enum_bitset`
+# 4. API and Examples using `enum_bitset`
 `enum_bitset` is a convenient way of creating bitsets based on `std::bitset`. It uses your enum (scoped or unscoped)
 for the bit positions (and names).
 > [!NOTE]
@@ -811,7 +811,7 @@ true
 1000000001
 0000000001
 ```
-# Other functions
+## Other functions
 ## `operator bool`
 ```c++
 constexpr operator bool() const;
@@ -827,7 +827,7 @@ _output_
 0001001111
 ```
 
-## `std::ostream& operator<<`, `to_string`
+### `std::ostream& operator<<`, `to_string`
 ```c++
 friend constexpr std::ostream& operator<<(std::ostream& os, const enum_bitset& what);
 constexpr std::string to_string(char zero='0', char one='1') const;
@@ -845,7 +845,7 @@ _output_
 0001001010
 ---+--+-+-
 ```
-## `for_each`
+### `for_each`
 ```c++
 template<typename Fn, typename... Args>
 requires std::invocable<Fn&&, T, Args...>
@@ -887,7 +887,7 @@ numbers::nine
 ```
 
 ---
-# API and Examples using `conjure_type`
+# 5. API and Examples using `conjure_type`
 `conjure_type` is a general purpose class allowing you to extract a string representation of any type.
 The string will be stored statically by the compiler, so use the statically generated value `name` for your type.
 ```c++
@@ -939,7 +939,7 @@ std::basic_string_view<char>
 ```
 
 ---
-# Building
+# 6. Building
 This implementation is header only. Apart from standard C++20 includes there are no external dependencies needed in your application.
 [Catch2](https://github.com/catchorg/Catch2.git) is used for the built-in unit tests.
 
@@ -1004,7 +1004,7 @@ target_include_directories(myproj PRIVATE ${conjure_enum_SOURCE_DIR}/include)
 ```
 
 ---
-# Notes
+# 7. Notes
 ## enum limits
 ### `ENUM_MIN_VALUE`, `ENUM_MAX_VALUE`
 These are set by default unless you override them by defining them in your application.
@@ -1283,7 +1283,7 @@ $
 It can be observed that there is only one copy of the scoped or unscoped enum value string in the executable.
 
 ---
-# Compiler support
+# 8. Compiler support
 | Compiler | Version(s) | Notes | Unsupported |
 | :--- | :--- | :--- | ---: |
 | [gcc](https://gcc.gnu.org/projects/cxx-status.html) | `11`, `12`, `13`, `14`| `std::format` not complete in `11`, `12` | `<= 10` |
@@ -1291,7 +1291,7 @@ It can be observed that there is only one copy of the scoped or unscoped enum va
 | [msvc](https://learn.microsoft.com/en-us/cpp/overview/visual-cpp-language-conformance) | `16`, `17` | Visual Studio 2019,2022, latest `17.9.5`| `<= 16.9`|
 | [xcode](https://developer.apple.com/support/xcode/) | `15` | Some issues with `constexpr`, workarounds| `<= 14`|
 
-# Compiler issues
+# 9. Compiler issues
 | Compiler | Version(s) | Issues | Workaround |
 | :--- | :--- | :--- | ---: |
 | clang | `16`, `18`| Compiler reports integers outside valid range [x,y]| specify underlying type when declaring enum eg. `enum class foo : int` |

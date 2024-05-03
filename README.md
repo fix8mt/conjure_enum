@@ -554,15 +554,15 @@ using ostream_enum_operator::operator<<;
 Examples
 ```c++
 using ostream_enum_operator::operator<<;
-std::cout << component::host << '\n';
-std::cout << component1::host << '\n';
-std::cout << static_cast<component>(100) << '\n';
+std::cout << '"' << component::host << '"' << '\n';
+std::cout << '"' << component1::host << '"' << '\n';
+std::cout << '"' << static_cast<component>(100) << '"' << '\n';
 ```
 _output_
 ```CSV
-component::host
-host
-100
+"component::host"
+"host"
+"100"
 ```
 ## `epeek, tpeek`
 ```c++

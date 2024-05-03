@@ -580,6 +580,7 @@ The following code:
 std::cout << conjure_enum<component>::tpeek() << '\n';
 std::cout << conjure_enum<component>::epeek<component::scheme>() << '\n';
 ```
+---
 Generates this output with gcc:
 ```CSV
 static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::path; T = component]
@@ -822,6 +823,7 @@ numbers::five
 numbers::nine
 ```
 
+---
 # API and Examples using `conjure_type`
 `conjure_type` is a general purpose class allowing you to extract a string representation of any type.
 The string will be stored statically by the compiler, so use the statically generated value `name` for your type.
@@ -873,6 +875,7 @@ fixed_string<58>
 std::basic_string_view<char>
 ```
 
+---
 # Building
 This implementation is header only. Apart from standard C++20 includes there are no external dependencies needed in your application.
 [Catch2](https://github.com/catchorg/Catch2.git) is used for the built-in unit tests.

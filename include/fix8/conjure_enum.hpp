@@ -166,10 +166,25 @@ private:
 		return std::array<enum_tuple, sizeof...(I)>{{{ values[I], _enum_name_v<values[I]>}...}};
 	}
 
+	static constexpr std::string_view _remove_scope(std::string_view what) noexcept
+	{
+		if (const auto lc { what.find_last_of(':') }; lc != std::string_view::npos)
+			return what.substr(lc + 1);
+		return what;
+	}
+
 	template<std::size_t... I>
 	static constexpr auto _scoped_entries(std::index_sequence<I...>) noexcept
 	{
-		std::array<scoped_tuple, sizeof...(I)> tmp{{{ remove_scope(_enum_name_v<values[I]>), _enum_name_v<values[I]>}...}};
+		std::array<scoped_tuple, sizeof...(I)> tmp{{{ _remove_scope(_enum_name_v<values[I]>), _enum_name_v<values[I]>}...}};
+		std::sort(tmp.begin(), tmp.end(), scoped_comp);
+		return tmp;
+	}
+
+	template<std::size_t... I>
+	static constexpr auto _rev_scoped_entries(std::index_sequence<I...>) noexcept
+	{
+		std::array<scoped_tuple, sizeof...(I)> tmp{{{ _enum_name_v<values[I]>, _remove_scope(_enum_name_v<values[I]>)}...}};
 		std::sort(tmp.begin(), tmp.end(), scoped_comp);
 		return tmp;
 	}
@@ -296,8 +311,10 @@ public:
 	{
 		if constexpr (is_scoped())
 		{
-			if (const auto lc { what.find_last_of(':') }; lc != std::string_view::npos)
-				return what.substr(lc + 1);
+			if (const auto result { std::equal_range(rev_scoped_entries.cbegin(),
+				rev_scoped_entries.cend(), scoped_tuple(what, std::string_view()), scoped_comp) };
+					result.first != result.second)
+						return std::get<1>(*result.first);
 		}
 		return what;
 	}
@@ -372,6 +389,7 @@ public:
 	static constexpr auto values { _values() };
 	static constexpr auto entries { _entries(std::make_index_sequence<values.size()>()) };
 	static constexpr auto scoped_entries { _scoped_entries(std::make_index_sequence<values.size()>()) };
+	static constexpr auto rev_scoped_entries { _rev_scoped_entries(std::make_index_sequence<values.size()>()) };
 	static constexpr auto sorted_entries { _sorted_entries() };
 	static constexpr auto names { _names(std::make_index_sequence<values.size()>()) };
 

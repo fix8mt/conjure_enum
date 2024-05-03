@@ -1022,11 +1022,11 @@ The following are the default settings:
 ```
 These definitions set the minimum and maximum enum values that are supported. You can adjust them to suit your requirements but for most use cases the defaults are sufficient.
 
-## class `conjure_enum` is not constructible
+## Class `conjure_enum` is not constructible
 All methods in this class are _static_. You cannot instantiate an object of this type.
 
-## It's not really _reflection_ - it's a hack
-This library provides a workaround to current limitations in C++. There are proposals out there for future versions of the language that will provide proper reflection.
+## It's not real _reflection_
+This library provides a workaround to current limitations of C++. There are proposals out there for future versions of the language that will provide proper reflection.
 See [Reflection TS](https://en.cppreference.com/w/cpp/experimental/reflect) and [Reflection for C++26](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2023/p2996r0.html)
 for examples of some of these.
 

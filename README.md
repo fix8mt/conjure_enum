@@ -6,7 +6,7 @@
 
 ### Lightweight header-only C++20 enum reflection
 
-------------------------------------------------------------------------
+---
 [![clang](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-clang-latest.yml/badge.svg)](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-clang-latest.yml)
 [![gcc](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-gcc-latest.yml/badge.svg)](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-gcc-latest.yml)
 <a href="https://en.wikipedia.org/wiki/C%2B%2B20"><img src="https://github.com/fix8mt/conjure_enum/blob/master/assets/badgecpprequired.svg"></a>
@@ -26,7 +26,7 @@
 > [!TIP]
 > Use the built-in [table of contents](https://github.blog/changelog/2021-04-13-table-of-contents-support-in-markdown-files/) to navigate this guide.
 
-------------------------------------------------------------------------
+---
 # Introduction
 ## Supercharge Your C++ Enums with This Lightweight Reflection Library!
 
@@ -54,6 +54,7 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
 - ***Wide Compiler Compatibility***:  Supports GCC, Clang, MSVC and XCode/Clang; `x86_64`, `AArch64`
 - ***Confidence in Quality***:  Includes built-in unit tests for reliable functionality.
 
+---
 # API and Examples
 All examples refer to the following enums:
 ```c++
@@ -580,12 +581,12 @@ The following code:
 std::cout << conjure_enum<component>::tpeek() << '\n';
 std::cout << conjure_enum<component>::epeek<component::scheme>() << '\n';
 ```
----
 Generates this output with gcc:
 ```CSV
 static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::path; T = component]
 static consteval const char* FIX8::conjure_enum<T>::tpeek() [with T = component]
 ```
+---
 # API and Examples using `enum_bitset`
 `enum_bitset` is a convenient way of creating bitsets based on `std::bitset`. It uses your enum (scoped or unscoped)
 for the bit positions (and names).
@@ -940,6 +941,7 @@ FetchContent_MakeAvailable(conjure_enum)
 target_include_directories(myproj PRIVATE ${conjure_enum_SOURCE_DIR}/include)
 ```
 
+---
 # Notes
 ## enum limits
 ### `ENUM_MIN_VALUE`, `ENUM_MAX_VALUE`
@@ -1218,6 +1220,7 @@ $
 </details>
 It can be observed that there is only one copy of the scoped or unscoped enum value string in the executable.
 
+---
 # Compiler support
 | Compiler | Version(s) | Notes | Unsupported |
 | :--- | :--- | :--- | ---: |

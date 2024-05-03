@@ -16,13 +16,13 @@
 |**Link**|**Description**|
 --|--
 |[Here](https://github.com/fix8mt/conjure_enum/blob/master/include/fix8/conjure_enum.hpp)| For implementation|
-|[API and Examples](#api-and-examples)| General examples|
-|[API and Examples for `enum_bitset`](#3-api-and-examples-using-enum_bitset)| `std::bitset` replacement|
-|[API and Examples for `conjure_type`](#4-api-and-examples-using-conjure_type)| any type string extractor|
-|[Building](#building)| How to build or include|
-|[Notes](#notes)| Notes on the implementation, limits, etc|
-|[Compilers](#compiler-support)| Supported compilers|
-|[Compiler issues](#compiler-issues)| Workarounds for various compiler issues|
+|[API and Examples](#3-api-and-examples)| General examples|
+|[API and Examples for `enum_bitset`](#4-api-and-examples-using-enum_bitset)| `std::bitset` replacement|
+|[API and Examples for `conjure_type`](#5-api-and-examples-using-conjure_type)| any type string extractor|
+|[Building](#6-building)| How to build or include|
+|[Notes](#7-notes)| Notes on the implementation, limits, etc|
+|[Compilers](#8-compiler-support)| Supported compilers|
+|[Compiler issues](#9-compiler-issues)| Workarounds for various compiler issues|
 > [!TIP]
 > Use the built-in [table of contents](https://github.blog/changelog/2021-04-13-table-of-contents-support-in-markdown-files/) to navigate this guide.
 

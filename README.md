@@ -45,7 +45,7 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
 ## Key Benefits
 
 - ***Lightweight***:  Designed for performance without unnecessary overhead.
-- ***Header-Only***:  No external dependencies, simplifying integration into your project.
+- ***Single Header-Only***:  No external dependencies, simplifying integration into your project.
 - ***Modern C++20***:  Entirely `constexpr` for compile-time safety, efficiency and performance.
 - ***Simple & Easy to Use***:  Class-based approach with intuitive syntax.
 - ***Convenient***:  `enum_bitset` offers an enhanced `std::bitset`.
@@ -87,10 +87,12 @@ Because all methods in `conjure_enum` are within a `class` instead of individual
 typing with standard aliases:
 ```c++
 using ec = conjure_enum<component>;
+std::cout << std::format("\"{}\"\n", ec::enum_to_string(component::authority));
 std::cout << std::format("\"{}\"\n", ec::enum_to_string(static_cast<component>(100)));
 ```
 _output_
 ```CSV
+"component::authority"
 ""
 ```
 Also supplied is a template version of `enum_to_string`.

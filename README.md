@@ -39,7 +39,7 @@ focusing on the main features developers usually need while enhancing and expand
 `conjure_enum`[^1] takes full advantage of the latest C++20 features. We've leveraged the convenience of `std::source_location` and
 unlocked the potential of `constexpr` algorithms and concepts. This translates to:
 
-- ***Improved Performance***  Optimized code for faster and smoother operation - get the compiler to do more!
+- ***Improved Performance***  Optimized code for faster and smoother operation - get your compiler to do more!
 - ***Enhanced Developer Experience***  Write cleaner, more concise, and more powerful C++ code.
 
 ## Key Benefits
@@ -541,6 +541,28 @@ _output_
 ```CSV
 0 numbers::zero
 9 numbers::nine
+```
+## `ostream_enum_operator`
+```c++
+template<typename CharT, typename Traits=std::char_traits<CharT>, valid_enum T>
+constexpr std::basic_ostream<CharT, Traits>& operator<<(std::basic_ostream<CharT, Traits>& os, T value);
+```
+Provides `std::ostream` insertion for any enum. You just need to include
+```c++
+using ostream_enum_operator::operator<<;
+```
+Examples
+```c++
+using ostream_enum_operator::operator<<;
+std::cout << component::host << '\n';
+std::cout << component1::host << '\n';
+std::cout << static_cast<component>(100) << '\n';
+```
+_output_
+```CSV
+component::host
+host
+100
 ```
 ## `epeek, tpeek`
 ```c++

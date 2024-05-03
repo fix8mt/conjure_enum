@@ -1025,6 +1025,11 @@ These definitions set the minimum and maximum enum values that are supported. Yo
 ## class `conjure_enum` is not constructible
 All methods in this class are _static_. You cannot instantiate an object of this type.
 
+## It's not really _reflection_ - it's a hack
+This library provides a workaround to current limitations in C++. There are proposals out there for future versions of the language that will provide proper reflection.
+See [Reflection TS](https://en.cppreference.com/w/cpp/experimental/reflect) and [Reflection for C++26](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2023/p2996r0.html)
+for examples of some of these.
+
 ## Use of `std::string_view`
 All of the generated static strings and generated static tables obtained by `std::source_location` use the library defined `fixed_string`. No string copying is done at runtime, resulting in
 a single static string in your application. All `conjure_enum` methods that return strings _only_ return `std::string_view`.

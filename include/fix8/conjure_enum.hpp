@@ -98,7 +98,7 @@ public:
 };
 
 //-----------------------------------------------------------------------------------------
-template<int N, int V> // can't have constexpr decompositions! (but why?)
+template<int N, int V> // can't have constexpr decompositions! (but why not?)
 constexpr auto get_spec() noexcept
 {
 	constexpr auto compiler_specifics
@@ -121,7 +121,14 @@ constexpr auto get_spec() noexcept
 
 //-----------------------------------------------------------------------------------------
 template<typename T>
-requires std::same_as<T, std::decay_t<T>> && std::is_enum_v<T>
+concept valid_enum = requires(T)
+{
+	requires std::same_as<T, std::decay_t<T>>;
+	requires std::is_enum_v<T>;
+};
+
+//-----------------------------------------------------------------------------------------
+template<valid_enum T>
 class conjure_enum final
 {
 	static constexpr int enum_min_value{ENUM_MIN_VALUE}, enum_max_value{ENUM_MAX_VALUE};
@@ -174,7 +181,7 @@ private:
 		return tmp;
 	}
 
-	template< std::size_t... I>
+	template<std::size_t... I>
 	static constexpr auto _names(std::index_sequence<I...>) noexcept
 	{
 		return std::array<std::string_view, sizeof...(I)>{{{ _enum_name_v<values[I]>}...}};
@@ -322,6 +329,14 @@ public:
 	static constexpr auto front() noexcept { return *cbegin(); }
 	static constexpr auto back() noexcept { return *std::prev(cend()); }
 
+	static constexpr int enum_to_int(T value) noexcept
+	{
+		return static_cast<int>(value);
+	}
+	static constexpr std::underlying_type_t<T> enum_to_underlying(T value) noexcept
+	{
+		return static_cast<std::underlying_type_t<T>>(value);
+	}
 	static constexpr std::optional<T> int_to_enum(int value) noexcept
 	{
 		if (const auto result { std::equal_range(values.cbegin(), values.cend(), static_cast<T>(value), value_comp) };
@@ -377,9 +392,9 @@ public:
 	}
 };
 
+//-----------------------------------------------------------------------------------------
 // allow range based for
-template<typename E, typename T=std::decay_t<E>>
-requires std::is_enum_v<T>
+template<valid_enum T>
 struct iterator_adaptor
 {
 	constexpr auto begin() noexcept { return conjure_enum<T>::entries.cbegin(); }
@@ -387,19 +402,24 @@ struct iterator_adaptor
 };
 
 //-----------------------------------------------------------------------------------------
+// ostream& operator<< for any enum
+namespace ostream_enum_operator
+{
+	template<typename CharT, typename Traits=std::char_traits<CharT>, valid_enum T>
+	constexpr std::basic_ostream<CharT, Traits>& operator<<(std::basic_ostream<CharT, Traits>& os, T value) noexcept
+	{
+		if (conjure_enum<T>::contains(value))
+			return os << conjure_enum<T>::enum_to_string(value);
+		return os << conjure_enum<T>::enum_to_underlying(value);
+	}
+}
+
+//-----------------------------------------------------------------------------------------
 // bitset based on supplied enum
 // Note: your enum sequence must be continuous with the last enum value < count of enumerations
 //-----------------------------------------------------------------------------------------
-template<typename T>
-concept valid_bitset_enum = requires(T)
-{
-	requires std::is_enum_v<T>;
-	requires std::same_as<T, std::decay_t<T>>;
-	requires conjure_enum<T>::count() > 0;
-	requires static_cast<std::size_t>(conjure_enum<T>::values.back()) < conjure_enum<T>::count();
-};
-
-template<valid_bitset_enum T>
+template<valid_enum T>
+requires (conjure_enum<T>::count() > 0) && (static_cast<std::size_t>(conjure_enum<T>::values.back()) < conjure_enum<T>::count())
 class enum_bitset
 {
 	using U = std::underlying_type_t<std::decay_t<T>>;
@@ -416,12 +436,10 @@ public:
 	constexpr enum_bitset(std::string_view from, bool anyscope=false, char sep='|', bool ignore_errors=true)
 		: _present(factory(from, anyscope, sep, ignore_errors)) {}
 
-	template<typename... E>
-	requires(std::is_enum_v<E> && ...)
+	template<valid_enum... E>
 	constexpr enum_bitset(E... comp) noexcept : _present((0u | ... | (1 << to_underlying(comp)))) {}
 
-	template<typename... I>
-	requires(std::is_integral_v<I> && ...)
+	template<std::integral... I>
 	constexpr enum_bitset(I... comp) noexcept : _present((0u | ... | (1 << comp))) {}
 
 	constexpr enum_bitset() = default;
@@ -439,14 +457,17 @@ public:
 	constexpr void set(U pos) noexcept { _present |= (1 << pos); }
 	constexpr void set(T what) noexcept { set(to_underlying(what)); }
 	constexpr void set() noexcept { _present = all_bits; }
+
 	template<T what>
 	constexpr void set() noexcept
 	{
 		if constexpr (constexpr auto uu{to_underlying<what>()}; uu < countof)
 			_present |= (1 << uu);
 	}
+
 	template<T... comp>
 	constexpr void set_all() noexcept { (set<comp>(),...); }
+
 	template<typename... E>
 	constexpr void set_all(E... comp) noexcept { return (... | (set(comp))); }
 
@@ -456,6 +477,7 @@ public:
 		if constexpr (constexpr auto uu{to_underlying<what>()}; uu < countof)
 			_present ^= (1 << uu);
 	}
+
 	constexpr void flip() noexcept { _present = ~_present & all_bits; }
 	constexpr void flip(U pos) noexcept { _present ^= (1 << pos); }
 	constexpr void flip(T what) noexcept { flip(to_underlying(what)); }
@@ -466,39 +488,44 @@ public:
 		if constexpr (constexpr auto uu{to_underlying<what>()}; uu < countof)
 			_present &= ~(1 << uu);
 	}
+
 	constexpr void reset() noexcept { _present = 0; }
 	constexpr void reset(U pos) noexcept { _present &= ~(1 << pos); }
 	constexpr void reset(T what) noexcept { reset(to_underlying(what)); }
+
 	template<T... comp>
 	constexpr void reset_all() noexcept { (reset<comp>(),...); }
-	template<typename... I>
-	requires(std::is_integral_v<I> && ...)
+
+	template<std::integral... I>
 	constexpr void reset_all(I...comp) noexcept { (reset(comp),...); }
 
 	constexpr bool test(U pos) const noexcept { return _present & (1 << pos); }
 	constexpr bool test(T what) const noexcept { return test(to_underlying(what)); }
 	constexpr bool test() const noexcept { return _present; }
+
 	template<T what>
 	constexpr bool test() const noexcept
 	{
 		if constexpr (constexpr auto uu{to_underlying<what>()}; uu < countof)
 			return test(uu);
 	}
+
 	template<T... comp>
 	constexpr bool test_any() const noexcept { return (... || test<comp>()); }
-	template<typename... I>
-	requires(std::is_integral_v<I> && ...)
+
+	template<std::integral... I>
 	constexpr bool test_any(I...comp) const noexcept { return (... || test(comp)); }
-	template<typename... E>
-	requires(std::is_enum_v<E> && ...)
+
+	template<valid_enum... E>
 	constexpr bool test_any(E...comp) const noexcept { return (... || test(comp)); }
+
 	template<T... comp>
 	constexpr bool test_all() const noexcept { return (... && test<comp>()); }
-	template<typename... I>
-	requires(std::is_integral_v<I> && ...)
+
+	template<std::integral... I>
 	constexpr bool test_all(I...comp) const noexcept { return (... && test(comp)); }
-	template<typename... E>
-	requires(std::is_enum_v<E> && ...)
+
+	template<valid_enum... E>
 	constexpr bool test_all(E...comp) const noexcept { return (... && test(comp)); }
 
 	constexpr enum_bitset& operator<<=(std::size_t pos) noexcept { _present <<= pos; return *this; }

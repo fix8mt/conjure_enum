@@ -195,7 +195,7 @@ int main(void)
 	const foo bar;
 	ek.for_each(std::bind(&foo::printer, &bar, std::placeholders::_1, 10));
 	ek.for_each(&foo::printer, &bar, 10);
-	enum_bitset<numbers> er("one|three|four|eight"sv, true);
+	[[maybe_unused]] enum_bitset<numbers> er("one|three|four|eight"sv, true);
 
 	for (const auto& pp : iterator_adaptor<numbers>())
 		std::cout << static_cast<int>(std::get<0>(pp)) << '\n';
@@ -211,5 +211,10 @@ int main(void)
 
 	auto strv { conjure_type<test>::name };
 	std::cout << conjure_type<decltype(strv)>::name << '\n';
+
+	using ostream_enum_operator::operator<<;
+	std::cout << '"' << component::host << '"' << '\n';
+	std::cout << '"' << component1::host << '"' << '\n';
+	std::cout << '"' << static_cast<component>(100) << '"' << '\n';
 	return 0;
 }

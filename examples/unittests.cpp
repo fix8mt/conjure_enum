@@ -219,6 +219,30 @@ TEST_CASE("int_to_enum")
 }
 
 //-----------------------------------------------------------------------------------------
+TEST_CASE("enum_to_int")
+{
+	REQUIRE(conjure_enum<component>::enum_to_int(component::password) == 4);
+	REQUIRE(conjure_enum<component1>::enum_to_int(password) == 4);
+	REQUIRE(conjure_enum<component>::enum_to_underlying(component::password) == 4);
+	REQUIRE(conjure_enum<component1>::enum_to_underlying(password) == 4);
+}
+
+//-----------------------------------------------------------------------------------------
+TEST_CASE("ostream<<")
+{
+	using ostream_enum_operator::operator<<;
+	std::ostringstream ostr;
+	ostr << component::host;
+	REQUIRE(ostr.str() == "component::host");
+	ostr.str("");
+	ostr << component1::host;
+	REQUIRE(ostr.str() == "host");
+	ostr.str("");
+	ostr << static_cast<component>(100);
+	REQUIRE(ostr.str() == "100");
+}
+
+//-----------------------------------------------------------------------------------------
 TEST_CASE("get_name")
 {
 	REQUIRE(conjure_enum<component>::enum_to_string<component::scheme>() == "component::scheme");
@@ -281,6 +305,7 @@ TEST_CASE("enum_bitset")
 	REQUIRE(ec.to_string() == "0001001010"s);
 	REQUIRE(ec.to_ulong() == 0b0001001010);
 	REQUIRE(ec.to_string('-', '+') == "---+--+-+-"s);
+	REQUIRE(enum_bitset<numbers>(0b0101001010).to_string() == "0101001010"s);
 
 	REQUIRE(ec.test<numbers::one>());
 	ec.flip<numbers::one>();
@@ -298,7 +323,11 @@ TEST_CASE("enum_bitset")
 	REQUIRE(!ec.test<numbers::three>());
 	ec.set(numbers::three);
 	REQUIRE(ec.test<numbers::three>());
+}
 
+//-----------------------------------------------------------------------------------------
+TEST_CASE("enum_bitset ops")
+{
 	enum_bitset<numbers> ed(numbers::two,numbers::three,numbers::four,numbers::seven);
 	REQUIRE(ed.test_all<numbers::two,numbers::three,numbers::four,numbers::seven>());
 	REQUIRE(ed.test_any<numbers::two,numbers::three,numbers::four,numbers::seven>());
@@ -309,8 +338,8 @@ TEST_CASE("enum_bitset")
 	ed >>= 1;
 	REQUIRE(ed.to_ulong() == 0b0010011100);
 
-	REQUIRE((ed | numbers::one).to_ulong()  == 0b0010011110);
-	REQUIRE((ed & numbers::two).to_ulong()  == 0b100);
+	REQUIRE((ed | numbers::one).to_ulong() == 0b0010011110);
+	REQUIRE((ed & numbers::two).to_ulong() == 0b100);
 	ed |= numbers::one;
 	REQUIRE(ed.to_ulong() == 0b0010011110);
 	ed &= numbers::one;

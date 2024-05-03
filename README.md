@@ -290,6 +290,11 @@ scheme    component::scheme
 user      component::user
 userinfo  component::userinfo
 ```
+## `rev_scoped_entries`
+```c++
+static constexpr std::array<std::tuple<std::string_view, std::string_view>, std::size_t> rev_scoped_entries;
+```
+Same as `scoped_entries` except reversed, sorted by scoped name. Use to lookup unscoped name.
 ## `contains`
 ```c++
 static constexpr bool contains(T value);

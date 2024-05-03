@@ -4,7 +4,7 @@
 
 # `conjure_enum`
 
-### Lightweight header-only C++20 enum reflection
+### Lightweight header-only C++20 enum and type reflection
 
 ---
 [![clang](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-clang-latest.yml/badge.svg)](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-clang-latest.yml)
@@ -124,6 +124,24 @@ _output_
 12
 100 <-- invalid, error value
 ```
+## `unscoped_string_to_enum`
+```c++
+static constexpr std::optional<T> unscoped_string_to_enum(std::string_view str);
+```
+Same as `string_to_enum` except works with unscoped strings. Returns a `std::optional<T>`. Empty if string was not valid. Use `std::optional<T>::value_or()` to set an error value
+and avoid throwing an exception.
+```c++
+int value { static_cast<int>(conjure_enum<component>::unscoped_string_to_enum("path").value()) };
+int noscope_value { static_cast<int>(conjure_enum<component1>::string_to_enum("path").value()) };
+int bad_value { static_cast<int>(conjure_enum<component>::string_to_enum("bad_string").value_or(component(100))) };
+std::cout << value << '\n' << noscope_value << '\n' << bad_value << '\n';
+```
+_output_
+```CSV
+12
+12
+100 <-- invalid, error value
+```
 ## `int_to_enum`
 ```c++
 static constexpr std::optional<T> int_to_enum(int value);
@@ -196,6 +214,43 @@ component::port
 component::path
 component::query
 component::fragment
+scheme
+authority
+userinfo
+user
+password
+host
+port
+path
+query
+fragment
+```
+## `unscoped_names`
+```c++
+static constexpr std::array<std::string_view, std::size_t> unscoped_names;
+```
+This static member is generated for your type. It is a `std::array` of the `std::string_view` unscoped strings in enum order.
+For unscoped enums is the same as `names` above.
+```c++
+for(const auto ev : conjure_enum<component>::unscoped_names) // scoped
+   std::cout << ev << '\n';
+std::cout << '\n';
+for(const auto ev : conjure_enum<component1>::unscoped_names) // unscoped
+   std::cout << ev << '\n';
+```
+_output_
+```CSV
+scheme
+authority
+userinfo
+user
+password
+host
+port
+path
+query
+fragment
+
 scheme
 authority
 userinfo

@@ -52,7 +52,7 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
 - ***Useful***:  `conjure_type` lets you obtain the type string of _any type!_
 - ***Broad Support***:  Works with scoped and unscoped enums, enum aliases and even with gaps.
 - ***Wide Compiler Compatibility***:  Supports GCC, Clang, MSVC and XCode/Clang; `x86_64`, `AArch64`
-- ***Confidence in Quality***:  Includes built-in unit tests for reliable functionality.
+- ***Confidence in Quality***:  Includes comprehensive unit tests for reliable functionality.
 
 ---
 # 3. API and Examples
@@ -566,8 +566,7 @@ _output_
 ```
 ## `iterator_adaptor`
 ```c++
-template<typename E, typename T=std::decay_t<E>>
-requires std::is_enum_v<T>
+template<valid_enum T>
 struct iterator_adaptor;
 ```
 This class wraps `conjure_enum<T>::entries` allowing it to be used in range based for loops:
@@ -664,12 +663,10 @@ constexpr enum_bitset(U bits);
 constexpr enum_bitset(std::string_view from, bool anyscope=false,
    char sep='|', bool ignore_errors=true);
 
-template<typename... E>
-requires(std::is_enum_v<E> && ...)
+template<valid_enum... E>
 constexpr enum_bitset(E... comp);
 
-template<typename... I>
-requires(std::is_integral_v<I> && ...)
+template<std::integral... I>
 constexpr enum_bitset(I... comp);
 ```
 You can use the enum values directly in your constructor. _No_ need to `|` them - this is assumed. Just supply them comma separated:
@@ -911,11 +908,13 @@ using test = std::map<std::size_t, std::string_view>;
 using test1 = std::map<std::size_t, foo>;
 std::cout << conjure_type<test>::name << '\n';
 std::cout << conjure_type<test1>::name << '\n';
+std::cout << conjure_type<std::underlying_type_t<numbers>>::name << '\n';
 ```
 _output_
 ```CSV
 std::map<long unsigned int, std::basic_string_view<char> >
 std::map<long unsigned int, foo>
+int
 ```
 Works with its own types too:
 ```c++
@@ -935,6 +934,15 @@ std::cout << conjure_type<decltype(strv)>::name << '\n';
 _output_
 ```CSV
 fixed_string<58>
+std::basic_string_view<char>
+```
+Alternatively you can use the `as_string_view()` method:
+```c++
+auto fstrv { conjure_type<test>::as_string_view() };
+std::cout << conjure_type<decltype(fstrv)>::name << '\n';
+```
+_output_
+```CSV
 std::basic_string_view<char>
 ```
 

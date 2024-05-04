@@ -1,11 +1,13 @@
 //-----------------------------------------------------------------------------------------
 // SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: Copyright (C) 2024 Fix8 Market Technologies Pty Ltd
+// SPDX-FileType: SOURCE
+//
 // conjure_enum (header only)
-// Copyright (C) 2024 Fix8 Market Technologies Pty Ltd
 //   by David L. Dight
 // see https://github.com/fix8mt/conjure_enum
 //
-// Lightweight header-only C++20 enum reflection
+// Lightweight header-only C++20 enum and type reflection
 //
 // Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 //
@@ -45,6 +47,18 @@ enum class numbers : int { zero, one, two, three, four, five, FIVE=five, six, se
 
 //-----------------------------------------------------------------------------------------
 // run as: ctest --output-on-failure
+//-----------------------------------------------------------------------------------------
+TEST_CASE("fixed_string")
+{
+	static constexpr std::string_view t1{"The rain in Spain"};
+	fixed_string<t1.size()> f1{t1};
+	REQUIRE(f1.size() == t1.size() + 1); // fixed_string makes string ASCIIZ
+	REQUIRE(f1[t1.size()] == 0); // test ASCIIZ
+	REQUIRE(f1.get().size() == t1.size()); // fixed_string as string_view
+	REQUIRE(static_cast<std::string_view>(f1) == t1); // fixed_string as string_view
+	REQUIRE(static_cast<std::string_view>(f1).size() == t1.size()); // fixed_string as string_view
+}
+
 //-----------------------------------------------------------------------------------------
 TEST_CASE("is_valid")
 {
@@ -88,6 +102,20 @@ TEST_CASE("names")
    };
 	REQUIRE(conjure_enum<component>::names == compnames);
 	REQUIRE(conjure_enum<component1>::names == compnames1);
+}
+
+//-----------------------------------------------------------------------------------------
+TEST_CASE("unscoped_names")
+{
+	static constexpr auto compnames_both
+	{
+      std::to_array<std::string_view>
+      ({
+			"scheme", "authority", "userinfo", "user", "password", "host", "port", "path", "query", "fragment"
+      })
+   };
+	REQUIRE(conjure_enum<component>::unscoped_names == compnames_both);
+	REQUIRE(conjure_enum<component1>::unscoped_names == compnames_both);
 }
 
 //-----------------------------------------------------------------------------------------
@@ -210,6 +238,14 @@ TEST_CASE("string_to_enum")
 }
 
 //-----------------------------------------------------------------------------------------
+TEST_CASE("unscoped_string_to_enum")
+{
+	REQUIRE(static_cast<int>(conjure_enum<component>::unscoped_string_to_enum("userinfo").value()) == 2);
+	REQUIRE(static_cast<int>(conjure_enum<component1>::unscoped_string_to_enum("userinfo").value()) == 2);
+	REQUIRE(static_cast<int>(conjure_enum<component>::unscoped_string_to_enum("wrong").value_or(component(100))) == 100);
+}
+
+//-----------------------------------------------------------------------------------------
 TEST_CASE("int_to_enum")
 {
 	REQUIRE(conjure_enum<component>::int_to_enum(4).value() == component::password);
@@ -263,6 +299,7 @@ TEST_CASE("conjure_type")
 	REQUIRE(std::string_view(conjure_type<component>::name) == "component");
 	REQUIRE(std::string_view(conjure_type<component1>::name) == "component1");
 	REQUIRE(std::string_view(conjure_type<numbers>::name) == "numbers");
+	REQUIRE(conjure_type<component>::as_string_view() == "component"sv);
 }
 
 //-----------------------------------------------------------------------------------------

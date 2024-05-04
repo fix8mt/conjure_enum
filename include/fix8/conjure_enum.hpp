@@ -1,11 +1,13 @@
 //-----------------------------------------------------------------------------------------
 // SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: Copyright (C) 2024 Fix8 Market Technologies Pty Ltd
+// SPDX-FileType: SOURCE
+//
 // conjure_enum (header only)
-// Copyright (C) 2024 Fix8 Market Technologies Pty Ltd
 //   by David L. Dight
 // see https://github.com/fix8mt/conjure_enum
 //
-// Lightweight header-only C++20 enum reflection
+// Lightweight header-only C++20 enum and type reflection
 //
 //   Parts based on magic_enum <https://github.com/Neargye/magic_enum>
 //   Copyright (c) 2019 - 2024 Daniil Goncharov <neargye@gmail.com>.
@@ -54,6 +56,10 @@
 #ifndef FIX8_CONJURE_ENUM_HPP_
 #define FIX8_CONJURE_ENUM_HPP_
 
+#if __cplusplus < 202002L
+# error "C++20 not supported by your compiler"
+#endif
+
 //----------------------------------------------------------------------------------------
 #include <source_location>
 #include <algorithm>
@@ -93,8 +99,9 @@ public:
 	constexpr fixed_string() = delete;
 	constexpr std::string_view get() const noexcept { return { _buff.data(), N }; }
 	constexpr operator std::string_view() const noexcept { return get(); }
+	constexpr char operator[](size_t idx) const noexcept { return _buff[idx]; }
 	constexpr std::size_t size() const noexcept { return _buff.size(); }
-	friend std::ostream& operator<<(std::ostream& os, const fixed_string& what) { return os << what.get(); }
+	friend std::ostream& operator<<(std::ostream& os, const fixed_string& what) noexcept { return os << what.get(); }
 };
 
 //-----------------------------------------------------------------------------------------
@@ -112,7 +119,7 @@ constexpr auto get_spec() noexcept
 #elif defined _MSC_VER
 			{ "epeek<", '>' }, { "enum ", '>' },
 #else
-# error "compiler not supported"
+# error "conjure_enum not supported by your compiler"
 #endif
 		})
 	};
@@ -129,17 +136,10 @@ concept valid_enum = requires(T)
 
 //-----------------------------------------------------------------------------------------
 template<valid_enum T>
-class conjure_enum final
+class conjure_enum
 {
 	static constexpr int enum_min_value{ENUM_MIN_VALUE}, enum_max_value{ENUM_MAX_VALUE};
 	static_assert(enum_max_value > enum_min_value, "ENUM_MAX_VALUE must be greater than ENUM_MIN_VALUE");
-
-	template<T e>
-	static constexpr auto _enum_name() noexcept
-	{
-		constexpr auto result { _get_name<e>() };
-		return fixed_string<result.size()>(result);
-	}
 
 public:
 	conjure_enum() = delete;
@@ -152,11 +152,14 @@ public:
 	using enum_tuple = std::tuple<T, std::string_view>;
 	using scoped_tuple = std::tuple<std::string_view, std::string_view>;
 
-	static consteval const char *tpeek() noexcept { return std::source_location::current().function_name(); }
-	template<T e>
-	static consteval const char *epeek() noexcept { return std::source_location::current().function_name(); }
-
 private:
+	template<T e>
+	static constexpr auto _enum_name() noexcept
+	{
+		constexpr auto result { _get_name<e>() };
+		return fixed_string<result.size()>(result);
+	}
+
 	template<T e>
 	static constexpr auto _enum_name_v { _enum_name<e>() };
 
@@ -164,6 +167,14 @@ private:
 	static constexpr auto _entries(std::index_sequence<I...>) noexcept
 	{
 		return std::array<enum_tuple, sizeof...(I)>{{{ values[I], _enum_name_v<values[I]>}...}};
+	}
+
+	template<std::size_t... I>
+	static constexpr auto _unscoped_entries(std::index_sequence<I...>) noexcept
+	{
+		std::array<enum_tuple, sizeof...(I)> tmp{{{ values[I], _remove_scope(_enum_name_v<values[I]>)}...}};
+		std::sort(tmp.begin(), tmp.end(), tuple_comp_rev);
+		return tmp;
 	}
 
 	static constexpr std::string_view _remove_scope(std::string_view what) noexcept
@@ -200,6 +211,12 @@ private:
 	static constexpr auto _names(std::index_sequence<I...>) noexcept
 	{
 		return std::array<std::string_view, sizeof...(I)>{{{ _enum_name_v<values[I]>}...}};
+	}
+
+	template<std::size_t... I>
+	static constexpr auto _unscoped_names(std::index_sequence<I...>) noexcept
+	{
+		return std::array<std::string_view, sizeof...(I)>{{{ _remove_scope(_enum_name_v<values[I]>)}...}};
 	}
 
 	template<T e>
@@ -281,6 +298,11 @@ private:
 	}
 
 public:
+	static consteval const char *tpeek() noexcept { return std::source_location::current().function_name(); }
+
+	template<T e>
+	static consteval const char *epeek() noexcept { return std::source_location::current().function_name(); }
+
 	template<T e>
 	static constexpr std::string_view enum_to_string() noexcept { return _get_name<e>(); }
 
@@ -385,13 +407,13 @@ public:
 				return std::get<T>(*result.first);
 		return {};
 	}
-
-	static constexpr auto values { _values() };
-	static constexpr auto entries { _entries(std::make_index_sequence<values.size()>()) };
-	static constexpr auto scoped_entries { _scoped_entries(std::make_index_sequence<values.size()>()) };
-	static constexpr auto rev_scoped_entries { _rev_scoped_entries(std::make_index_sequence<values.size()>()) };
-	static constexpr auto sorted_entries { _sorted_entries() };
-	static constexpr auto names { _names(std::make_index_sequence<values.size()>()) };
+	static constexpr std::optional<T> unscoped_string_to_enum(std::string_view str) noexcept
+	{
+		if (const auto result { std::equal_range(unscoped_entries.cbegin(), unscoped_entries.cend(), enum_tuple(T{}, str), tuple_comp_rev) };
+			result.first != result.second)
+				return std::get<T>(*result.first);
+		return {};
+	}
 
 	template<typename Fn, typename... Args>
 	requires std::invocable<Fn&&, T, Args...>
@@ -402,12 +424,23 @@ public:
 		return std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...);
 	}
 
+	// specialisation for member function with object
 	template<typename Fn, typename C, typename... Args>
 	requires std::invocable<Fn&&, C, T, Args...>
-	[[maybe_unused]] static constexpr auto for_each(Fn&& func, C *obj, Args&&... args) noexcept // specialisation for member function with object
+	[[maybe_unused]] static constexpr auto for_each(Fn&& func, C *obj, Args&&... args) noexcept
 	{
 		return for_each(std::bind(std::forward<Fn>(func), obj, std::placeholders::_1, std::forward<Args>(args)...));
 	}
+
+	// public constexpr data structures
+	static constexpr auto values { _values() };
+	static constexpr auto entries { _entries(std::make_index_sequence<values.size()>()) };
+	static constexpr auto scoped_entries { _scoped_entries(std::make_index_sequence<values.size()>()) };
+	static constexpr auto unscoped_entries { _unscoped_entries(std::make_index_sequence<values.size()>()) };
+	static constexpr auto rev_scoped_entries { _rev_scoped_entries(std::make_index_sequence<values.size()>()) };
+	static constexpr auto sorted_entries { _sorted_entries() };
+	static constexpr auto names { _names(std::make_index_sequence<values.size()>()) };
+	static constexpr auto unscoped_names { _unscoped_names(std::make_index_sequence<values.size()>()) };
 };
 
 //-----------------------------------------------------------------------------------------
@@ -420,7 +453,9 @@ struct iterator_adaptor
 };
 
 //-----------------------------------------------------------------------------------------
-// ostream& operator<< for any enum
+// ostream& operator<< for any enum; add the following before using:
+// using ostream_enum_operator::operator<<;
+//-----------------------------------------------------------------------------------------
 namespace ostream_enum_operator
 {
 	template<typename CharT, typename Traits=std::char_traits<CharT>, valid_enum T>
@@ -486,7 +521,7 @@ public:
 	template<T... comp>
 	constexpr void set_all() noexcept { (set<comp>(),...); }
 
-	template<typename... E>
+	template<valid_enum... E>
 	constexpr void set_all(E... comp) noexcept { return (... | (set(comp))); }
 
 	template<T what>
@@ -643,7 +678,7 @@ constexpr enum_bitset<T> operator^(const enum_bitset<T>& lh, const enum_bitset<T
 
 //-----------------------------------------------------------------------------------------
 template<typename T>
-class conjure_type final
+class conjure_type
 {
 	static constexpr std::string_view _get_name() noexcept
 	{
@@ -683,6 +718,14 @@ public:
 		_type_name()
 #endif
 	};
+	static constexpr std::string_view as_string_view() noexcept
+	{
+#if defined _MSC_VER
+		return name;
+#else
+		return name.get();
+#endif
+	}
 };
 
 //-----------------------------------------------------------------------------------------

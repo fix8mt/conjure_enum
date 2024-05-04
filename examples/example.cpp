@@ -1,11 +1,13 @@
 //-----------------------------------------------------------------------------------------
 // SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: Copyright (C) 2024 Fix8 Market Technologies Pty Ltd
+// SPDX-FileType: SOURCE
+
 // conjure_enum (header only)
-// Copyright (C) 2024 Fix8 Market Technologies Pty Ltd
 //   by David L. Dight
 // see https://github.com/fix8mt/conjure_enum
 //
-// Lightweight header-only C++20 enum reflection
+// Lightweight header-only C++20 enum and type reflection
 //
 // Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 //
@@ -211,6 +213,10 @@ int main(void)
 
 	auto strv { conjure_type<test>::name };
 	std::cout << conjure_type<decltype(strv)>::name << '\n';
+	std::cout << conjure_type<std::underlying_type_t<numbers>>::name << '\n';
+
+	for(const auto& [a, b] : conjure_enum<component>::unscoped_entries)
+		std::cout << static_cast<int>(a) << ' ' << b << '\n';
 
 	using ostream_enum_operator::operator<<;
 	std::cout << '"' << component::host << '"' << '\n';

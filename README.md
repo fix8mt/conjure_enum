@@ -63,7 +63,7 @@ enum component1 { scheme, authority, userinfo, user, password, host, port, path=
 enum class numbers { zero, one, two, three, four, five, six, seven, eight, nine };
 ```
 
-## `enum_to_string`
+## a. `enum_to_string`
 ```c++
 static constexpr std::string_view enum_to_string(T value, bool noscope=false);
 ```
@@ -106,7 +106,7 @@ _output_
 "scheme"
 ```
 
-## `string_to_enum`
+## b. `string_to_enum`
 ```c++
 static constexpr std::optional<T> string_to_enum(std::string_view str);
 ```
@@ -124,7 +124,7 @@ _output_
 12
 100 <-- invalid, error value
 ```
-## `unscoped_string_to_enum`
+## c. `unscoped_string_to_enum`
 ```c++
 static constexpr std::optional<T> unscoped_string_to_enum(std::string_view str);
 ```
@@ -142,7 +142,7 @@ _output_
 12
 100 <-- invalid, error value
 ```
-## `int_to_enum`
+## d. `int_to_enum`
 ```c++
 static constexpr std::optional<T> int_to_enum(int value);
 ```
@@ -160,7 +160,7 @@ _output_
 12
 100 <-- invalid, error value
 ```
-## `enum_to_int`, `enum_to_underlying`
+## e. `enum_to_int`, `enum_to_underlying`
 ```c++
 static constexpr int enum_to_int(T value);
 static constexpr std::underlying_type_t<T> enum_to_underlying(T value);
@@ -179,7 +179,7 @@ _output_
 12
 12
 ```
-## `count`
+## f. `count`
 ```c++
 static constexpr std::size_t count();
 ```
@@ -191,7 +191,7 @@ _output_
 ```CSV
 10
 ```
-## `names`
+## g. `names`
 ```c++
 static constexpr std::array<std::string_view, std::size_t> names;
 ```
@@ -225,7 +225,7 @@ path
 query
 fragment
 ```
-## `unscoped_names`
+## h. `unscoped_names`
 ```c++
 static constexpr std::array<std::string_view, std::size_t> unscoped_names;
 ```
@@ -262,7 +262,7 @@ path
 query
 fragment
 ```
-## `values`
+## i. `values`
 ```c++
 static constexpr std::array<T, std::size_t> values;
 ```
@@ -284,7 +284,7 @@ _output_
 13
 14
 ```
-## `entries`, `sorted_entries`
+## j. `entries`, `sorted_entries`
 ```c++
 static constexpr std::array<std::tuple<T, std::string_view>, std::size_t> entries;
 static constexpr std::array<std::tuple<T, std::string_view>, std::size_t> sorted_entries;
@@ -323,7 +323,7 @@ _output_
 3  component::user
 2  component::userinfo
 ```
-## `scoped_entries`
+## k. `scoped_entries`
 ```c++
 static constexpr std::array<std::tuple<std::string_view, std::string_view>, std::size_t> scoped_entries;
 ```
@@ -347,12 +347,12 @@ scheme    component::scheme
 user      component::user
 userinfo  component::userinfo
 ```
-## `rev_scoped_entries`
+## l. `rev_scoped_entries`
 ```c++
 static constexpr std::array<std::tuple<std::string_view, std::string_view>, std::size_t> rev_scoped_entries;
 ```
 Same as `scoped_entries` except reversed, sorted by scoped name. Use to lookup unscoped name.
-## `contains`
+## m. `contains`
 ```c++
 static constexpr bool contains(T value);
 static constexpr bool contains(std::string_view str);
@@ -367,7 +367,7 @@ _output_
 true
 false
 ```
-## `for_each`
+## n. `for_each`
 ```c++
 template<typename Fn, typename... Args>
 requires std::invocable<Fn&&, T, Args...>
@@ -449,7 +449,7 @@ _output_
 ```CSV
 160
 ```
-## `is_scoped`
+## o. `is_scoped`
 ```c++
 struct is_scoped : std::integral_constant<bool, requires
    { requires !std::is_convertible_v<T, std::underlying_type_t<T>>; }>{};
@@ -464,7 +464,7 @@ _output_
 true
 false
 ```
-## `is_valid`
+## p. `is_valid`
 ```c++
 template<T e>
 static constexpr bool is_valid();
@@ -479,7 +479,7 @@ _output_
 true
 false
 ```
-## `type_name`
+## q. `type_name`
 ```c++
 static constexpr std::string_view type_name();
 ```
@@ -493,7 +493,7 @@ _output_
 component
 component1
 ```
-## `remove_scope`
+## r. `remove_scope`
 ```c++
 static constexpr std::string_view remove_scope(std::string_view what);
 ```
@@ -507,7 +507,7 @@ _output_
 path
 path
 ```
-## `add_scope`
+## s. `add_scope`
 ```c++
 static constexpr std::string_view add_scope(std::string_view what);
 ```
@@ -521,7 +521,7 @@ _output_
 component::path
 path
 ```
-## `has_scope`
+## t. `has_scope`
 ```c++
 static constexpr bool has_scope(std::string_view what);
 ```
@@ -537,7 +537,7 @@ true
 false
 false
 ```
-## `iterators`
+## u. `iterators`
 ```c++
 static constexpr auto cbegin();
 static constexpr auto cend();
@@ -564,7 +564,7 @@ _output_
 8 numbers::eight
 9 numbers::nine
 ```
-## `iterator_adaptor`
+## v. `iterator_adaptor`
 ```c++
 template<valid_enum T>
 struct iterator_adaptor;
@@ -587,7 +587,7 @@ _output_
 8
 9
 ```
-## `front, back`
+## w. `front, back`
 ```c++
 static constexpr auto front();
 static constexpr auto back();
@@ -604,7 +604,7 @@ _output_
 0 numbers::zero
 9 numbers::nine
 ```
-## `ostream_enum_operator`
+## x. `ostream_enum_operator`
 ```c++
 template<typename CharT, typename Traits=std::char_traits<CharT>, valid_enum T>
 constexpr std::basic_ostream<CharT, Traits>& operator<<(std::basic_ostream<CharT, Traits>& os, T value);
@@ -626,7 +626,7 @@ _output_
 "host"
 "100"
 ```
-## `epeek, tpeek`
+## y. `epeek, tpeek`
 ```c++
 static consteval const char *tpeek();
 template<T e>

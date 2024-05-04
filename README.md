@@ -28,13 +28,13 @@
 
 ---
 # 2. Introduction
-## Supercharge Your C++ Enums with This Lightweight Reflection Library!
+## a. Supercharge Your C++ Enums with This Lightweight Reflection Library!
 
 Based on the awesome work of [`magic_enum`](https://github.com/Neargye/magic_enum)[^2] and [`boost::desribe`](https://github.com/boostorg/describe),
 this library offers a streamlined and powerful way to add reflection capabilities to your C++ enums and other types. We've optimized the core functionality,
 focusing on the main features developers usually need while enhancing and expanding them for a more efficient and expressive experience.
 
-## Embrace the Future with C++20
+## b. Embrace the Future with C++20
 
 `conjure_enum`[^1] takes full advantage of the latest C++20 features. We've leveraged the convenience of `std::source_location` and
 unlocked the potential of `constexpr` algorithms and concepts. This translates to:
@@ -42,7 +42,7 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
 - ***Improved Performance***  Optimized code for faster and smoother operation - get your compiler to do more!
 - ***Enhanced Developer Experience***  Write cleaner, more concise, and more powerful C++ code.
 
-## Key Benefits
+## c. Key Benefits
 
 - ***Lightweight***:  Designed for performance without unnecessary overhead.
 - ***Single Header-Only***:  No external dependencies, simplifying integration into your project.
@@ -656,7 +656,7 @@ for the bit positions (and names).
 
 We decided on this restriction for both simplicity and practicality - bitsets only really make sense when represented in this manner.
 
-## Creating an `enum_bitset`
+## a. Creating an `enum_bitset`
 ```c++
 constexpr enum_bitset() = default;
 constexpr enum_bitset(U bits);
@@ -730,7 +730,7 @@ _output_
 ```CSV
 exception: twenty
 ```
-## Standard bit operators
+## b. Standard bit operators
 All of the standard operators are supported. Assignment operators return a `enum_bitset&`, non-assignment operators return a `enum_bitset`.
 
 | Operator | Description |
@@ -761,7 +761,7 @@ _output_
 0000000111
 0000001011
 ```
-## Standard accessors and mutators
+## c. Standard accessors and mutators
 All of the standard accessors and mutators are supported.
 | Method | Description |
 | :--- | :--- |
@@ -808,8 +808,8 @@ true
 1000000001
 0000000001
 ```
-## Other functions
-## `operator bool`
+## d. Other functions
+### i. `operator bool`
 ```c++
 constexpr operator bool() const;
 ```
@@ -842,7 +842,7 @@ _output_
 0001001010
 ---+--+-+-
 ```
-### `for_each`
+### ii. `for_each`
 ```c++
 template<typename Fn, typename... Args>
 requires std::invocable<Fn&&, T, Args...>
@@ -951,7 +951,7 @@ std::basic_string_view<char>
 This implementation is header only. Apart from standard C++20 includes there are no external dependencies needed in your application.
 [Catch2](https://github.com/catchorg/Catch2.git) is used for the built-in unit tests.
 
-## Obtaining the source, building the examples
+## a. Obtaining the source, building the examples
 ### \*nix based environments
 To clone and default build the test app, unit tests and the benchmark:
 ```bash
@@ -980,7 +980,7 @@ Create a new console project. Add the repo `https://github.com/fix8mt/conjure_en
 Make sure you set the C++ language to C++20 in the project preferences. The project should build and run the unit tests
 by default.
 
-## Using in your application with cmake
+## b. Using in your application with cmake
 In `CMakeLists.txt` set your include path to:
 ```cmake
 include_directories([conjure_enum directory]/include)
@@ -997,7 +997,7 @@ in your application. Everything in this class is within the namespace `FIX8`, so
 using namespace FIX8;
 ```
 
-## Integrating `conjure_enum` in your project with cmake FetchContent
+## c. Integrating `conjure_enum` in your project with cmake FetchContent
 You can use cmake [FetchContent](https://cmake.org/cmake/help/latest/module/FetchContent.html) to integrate `conjure_enum` with your project.
 If your project was called `myproj` with the sourcefile `myproj.cpp` then...
 ```cmake
@@ -1013,7 +1013,7 @@ target_include_directories(myproj PRIVATE ${conjure_enum_SOURCE_DIR}/include)
 
 ---
 # 7. Notes
-## enum limits
+## a. enum limits
 ### `ENUM_MIN_VALUE`, `ENUM_MAX_VALUE`
 These are set by default unless you override them by defining them in your application.
 > [!NOTE]
@@ -1030,15 +1030,15 @@ The following are the default settings:
 ```
 These definitions set the minimum and maximum enum values that are supported. You can adjust them to suit your requirements but for most use cases the defaults are sufficient.
 
-## Class `conjure_enum` is not constructible
+## b. Class `conjure_enum` is not constructible
 All methods in this class are _static_. You cannot instantiate an object of this type.
 
-## It's not _real_ reflection
+## c. It's not _real_ reflection
 This library provides a workaround to current limitations of C++. There are proposals out there for future versions of the language that will provide proper reflection.
 See [Reflection TS](https://en.cppreference.com/w/cpp/experimental/reflect) and [Reflection for C++26](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2023/p2996r0.html)
 for examples of some of these.
 
-## Use of `std::string_view`
+## d. Use of `std::string_view`
 All of the generated static strings and generated static tables obtained by `std::source_location` use the library defined `fixed_string`. No string copying is done at runtime, resulting in
 a single static string in your application. All `conjure_enum` methods that return strings _only_ return `std::string_view`.
 To demonstrate this, the default build of `example` performs a [strip](https://en.wikipedia.org/wiki/Strip_(Unix)) on the executable. Then we run

@@ -48,10 +48,10 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
 - ***Lightweight***:  Designed for performance without unnecessary overhead.
 - ***Single Header-Only***:  No external dependencies, simplifying integration into your project.
 - ***Modern C++20***:  Entirely `constexpr` for compile-time safety, efficiency and performance.
+- ***Broad Support***:  Works with scoped and unscoped enums, enum *aliases* and even with *gaps*.
 - ***Simple & Easy to Use***:  Class-based approach with intuitive syntax.
 - ***Convenient***:  `enum_bitset` offers an enhanced `std::bitset`.
 - ***Useful***:  `conjure_type` lets you obtain the type string of _any type!_
-- ***Broad Support***:  Works with scoped and unscoped enums, enum aliases and even with gaps.
 - ***Wide Compiler Compatibility***:  Supports GCC, Clang, MSVC and XCode/Clang; `x86_64`, `AArch64`
 - ***Confidence in Quality***:  Includes comprehensive unit tests for reliable functionality.
 

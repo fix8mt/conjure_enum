@@ -826,7 +826,7 @@ _output_
 0001001111
 ```
 
-### `std::ostream& operator<<`, `to_string`
+### ii. `std::ostream& operator<<`, `to_string`
 ```c++
 friend constexpr std::ostream& operator<<(std::ostream& os, const enum_bitset& what);
 constexpr std::string to_string(char zero='0', char one='1') const;
@@ -844,7 +844,7 @@ _output_
 0001001010
 ---+--+-+-
 ```
-### ii. `for_each`
+### iii. `for_each`
 ```c++
 template<typename Fn, typename... Args>
 requires std::invocable<Fn&&, T, Args...>

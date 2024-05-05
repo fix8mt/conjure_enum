@@ -1062,7 +1062,7 @@ int main(void)
 ```
 _output_
 ```CSV
-./statictest
+$ ./statictest
 0 component::scheme
 1 component::authority
 2 component::userinfo
@@ -1070,16 +1070,16 @@ _output_
 4 component::password
 5 component::host
 6 component::port
-12 component::path
-13 component::query
-14 component::fragment
+7 component::path
+8 component::query
+9 component::fragment
 1 authority
-14 fragment
+9 fragment
 5 host
 4 password
-12 path
+7 path
 6 port
-13 query
+8 query
 0 scheme
 3 user
 2 userinfo
@@ -1103,6 +1103,7 @@ port
 path
 query
 fragment
+$
 ```
 
 The default build of `statictest` performs a [strip](https://en.wikipedia.org/wiki/Strip_(Unix)) on the executable.

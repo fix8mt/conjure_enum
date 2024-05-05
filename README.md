@@ -1042,11 +1042,11 @@ for examples of some of these.
 ## d) Use of `std::string_view`
 All of the generated static strings and generated static tables obtained by `std::source_location` use the library defined `fixed_string`. No string copying is done at runtime, resulting in
 a single static string in your application. All `conjure_enum` methods that return strings _only_ return `std::string_view`.
-To demonstrate this, the default build of `statictest` performs a [strip](https://en.wikipedia.org/wiki/Strip_(Unix)) on the executable. Then we run
-[strings](https://en.wikipedia.org/wiki/Strings_(Unix)) on the executable.
+To demonstrate this, the default build of `statictest` performs a [strip](https://en.wikipedia.org/wiki/Strip_(Unix)) on the executable.
 ```c++
 #include <iostream>
 #include <fix8/conjure_enum.hpp>
+enum class component : int { scheme, authority, userinfo, user, password, host, port, path, query, fragment };
 int main(void)
 {
    for(const auto& [a, b] : conjure_enum<component>::entries)
@@ -1178,7 +1178,7 @@ $
 ```
 </p>
 </details>
-It can be observed that there is only one copy of the scoped or unscoped enum value string in the executable.
+It can be observed that there is only one copy of the scoped enum value string in the executable.
 
 ---
 # 8. Compiler support

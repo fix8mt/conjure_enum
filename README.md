@@ -54,6 +54,7 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
 - ***Useful***:  `conjure_type` lets you obtain the type string of _any type!_
 - ***Wide Compiler Compatibility***:  Supports GCC, Clang, MSVC and XCode/Clang; `x86_64`, `AArch64`
 - ***Confidence in Quality***:  Includes comprehensive unit tests for reliable functionality.
+- ***Expanded***:  Enhanced API such as `add_scope`, `remove_scope`, `unscoped_string_to_enum`, iterators and more!
 
 ---
 # 3. API and Examples
@@ -919,11 +920,11 @@ int
 ```
 Works with its own types too:
 ```c++
-std::cout << conjure_type<conjure_type<conjure_enum<numbers&>>>::name << '\n';
+std::cout << conjure_type<conjure_type<conjure_enum<numbers>>>::name << '\n';
 ```
 _output_
 ```CSV
-conjure_type<conjure_enum<numbers&, numbers> >
+FIX8::conjure_type<FIX8::conjure_enum<numbers> >
 ```
 If you need to explicitly obtain a `std::string_view`, use the `get()` method on `name` (not windows sorry):
 ```c++

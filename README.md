@@ -1179,6 +1179,7 @@ $
 ```
 </p>
 </details>
+
 It can be observed that there is only _one_ copy of the scoped enum value string in the executable.
 
 ---

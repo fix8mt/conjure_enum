@@ -1045,6 +1045,8 @@ a single static string in your application. All `conjure_enum` methods that retu
 To demonstrate this, the default build of `statictest` performs a [strip](https://en.wikipedia.org/wiki/Strip_(Unix)) on the executable. Then we run
 [strings](https://en.wikipedia.org/wiki/Strings_(Unix)) on the executable.
 ```c++
+#include <iostream>
+#include <fix8/conjure_enum.hpp>
 int main(void)
 {
    for(const auto& [a, b] : conjure_enum<component>::entries)
@@ -1058,7 +1060,52 @@ int main(void)
    return 0;
 }
 ```
+_output_
+```CSV
+./statictest
+0 component::scheme
+1 component::authority
+2 component::userinfo
+3 component::user
+4 component::password
+5 component::host
+6 component::port
+12 component::path
+13 component::query
+14 component::fragment
+1 authority
+14 fragment
+5 host
+4 password
+12 path
+6 port
+13 query
+0 scheme
+3 user
+2 userinfo
+component::scheme
+component::authority
+component::userinfo
+component::user
+component::password
+component::host
+component::port
+component::path
+component::query
+component::fragment
+scheme
+authority
+userinfo
+user
+password
+host
+port
+path
+query
+fragment
+```
 
+Then we run [strings](https://en.wikipedia.org/wiki/Strings_(Unix)) on the executable.
 <details><summary><i>shell output</i></summary>
 <p>
 

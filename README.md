@@ -1047,15 +1047,15 @@ To demonstrate this, the default build of `statictest` performs a [strip](https:
 ```c++
 int main(void)
 {
-	for(const auto& [a, b] : conjure_enum<component>::entries)
-		std::cout << static_cast<int>(a) << ' ' << b << '\n';
-	for(const auto& [a, b] : conjure_enum<component>::unscoped_entries)
-		std::cout << static_cast<int>(a) << ' ' << b << '\n';
-	for(const auto& a : conjure_enum<component>::names)
-		std::cout << a << '\n';
-	for(const auto& a : conjure_enum<component>::unscoped_names)
-		std::cout << a << '\n';
-	return 0;
+   for(const auto& [a, b] : conjure_enum<component>::entries)
+      std::cout << static_cast<int>(a) << ' ' << b << '\n';
+   for(const auto& [a, b] : conjure_enum<component>::unscoped_entries)
+      std::cout << static_cast<int>(a) << ' ' << b << '\n';
+   for(const auto& a : conjure_enum<component>::names)
+      std::cout << a << '\n';
+   for(const auto& a : conjure_enum<component>::unscoped_names)
+      std::cout << a << '\n';
+   return 0;
 }
 ```
 

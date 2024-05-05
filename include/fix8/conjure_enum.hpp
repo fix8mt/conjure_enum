@@ -56,7 +56,11 @@
 #ifndef FIX8_CONJURE_ENUM_HPP_
 #define FIX8_CONJURE_ENUM_HPP_
 
-#if (defined _MSC_VER && _MSC_VER < 1910) || __cplusplus < 202002L
+#if defined _MSC_VER
+# if _MSC_VER < 1910
+#  error "C++20 not supported by your compiler"
+# endif
+#elif __cplusplus < 202002L
 # error "C++20 not supported by your compiler"
 #endif
 

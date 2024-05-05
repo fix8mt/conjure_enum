@@ -1050,9 +1050,9 @@ enum class component : int { scheme, authority, userinfo, user, password, host, 
 int main(void)
 {
    for(const auto& [a, b] : conjure_enum<component>::entries)
-      std::cout << static_cast<int>(a) << ' ' << b << '\n';
+      std::cout << conjure_enum<component>::enum_to_int(a) << ' ' << b << '\n';
    for(const auto& [a, b] : conjure_enum<component>::unscoped_entries)
-      std::cout << static_cast<int>(a) << ' ' << b << '\n';
+      std::cout << conjure_enum<component>::enum_to_int(a) << ' ' << b << '\n';
    for(const auto& a : conjure_enum<component>::names)
       std::cout << a << '\n';
    for(const auto& a : conjure_enum<component>::unscoped_names)

@@ -218,6 +218,8 @@ int main(void)
 	for(const auto& [a, b] : conjure_enum<component>::unscoped_entries)
 		std::cout << static_cast<int>(a) << ' ' << b << '\n';
 
+	std::cout << conjure_type<conjure_type<conjure_enum<numbers>>>::name << '\n';
+
 	using ostream_enum_operator::operator<<;
 	std::cout << '"' << component::host << '"' << '\n';
 	std::cout << '"' << component1::host << '"' << '\n';

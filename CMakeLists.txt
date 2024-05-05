@@ -63,7 +63,7 @@ if(BUILD_UNITTESTS)
 	target_compile_features(Catch2 PRIVATE cxx_std_20)
 endif()
 
-set(files example.cpp)
+set(files example.cpp statictest.cpp)
 if(BUILD_UNITTESTS)
    list(APPEND files unittests.cpp)
 endif()

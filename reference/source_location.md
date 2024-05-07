@@ -28,6 +28,43 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------->
+# Source enums and types
+```C++
+enum class Type : int { Value };
+enum Type1 : int { Value };
+
+namespace
+{
+	enum class Anon_Type : int { Value };
+	enum Anon_Type1 : int { Value };
+}
+
+namespace Namespace
+{
+	enum class Type : int { Value };
+	enum Type1 : int { Value };
+}
+
+template<typename T>
+class conjure_enum
+{
+public:
+	static consteval const char *tpeek() noexcept { return std::source_location::current().function_name(); }
+
+	template<T e>
+	static consteval const char *epeek() noexcept { return std::source_location::current().function_name(); }
+};
+
+template<typename T>
+class conjure_type
+{
+public:
+	static consteval const char *tpeek() noexcept { return std::source_location::current().function_name(); }
+};
+
+using foo = std::vector<std::tuple<int, char, std::string_view>>;
+```
+
 # Compiler: Clang: Ubuntu Clang 16.0.6 (23ubuntu4)
 ## 1. scoped enum
 ```C++

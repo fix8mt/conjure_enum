@@ -102,6 +102,8 @@ int main(void)
 				conjure_enum<Namespace::Type1>::epeek<Namespace::Type1::Value>(),
 				conjure_enum<Namespace::Type1>::epeek<(Namespace::Type1)100>(), "",
 			"7. other type",
+				conjure_type<int>::tpeek(),
+				conjure_type<std::string_view>::tpeek(),
 				conjure_type<foo>::tpeek(),
       })
    };

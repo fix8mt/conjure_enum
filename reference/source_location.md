@@ -64,6 +64,7 @@ public:
 
 using foo = std::vector<std::tuple<int, char, std::string_view>>;
 ```
+---
 
 # Compiler: Clang: Ubuntu Clang 16.0.6 (23ubuntu4)
 ## 1. scoped enum
@@ -115,6 +116,7 @@ static const char *conjure_type<std::basic_string_view<char>>::tpeek() [T = std:
 static const char *conjure_type<std::vector<std::tuple<int, char, std::basic_string_view<char>>>>::tpeek() [T = std::vector<std::tuple<int, char, std::basic_string_view<char>>>]
 ```
 
+---
 # Compiler: GCC: 14.0.1 20240412 (experimental) [master r14-9935-g67e1433a94f]
 ## 1. scoped enum
 ```C++
@@ -165,6 +167,7 @@ static consteval const char* conjure_type<T>::tpeek() [with T = std::basic_strin
 static consteval const char* conjure_type<T>::tpeek() [with T = std::vector<std::tuple<int, char, std::basic_string_view<char, std::char_traits<char> > > >]
 ```
 
+---
 # Compiler: MSVC: 1939
 ## 1. scoped enum
 ```C++

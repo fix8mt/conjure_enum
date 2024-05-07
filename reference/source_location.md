@@ -35,31 +35,31 @@ enum Type1 : int { Value };
 
 namespace
 {
-	enum class Anon_Type : int { Value };
-	enum Anon_Type1 : int { Value };
+   enum class Anon_Type : int { Value };
+   enum Anon_Type1 : int { Value };
 }
 
 namespace Namespace
 {
-	enum class Type : int { Value };
-	enum Type1 : int { Value };
+   enum class Type : int { Value };
+   enum Type1 : int { Value };
 }
 
 template<typename T>
 class conjure_enum
 {
 public:
-	static consteval const char *tpeek() noexcept { return std::source_location::current().function_name(); }
+   static consteval const char *tpeek() noexcept { return std::source_location::current().function_name(); }
 
-	template<T e>
-	static consteval const char *epeek() noexcept { return std::source_location::current().function_name(); }
+   template<T e>
+   static consteval const char *epeek() noexcept { return std::source_location::current().function_name(); }
 };
 
 template<typename T>
 class conjure_type
 {
 public:
-	static consteval const char *tpeek() noexcept { return std::source_location::current().function_name(); }
+   static consteval const char *tpeek() noexcept { return std::source_location::current().function_name(); }
 };
 
 using foo = std::vector<std::tuple<int, char, std::string_view>>;

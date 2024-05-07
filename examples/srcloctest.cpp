@@ -111,7 +111,7 @@ int main(void)
 #elif defined __GNUC__
 		"GCC" ": " __VERSION__
 #elif defined _MSC_VER
-		"MSVC" ": " _MSC_VER
+		"MSVC" ": " << _MSC_VER <<
 #else
 # error "conjure_enum not supported by your compiler"
 #endif

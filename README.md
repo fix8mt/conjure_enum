@@ -199,9 +199,9 @@ static constexpr std::array<std::string_view, std::size_t> names;
 ```
 This static member is generated for your type. It is a `std::array` of the `std::string_view` strings in enum order.
 ```c++
-for(const auto ev : conjure_enum<component>::names) // scoped
+for(const auto ev : conjure_enum<component>::names) // scoped enum
    std::cout << ev << '\n';
-for(const auto ev : conjure_enum<component1>::names) // unscoped
+for(const auto ev : conjure_enum<component1>::names) // unscoped enum
    std::cout << ev << '\n';
 ```
 _output_
@@ -234,10 +234,10 @@ static constexpr std::array<std::string_view, std::size_t> unscoped_names;
 This static member is generated for your type. It is a `std::array` of the `std::string_view` unscoped strings in enum order.
 For unscoped enums is the same as `names` above.
 ```c++
-for(const auto ev : conjure_enum<component>::unscoped_names) // scoped
+for(const auto ev : conjure_enum<component>::unscoped_names) // scoped enum
    std::cout << ev << '\n';
 std::cout << '\n';
-for(const auto ev : conjure_enum<component1>::unscoped_names) // unscoped
+for(const auto ev : conjure_enum<component1>::unscoped_names) // unscoped enum
    std::cout << ev << '\n';
 ```
 _output_
@@ -270,7 +270,7 @@ static constexpr std::array<T, std::size_t> values;
 ```
 This static member is generated for your type. It is a `std::array` of the `T` values in enum order.
 ```c++
-for(const auto ev : conjure_enum<component>::values) // scoped
+for(const auto ev : conjure_enum<component>::values) // scoped enum
    std::cout << static_cast<int>(ev) << '\n';
 ```
 _output_
@@ -295,10 +295,10 @@ These static members are generated for your type. They are `std::array` of tuple
 `sorted_entries` is the same as `entries` except the array is sorted by the `std::string_view` name.
 ```c++
 using ec = conjure_enum<component>;
-for(const auto [value, str] : ec::entries) // scoped
+for(const auto [value, str] : ec::entries) // scoped enum
    std::cout << std::format("{:<2} {}\n", static_cast<int>(value), str);
 std::cout << '\n';
-for(const auto [value, str] : ec::sorted_entries) // scoped
+for(const auto [value, str] : ec::sorted_entries) // scoped enum
    std::cout << std::format("{:<2} {}\n", static_cast<int>(value), str);
 ```
 _output_

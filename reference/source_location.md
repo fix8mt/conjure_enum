@@ -28,6 +28,13 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------->
+# What is this?
+
+This page shows the output of the included program `srcloctest` from different compilers.
+There are seven different sets of tests for each compiler. `conjure_enum` and `conjure_type`
+use this information to inform the parsing algorithm that extracts the enum and type info.
+
+---
 # Source enums and types
 ```C++
 enum class Type : int { Value };

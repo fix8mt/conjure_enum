@@ -53,7 +53,7 @@
 |[Notes](#7-notes)| Notes on the implementation, limits, etc|
 |[Compilers](#8-compiler-support)| Supported compilers|
 |[Compiler issues](#9-compiler-issues)| Workarounds for various compiler issues|
-|[Review `std::source_location`](https://github.com/fix8mt/conjure_enum/blob/master/referenece/source_location.md)| For implementation specific `source_location` results|
+|[Review `std::source_location`](https://github.com/fix8mt/conjure_enum/blob/master/reference/source_location.md)| For implementation specific `source_location` results|
 > [!TIP]
 > Use the built-in [table of contents](https://github.blog/changelog/2021-04-13-table-of-contents-support-in-markdown-files/) to navigate this guide.
 

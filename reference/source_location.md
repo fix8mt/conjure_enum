@@ -34,6 +34,10 @@ This page shows the output of the included program `srcloctest` from different c
 There are seven different sets of tests for each compiler. `conjure_enum` and `conjure_type`
 use this information to inform the parsing algorithm that extracts the enum and type info.
 
+```C++
+# examples/statictest.cpp
+```
+
 ---
 # Source enums and types
 ```C++

@@ -1,7 +1,7 @@
 <!-----------------------------------------------------------------------------------------
 // SPDX-License-Identifier: MIT
 // SPDX-FileCopyrightText: Copyright (C) 2024 Fix8 Market Technologies Pty Ltd
-// SPDX-FileType: SOURCE
+// SPDX-FileType: DOCUMENTATION
 //
 // conjure_enum (header only)
 //   by David L. Dight
@@ -30,7 +30,8 @@
 //---------------------------------------------------------------------------------------->
 # What is this?
 
-This page shows the output of the included program `srcloctest` from different compilers.
+This page shows the output of the included program [`srcloctest`](https://github.com/fix8mt/conjure_enum/blob/master/examples/srcloctest.cpp)
+from different compilers.
 There are seven different sets of tests for each compiler. `conjure_enum` and `conjure_type`
 use this information to inform the parsing algorithm that extracts the enum and type info.
 

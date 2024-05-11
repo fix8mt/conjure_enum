@@ -672,8 +672,6 @@ static consteval const char *epeek();
 ```
 These functions return `std::source_location::current().function_name()` as `const char*` strings for the enum type or enum value.
 The actual output is implementation dependent.
-> [!TIP]
-> If you want to report an issue please include the output of these methods.
 
 The following code:
 ```c++
@@ -999,7 +997,7 @@ mkdir build
 cd build
 cmake ..
 make -j4
-make test (or ctest)
+ctest (or make test)
 ```
 By default all warnings are enabled. To prevent this, pass the following to cmake:
 ```cmake
@@ -1012,6 +1010,10 @@ cmake -DBUILD_UNITTESTS=false ..
 To disable certain C++20 features that cause issues with some builds:
 ```cmake
 cmake -DBUILD_CONSRVCPP20=true ..
+```
+To disable stripping of the executables:
+```cmake
+cmake -DBUILD_STRIP_EXE=false ..
 ```
 ### Windows environments
 Create a new console project. Add the repo `https://github.com/fix8mt/conjure_enum.git` and clone the source.
@@ -1048,6 +1050,12 @@ FetchContent_Declare(conjure_enum GIT_REPOSITORY https://github.com/fix8mt/conju
 FetchContent_MakeAvailable(conjure_enum)
 target_include_directories(myproj PRIVATE ${conjure_enum_SOURCE_DIR}/include)
 ```
+
+## d) Reporting issues
+Raise an [issue](https://github.com/fix8mt/conjure_enum/issues) on the github page.
+The executable `srcloctest` should be built when you build the package by default. This application
+does not use any of the `conjure_enum` library and is designed to report on how your compiler handles `std::source_location`.
+You should attach the output of this application with your issue.
 
 ---
 # 7. Notes

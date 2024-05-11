@@ -32,7 +32,7 @@ cmake_minimum_required (VERSION 3.20)
 project (conjure_enum
    LANGUAGES CXX
 	HOMEPAGE_URL https://github.com/fix8mt/conjure_enum
-   DESCRIPTION "Lightweight C++20 enum reflection"
+   DESCRIPTION "Lightweight C++20 enum and type reflection"
    VERSION 1.0.0
 )
 
@@ -51,6 +51,9 @@ message("-- Build with all warnings : ${BUILD_ALL_WARNINGS}")
 option(BUILD_UNITTESTS "enable building unit tests" true)
 message("-- Build unit tests: ${BUILD_UNITTESTS}")
 
+set(srcs srcloctest example statictest)
+set(usrcs unittests edgetests)
+
 if(BUILD_UNITTESTS)
 	include(FetchContent)
 	FetchContent_Declare(Catch2
@@ -61,36 +64,28 @@ if(BUILD_UNITTESTS)
 	FetchContent_MakeAvailable(Catch2)
 	list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
 	target_compile_features(Catch2 PRIVATE cxx_std_20)
+	include(Catch)
+	enable_testing()
+   list(APPEND srcs ${usrcs})
 endif()
 
-set(files srcloctest.cpp example.cpp statictest.cpp)
-if(BUILD_UNITTESTS)
-   list(APPEND files unittests.cpp)
-endif()
-foreach(x IN LISTS files)
-	cmake_path(GET x STEM LAST_ONLY target)
-	add_executable(${target} examples/${x})
-	set_target_properties(${target} PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED true)
-	target_include_directories(${target} PRIVATE include)
+foreach(x IN LISTS srcs)
+	add_executable(${x} examples/${x}.cpp)
+	set_target_properties(${x} PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED true)
+	target_include_directories(${x} PRIVATE include)
 	if (BUILD_CONSRVCPP20)
-		target_compile_definitions(${target} PRIVATE BUILD_CONSRVCPP20)
+		target_compile_definitions(${x} PRIVATE BUILD_CONSRVCPP20)
 	endif()
 	if(BUILD_ALL_WARNINGS)
-		target_compile_options(${target} PRIVATE
+		target_compile_options(${x} PRIVATE
 			$<$<CXX_COMPILER_ID:MSVC>:/W4>
 			$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic>)
 	endif()
-	if(BUILD_UNITTESTS)
-		target_link_libraries(${target} PRIVATE Catch2::Catch2WithMain)
+	if(BUILD_UNITTESTS AND ${x} IN_LIST usrcs)
+		target_link_libraries(${x} PRIVATE Catch2::Catch2WithMain)
+		catch_discover_tests(${x})
 	endif()
-	add_custom_command(TARGET ${target} POST_BUILD COMMAND ${CMAKE_STRIP} ${target})
-	cmake_path(GET x FILENAME fname)
-	get_target_property(cppstd ${target} CXX_STANDARD)
-	message("-- adding ${fname} CXX_STANDARD: C++${cppstd} (${CMAKE_CXX_COMPILER_ID})")
+	add_custom_command(TARGET ${x} POST_BUILD COMMAND ${CMAKE_STRIP} ${x})
+	get_target_property(cppstd ${x} CXX_STANDARD)
+	message("-- adding ${x}.cpp CXX_STANDARD: C++${cppstd} (${CMAKE_CXX_COMPILER_ID})")
 endforeach()
-
-if(BUILD_UNITTESTS)
-	include(Catch)
-	enable_testing()
-	catch_discover_tests(unittests)
-endif()

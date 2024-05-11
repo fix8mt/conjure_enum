@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 // SPDX-FileCopyrightText: Copyright (C) 2024 Fix8 Market Technologies Pty Ltd
 // SPDX-FileType: SOURCE
-
+//
 // conjure_enum (header only)
 //   by David L. Dight
 // see https://github.com/fix8mt/conjure_enum

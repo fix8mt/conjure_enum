@@ -27,6 +27,28 @@
 // HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
+// clang
+// static const char *FIX8::conjure_enum<component>::epeek() [T = component, e = component::path] // valid
+// 																								  |<- 				 ->|
+// static const char *FIX8::conjure_enum<component>::epeek() [T = component, e = (component)100] // invalid
+//																									  |<-             ->|
+// static const char *FIX8::conjure_enum<component>::tpeek() [T = component]
+//																				  |<- 		 ->|
+// gcc
+// static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::path; T = component] // valid
+//																						     |<- 				 ->|
+// static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = (component)100; T = component] // invalid
+//																		 					  |<-             ->|
+// static consteval const char* FIX8::conjure_type<T>::tpeek() [with T = component]
+//																							|<- 		  ->|
+// msvc
+// const char *__cdecl FIX8::conjure_enum<enum numbers>::epeek<numbers::two>(void) noexcept			// valid
+//																					|<- 		 ->|
+// const char *__cdecl FIX8::conjure_enum<enum numbers>::epeek<(enum numbers)0xa>(void) noexcept	// invalid
+//																			|<- 		 		  ->|
+// const char *__cdecl FIX8::conjure_enum<enum numbers>::tpeek(void) noexcept
+//														|<-    	 ->|
 //---------------------------------------------------------------------------------------->
 # What is this?
 

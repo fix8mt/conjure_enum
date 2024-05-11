@@ -42,6 +42,12 @@ using namespace std::literals::string_literals;
 namespace
 {
 	enum class NineEnums { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
+	enum NineEnums1 : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
+}
+
+namespace TEST
+{
+	enum class NineEnums { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
 	enum NineEnums1 { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
 }
 
@@ -50,4 +56,12 @@ namespace
 //-----------------------------------------------------------------------------------------
 TEST_CASE("anonymous namespace")
 {
+	for(const auto& [a, b] : conjure_enum<NineEnums1>::entries)
+		std::cout << conjure_enum<NineEnums1>::enum_to_int(a) << ' ' << b << '\n';
+	for(const auto& [a, b] : conjure_enum<NineEnums>::unscoped_entries)
+		std::cout << conjure_enum<NineEnums>::enum_to_int(a) << ' ' << b << '\n';
+	for(const auto& a : conjure_enum<NineEnums>::names)
+		std::cout << a << '\n';
+	for(const auto& [a, b] : conjure_enum<TEST::NineEnums>::entries)
+		std::cout << conjure_enum<TEST::NineEnums>::enum_to_int(a) << ' ' << b << '\n';
 }

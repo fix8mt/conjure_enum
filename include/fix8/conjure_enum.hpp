@@ -31,28 +31,6 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //----------------------------------------------------------------------------------------
-// clang
-// static const char *FIX8::conjure_enum<component>::epeek() [T = component, e = component::path] // valid
-// 																								  |<--				-->|
-// static const char *FIX8::conjure_enum<component>::epeek() [T = component, e = (component)100] // invalid
-//																									  |<--           -->|
-// static const char *FIX8::conjure_enum<component>::tpeek() [T = component]
-//																				  |<--		-->|
-// gcc
-// static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::path; T = component] // valid
-//																						     |<--				-->|
-// static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = (component)100; T = component] // invalid
-//																		 					  |<--           -->|
-// static consteval const char* FIX8::conjure_type<T>::tpeek() [with T = component]
-//																							|<--		 -->|
-// msvc
-// const char *__cdecl FIX8::conjure_enum<enum numbers>::epeek<numbers::two>(void) noexcept			// valid
-//																					|<--		-->|
-// const char *__cdecl FIX8::conjure_enum<enum numbers>::epeek<(enum numbers)0xa>(void) noexcept	// invalid
-//																			|<--		 		 -->|
-// const char *__cdecl FIX8::conjure_enum<enum numbers>::tpeek(void) noexcept
-//														|<--   	-->|
-//----------------------------------------------------------------------------------------
 #ifndef FIX8_CONJURE_ENUM_HPP_
 #define FIX8_CONJURE_ENUM_HPP_
 
@@ -110,14 +88,14 @@ constexpr auto get_spec() noexcept
 {
 	constexpr auto compiler_specifics
 	{
-		std::to_array<std::tuple<std::string_view, char>>
+		std::to_array<std::tuple<std::string_view, char, std::string_view>>
 		({
 #if defined __clang__
-			{ "e = ", ']' }, { "T = ", ']' },
+			{ "e = ", ']', "(anonymous namespace)" }, { "T = ", ']', "(anonymous namespace)" },
 #elif defined __GNUC__
-			{ "e = ", ';' }, { "T = ", ']' },
+			{ "e = ", ';', "<unnamed>" }, { "T = ", ']', "{anonymous}" },
 #elif defined _MSC_VER
-			{ "epeek<", '>' }, { "enum ", '>' },
+			{ "epeek<", '>', "`anonymous-namespace'" }, { "enum ", '>', "`anonymous-namespace'" },
 #else
 # error "conjure_enum not supported by your compiler"
 #endif
@@ -224,11 +202,26 @@ private:
 	{
 		constexpr std::string_view from{epeek<e>()};
 		constexpr auto ep { from.rfind(get_spec<0,0>()) };
-		if constexpr (ep != std::string_view::npos && from[ep + get_spec<0,0>().size()] != '('
+		if constexpr (ep == std::string_view::npos)
+			return false;
+#if defined __clang__
+		if constexpr (from[ep + get_spec<0,0>().size()] == '(')
+		{
+			if constexpr (from[ep + get_spec<0,0>().size() + 1] == '(')
+				return false; // check for ((anonymous namespace)
+			if (constexpr auto lstr { from.substr(ep + get_spec<0,0>().size()) }; lstr.find(get_spec<2,0>()) != std::string_view::npos)	// is anon
+				return true;
+		}
+		else if (from.substr(ep + get_spec<0,0>().size()).find_first_of(get_spec<1,0>()) != std::string_view::npos)
+			return true;
+		return false;
+#else
+		if constexpr (from[ep + get_spec<0,0>().size()] != '('
 			&& from.substr(ep + get_spec<0,0>().size()).find_first_of(get_spec<1,0>()) != std::string_view::npos)
 				return true;
 		else
 			return false;
+#endif
 	}
 
 #if defined BUILD_CONSRVCPP20
@@ -270,14 +263,35 @@ private:
 	static constexpr std::string_view _get_name() noexcept
 	{
 		constexpr std::string_view from{epeek<e>()};
-		if constexpr (constexpr auto ep { from.rfind(get_spec<0,0>()) }; ep != std::string_view::npos && from[ep + get_spec<0,0>().size()] != '(')
-		{
-			constexpr std::string_view result { from.substr(ep + get_spec<0,0>().size()) };
-			if constexpr (constexpr auto lc { result.find_first_of(get_spec<1,0>()) }; lc != std::string_view::npos)
-				return result.substr(0, lc);
-		}
-		else
+		constexpr auto ep { from.rfind(get_spec<0,0>()) };
+		if constexpr (ep == std::string_view::npos)
 			return {};
+#if defined __clang__
+		if constexpr (from[ep + get_spec<0,0>().size()] == '(')
+		{
+			if constexpr (from[ep + get_spec<0,0>().size() + 1] == '(')
+				return {}; // check for ((anonymous namespace)
+			// (anonymous namespace)::Anon_Type::Value]
+			if (constexpr auto lstr { from.substr(ep + get_spec<0,0>().size()) }; lstr.find(get_spec<2,0>()) != std::string_view::npos)	// is anon
+				if constexpr (constexpr auto lc { lstr.find_first_of(get_spec<1,0>()) }; lc != std::string_view::npos)
+					return lstr.substr(get_spec<2,0>().size() + 2, lc - (get_spec<2,0>().size() + 2)); // eat "::"
+		}
+#elif defined __GNUC__
+		if constexpr (from[ep + get_spec<0,0>().size()] == '<')
+		{
+			// <unnamed>::Anon_Type::Value;
+			if (constexpr auto lstr { from.substr(ep + get_spec<0,0>().size()) }; lstr.find(get_spec<2,0>()) != std::string_view::npos)	// is anon
+				if constexpr (constexpr auto lc { lstr.find_first_of(get_spec<1,0>()) }; lc != std::string_view::npos)
+					return lstr.substr(get_spec<2,0>().size() + 2, lc - (get_spec<2,0>().size() + 2)); // eat "::"
+		}
+#elif defined _MSC_VER
+		if constexpr (from[ep + get_spec<0,0>().size()] == '(')
+			return {};
+#endif
+		constexpr std::string_view result { from.substr(ep + get_spec<0,0>().size()) };
+		if constexpr (constexpr auto lc { result.find_first_of(get_spec<1,0>()) }; lc != std::string_view::npos)
+			return result.substr(0, lc);
+		return {};
 	}
 
 	static constexpr bool value_comp(const T& pl, const T& pr) noexcept

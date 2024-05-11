@@ -1,7 +1,7 @@
 <!-----------------------------------------------------------------------------------------
 // SPDX-License-Identifier: MIT
 // SPDX-FileCopyrightText: Copyright (C) 2024 Fix8 Market Technologies Pty Ltd
-// SPDX-FileType: SOURCE
+// SPDX-FileType: DOCUMENTATION
 //
 // conjure_enum (header only)
 //   by David L. Dight
@@ -53,7 +53,7 @@
 |[Notes](#7-notes)| Notes on the implementation, limits, etc|
 |[Compilers](#8-compiler-support)| Supported compilers|
 |[Compiler issues](#9-compiler-issues)| Workarounds for various compiler issues|
-|[Review `std::source_location`](https://github.com/fix8mt/conjure_enum/blob/master/reference/source_location.md)| For implementation specific `source_location` results|
+|[Results of `source_location`](https://github.com/fix8mt/conjure_enum/blob/master/reference/source_location.md)| For implementation specific `std::source_location` results|
 > [!TIP]
 > Use the built-in [table of contents](https://github.blog/changelog/2021-04-13-table-of-contents-support-in-markdown-files/) to navigate this guide.
 
@@ -61,7 +61,7 @@
 # 2. Introduction
 ## a) Supercharge Your C++ Enums with This Lightweight Reflection Library!
 
-Based on the awesome work of [`magic_enum`](https://github.com/Neargye/magic_enum)[^2] and [`boost::desribe`](https://github.com/boostorg/describe),
+Based on the awesome work of [`magic_enum`](https://github.com/Neargye/magic_enum)[^2] and [`boost::describe`](https://github.com/boostorg/describe),
 this library offers a streamlined and powerful way to add reflection capabilities to your C++ enums and other types. We've optimized the core functionality,
 focusing on the main features developers usually need while enhancing and expanding them for a more efficient and expressive experience. We've also
 added general purpose type reflection for any type.

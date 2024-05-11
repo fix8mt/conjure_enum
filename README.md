@@ -87,9 +87,19 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
 - ***Simple & Easy to Use***:  Class-based approach with intuitive syntax.
 - ***Convenient***:  `enum_bitset` offers an enhanced `std::bitset`.
 - ***Useful***:  `conjure_type` lets you obtain the type string of _any type!_
-- ***Wide Compiler Compatibility***:  Supports GCC, Clang, MSVC and XCode/Clang; `x86_64`, `AArch64`
+- ***Wide Compiler Compatibility***:  Support for:
+  - GCC
+  - Clang
+  - MSVC
+  - XCode/Clang
+  - `x86_64`
+  - `AArch64`
 - ***Confidence in Quality***:  Includes comprehensive unit tests for reliable functionality.
-- ***Expanded***:  Enhanced API such as `add_scope`, `remove_scope`, `unscoped_string_to_enum`, iterators and more!
+- ***Expanded***:  Enhanced API:
+  - `add_scope`
+  - `remove_scope`
+  - `unscoped_string_to_enum`
+  - iterators and more!
 
 ---
 # 3. API and Examples

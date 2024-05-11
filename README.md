@@ -79,7 +79,7 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
 - ***Lightweight***:  Designed for performance without unnecessary overhead.
 - ***Single Header-Only***:  No external dependencies, simplifying integration into your project.
 - ***Modern C++20***:  Entirely `constexpr` for compile-time safety, efficiency and performance.
-- ***Broad Support***:  Works with scoped and unscoped enums, enum **aliases** and even with **gaps**.
+- ***Broad Support***:  Works with scoped and unscoped enums, enum **aliases**, **gaps**, anonymous and namespaced enums and types.
 - ***Simple & Easy to Use***:  Class-based approach with intuitive syntax.
 - ***Convenient***:  `enum_bitset` offers an enhanced `std::bitset`.
 - ***Useful***:  `conjure_type` lets you obtain the type string of _any type!_
@@ -198,7 +198,8 @@ _output_
 static constexpr int enum_to_int(T value);
 static constexpr std::underlying_type_t<T> enum_to_underlying(T value);
 ```
-Returns an `int` or the `underlying` value for the given enum value.
+Returns an `int` or the `underlying` value for the given enum value. These are added for completeness. For unscoped enums
+you can always just use the value like an int, or for scoped enums just `static_cast<int>` it first.
 ```c++
 std::cout << conjure_enum<component>::enum_to_int(component::path) << '\n';
 std::cout << conjure_enum<component>::enum_to_underlying(component::path) << '\n';

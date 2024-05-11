@@ -1057,6 +1057,46 @@ The executable `srcloctest` should be built when you build the package by defaul
 does not use any of the `conjure_enum` library and is designed to report on how your compiler handles `std::source_location`.
 You should attach the output of this application with your issue.
 
+```C++
+$ ./srcloctest
+Compiler: Clang: Ubuntu Clang 16.0.6 (23ubuntu4)
+1. scoped enum
+static const char *conjure_enum<Type>::tpeek() [T = Type]
+static const char *conjure_enum<Type>::epeek() [T = Type, e = Type::Value]
+static const char *conjure_enum<Type>::epeek() [T = Type, e = (Type)100]
+
+2. unscoped enum
+static const char *conjure_enum<Type1>::tpeek() [T = Type1]
+static const char *conjure_enum<Type1>::epeek() [T = Type1, e = Value]
+static const char *conjure_enum<Type1>::epeek() [T = Type1, e = (Type1)100]
+
+3. scoped enum in anonymous namespace
+static const char *conjure_enum<(anonymous namespace)::Anon_Type>::tpeek() [T = (anonymous namespace)::Anon_Type]
+static const char *conjure_enum<(anonymous namespace)::Anon_Type>::epeek() [T = (anonymous namespace)::Anon_Type, e = (anonymous namespace)::Anon_Type::Value]
+static const char *conjure_enum<(anonymous namespace)::Anon_Type>::epeek() [T = (anonymous namespace)::Anon_Type, e = ((anonymous namespace)::Anon_Type)100]
+
+4. unscoped enum in anonymous namespace
+static const char *conjure_enum<(anonymous namespace)::Anon_Type1>::tpeek() [T = (anonymous namespace)::Anon_Type1]
+static const char *conjure_enum<(anonymous namespace)::Anon_Type1>::epeek() [T = (anonymous namespace)::Anon_Type1, e = (anonymous namespace)::Value]
+static const char *conjure_enum<(anonymous namespace)::Anon_Type1>::epeek() [T = (anonymous namespace)::Anon_Type1, e = ((anonymous namespace)::Anon_Type1)100]
+
+5. scoped enum in namespace
+static const char *conjure_enum<Namespace::Type>::tpeek() [T = Namespace::Type]
+static const char *conjure_enum<Namespace::Type>::epeek() [T = Namespace::Type, e = Namespace::Type::Value]
+static const char *conjure_enum<Namespace::Type>::epeek() [T = Namespace::Type, e = (Namespace::Type)100]
+
+6. unscoped enum in namespace
+static const char *conjure_enum<Namespace::Type1>::tpeek() [T = Namespace::Type1]
+static const char *conjure_enum<Namespace::Type1>::epeek() [T = Namespace::Type1, e = Namespace::Value]
+static const char *conjure_enum<Namespace::Type1>::epeek() [T = Namespace::Type1, e = (Namespace::Type1)100]
+
+7. other type
+static const char *conjure_type<int>::tpeek() [T = int]
+static const char *conjure_type<std::basic_string_view<char>>::tpeek() [T = std::basic_string_view<char>]
+static const char *conjure_type<std::vector<std::tuple<int, char, std::basic_string_view<char>>>>::tpeek() [T = std::vector<std::tuple<int, char, std::basic_string_view<char>>>]
+$
+```
+
 ---
 # 7. Notes
 ## a) enum limits

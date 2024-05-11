@@ -35,8 +35,6 @@
 
 //-----------------------------------------------------------------------------------------
 using namespace FIX8;
-using namespace std::literals::string_view_literals;
-using namespace std::literals::string_literals;
 
 //-----------------------------------------------------------------------------------------
 namespace

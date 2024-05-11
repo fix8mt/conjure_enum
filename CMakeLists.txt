@@ -41,6 +41,11 @@ project (conjure_enum
 option(BUILD_CONSRVCPP20 "enable conservative C++20 build" false)
 message("-- Build conservative C++20: ${BUILD_CONSRVCPP20}")
 
+# to disable strip:
+# cmake -DBUILD_STRIP_EXE=false ..
+option(BUILD_STRIP_EXE "enable stripping of executables" true)
+message("-- Build strip exes: ${BUILD_STRIP_EXE}")
+
 # to disable warnings:
 # cmake -DBUILD_ALL_WARNINGS=false ..
 option(BUILD_ALL_WARNINGS "enable building with all warnings" true)
@@ -51,7 +56,8 @@ message("-- Build with all warnings : ${BUILD_ALL_WARNINGS}")
 option(BUILD_UNITTESTS "enable building unit tests" true)
 message("-- Build unit tests: ${BUILD_UNITTESTS}")
 
-set(srcs srcloctest example statictest)
+set(dep srcloctest)
+set(srcs ${dep} example statictest)
 set(usrcs unittests edgetests)
 
 if(BUILD_UNITTESTS)
@@ -71,6 +77,9 @@ endif()
 
 foreach(x IN LISTS srcs)
 	add_executable(${x} examples/${x}.cpp)
+	if (NOT ${x} EQUAL ${dep})
+		add_dependencies(${x} ${dep}) # srcloctest should be built even if errors with conjure_enum
+	endif()
 	set_target_properties(${x} PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED true)
 	target_include_directories(${x} PRIVATE include)
 	if (BUILD_CONSRVCPP20)
@@ -85,7 +94,9 @@ foreach(x IN LISTS srcs)
 		target_link_libraries(${x} PRIVATE Catch2::Catch2WithMain)
 		catch_discover_tests(${x})
 	endif()
-	add_custom_command(TARGET ${x} POST_BUILD COMMAND ${CMAKE_STRIP} ${x})
+	if(BUILD_STRIP_EXE)
+		add_custom_command(TARGET ${x} POST_BUILD COMMAND ${CMAKE_STRIP} ${x})
+	endif()
 	get_target_property(cppstd ${x} CXX_STANDARD)
 	message("-- adding ${x}.cpp CXX_STANDARD: C++${cppstd} (${CMAKE_CXX_COMPILER_ID})")
 endforeach()

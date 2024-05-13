@@ -41,12 +41,22 @@ namespace
 {
 	enum class NineEnums : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
 	enum NineEnums1 : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
+	namespace TEST1
+	{
+		enum class NineEnums : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
+		enum NineEnums1 : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
+	}
 }
 
 namespace TEST
 {
 	enum class NineEnums : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
 	enum NineEnums1 : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
+	namespace TEST1
+	{
+		enum class NineEnums : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
+		enum NineEnums1 : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
+	}
 }
 
 //-----------------------------------------------------------------------------------------
@@ -133,3 +143,88 @@ TEST_CASE("namespaced entries")
 	REQUIRE(conjure_enum<TEST::NineEnums>::entries == compentries);
 	REQUIRE(conjure_enum<TEST::NineEnums1>::entries == compentries1);
 }
+
+//-----------------------------------------------------------------------------------------
+TEST_CASE("nested anonymous type")
+{
+	REQUIRE(conjure_type<TEST1::NineEnums>::as_string_view() == "TEST1::NineEnums");
+	REQUIRE(conjure_type<TEST1::NineEnums1>::as_string_view() == "TEST1::NineEnums1");
+	REQUIRE(conjure_type<TEST::TEST1::NineEnums>::as_string_view() == "TEST::TEST1::NineEnums");
+	REQUIRE(conjure_type<TEST::TEST1::NineEnums1>::as_string_view() == "TEST::TEST1::NineEnums1");
+}
+
+//-----------------------------------------------------------------------------------------
+TEST_CASE("nested anonymous entries")
+{
+	static constexpr auto compentries
+	{
+      std::to_array<std::tuple<TEST1::NineEnums, std::string_view>>
+      ({
+			{ TEST1::NineEnums::One, "TEST1::NineEnums::One" },
+			{ TEST1::NineEnums::Two, "TEST1::NineEnums::Two" },
+			{ TEST1::NineEnums::Three, "TEST1::NineEnums::Three" },
+			{ TEST1::NineEnums::Four, "TEST1::NineEnums::Four" },
+			{ TEST1::NineEnums::Five, "TEST1::NineEnums::Five" },
+			{ TEST1::NineEnums::Six, "TEST1::NineEnums::Six" },
+			{ TEST1::NineEnums::Seven, "TEST1::NineEnums::Seven" },
+			{ TEST1::NineEnums::Eight, "TEST1::NineEnums::Eight" },
+			{ TEST1::NineEnums::Nine, "TEST1::NineEnums::Nine" },
+      })
+   };
+	static constexpr auto compentries1
+	{
+      std::to_array<std::tuple<TEST1::NineEnums1, std::string_view>>
+      ({
+			{ TEST1::One, "TEST1::One" },
+			{ TEST1::Two, "TEST1::Two" },
+			{ TEST1::Three, "TEST1::Three" },
+			{ TEST1::Four, "TEST1::Four" },
+			{ TEST1::Five, "TEST1::Five" },
+			{ TEST1::Six, "TEST1::Six" },
+			{ TEST1::Seven, "TEST1::Seven" },
+			{ TEST1::Eight, "TEST1::Eight" },
+			{ TEST1::Nine, "TEST1::Nine" },
+      })
+   };
+	REQUIRE(conjure_enum<TEST1::NineEnums>::entries == compentries);
+	REQUIRE(conjure_enum<TEST1::NineEnums1>::entries == compentries1);
+}
+
+//-----------------------------------------------------------------------------------------
+TEST_CASE("nested namespaced entries")
+{
+	static constexpr auto compentries
+	{
+      std::to_array<std::tuple<TEST::TEST1::NineEnums, std::string_view>>
+      ({
+			{ TEST::TEST1::NineEnums::One, "TEST::TEST1::NineEnums::One" },
+			{ TEST::TEST1::NineEnums::Two, "TEST::TEST1::NineEnums::Two" },
+			{ TEST::TEST1::NineEnums::Three, "TEST::TEST1::NineEnums::Three" },
+			{ TEST::TEST1::NineEnums::Four, "TEST::TEST1::NineEnums::Four" },
+			{ TEST::TEST1::NineEnums::Five, "TEST::TEST1::NineEnums::Five" },
+			{ TEST::TEST1::NineEnums::Six, "TEST::TEST1::NineEnums::Six" },
+			{ TEST::TEST1::NineEnums::Seven, "TEST::TEST1::NineEnums::Seven" },
+			{ TEST::TEST1::NineEnums::Eight, "TEST::TEST1::NineEnums::Eight" },
+			{ TEST::TEST1::NineEnums::Nine, "TEST::TEST1::NineEnums::Nine" },
+      })
+   };
+	static constexpr auto compentries1
+	{
+      std::to_array<std::tuple<TEST::TEST1::NineEnums1, std::string_view>>
+      ({
+			{ TEST::TEST1::One, "TEST::TEST1::One" },
+			{ TEST::TEST1::Two, "TEST::TEST1::Two" },
+			{ TEST::TEST1::Three, "TEST::TEST1::Three" },
+			{ TEST::TEST1::Four, "TEST::TEST1::Four" },
+			{ TEST::TEST1::Five, "TEST::TEST1::Five" },
+			{ TEST::TEST1::Six, "TEST::TEST1::Six" },
+			{ TEST::TEST1::Seven, "TEST::TEST1::Seven" },
+			{ TEST::TEST1::Eight, "TEST::TEST1::Eight" },
+			{ TEST::TEST1::Nine, "TEST::TEST1::Nine" },
+      })
+   };
+	REQUIRE(conjure_enum<TEST::TEST1::NineEnums>::entries == compentries);
+	REQUIRE(conjure_enum<TEST::TEST1::NineEnums1>::entries == compentries1);
+}
+
+//-----------------------------------------------------------------------------------------

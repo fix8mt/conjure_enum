@@ -33,8 +33,7 @@ project (conjure_enum
    LANGUAGES CXX
 	HOMEPAGE_URL https://github.com/fix8mt/conjure_enum
    DESCRIPTION "Lightweight C++20 enum and type reflection"
-   VERSION 1.0.0
-)
+   VERSION 1.0.0)
 
 # to enable conservative C++20 build:
 # cmake -DBUILD_CONSRVCPP20=true ..
@@ -43,7 +42,7 @@ message("-- Build conservative C++20: ${BUILD_CONSRVCPP20}")
 
 # to disable strip:
 # cmake -DBUILD_STRIP_EXE=false ..
-option(BUILD_STRIP_EXE "enable stripping of executables" true)
+option(BUILD_STRIP_EXE "enable stripping of non-unittest executables" true)
 message("-- Build strip exes: ${BUILD_STRIP_EXE}")
 
 # to disable warnings:
@@ -56,30 +55,9 @@ message("-- Build with all warnings : ${BUILD_ALL_WARNINGS}")
 option(BUILD_UNITTESTS "enable building unit tests" true)
 message("-- Build unit tests: ${BUILD_UNITTESTS}")
 
-set(dep srcloctest)
-set(srcs ${dep} example statictest)
-set(usrcs unittests edgetests)
-
-if(BUILD_UNITTESTS)
-	include(FetchContent)
-	FetchContent_Declare(Catch2
-		GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-		GIT_SHALLOW ON
-		GIT_TAG devel
-	)
-	FetchContent_MakeAvailable(Catch2)
-	list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
-	target_compile_features(Catch2 PRIVATE cxx_std_20)
-	include(Catch)
-	enable_testing()
-   list(APPEND srcs ${usrcs})
-endif()
-
-foreach(x IN LISTS srcs)
+function(build x)
 	add_executable(${x} examples/${x}.cpp)
-	if (NOT ${x} EQUAL ${dep})
-		add_dependencies(${x} ${dep}) # srcloctest should be built even if errors with conjure_enum
-	endif()
+	add_dependencies(${x} srcloctest) # srcloctest should be built even if errors with conjure_enum
 	set_target_properties(${x} PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED true)
 	target_include_directories(${x} PRIVATE include)
 	if (BUILD_CONSRVCPP20)
@@ -90,13 +68,31 @@ foreach(x IN LISTS srcs)
 			$<$<CXX_COMPILER_ID:MSVC>:/W4>
 			$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic>)
 	endif()
-	if(BUILD_UNITTESTS AND ${x} IN_LIST usrcs)
-		target_link_libraries(${x} PRIVATE Catch2::Catch2WithMain)
-		catch_discover_tests(${x})
-	endif()
+	get_target_property(cppstd ${x} CXX_STANDARD)
+	message("-- adding ${x}.cpp CXX_STANDARD: C++${cppstd} (${CMAKE_CXX_COMPILER_ID})")
+endfunction()
+
+foreach(x srcloctest example statictest)
+	build(${x})
 	if(BUILD_STRIP_EXE)
 		add_custom_command(TARGET ${x} POST_BUILD COMMAND ${CMAKE_STRIP} ${x})
 	endif()
-	get_target_property(cppstd ${x} CXX_STANDARD)
-	message("-- adding ${x}.cpp CXX_STANDARD: C++${cppstd} (${CMAKE_CXX_COMPILER_ID})")
 endforeach()
+
+if(BUILD_UNITTESTS)
+	include(FetchContent)
+	FetchContent_Declare(Catch2
+		GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+		GIT_SHALLOW ON
+		GIT_TAG devel)
+	FetchContent_MakeAvailable(Catch2)
+	list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
+	target_compile_features(Catch2 PRIVATE cxx_std_20)
+	include(Catch)
+	enable_testing()
+	foreach(x unittests edgetests)
+		build(${x})
+		target_link_libraries(${x} PRIVATE Catch2::Catch2WithMain)
+		catch_discover_tests(${x})
+	endforeach()
+endif()

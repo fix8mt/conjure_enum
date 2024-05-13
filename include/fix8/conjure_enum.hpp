@@ -627,7 +627,7 @@ public:
 	}
 
 	/// create a bitset from enum separated enum string
-	constexpr static U factory(std::string_view src, bool anyscope, char sep, bool ignore_errors)
+	static constexpr U factory(std::string_view src, bool anyscope, char sep, bool ignore_errors)
 	{
 		enum_bitset result;
 		auto trim([](std::string_view src) noexcept ->std::string_view

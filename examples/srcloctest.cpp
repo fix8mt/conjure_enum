@@ -73,39 +73,36 @@ using foo = std::vector<std::tuple<int, char, std::string_view>>;
 //-----------------------------------------------------------------------------------------
 int main(void)
 {
-	static constexpr auto srclocstrs
+	static constexpr std::array srclocstrs
 	{
-      std::to_array<std::string_view>
-      ({
-			"1. scoped enum",
-				conjure_enum<Type>::tpeek(),
-				conjure_enum<Type>::epeek<Type::Value>(),
-				conjure_enum<Type>::epeek<(Type)100>(), "",
-			"2. unscoped enum",
-				conjure_enum<Type1>::tpeek(),
-				conjure_enum<Type1>::epeek<Type1::Value>(),
-				conjure_enum<Type1>::epeek<(Type1)100>(), "",
-			"3. scoped enum in anonymous namespace",
-				conjure_enum<Anon_Type>::tpeek(),
-				conjure_enum<Anon_Type>::epeek<Anon_Type::Value>(),
-				conjure_enum<Anon_Type>::epeek<(Anon_Type)100>(), "",
-			"4. unscoped enum in anonymous namespace",
-				conjure_enum<Anon_Type1>::tpeek(),
-				conjure_enum<Anon_Type1>::epeek<Anon_Type1::Value>(),
-				conjure_enum<Anon_Type1>::epeek<(Anon_Type1)100>(), "",
-			"5. scoped enum in namespace",
-				conjure_enum<Namespace::Type>::tpeek(),
-				conjure_enum<Namespace::Type>::epeek<Namespace::Type::Value>(),
-				conjure_enum<Namespace::Type>::epeek<(Namespace::Type)100>(), "",
-			"6. unscoped enum in namespace",
-				conjure_enum<Namespace::Type1>::tpeek(),
-				conjure_enum<Namespace::Type1>::epeek<Namespace::Type1::Value>(),
-				conjure_enum<Namespace::Type1>::epeek<(Namespace::Type1)100>(), "",
-			"7. other type",
-				conjure_type<int>::tpeek(),
-				conjure_type<std::string_view>::tpeek(),
-				conjure_type<foo>::tpeek(),
-      })
+		"1. scoped enum",
+			conjure_enum<Type>::tpeek(),
+			conjure_enum<Type>::epeek<Type::Value>(),
+			conjure_enum<Type>::epeek<(Type)100>(), "",
+		"2. unscoped enum",
+			conjure_enum<Type1>::tpeek(),
+			conjure_enum<Type1>::epeek<Type1::Value>(),
+			conjure_enum<Type1>::epeek<(Type1)100>(), "",
+		"3. scoped enum in anonymous namespace",
+			conjure_enum<Anon_Type>::tpeek(),
+			conjure_enum<Anon_Type>::epeek<Anon_Type::Value>(),
+			conjure_enum<Anon_Type>::epeek<(Anon_Type)100>(), "",
+		"4. unscoped enum in anonymous namespace",
+			conjure_enum<Anon_Type1>::tpeek(),
+			conjure_enum<Anon_Type1>::epeek<Anon_Type1::Value>(),
+			conjure_enum<Anon_Type1>::epeek<(Anon_Type1)100>(), "",
+		"5. scoped enum in namespace",
+			conjure_enum<Namespace::Type>::tpeek(),
+			conjure_enum<Namespace::Type>::epeek<Namespace::Type::Value>(),
+			conjure_enum<Namespace::Type>::epeek<(Namespace::Type)100>(), "",
+		"6. unscoped enum in namespace",
+			conjure_enum<Namespace::Type1>::tpeek(),
+			conjure_enum<Namespace::Type1>::epeek<Namespace::Type1::Value>(),
+			conjure_enum<Namespace::Type1>::epeek<(Namespace::Type1)100>(), "",
+		"7. other type",
+			conjure_type<int>::tpeek(),
+			conjure_type<std::string_view>::tpeek(),
+			conjure_type<foo>::tpeek(),
    };
 	std::cout << "Compiler: "
 #if defined __clang__

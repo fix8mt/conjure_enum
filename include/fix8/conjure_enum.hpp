@@ -688,17 +688,12 @@ class conjure_type
 		constexpr auto ep { from.rfind(get_spec<0,1>()) };
 		if constexpr (ep == std::string_view::npos)
 			return {};
-#if defined _MSC_VER
-		if constexpr (from[ep + get_spec<0,0>().size()] == '(')
-			return {};
-#else
 		if constexpr (from[ep + get_spec<0,1>().size()] == get_spec<3,1>())
 		{
 			if (constexpr auto lstr { from.substr(ep + get_spec<0,1>().size()) }; lstr.find(get_spec<2,1>()) != std::string_view::npos)	// is anon
 				if constexpr (constexpr auto lc { lstr.find_first_of(get_spec<1,1>()) }; lc != std::string_view::npos)
 					return lstr.substr(get_spec<2,1>().size() + 2, lc - (get_spec<2,1>().size() + 2)); // eat "::"
 		}
-#endif
 		constexpr std::string_view result { from.substr(ep + get_spec<0,1>().size()) };
 		if constexpr (constexpr auto lc { result.find_first_of(get_spec<1,1>()) }; lc != std::string_view::npos)
 			return result.substr(0, lc);

@@ -62,15 +62,6 @@ namespace TEST
 //-----------------------------------------------------------------------------------------
 // run as: ctest --output-on-failure
 //-----------------------------------------------------------------------------------------
-TEST_CASE("anonymous type")
-{
-	REQUIRE(conjure_type<NineEnums>::as_string_view() == "NineEnums");
-	REQUIRE(conjure_type<NineEnums1>::as_string_view() == "NineEnums1");
-	REQUIRE(conjure_type<TEST::NineEnums>::as_string_view() == "TEST::NineEnums");
-	REQUIRE(conjure_type<TEST::NineEnums1>::as_string_view() == "TEST::NineEnums1");
-}
-
-//-----------------------------------------------------------------------------------------
 TEST_CASE("anonymous entries")
 {
 	static constexpr auto compentries
@@ -145,15 +136,6 @@ TEST_CASE("namespaced entries")
 }
 
 //-----------------------------------------------------------------------------------------
-TEST_CASE("nested anonymous type")
-{
-	REQUIRE(conjure_type<TEST1::NineEnums>::as_string_view() == "TEST1::NineEnums");
-	REQUIRE(conjure_type<TEST1::NineEnums1>::as_string_view() == "TEST1::NineEnums1");
-	REQUIRE(conjure_type<TEST::TEST1::NineEnums>::as_string_view() == "TEST::TEST1::NineEnums");
-	REQUIRE(conjure_type<TEST::TEST1::NineEnums1>::as_string_view() == "TEST::TEST1::NineEnums1");
-}
-
-//-----------------------------------------------------------------------------------------
 TEST_CASE("nested anonymous entries")
 {
 	static constexpr auto compentries
@@ -225,6 +207,24 @@ TEST_CASE("nested namespaced entries")
    };
 	REQUIRE(conjure_enum<TEST::TEST1::NineEnums>::entries == compentries);
 	REQUIRE(conjure_enum<TEST::TEST1::NineEnums1>::entries == compentries1);
+}
+
+//-----------------------------------------------------------------------------------------
+TEST_CASE("anonymous type")
+{
+	REQUIRE(conjure_type<NineEnums>::as_string_view() == "NineEnums");
+	REQUIRE(conjure_type<NineEnums1>::as_string_view() == "NineEnums1");
+	REQUIRE(conjure_type<TEST::NineEnums>::as_string_view() == "TEST::NineEnums");
+	REQUIRE(conjure_type<TEST::NineEnums1>::as_string_view() == "TEST::NineEnums1");
+}
+
+//-----------------------------------------------------------------------------------------
+TEST_CASE("nested anonymous type")
+{
+	REQUIRE(conjure_type<TEST1::NineEnums>::as_string_view() == "TEST1::NineEnums");
+	REQUIRE(conjure_type<TEST1::NineEnums1>::as_string_view() == "TEST1::NineEnums1");
+	REQUIRE(conjure_type<TEST::TEST1::NineEnums>::as_string_view() == "TEST::TEST1::NineEnums");
+	REQUIRE(conjure_type<TEST::TEST1::NineEnums1>::as_string_view() == "TEST::TEST1::NineEnums1");
 }
 
 //-----------------------------------------------------------------------------------------

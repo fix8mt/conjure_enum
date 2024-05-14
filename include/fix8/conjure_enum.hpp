@@ -95,7 +95,7 @@ constexpr auto get_spec() noexcept
 #elif defined __GNUC__
 			{ "e = ", ';', "<unnamed>", '<' }, { "T = ", ']', "{anonymous}", '{' },
 #elif defined _MSC_VER
-			{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "enum ", '>', "`anonymous-namespace'", '`' },
+			{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "enum ", '>', "enum `anonymous-namespace'", '`' },
 #else
 # error "conjure_enum not supported by your compiler"
 #endif

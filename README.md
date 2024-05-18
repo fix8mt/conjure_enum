@@ -32,7 +32,6 @@
   <a href="https://www.fix8mt.com"><img src="assets/conjure_enum_logo.png" width="200"></a>
 </p>
 
-
 <h3 align="center">Lightweight header-only C++20 enum and type reflection</h3>
 
 ---

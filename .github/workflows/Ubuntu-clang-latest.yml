@@ -17,8 +17,8 @@ env:
 
 jobs:
   linux:
-	 runs-on: Ubuntu-24.04
-	 if: github.ref == 'refs/heads/master'
+    runs-on: Ubuntu-24.04
+    if: github.ref == 'refs/heads/master'
     timeout-minutes: 5
 
     steps:

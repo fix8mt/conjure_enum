@@ -29,7 +29,7 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------->
 <p align="center">
-  <a href="https://www.fix8mt.com"><img src="https://github.com/fix8mt/conjure_enum/blob/master/assets/fix8mt_Master_Logo_Green_Trans.png" width="200"></a>
+  <a href="https://www.fix8mt.com"><img src="https://github.com/fix8mt/conjure_enum/blob/master/assets/conjure_enum_logo.png" width="200"></a>
 </p>
 
 # `conjure_enum`
@@ -997,7 +997,7 @@ std::basic_string_view<char>
 This implementation is header only. Apart from standard C++20 includes there are no external dependencies needed in your application.
 [Catch2](https://github.com/catchorg/Catch2.git) is used for the built-in unit tests.
 
-## a) Obtaining the source, building the examples
+## a) Obtaining the source, building the unittests and examples
 ### \*nix based environments
 To clone and default build the test app, unit tests and the benchmark:
 ```bash

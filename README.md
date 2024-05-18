@@ -32,9 +32,10 @@
   <a href="https://www.fix8mt.com"><img src="https://github.com/fix8mt/conjure_enum/blob/dev/assets/conjure_enum_logo.png" width="200"></a>
 </p>
 
+---
+
 ### Lightweight header-only C++20 enum and type reflection
 
----
 [![clang](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-clang-latest.yml/badge.svg)](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-clang-latest.yml)
 [![gcc](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-gcc-latest.yml/badge.svg)](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-gcc-latest.yml)
 <a href="https://en.wikipedia.org/wiki/C%2B%2B20"><img src="https://github.com/fix8mt/conjure_enum/blob/master/assets/badgecpprequired.svg"></a>

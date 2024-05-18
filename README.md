@@ -37,8 +37,8 @@
 
 ---
 
-[![clang](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-clang-latest.yml/badge.svg)](actions/workflows/Ubuntu-clang-latest.yml)
-[![gcc](actions/workflows/Ubuntu-gcc-latest.yml/badge.svg)](actions/workflows/Ubuntu-gcc-latest.yml)
+[![clang](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-clang-latest.yml/badge.svg)](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-clang-latest.yml)
+[![gcc](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-gcc-latest.yml/badge.svg)](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-gcc-latest.yml)
 <a href="https://en.wikipedia.org/wiki/C%2B%2B20"><img src="assets/badgecpprequired.svg"></a>
 <a href="https://opensource.org/license/mit"><img src="assets/badgemitlic.svg"></a>
 

@@ -18,7 +18,8 @@ env:
 
 jobs:
   linux:
-    runs-on: ubuntu-latest
+#runs-on: ubuntu-latest
+    runs-on: Ubuntu-24.04
     timeout-minutes: 5
 
     steps:

@@ -37,15 +37,15 @@
 
 ---
 
-[![clang](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-clang-latest.yml/badge.svg)](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-clang-latest.yml)
-[![gcc](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-gcc-latest.yml/badge.svg)](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-gcc-latest.yml)
-<a href="https://en.wikipedia.org/wiki/C%2B%2B20"><img src="https://github.com/fix8mt/conjure_enum/blob/master/assets/badgecpprequired.svg"></a>
-<a href="https://opensource.org/license/mit"><img src="https://github.com/fix8mt/conjure_enum/blob/master/assets/badgemitlic.svg"></a>
+[![clang](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-clang-latest.yml/badge.svg)](actions/workflows/Ubuntu-clang-latest.yml)
+[![gcc](actions/workflows/Ubuntu-gcc-latest.yml/badge.svg)](actions/workflows/Ubuntu-gcc-latest.yml)
+<a href="https://en.wikipedia.org/wiki/C%2B%2B20"><img src="assets/badgecpprequired.svg"></a>
+<a href="https://opensource.org/license/mit"><img src="assets/badgemitlic.svg"></a>
 
 # 1. Quick links
 |**Link**|**Description**|
 --|--
-|[Here](https://github.com/fix8mt/conjure_enum/blob/master/include/fix8/conjure_enum.hpp)| For implementation|
+|[Here](include/fix8/conjure_enum.hpp)| For implementation|
 |[API and Examples](#3-api-and-examples)| General examples|
 |[API and Examples for `enum_bitset`](#4-api-and-examples-using-enum_bitset)| `std::bitset` replacement|
 |[API and Examples for `conjure_type`](#5-api-and-examples-using-conjure_type)| any type string extractor|
@@ -53,7 +53,7 @@
 |[Notes](#7-notes)| Notes on the implementation, limits, etc|
 |[Compilers](#8-compiler-support)| Supported compilers|
 |[Compiler issues](#9-compiler-issues)| Workarounds for various compiler issues|
-|[Results of `source_location`](https://github.com/fix8mt/conjure_enum/blob/master/reference/source_location.md)| For implementation specific `std::source_location` results|
+|[Results of `source_location`](reference/source_location.md)| For implementation specific `std::source_location` results|
 > [!TIP]
 > Use the built-in [table of contents](https://github.blog/changelog/2021-04-13-table-of-contents-support-in-markdown-files/) to navigate this guide.
 

@@ -32,8 +32,6 @@
   <a href="https://www.fix8mt.com"><img src="https://github.com/fix8mt/conjure_enum/blob/dev/assets/conjure_enum_logo.png" width="200"></a>
 </p>
 
-# `conjure_enum`
-
 ### Lightweight header-only C++20 enum and type reflection
 
 ---

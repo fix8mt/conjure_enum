@@ -33,7 +33,7 @@
 </p>
 
 
-<p align="center">Lightweight header-only C++20 enum and type reflection</p>
+<h3 align="center">Lightweight header-only C++20 enum and type reflection</h3>
 
 ---
 

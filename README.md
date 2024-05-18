@@ -29,7 +29,7 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------->
 <p align="center">
-  <a href="https://www.fix8mt.com"><img src="https://github.com/fix8mt/conjure_enum/blob/master/assets/conjure_enum_logo.png" width="200"></a>
+  <a href="https://www.fix8mt.com"><img src="https://github.com/fix8mt/conjure_enum/blob/dev/assets/conjure_enum_logo.png" width="200"></a>
 </p>
 
 # `conjure_enum`

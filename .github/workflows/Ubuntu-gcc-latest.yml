@@ -13,8 +13,8 @@ on:
 
 env:
   BUILD_TYPE: Release
-  CC: gcc-14
-  CXX: g++-14
+  CC: gcc-13
+  CXX: g++-13
 
 jobs:
   linux:

@@ -32,10 +32,10 @@ jobs:
 
     - name: Exit if the branch is not master
       run: |
-           if [[ "${{ github.ref }}" != "refs/heads/master" ]]; then
-	           echo "Branch is not master, exiting."
-	           exit 0
-           fi
+        if [[ "${{ github.ref }}" != "refs/heads/master" ]]; then
+	       echo "Branch is not master, exiting."
+	       exit 0
+        fi
 
     - name: Build
       # Build your program with the given configuration

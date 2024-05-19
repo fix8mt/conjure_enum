@@ -83,10 +83,11 @@ public:
 };
 
 //-----------------------------------------------------------------------------------------
-template<int N, int V> // can't have constexpr decompositions! (but why not?)
-constexpr auto get_spec() noexcept
+// compiler specifics
+//-----------------------------------------------------------------------------------------
+class cs
 {
-	constexpr auto compiler_specifics
+	static constexpr auto _specifics
 	{
 		std::to_array<std::tuple<std::string_view, char, std::string_view, char>>
 		({
@@ -101,8 +102,21 @@ constexpr auto get_spec() noexcept
 #endif
 		})
 	};
-	return std::get<N>(compiler_specifics[V]);
-}
+
+public:
+	cs() = delete;
+	~cs() = delete;
+	cs(const cs&) = delete;
+	cs& operator=(const cs&) = delete;
+	cs(cs&&) = delete;
+	cs& operator=(cs&&) = delete;
+
+	template<int N, int V> // can't have constexpr decompositions! (but why not?)
+	static constexpr auto get_spec() noexcept
+	{
+		return std::get<N>(_specifics[V]);
+	}
+};
 
 //-----------------------------------------------------------------------------------------
 template<typename T>
@@ -201,23 +215,23 @@ private:
 	static constexpr bool _is_valid() noexcept
 	{
 		constexpr std::string_view from{epeek<e>()};
-		constexpr auto ep { from.rfind(get_spec<0,0>()) };
+		constexpr auto ep { from.rfind(cs::get_spec<0,0>()) };
 		if constexpr (ep == std::string_view::npos)
 			return false;
 #if defined __clang__
-		if constexpr (from[ep + get_spec<0,0>().size()] == '(')
+		if constexpr (from[ep + cs::get_spec<0,0>().size()] == '(')
 		{
-			if constexpr (from[ep + get_spec<0,0>().size() + 1] == '(')
+			if constexpr (from[ep + cs::get_spec<0,0>().size() + 1] == '(')
 				return false; // check for ((anonymous namespace)
-			if constexpr (constexpr auto lstr { from.substr(ep + get_spec<0,0>().size()) }; lstr.find(get_spec<2,0>()) != std::string_view::npos)	// is anon
+			if constexpr (constexpr auto lstr { from.substr(ep + cs::get_spec<0,0>().size()) }; lstr.find(cs::get_spec<2,0>()) != std::string_view::npos)	// is anon
 				return true;
 		}
-		else if constexpr (from.substr(ep + get_spec<0,0>().size()).find_first_of(get_spec<1,0>()) != std::string_view::npos)
+		else if constexpr (from.substr(ep + cs::get_spec<0,0>().size()).find_first_of(cs::get_spec<1,0>()) != std::string_view::npos)
 			return true;
 		return false;
 #else
-		if constexpr (from[ep + get_spec<0,0>().size()] != '('
-			&& from.substr(ep + get_spec<0,0>().size()).find_first_of(get_spec<1,0>()) != std::string_view::npos)
+		if constexpr (from[ep + cs::get_spec<0,0>().size()] != '('
+			&& from.substr(ep + cs::get_spec<0,0>().size()).find_first_of(cs::get_spec<1,0>()) != std::string_view::npos)
 				return true;
 		else
 			return false;
@@ -263,21 +277,21 @@ private:
 	static constexpr std::string_view _get_name() noexcept
 	{
 		constexpr std::string_view from{epeek<e>()};
-		constexpr auto ep { from.rfind(get_spec<0,0>()) };
+		constexpr auto ep { from.rfind(cs::get_spec<0,0>()) };
 		if constexpr (ep == std::string_view::npos)
 			return {};
-		if constexpr (from[ep + get_spec<0,0>().size()] == get_spec<3,0>())
+		if constexpr (from[ep + cs::get_spec<0,0>().size()] == cs::get_spec<3,0>())
 		{
 #if defined __clang__
-			if constexpr (from[ep + get_spec<0,0>().size() + 1] == get_spec<3,0>())
+			if constexpr (from[ep + cs::get_spec<0,0>().size() + 1] == cs::get_spec<3,0>())
 				return {}; // check for ((anonymous namespace)
 #endif
-			if (constexpr auto lstr { from.substr(ep + get_spec<0,0>().size()) }; lstr.find(get_spec<2,0>()) != std::string_view::npos)	// is anon
-				if constexpr (constexpr auto lc { lstr.find_first_of(get_spec<1,0>()) }; lc != std::string_view::npos)
-					return lstr.substr(get_spec<2,0>().size() + 2, lc - (get_spec<2,0>().size() + 2)); // eat "::"
+			if (constexpr auto lstr { from.substr(ep + cs::get_spec<0,0>().size()) }; lstr.find(cs::get_spec<2,0>()) != std::string_view::npos)	// is anon
+				if constexpr (constexpr auto lc { lstr.find_first_of(cs::get_spec<1,0>()) }; lc != std::string_view::npos)
+					return lstr.substr(cs::get_spec<2,0>().size() + 2, lc - (cs::get_spec<2,0>().size() + 2)); // eat "::"
 		}
-		constexpr std::string_view result { from.substr(ep + get_spec<0,0>().size()) };
-		if constexpr (constexpr auto lc { result.find_first_of(get_spec<1,0>()) }; lc != std::string_view::npos)
+		constexpr std::string_view result { from.substr(ep + cs::get_spec<0,0>().size()) };
+		if constexpr (constexpr auto lc { result.find_first_of(cs::get_spec<1,0>()) }; lc != std::string_view::npos)
 			return result.substr(0, lc);
 		else
 			return {};
@@ -312,10 +326,10 @@ public:
 	static constexpr std::string_view type_name() noexcept
 	{
 		constexpr std::string_view from{tpeek()};
-		if constexpr (constexpr auto ep { from.rfind(get_spec<0,1>()) }; ep != std::string_view::npos)
+		if constexpr (constexpr auto ep { from.rfind(cs::get_spec<0,1>()) }; ep != std::string_view::npos)
 		{
-			constexpr std::string_view result { from.substr(ep + get_spec<0,1>().size()) };
-			if constexpr (constexpr auto lc { result.find_first_of(get_spec<1,1>()) }; lc != std::string_view::npos)
+			constexpr std::string_view result { from.substr(ep + cs::get_spec<0,1>().size()) };
+			if constexpr (constexpr auto lc { result.find_first_of(cs::get_spec<1,1>()) }; lc != std::string_view::npos)
 				return result.substr(0, lc);
 		}
 		else
@@ -686,17 +700,17 @@ class conjure_type
 	static constexpr std::string_view _get_name() noexcept
 	{
 		constexpr std::string_view from{tpeek()};
-		constexpr auto ep { from.rfind(get_spec<0,1>()) };
+		constexpr auto ep { from.rfind(cs::get_spec<0,1>()) };
 		if constexpr (ep == std::string_view::npos)
 			return {};
-		if constexpr (from[ep + get_spec<0,1>().size()] == get_spec<3,1>())
+		if constexpr (from[ep + cs::get_spec<0,1>().size()] == cs::get_spec<3,1>())
 		{
-			if (constexpr auto lstr { from.substr(ep + get_spec<0,1>().size()) }; lstr.find(get_spec<2,1>()) != std::string_view::npos)	// is anon
-				if constexpr (constexpr auto lc { lstr.find_first_of(get_spec<1,1>()) }; lc != std::string_view::npos)
-					return lstr.substr(get_spec<2,1>().size() + 2, lc - (get_spec<2,1>().size() + 2)); // eat "::"
+			if (constexpr auto lstr { from.substr(ep + cs::get_spec<0,1>().size()) }; lstr.find(cs::get_spec<2,1>()) != std::string_view::npos)	// is anon
+				if constexpr (constexpr auto lc { lstr.find_first_of(cs::get_spec<1,1>()) }; lc != std::string_view::npos)
+					return lstr.substr(cs::get_spec<2,1>().size() + 2, lc - (cs::get_spec<2,1>().size() + 2)); // eat "::"
 		}
-		constexpr std::string_view result { from.substr(ep + get_spec<0,1>().size()) };
-		if constexpr (constexpr auto lc { result.find_first_of(get_spec<1,1>()) }; lc != std::string_view::npos)
+		constexpr std::string_view result { from.substr(ep + cs::get_spec<0,1>().size()) };
+		if constexpr (constexpr auto lc { result.find_first_of(cs::get_spec<1,1>()) }; lc != std::string_view::npos)
 			return result.substr(0, lc);
 		return {};
 	}

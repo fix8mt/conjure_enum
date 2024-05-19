@@ -34,6 +34,7 @@
 //-----------------------------------------------------------------------------------------
 enum class component : int { scheme, authority, userinfo, user, password, host, port, path, query, fragment };
 
+/*
 namespace TEST
 {
 	enum class NineEnums : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
@@ -70,6 +71,7 @@ namespace gsdsp::utilities
 	  return FIX8::conjure_enum<E>::count();
 	}
 }
+*/
 
 //-----------------------------------------------------------------------------------------
 using namespace FIX8;
@@ -86,10 +88,12 @@ int main(void)
 	for(const auto& a : conjure_enum<component>::unscoped_names)
 		std::cout << a << '\n';
 
+/*
 	for(const auto& [a, b] : conjure_enum<TEST::TEST1::TEST2::TEST3::TEST4::TEST5::NineEnums>::entries)
 		std::cout << conjure_enum<TEST::TEST1::TEST2::TEST3::TEST4::TEST5::NineEnums>::enum_to_int(a) << ' ' << b << '\n';
 	std::cout << conjure_enum<TEST::TEST1::TEST2::TEST3::TEST4::TEST5::NineEnums>::count() << '\n';
 
 	std::cout << gsdsp::utilities::countOf<gsdsp::dsp::fd::AnalysisFrame::PrecomputedFrames>() << '\n';
+*/
 	return 0;
 }

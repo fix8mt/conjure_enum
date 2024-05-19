@@ -215,8 +215,8 @@ int main(void)
 	std::cout << conjure_type<decltype(strv)>::name << '\n';
 	std::cout << conjure_type<std::underlying_type_t<numbers>>::name << '\n';
 
-	for(const auto& [a, b] : conjure_enum<component>::unscoped_entries)
-		std::cout << static_cast<int>(a) << ' ' << b << '\n';
+	for(const auto& [a1, b1] : conjure_enum<component>::unscoped_entries)
+		std::cout << static_cast<int>(a1) << ' ' << b1 << '\n';
 
 	std::cout << conjure_type<conjure_type<conjure_enum<numbers>>>::name << '\n';
 

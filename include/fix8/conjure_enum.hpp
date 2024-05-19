@@ -279,7 +279,8 @@ private:
 		constexpr std::string_view result { from.substr(ep + get_spec<0,0>().size()) };
 		if constexpr (constexpr auto lc { result.find_first_of(get_spec<1,0>()) }; lc != std::string_view::npos)
 			return result.substr(0, lc);
-		return {};
+		else
+			return {};
 	}
 
 	static constexpr bool value_comp(const T& pl, const T& pr) noexcept

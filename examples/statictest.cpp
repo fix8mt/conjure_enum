@@ -56,7 +56,7 @@ namespace gsdsp::dsp::fd
 class AnalysisFrame
 {
  public:
-  enum class PrecomputedFrames : int
+  enum class PrecomputedFrames
   { one };
 };
 }

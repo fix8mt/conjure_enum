@@ -209,10 +209,10 @@ private:
 		{
 			if constexpr (from[ep + get_spec<0,0>().size() + 1] == '(')
 				return false; // check for ((anonymous namespace)
-			if (constexpr auto lstr { from.substr(ep + get_spec<0,0>().size()) }; lstr.find(get_spec<2,0>()) != std::string_view::npos)	// is anon
+			if constexpr (constexpr auto lstr { from.substr(ep + get_spec<0,0>().size()) }; lstr.find(get_spec<2,0>()) != std::string_view::npos)	// is anon
 				return true;
 		}
-		else if (from.substr(ep + get_spec<0,0>().size()).find_first_of(get_spec<1,0>()) != std::string_view::npos)
+		else if constexpr (from.substr(ep + get_spec<0,0>().size()).find_first_of(get_spec<1,0>()) != std::string_view::npos)
 			return true;
 		return false;
 #else

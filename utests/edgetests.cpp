@@ -34,9 +34,6 @@
 #include <fix8/conjure_enum.hpp>
 
 //-----------------------------------------------------------------------------------------
-using namespace FIX8;
-
-//-----------------------------------------------------------------------------------------
 namespace
 {
 	enum class NineEnums : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
@@ -58,6 +55,30 @@ namespace TEST
 		enum NineEnums1 : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
 	}
 }
+
+namespace test::rsp::gd
+{
+
+class AFrame
+{
+ public:
+  enum class PreFrames
+  { one };
+};
+}
+
+namespace test::util
+{
+	template <typename E>
+	[[nodiscard]]
+	constexpr size_t countOf()
+	{
+	  return FIX8::conjure_enum<E>::count();
+	}
+}
+
+//-----------------------------------------------------------------------------------------
+using namespace FIX8;
 
 //-----------------------------------------------------------------------------------------
 // run as: ctest --output-on-failure
@@ -228,3 +249,8 @@ TEST_CASE("nested anonymous type")
 }
 
 //-----------------------------------------------------------------------------------------
+TEST_CASE("nested structured enum")
+{
+	REQUIRE(test::util::countOf<test::rsp::gd::AFrame::PreFrames>() == 1);
+}
+

@@ -1065,6 +1065,8 @@ Raise an [issue](https://github.com/fix8mt/conjure_enum/issues) on the github pa
 The executable `srcloctest` should be built when you build the package by default. This application
 does not use any of the `conjure_enum` library and is designed to report on how your compiler handles `std::source_location`.
 You should attach the output of this application with your issue.
+> [!TIP]
+> Passing the switch `-m` causes `srcloctest` to generate github markdown which you can paste directly into the issue.
 
 ```C++
 $ ./srcloctest

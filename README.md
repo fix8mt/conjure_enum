@@ -680,7 +680,7 @@ template<T e>
 static consteval const char *epeek();
 ```
 These functions return `std::source_location::current().function_name()` as `const char*` strings for the enum type or enum value.
-The actual output is implementation dependent.
+The actual output is implementation dependent. See [Results of `source_location`](reference/source_location.md) for implementation specific `std::source_location` results.
 
 The following code:
 ```c++

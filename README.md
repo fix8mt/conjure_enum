@@ -55,7 +55,7 @@
 |[Results of `source_location`](reference/source_location.md)| For implementation specific `std::source_location` results|
 > [!TIP]
 > Use the built-in [table of contents](https://github.blog/changelog/2021-04-13-table-of-contents-support-in-markdown-files/) to navigate this guide.
-> Better still, go to [full read view](./README.md) of this page.
+> Even better in [full read view](./README.md) of this page.
 
 ---
 # 2. Introduction

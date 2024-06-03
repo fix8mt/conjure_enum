@@ -31,6 +31,7 @@
 #include <iostream>
 #include <array>
 #include <vector>
+#include <cctype>
 #include <tuple>
 #include <string_view>
 #include <source_location>
@@ -71,8 +72,11 @@ public:
 using foo = std::vector<std::tuple<int, char, std::string_view>>;
 
 //-----------------------------------------------------------------------------------------
-int main(void)
+// pass -m to generate markdown version
+//-----------------------------------------------------------------------------------------
+int main(int argc, char **argv)
 {
+	const bool md { argc > 1 && std::string_view(argv[1]) == "-m" };
 	static constexpr std::array srclocstrs
 	{
 		"1. scoped enum",
@@ -104,6 +108,8 @@ int main(void)
 			conjure_type<std::string_view>::tpeek(),
 			conjure_type<foo>::tpeek(),
    };
+	if (md)
+		std::cout << "# ";
 	std::cout << "Compiler: "
 #if defined __clang__
 		"Clang" ": " __VERSION__
@@ -112,10 +118,24 @@ int main(void)
 #elif defined _MSC_VER
 		"MSVC" ": " << _MSC_VER <<
 #else
-# error "conjure_enum not supported by your compiler"
+# error "Not Supported"
 #endif
 		"\n";
-	for (const auto& pp : srclocstrs)
-		std::cout << pp << '\n';
+	for (bool doneone{}; const auto *pp : srclocstrs)
+	{
+		if (md && std::isdigit(pp[0]))
+		{
+			if (doneone)
+				std::cout << "```\n";
+			std::cout << "## ";
+		}
+		if (!md || pp[0])
+			std::cout << pp << '\n';
+		if (md && std::isdigit(pp[0]))
+			std::cout << "```c++\n";
+		doneone = true;
+	}
+	if (md)
+		std::cout << "```\n";
 	return 0;
 }

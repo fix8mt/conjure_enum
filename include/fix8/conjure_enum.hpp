@@ -83,9 +83,29 @@ public:
 };
 
 //-----------------------------------------------------------------------------------------
+template<typename T>
+concept not_constructible_or_assignable = requires(T)
+{
+	requires !std::is_copy_constructible_v<T>;
+	requires !std::is_copy_assignable_v<T>;
+	requires !std::is_move_constructible_v<T>;
+	requires !std::is_move_assignable_v<T>;
+};
+
+struct no_construct_or_assign
+{
+	no_construct_or_assign() = delete;
+	~no_construct_or_assign() = delete;
+	no_construct_or_assign(const no_construct_or_assign&) = delete;
+	no_construct_or_assign& operator=(const no_construct_or_assign&) = delete;
+	no_construct_or_assign(no_construct_or_assign&&) = delete;
+	no_construct_or_assign& operator=(no_construct_or_assign&&) = delete;
+};
+
+//-----------------------------------------------------------------------------------------
 // compiler specifics
 //-----------------------------------------------------------------------------------------
-class cs
+class cs : private no_construct_or_assign
 {
 	static constexpr auto _specifics
 	{
@@ -96,7 +116,8 @@ class cs
 #elif defined __GNUC__
 			{ "e = ", ';', "<unnamed>", '<' }, { "T = ", ']', "{anonymous}", '{' },
 #elif defined _MSC_VER
-			{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "class ", '>', "class `anonymous-namespace'", '`' },
+			{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "::tpeek", '<', "enum `anonymous-namespace'", '`' }, { "<class ", '>', "", 0 },
+			//{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "enum ", '>', "enum `anonymous-namespace'", '`' }, { "class ", '>', "", 0 },
 #else
 # error "conjure_enum not supported by your compiler"
 #endif
@@ -104,19 +125,17 @@ class cs
 	};
 
 public:
-	cs() = delete;
-	~cs() = delete;
-	cs(const cs&) = delete;
-	cs& operator=(const cs&) = delete;
-	cs(cs&&) = delete;
-	cs& operator=(cs&&) = delete;
+	enum class stype { enum_t, type_t, extype_t };
+	enum class sval { start, end, anon_str, anon_start };
 
-	template<int N, int V> // can't have constexpr decompositions! (but why not?)
+	template<sval N, stype V> // can't have constexpr decompositions! (but why not?)
 	static constexpr auto get_spec() noexcept
 	{
-		return std::get<N>(_specifics[V]);
+		return std::get<static_cast<int>(N)>(_specifics[static_cast<int>(V)]);
 	}
 };
+using stype = cs::stype;
+using sval = cs::sval;
 
 //-----------------------------------------------------------------------------------------
 template<typename T>
@@ -128,19 +147,12 @@ concept valid_enum = requires(T)
 
 //-----------------------------------------------------------------------------------------
 template<valid_enum T>
-class conjure_enum
+class conjure_enum : private no_construct_or_assign
 {
 	static constexpr int enum_min_value{ENUM_MIN_VALUE}, enum_max_value{ENUM_MAX_VALUE};
 	static_assert(enum_max_value > enum_min_value, "ENUM_MAX_VALUE must be greater than ENUM_MIN_VALUE");
 
 public:
-	conjure_enum() = delete;
-	~conjure_enum() = delete;
-	conjure_enum(const conjure_enum&) = delete;
-	conjure_enum& operator=(const conjure_enum&) = delete;
-	conjure_enum(conjure_enum&&) = delete;
-	conjure_enum& operator=(conjure_enum&&) = delete;
-
 	using enum_tuple = std::tuple<T, std::string_view>;
 	using scoped_tuple = std::tuple<std::string_view, std::string_view>;
 
@@ -215,23 +227,24 @@ private:
 	static constexpr bool _is_valid() noexcept
 	{
 		constexpr std::string_view from{epeek<e>()};
-		constexpr auto ep { from.rfind(cs::get_spec<0,0>()) };
+		constexpr auto ep { from.rfind(cs::get_spec<sval::start,stype::enum_t>()) };
 		if constexpr (ep == std::string_view::npos)
 			return false;
 #if defined __clang__
-		if constexpr (from[ep + cs::get_spec<0,0>().size()] == '(')
+		if constexpr (from[ep + cs::get_spec<sval::start,stype::enum_t>().size()] == '(')
 		{
-			if constexpr (from[ep + cs::get_spec<0,0>().size() + 1] == '(')
+			if constexpr (from[ep + cs::get_spec<sval::start,stype::enum_t>().size() + 1] == '(')
 				return false; // check for ((anonymous namespace)
-			if constexpr (constexpr auto lstr { from.substr(ep + cs::get_spec<0,0>().size()) }; lstr.find(cs::get_spec<2,0>()) != std::string_view::npos)	// is anon
-				return true;
+			if constexpr (constexpr auto lstr { from.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()) };
+				lstr.find(cs::get_spec<sval::anon_str,stype::enum_t>()) != std::string_view::npos)	// is anon
+					return true;
 		}
-		else if constexpr (from.substr(ep + cs::get_spec<0,0>().size()).find_first_of(cs::get_spec<1,0>()) != std::string_view::npos)
+		else if constexpr (from.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()).find_first_of(cs::get_spec<sval::end,stype::enum_t>()) != std::string_view::npos)
 			return true;
 		return false;
 #else
-		if constexpr (from[ep + cs::get_spec<0,0>().size()] != '('
-			&& from.substr(ep + cs::get_spec<0,0>().size()).find_first_of(cs::get_spec<1,0>()) != std::string_view::npos)
+		if constexpr (from[ep + cs::get_spec<sval::start,stype::enum_t>().size()] != '('
+			&& from.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()).find_first_of(cs::get_spec<sval::end,stype::enum_t>()) != std::string_view::npos)
 				return true;
 		else
 			return false;
@@ -277,21 +290,22 @@ private:
 	static constexpr std::string_view _get_name() noexcept
 	{
 		constexpr std::string_view from{epeek<e>()};
-		constexpr auto ep { from.rfind(cs::get_spec<0,0>()) };
+		constexpr auto ep { from.rfind(cs::get_spec<sval::start,stype::enum_t>()) };
 		if constexpr (ep == std::string_view::npos)
 			return {};
-		if constexpr (from[ep + cs::get_spec<0,0>().size()] == cs::get_spec<3,0>())
+		if constexpr (from[ep + cs::get_spec<sval::start,stype::enum_t>().size()] == cs::get_spec<sval::anon_start,stype::enum_t>())
 		{
 #if defined __clang__
-			if constexpr (from[ep + cs::get_spec<0,0>().size() + 1] == cs::get_spec<3,0>())
+			if constexpr (from[ep + cs::get_spec<sval::start,stype::enum_t>().size() + 1] == cs::get_spec<sval::anon_start,stype::enum_t>())
 				return {}; // check for ((anonymous namespace)
 #endif
-			if (constexpr auto lstr { from.substr(ep + cs::get_spec<0,0>().size()) }; lstr.find(cs::get_spec<2,0>()) != std::string_view::npos)	// is anon
-				if constexpr (constexpr auto lc { lstr.find_first_of(cs::get_spec<1,0>()) }; lc != std::string_view::npos)
-					return lstr.substr(cs::get_spec<2,0>().size() + 2, lc - (cs::get_spec<2,0>().size() + 2)); // eat "::"
+			if (constexpr auto lstr { from.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()) };
+				lstr.find(cs::get_spec<sval::anon_str,stype::enum_t>()) != std::string_view::npos)	// is anon
+					if constexpr (constexpr auto lc { lstr.find_first_of(cs::get_spec<sval::end,stype::enum_t>()) }; lc != std::string_view::npos)
+						return lstr.substr(cs::get_spec<sval::anon_str,stype::enum_t>().size() + 2, lc - (cs::get_spec<sval::anon_str,stype::enum_t>().size() + 2)); // eat "::"
 		}
-		constexpr std::string_view result { from.substr(ep + cs::get_spec<0,0>().size()) };
-		if constexpr (constexpr auto lc { result.find_first_of(cs::get_spec<1,0>()) }; lc != std::string_view::npos)
+		constexpr std::string_view result { from.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()) };
+		if constexpr (constexpr auto lc { result.find_first_of(cs::get_spec<sval::end,stype::enum_t>()) }; lc != std::string_view::npos)
 			return result.substr(0, lc);
 		else
 			return {};
@@ -326,10 +340,10 @@ public:
 	static constexpr std::string_view type_name() noexcept
 	{
 		constexpr std::string_view from{tpeek()};
-		if constexpr (constexpr auto ep { from.rfind(cs::get_spec<0,1>()) }; ep != std::string_view::npos)
+		if constexpr (constexpr auto ep { from.rfind(cs::get_spec<sval::start,stype::type_t>()) }; ep != std::string_view::npos)
 		{
-			constexpr std::string_view result { from.substr(ep + cs::get_spec<0,1>().size()) };
-			if constexpr (constexpr auto lc { result.find_first_of(cs::get_spec<1,1>()) }; lc != std::string_view::npos)
+			constexpr std::string_view result { from.substr(ep + cs::get_spec<sval::start,stype::type_t>().size()) };
+			if constexpr (constexpr auto lc { result.find_first_of(cs::get_spec<sval::end,stype::type_t>()) }; lc != std::string_view::npos)
 				return result.substr(0, lc);
 		}
 		else
@@ -695,41 +709,52 @@ constexpr enum_bitset<T> operator^(const enum_bitset<T>& lh, const enum_bitset<T
 
 //-----------------------------------------------------------------------------------------
 template<typename T>
-class conjure_type
+class conjure_type : private no_construct_or_assign
 {
 	static constexpr std::string_view _get_name() noexcept
 	{
 		constexpr std::string_view from{tpeek()};
-		constexpr auto ep { from.rfind(cs::get_spec<0,1>()) };
+#if !defined _MSC_VER
+		constexpr auto ep { from.rfind(cs::get_spec<sval::start,stype::type_t>()) };
 		if constexpr (ep == std::string_view::npos)
 			return {};
-		if constexpr (from[ep + cs::get_spec<0,1>().size()] == cs::get_spec<3,1>())
+		if constexpr (from[ep + cs::get_spec<sval::start,stype::type_t>().size()] == cs::get_spec<sval::anon_start,stype::type_t>())
 		{
-			if (constexpr auto lstr { from.substr(ep + cs::get_spec<0,1>().size()) }; lstr.find(cs::get_spec<2,1>()) != std::string_view::npos)	// is anon
-				if constexpr (constexpr auto lc { lstr.find_first_of(cs::get_spec<1,1>()) }; lc != std::string_view::npos)
-					return lstr.substr(cs::get_spec<2,1>().size() + 2, lc - (cs::get_spec<2,1>().size() + 2)); // eat "::"
+			if (constexpr auto lstr { from.substr(ep + cs::get_spec<sval::start,stype::type_t>().size()) };
+				lstr.find(cs::get_spec<sval::anon_str,stype::type_t>()) != std::string_view::npos)	// is anon
+					if constexpr (constexpr auto lc { lstr.find_first_of(cs::get_spec<sval::end,stype::type_t>()) }; lc != std::string_view::npos)
+						return lstr.substr(cs::get_spec<sval::anon_str,stype::type_t>().size() + 2, lc - (cs::get_spec<sval::anon_str,stype::type_t>().size() + 2)); // eat "::"
 		}
-		constexpr std::string_view result { from.substr(ep + cs::get_spec<0,1>().size()) };
-		if constexpr (constexpr auto lc { result.find_first_of(cs::get_spec<1,1>()) }; lc != std::string_view::npos)
+		constexpr std::string_view result { from.substr(ep + cs::get_spec<sval::start,stype::type_t>().size()) };
+		if constexpr (constexpr auto lc { result.find_first_of(cs::get_spec<sval::end,stype::type_t>()) }; lc != std::string_view::npos)
 			return result.substr(0, lc);
 		return {};
 	}
-#if !defined _MSC_VER
 	static constexpr auto _type_name() noexcept
 	{
 		constexpr auto result { _get_name() };
 		return fixed_string<result.size()>(result);
 	}
+#else
+// enum class stype { enum_t, type_t, extype_t };
+// enum class sval { start, end, anon_str, anon_start };
+// constexpr auto ep { from.rfind(cs::get_spec<cs::sval::start,cs::stype::enum_t>()) };
+//	{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "::tpeek", '<', "enum `anonymous-namespace'", '`' }, { "<class ", '>', "", 0 },
+// const char *__cdecl conjure_type<int>::tpeek(void) noexcept
+// const char *__cdecl conjure_type<class std::basic_string_view<char,struct std::char_traits<char> > >::tpeek(void) noexcept
+// const char *__cdecl conjure_type<class std::vector<class std::tuple<int,char,class std::basic_string_view<char,struct std::char_traits<char> > >,
+//		class std::allocator<class std::tuple<int,char,class std::basic_string_view<char,struct std::char_traits<char> > > > > >::tpeek(void) noexcept
+
+		constexpr auto ep { from.rfind(cs::get_spec<sval::start,stype::type_t>()) };
+		if constexpr (ep == std::string_view::npos)
+			return {};
+		if constexpr (constexpr auto lc { from.find_first_of(cs::get_spec<sval::end,stype::type_t>()) }; lc != std::string_view::npos)
+			return from.substr(lc, ep - lc);
+		return {};
+	}
 #endif
 
 public:
-	conjure_type() = delete;
-	~conjure_type() = delete;
-	conjure_type(const conjure_type&) = delete;
-	conjure_type& operator=(const conjure_type&) = delete;
-	conjure_type(conjure_type&&) = delete;
-	conjure_type& operator=(conjure_type&&) = delete;
-
 	static consteval const char *tpeek() noexcept { return std::source_location::current().function_name(); }
 	static constexpr auto name
 	{

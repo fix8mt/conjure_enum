@@ -116,7 +116,7 @@ class cs : private no_construct_or_assign
 #elif defined __GNUC__
 			{ "e = ", ';', "<unnamed>", '<' }, { "T = ", ']', "{anonymous}", '{' },
 #elif defined _MSC_VER
-			{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "::tpeek", '<', "enum `anonymous-namespace'", '`' }, { "<class ", '>', "", 0 },
+			{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "::tpeek", '<', "enum `anonymous-namespace'", '`' }, { "<class ", '>', "", "" },
 			//{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "enum ", '>', "enum `anonymous-namespace'", '`' }, { "class ", '>', "", 0 },
 #else
 # error "conjure_enum not supported by your compiler"
@@ -348,6 +348,7 @@ public:
 		}
 		else
 			return {};
+		return {};
 	}
 
 	struct is_scoped : std::integral_constant<bool, requires

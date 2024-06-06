@@ -758,10 +758,10 @@ class conjure_type : private no_construct_or_assign
 			constexpr std::string_view e1 { from.substr(lc, ep - lc) };
 			if constexpr (constexpr auto ep1 { e1.find(cs::get_spec<sval::anon_str,stype::extype_t0>()) }; ep1 != std::string_view::npos)
 				return e1.substr(ep1, e1.size() - ep1);
-			if constexpr (constexpr auto ep1 { e1.find(cs::get_spec<sval::anon_str,stype::extype_t1>()) }; ep1 != std::string_view::npos)
-				return e1.substr(ep1, e1.size() - ep1);
-			if constexpr (constexpr auto ep1 { e1.find(cs::get_spec<sval::anon_str,stype::extype_t2>()) }; ep1 != std::string_view::npos)
-				return e1.substr(ep1, e1.size() - ep1);
+			if constexpr (constexpr auto ep2 { e1.find(cs::get_spec<sval::anon_str,stype::extype_t1>()) }; ep2 != std::string_view::npos)
+				return e1.substr(ep2, e1.size() - ep2);
+			if constexpr (constexpr auto ep3 { e1.find(cs::get_spec<sval::anon_str,stype::extype_t2>()) }; ep3 != std::string_view::npos)
+				return e1.substr(ep3, e1.size() - ep3);
 		}
 		return {};
 	}

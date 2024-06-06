@@ -126,7 +126,7 @@ class cs : private no_construct_or_assign
 	};
 
 public:
-	enum class stype { enum_t, type_t, extype_t };
+	enum class stype { enum_t, type_t, extype_t0, extype_t1, extype_t2 };
 	enum class sval { start, end, anon_str, anon_start };
 
 	template<sval N, stype V> // can't have constexpr decompositions! (but why not?)

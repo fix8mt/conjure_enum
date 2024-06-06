@@ -126,7 +126,7 @@ class cs : private no_construct_or_assign
 	};
 
 public:
-	enum class stype { enum_t, type_t, extype_t0, extype_t1, extype_t2 };
+	enum class stype { enum_t, type_t, extype_t0, extype_t1 };
 	enum class sval { start, end, anon_str, anon_start };
 
 	template<sval N, stype V> // can't have constexpr decompositions! (but why not?)
@@ -756,11 +756,11 @@ class conjure_type : private no_construct_or_assign
 		if constexpr (constexpr auto lc { from.find_first_of(cs::get_spec<sval::end,stype::type_t>()) }; lc != std::string_view::npos)
 		{
 			constexpr std::string_view e1 { from.substr(lc, ep - lc) };
-			if constexpr (constexpr auto ep1 { e1.find(cs::get_spec<sval::anon_str,stype::extype_t0>()) }; ep1 != std::string_view::npos)
+			if constexpr (constexpr auto ep1 { e1.find(cs::get_spec<sval::anon_str,stype::type_t>()) }; ep1 != std::string_view::npos)
 				return e1.substr(ep1, e1.size() - ep1);
-			if constexpr (constexpr auto ep2 { e1.find(cs::get_spec<sval::anon_str,stype::extype_t1>()) }; ep2 != std::string_view::npos)
+			if constexpr (constexpr auto ep2 { e1.find(cs::get_spec<sval::anon_str,stype::extype_t0>()) }; ep2 != std::string_view::npos)
 				return e1.substr(ep2, e1.size() - ep2);
-			if constexpr (constexpr auto ep3 { e1.find(cs::get_spec<sval::anon_str,stype::extype_t2>()) }; ep3 != std::string_view::npos)
+			if constexpr (constexpr auto ep3 { e1.find(cs::get_spec<sval::anon_str,stype::extype_t1>()) }; ep3 != std::string_view::npos)
 				return e1.substr(ep3, e1.size() - ep3);
 		}
 		return {};

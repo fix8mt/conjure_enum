@@ -96,7 +96,7 @@ class cs
 #elif defined __GNUC__
 			{ "e = ", ';', "<unnamed>", '<' }, { "T = ", ']', "{anonymous}", '{' },
 #elif defined _MSC_VER
-			{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "::tpeek", '<', "enum `anonymous-namespace'::", '`' },
+			{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "::tpeek", '<', "`anonymous-namespace'::", '`' },
 				{ "", '\0', "enum ", '\0' }, { "", '\0', "class ", '\0' },
 			//{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "enum ", '>', "enum `anonymous-namespace'", '`' }, { "class ", '>', "", 0 },
 #else

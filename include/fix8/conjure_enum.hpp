@@ -117,7 +117,7 @@ class cs : private no_construct_or_assign
 			{ "e = ", ';', "<unnamed>", '<' }, { "T = ", ']', "{anonymous}", '{' },
 #elif defined _MSC_VER
 			{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "::tpeek", '<', "enum `anonymous-namespace'", '`' },
-				{ "", '\0', "enum", '\0' }, { "", '\0', "class", '\0' },
+				{ "", '\0', "enum ", '\0' }, { "", '\0', "class ", '\0' },
 			//{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "enum ", '>', "enum `anonymous-namespace'", '`' }, { "class ", '>', "", 0 },
 #else
 # error "conjure_enum not supported by your compiler"
@@ -738,13 +738,12 @@ class conjure_type : private no_construct_or_assign
 		return fixed_string<result.size()>(result);
 	}
 #else
-// enum class stype { enum_t, type_t, extype_t0, extype_t1, extype_t2, extype_end };
+// enum class stype { enum_t, type_t, extype_t0, extype_t1 };
 // enum class sval { start, end, anon_str, anon_start };
 
 //			{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "::tpeek", '<', "enum `anonymous-namespace'", '`' },
-//				{ "enum ", '\0', "enum `anonymous-namespace'", '\0' }, { "", '\0', "class", '\0' },
+//				{ "", '\0', "enum", '\0' }, { "", '\0', "class", '\0' },
 
-//	{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "::tpeek", '<', "enum `anonymous-namespace'", '`' }, { "<class ", '>', "", 0 },
 // const char *__cdecl conjure_type<int>::tpeek(void) noexcept
 // const char *__cdecl conjure_type<class std::basic_string_view<char,struct std::char_traits<char> > >::tpeek(void) noexcept
 // const char *__cdecl conjure_type<class std::vector<class std::tuple<int,char,class std::basic_string_view<char,struct std::char_traits<char> > >,
@@ -758,10 +757,10 @@ class conjure_type : private no_construct_or_assign
 			constexpr std::string_view e1 { from.substr(lc, ep - lc) };
 			if constexpr (constexpr auto ep1 { e1.find(cs::get_spec<sval::anon_str,stype::type_t>()) }; ep1 != std::string_view::npos)
 				return e1.substr(ep1, e1.size() - ep1);
-			if constexpr (constexpr auto ep2 { e1.find(cs::get_spec<sval::anon_str,stype::extype_t0>()) }; ep2 != std::string_view::npos)
-				return e1.substr(ep2, e1.size() - ep2);
-			if constexpr (constexpr auto ep3 { e1.find(cs::get_spec<sval::anon_str,stype::extype_t1>()) }; ep3 != std::string_view::npos)
-				return e1.substr(ep3, e1.size() - ep3);
+			if constexpr (constexpr auto ep1 { e1.find(cs::get_spec<sval::anon_str,stype::extype_t0>()) }; ep1 != std::string_view::npos)
+				return e1.substr(ep1, e1.size() - ep1);
+			if constexpr (constexpr auto ep1 { e1.find(cs::get_spec<sval::anon_str,stype::extype_t1>()) }; ep1 != std::string_view::npos)
+				return e1.substr(ep1, e1.size() - ep1);
 		}
 		return {};
 	}

@@ -748,13 +748,13 @@ class conjure_type
 			return {};
 		if constexpr (constexpr auto lc { from.find_first_of(cs::get_spec<sval::end,stype::type_t>()) }; lc != std::string_view::npos)
 		{
-			constexpr std::string_view e1 { from.substr(lc, ep - lc) };
+			constexpr std::string_view e1 { from.substr(lc, ep - lc - 1) };
 			if constexpr (constexpr auto ep1 { e1.find(cs::get_spec<sval::anon_str,stype::type_t>()) }; ep1 != std::string_view::npos)
-				return e1.substr(ep1, e1.size() - ep1);
+				return e1.substr(ep1 + cs::get_spec<sval::anon_str,stype::type_t>().size(), e1.size() - ep1 - cs::get_spec<sval::anon_str,stype::type_t>().size());
 			if constexpr (constexpr auto ep1 { e1.find(cs::get_spec<sval::anon_str,stype::extype_t0>()) }; ep1 != std::string_view::npos)
-				return e1.substr(ep1, e1.size() - ep1);
+				return e1.substr(ep1 + cs::get_spec<sval::anon_str,stype::extype_t0>().size(), e1.size() - ep1 - cs::get_spec<sval::anon_str,stype::extype_t0>().size());
 			if constexpr (constexpr auto ep1 { e1.find(cs::get_spec<sval::anon_str,stype::extype_t1>()) }; ep1 != std::string_view::npos)
-				return e1.substr(ep1, e1.size() - ep1);
+				return e1.substr(ep1 + cs::get_spec<sval::anon_str,stype::extype_t1>().size(), e1.size() - ep1 - cs::get_spec<sval::anon_str,stype::extype_t1>().size());
 		}
 		return {};
 	}

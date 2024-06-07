@@ -30,7 +30,9 @@
 //----------------------------------------------------------------------------------------
 #include <iostream>
 #include <array>
+#include <vector>
 #include <cctype>
+#include <tuple>
 #include <string_view>
 #include <source_location>
 
@@ -70,6 +72,8 @@ public:
 	static consteval const char *tpeek() noexcept { return std::source_location::current().function_name(); }
 };
 
+using UType = std::vector<std::tuple<int, char, std::string_view>>;
+
 //-----------------------------------------------------------------------------------------
 // pass -m to generate markdown version
 //-----------------------------------------------------------------------------------------
@@ -105,6 +109,10 @@ int main(int argc, char **argv)
 			conjure_type<Foo>::tpeek(),
 			conjure_type<Namespace::Namespace_Foo>::tpeek(),
 			conjure_type<Anon_Foo>::tpeek(),
+		"8. other types",
+			conjure_type<int>::tpeek(),
+			conjure_type<std::string_view>::tpeek(),
+			conjure_type<Utype>::tpeek(),
    };
 	const bool md { argc > 1 && std::string_view(argv[1]) == "-m" };
 	if (md)

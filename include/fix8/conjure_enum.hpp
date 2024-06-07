@@ -97,7 +97,7 @@ class cs
 			{ "e = ", ';', "<unnamed>", '<' }, { "T = ", ']', "{anonymous}", '{' },
 #elif defined _MSC_VER
 			{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "::tpeek", '<', "`anonymous-namespace'::", '`' },
-				{ "", '\0', "enum ", '\0' }, { "", '\0', "class ", '\0' },
+				{ "", '\0', "enum ", '\0' }, { "", '\0', "class ", '\0' }, { "", '\0', "struct ", '\0' },
 			//{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "enum ", '>', "enum `anonymous-namespace'", '`' }, { "class ", '>', "", 0 },
 #else
 # error "conjure_enum not supported by your compiler"
@@ -113,7 +113,7 @@ public:
 	cs(cs&&) = delete;
 	cs& operator=(cs&&) = delete;
 
-	enum class stype { enum_t, type_t, extype_t0, extype_t1 };
+	enum class stype { enum_t, type_t, extype_t0, extype_t1, extype_t2 };
 	enum class sval { start, end, anon_str, anon_start };
 
 	template<sval N, stype V> // can't have constexpr decompositions! (but why not?)
@@ -749,12 +749,13 @@ class conjure_type
 		if constexpr (constexpr auto lc { from.find_first_of(cs::get_spec<sval::end,stype::type_t>()) }; lc != std::string_view::npos)
 		{
 			constexpr std::string_view e1 { from.substr(lc, ep - lc - 1) };
-			if constexpr (constexpr auto ep1 { e1.find(cs::get_spec<sval::anon_str,stype::type_t>()) }; ep1 != std::string_view::npos)
-				return e1.substr(ep1 + cs::get_spec<sval::anon_str,stype::type_t>().size(), e1.size() - ep1 - cs::get_spec<sval::anon_str,stype::type_t>().size());
-			if constexpr (constexpr auto ep1 { e1.find(cs::get_spec<sval::anon_str,stype::extype_t0>()) }; ep1 != std::string_view::npos)
-				return e1.substr(ep1 + cs::get_spec<sval::anon_str,stype::extype_t0>().size(), e1.size() - ep1 - cs::get_spec<sval::anon_str,stype::extype_t0>().size());
-			if constexpr (constexpr auto ep1 { e1.find(cs::get_spec<sval::anon_str,stype::extype_t1>()) }; ep1 != std::string_view::npos)
-				return e1.substr(ep1 + cs::get_spec<sval::anon_str,stype::extype_t1>().size(), e1.size() - ep1 - cs::get_spec<sval::anon_str,stype::extype_t1>().size());
+#define _chkstr(x) \
+	if constexpr (constexpr auto ep1 { e1.find(cs::get_spec<sval::anon_str,stype::x>()) }; ep1 != std::string_view::npos) \
+		return e1.substr(ep1 + cs::get_spec<sval::anon_str,stype::x>().size(), e1.size() - ep1 - cs::get_spec<sval::anon_str,stype::x>().size())
+			_chkstr(type_t);
+			_chkstr(extype_t0);
+			_chkstr(extype_t1);
+			_chkstr(extype_t2);
 		}
 		return {};
 	}

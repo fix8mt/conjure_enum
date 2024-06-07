@@ -108,7 +108,7 @@ int main(int argc, char **argv)
 		"7. types in named and anonymous namespaces",
 			conjure_type<Foo>::tpeek(),
 			conjure_type<Namespace::Namespace_Foo>::tpeek(),
-			conjure_type<Anon_Foo>::tpeek(),
+			conjure_type<Anon_Foo>::tpeek(), "",
 		"8. other types",
 			conjure_type<int>::tpeek(),
 			conjure_type<std::string_view>::tpeek(),

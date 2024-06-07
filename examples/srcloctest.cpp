@@ -112,7 +112,7 @@ int main(int argc, char **argv)
 		"8. other types",
 			conjure_type<int>::tpeek(),
 			conjure_type<std::string_view>::tpeek(),
-			conjure_type<Utype>::tpeek(),
+			conjure_type<UType>::tpeek(),
    };
 	const bool md { argc > 1 && std::string_view(argv[1]) == "-m" };
 	if (md)

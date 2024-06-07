@@ -37,7 +37,7 @@
 //-----------------------------------------------------------------------------------------
 enum class Namespace_Enum_Type : int { Value };
 enum Namespace_Enum_Type1 : int { Value };
-class Foo{};
+struct Foo{};
 
 namespace
 {

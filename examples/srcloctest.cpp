@@ -30,26 +30,26 @@
 //----------------------------------------------------------------------------------------
 #include <iostream>
 #include <array>
-#include <vector>
 #include <cctype>
-#include <tuple>
 #include <string_view>
 #include <source_location>
 
 //-----------------------------------------------------------------------------------------
-enum class Type : int { Value };
-enum Type1 : int { Value };
+enum class Namespace_Enum_Type : int { Value };
+enum Namespace_Enum_Type1 : int { Value };
 
 namespace
 {
-	enum class Anon_Type : int { Value };
-	enum Anon_Type1 : int { Value };
+	enum class Anon_Enum_Type : int { Value };
+	enum Anon_Enum_Type1 : int { Value };
+	class Anon_Foo{};
 }
 
 namespace Namespace
 {
-	enum class Type : int { Value };
-	enum Type1 : int { Value };
+	enum class Namespace_Enum_Type : int { Value };
+	enum Namespace_Enum_Type1 : int { Value };
+	class Namespace_Foo{};
 }
 
 template<typename T>
@@ -69,45 +69,43 @@ public:
 	static consteval const char *tpeek() noexcept { return std::source_location::current().function_name(); }
 };
 
-using foo = std::vector<std::tuple<int, char, std::string_view>>;
-
 //-----------------------------------------------------------------------------------------
 // pass -m to generate markdown version
 //-----------------------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
-	const bool md { argc > 1 && std::string_view(argv[1]) == "-m" };
 	static constexpr std::array srclocstrs
 	{
 		"1. scoped enum",
-			conjure_enum<Type>::tpeek(),
-			conjure_enum<Type>::epeek<Type::Value>(),
-			conjure_enum<Type>::epeek<(Type)100>(), "",
+			conjure_enum<Namespace_Enum_Type>::tpeek(),
+			conjure_enum<Namespace_Enum_Type>::epeek<Namespace_Enum_Type::Value>(),
+			conjure_enum<Namespace_Enum_Type>::epeek<(Namespace_Enum_Type)100>(), "",
 		"2. unscoped enum",
-			conjure_enum<Type1>::tpeek(),
-			conjure_enum<Type1>::epeek<Type1::Value>(),
-			conjure_enum<Type1>::epeek<(Type1)100>(), "",
+			conjure_enum<Namespace_Enum_Type1>::tpeek(),
+			conjure_enum<Namespace_Enum_Type1>::epeek<Namespace_Enum_Type1::Value>(),
+			conjure_enum<Namespace_Enum_Type1>::epeek<(Namespace_Enum_Type1)100>(), "",
 		"3. scoped enum in anonymous namespace",
-			conjure_enum<Anon_Type>::tpeek(),
-			conjure_enum<Anon_Type>::epeek<Anon_Type::Value>(),
-			conjure_enum<Anon_Type>::epeek<(Anon_Type)100>(), "",
+			conjure_enum<Anon_Enum_Type>::tpeek(),
+			conjure_enum<Anon_Enum_Type>::epeek<Anon_Enum_Type::Value>(),
+			conjure_enum<Anon_Enum_Type>::epeek<(Anon_Enum_Type)100>(), "",
 		"4. unscoped enum in anonymous namespace",
-			conjure_enum<Anon_Type1>::tpeek(),
-			conjure_enum<Anon_Type1>::epeek<Anon_Type1::Value>(),
-			conjure_enum<Anon_Type1>::epeek<(Anon_Type1)100>(), "",
+			conjure_enum<Anon_Enum_Type1>::tpeek(),
+			conjure_enum<Anon_Enum_Type1>::epeek<Anon_Enum_Type1::Value>(),
+			conjure_enum<Anon_Enum_Type1>::epeek<(Anon_Enum_Type1)100>(), "",
 		"5. scoped enum in namespace",
-			conjure_enum<Namespace::Type>::tpeek(),
-			conjure_enum<Namespace::Type>::epeek<Namespace::Type::Value>(),
-			conjure_enum<Namespace::Type>::epeek<(Namespace::Type)100>(), "",
+			conjure_enum<Namespace::Namespace_Enum_Type>::tpeek(),
+			conjure_enum<Namespace::Namespace_Enum_Type>::epeek<Namespace::Namespace_Enum_Type::Value>(),
+			conjure_enum<Namespace::Namespace_Enum_Type>::epeek<(Namespace::Namespace_Enum_Type)100>(), "",
 		"6. unscoped enum in namespace",
-			conjure_enum<Namespace::Type1>::tpeek(),
-			conjure_enum<Namespace::Type1>::epeek<Namespace::Type1::Value>(),
-			conjure_enum<Namespace::Type1>::epeek<(Namespace::Type1)100>(), "",
-		"7. other type",
+			conjure_enum<Namespace::Namespace_Enum_Type1>::tpeek(),
+			conjure_enum<Namespace::Namespace_Enum_Type1>::epeek<Namespace::Namespace_Enum_Type1::Value>(),
+			conjure_enum<Namespace::Namespace_Enum_Type1>::epeek<(Namespace::Namespace_Enum_Type1)100>(), "",
+		"7. int, types in named and anonymous namespaces",
 			conjure_type<int>::tpeek(),
-			conjure_type<std::string_view>::tpeek(),
-			conjure_type<foo>::tpeek(),
+			conjure_type<Namespace::Namespace_Foo>::tpeek(),
+			conjure_type<Anon_Foo>::tpeek(),
    };
+	const bool md { argc > 1 && std::string_view(argv[1]) == "-m" };
 	if (md)
 		std::cout << "# ";
 	std::cout << "Compiler: "
@@ -121,11 +119,11 @@ int main(int argc, char **argv)
 # error "Not Supported"
 #endif
 		"\n";
-	for (bool doneone{}; const auto *pp : srclocstrs)
+	for (const auto *pp : srclocstrs)
 	{
 		if (md && std::isdigit(pp[0]))
 		{
-			if (doneone)
+			if (pp != srclocstrs[0])
 				std::cout << "```\n";
 			std::cout << "## ";
 		}
@@ -133,7 +131,6 @@ int main(int argc, char **argv)
 			std::cout << pp << '\n';
 		if (md && std::isdigit(pp[0]))
 			std::cout << "```c++\n";
-		doneone = true;
 	}
 	if (md)
 		std::cout << "```\n";

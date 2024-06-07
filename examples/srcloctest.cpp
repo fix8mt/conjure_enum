@@ -37,6 +37,7 @@
 //-----------------------------------------------------------------------------------------
 enum class Namespace_Enum_Type : int { Value };
 enum Namespace_Enum_Type1 : int { Value };
+class Foo{};
 
 namespace
 {
@@ -100,8 +101,8 @@ int main(int argc, char **argv)
 			conjure_enum<Namespace::Namespace_Enum_Type1>::tpeek(),
 			conjure_enum<Namespace::Namespace_Enum_Type1>::epeek<Namespace::Namespace_Enum_Type1::Value>(),
 			conjure_enum<Namespace::Namespace_Enum_Type1>::epeek<(Namespace::Namespace_Enum_Type1)100>(), "",
-		"7. int, types in named and anonymous namespaces",
-			conjure_type<int>::tpeek(),
+		"7. types in named and anonymous namespaces",
+			conjure_type<Foo>::tpeek(),
 			conjure_type<Namespace::Namespace_Foo>::tpeek(),
 			conjure_type<Anon_Foo>::tpeek(),
    };

@@ -35,7 +35,7 @@
 #include <tuple>
 #include <string_view>
 #include <source_location>
-#include <unistd.h>
+#include <getopt.h>
 
 //-----------------------------------------------------------------------------------------
 enum class Namespace_Enum_Type : int { Value };

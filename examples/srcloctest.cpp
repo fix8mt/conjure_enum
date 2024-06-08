@@ -35,6 +35,7 @@
 #include <tuple>
 #include <string_view>
 #include <source_location>
+#include <unistd.h>
 
 //-----------------------------------------------------------------------------------------
 enum class Namespace_Enum_Type : int { Value };
@@ -73,6 +74,28 @@ public:
 };
 
 using UType = std::vector<std::tuple<int, char, std::string_view>>;
+
+namespace
+{
+	enum class NineEnums : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
+	enum NineEnums1 : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
+	namespace TEST1
+	{
+		enum class NineEnums : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
+		enum NineEnums1 : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
+	}
+}
+
+namespace TEST
+{
+	enum class NineEnums : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
+	enum NineEnums1 : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
+	namespace TEST1
+	{
+		enum class NineEnums : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
+		enum NineEnums1 : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
+	}
+}
 
 //-----------------------------------------------------------------------------------------
 // pass -m to generate markdown version
@@ -114,20 +137,48 @@ int main(int argc, char **argv)
 			conjure_type<std::string_view>::tpeek(),
 			conjure_type<UType>::tpeek(),
    };
-	const bool md { argc > 1 && std::string_view(argv[1]) == "-m" };
-	if (md)
-		std::cout << "# ";
-	std::cout << "Compiler: "
+
+	static constexpr const char *optstr{"emch"};
+	bool md{}, ext{}, comp{true};
+	for (int opt; (opt = getopt(argc, argv, optstr)) != -1;)
+	{
+		switch (opt)
+		{
+		case 'm': md = true; break;
+		case 'c': comp = false; break;
+		case 'e': ext = true; break;
+		case ':': case '?': std::cout << '\n';
+			[[fallthrough]];
+		case 'h':
+			std::cout << "Usage: " << argv[0] << " [-" << optstr << "]" << R"(
+  -e run extended enum test
+  -c show compiler (default true)
+  -m output using markdown
+  -h help
+)";
+			exit(1);
+		default:
+			break;
+		}
+	}
+
+	if (comp)
+	{
+		if (md)
+			std::cout << "# ";
+		std::cout << "Compiler: "
 #if defined __clang__
-		"Clang" ": " __VERSION__
+			"Clang" ": " __VERSION__
 #elif defined __GNUC__
-		"GCC" ": " __VERSION__
+			"GCC" ": " __VERSION__
 #elif defined _MSC_VER
-		"MSVC" ": " << _MSC_VER <<
+			"MSVC" ": " << _MSC_VER <<
 #else
 # error "Not Supported"
 #endif
-		"\n";
+			"\n";
+	}
+
 	for (const auto *pp : srclocstrs)
 	{
 		if (md && std::isdigit(pp[0]))
@@ -143,5 +194,20 @@ int main(int argc, char **argv)
 	}
 	if (md)
 		std::cout << "```\n";
+
+	if (ext)
+	{
+		std::cout << "\n9. edge enum types\n"
+			<< conjure_type<NineEnums>::tpeek() << '\n'
+			<< conjure_type<NineEnums1>::tpeek() << '\n'
+			<< conjure_type<TEST::NineEnums>::tpeek() << '\n'
+			<< conjure_type<TEST::NineEnums1>::tpeek() << '\n';
+
+		std::cout << conjure_type<TEST1::NineEnums>::tpeek() << '\n'
+			<< conjure_type<TEST1::NineEnums1>::tpeek() << '\n'
+			<< conjure_type<TEST::TEST1::NineEnums>::tpeek() << '\n'
+			<< conjure_type<TEST::TEST1::NineEnums1>::tpeek() << '\n';
+	}
+
 	return 0;
 }

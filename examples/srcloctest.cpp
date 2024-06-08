@@ -35,7 +35,6 @@
 #include <tuple>
 #include <string_view>
 #include <source_location>
-#include <getopt.h>
 
 //-----------------------------------------------------------------------------------------
 enum class Namespace_Enum_Type : int { Value };
@@ -138,27 +137,24 @@ int main(int argc, char **argv)
 			conjure_type<UType>::tpeek(),
    };
 
-	static constexpr const char *optstr{"emch"};
 	bool md{}, ext{}, comp{true};
-	for (int opt; (opt = getopt(argc, argv, optstr)) != -1;)
+	for (int ii{1}; ii < argc; ++ii)
 	{
-		switch (opt)
+		if (std::string_view(argv[ii]).find("-m") != std::string_view::npos)
+			md = true;
+		if (std::string_view(argv[ii]).find("-c") != std::string_view::npos)
+			comp = false;
+		if (std::string_view(argv[ii]).find("-e") != std::string_view::npos)
+			ext = true;
+		if (std::string_view(argv[ii]).find("-h") != std::string_view::npos)
 		{
-		case 'm': md = true; break;
-		case 'c': comp = false; break;
-		case 'e': ext = true; break;
-		case ':': case '?': std::cout << '\n';
-			[[fallthrough]];
-		case 'h':
-			std::cout << "Usage: " << argv[0] << " [-" << optstr << "]" << R"(
+			std::cout << "Usage: " << argv[0] << " [-ecmh]" << R"(
   -e run extended enum test
   -c show compiler (default true)
   -m output using markdown
   -h help
 )";
 			exit(1);
-		default:
-			break;
 		}
 	}
 

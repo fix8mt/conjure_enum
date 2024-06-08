@@ -750,8 +750,8 @@ class conjure_type
 		{
 			constexpr std::string_view e1 { from.substr(lc, ep - lc - 1) };
 #define chkstr0(x) \
-	if constexpr (constexpr auto ep1 { e1.find(cs::get_spec<sval::anon_str,stype::x>()) }; ep1 != std::string_view::npos) \
-		return e1.substr(ep1 + cs::get_spec<sval::anon_str,stype::x>().size(), e1.size() - ep1 - cs::get_spec<sval::anon_str,stype::x>().size())
+	if constexpr (constexpr auto ep##x { e1.find(cs::get_spec<sval::anon_str,stype::x>()) }; ep##x != std::string_view::npos) \
+		return e1.substr(ep##x + cs::get_spec<sval::anon_str,stype::x>().size(), e1.size() - ep##x - cs::get_spec<sval::anon_str,stype::x>().size())
 			chkstr0(type_t);
 			else chkstr0(extype_t0);
 			else chkstr0(extype_t1);

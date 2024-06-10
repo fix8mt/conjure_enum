@@ -137,25 +137,22 @@ int main(int argc, char **argv)
 			conjure_type<UType>::tpeek(),
    };
 
-	bool md{}, ext{}, comp{true};
+	bool md{}, ext{}, comp{true}, hlp{};
+	auto opts { std::to_array<std::tuple<std::string_view, bool&>> ({{"-m",md},{"-c",comp},{"-e",ext},{"-h",hlp}}) };
 	for (int ii{1}; ii < argc; ++ii)
+		for (const auto& pp : opts)
+			if (std::string_view(argv[ii]) == std::get<0>(pp))
+				std::get<1>(pp) ^= 1;
+
+	if (hlp)
 	{
-		if (std::string_view(argv[ii]).find("-m") != std::string_view::npos)
-			md = true;
-		if (std::string_view(argv[ii]).find("-c") != std::string_view::npos)
-			comp = false;
-		if (std::string_view(argv[ii]).find("-e") != std::string_view::npos)
-			ext = true;
-		if (std::string_view(argv[ii]).find("-h") != std::string_view::npos)
-		{
-			std::cout << "Usage: " << argv[0] << " [-ecmh]" << R"(
-  -e run extended enum test
-  -c show compiler (default true)
-  -m output using markdown
-  -h help
+		std::cout << "Usage: " << argv[0] << " [-ecmh]" << R"(
+-e run extended enum test
+-c show compiler (default true)
+-m output using markdown
+-h help
 )";
-			exit(1);
-		}
+		return 0;
 	}
 
 	if (comp)

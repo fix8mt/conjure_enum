@@ -97,6 +97,7 @@ class cs
 			{ "e = ", ';', "<unnamed>", '<' }, { "T = ", ']', "{anonymous}", '{' },
 #elif defined _MSC_VER
 			{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "::tpeek", '<', "`anonymous-namespace'::", '`' },
+				{ "", '\0', "enum `anonymous-namespace'::", '\0' },
 				{ "", '\0', "enum ", '\0' }, { "", '\0', "class ", '\0' }, { "", '\0', "struct ", '\0' },
 			//{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "enum ", '>', "enum `anonymous-namespace'", '`' }, { "class ", '>', "", 0 },
 #else
@@ -113,7 +114,7 @@ public:
 	cs(cs&&) = delete;
 	cs& operator=(cs&&) = delete;
 
-	enum class stype { enum_t, type_t, extype_t0, extype_t1, extype_t2 };
+	enum class stype { enum_t, type_t, extype_t0, extype_t1, extype_t2, extype_t3 };
 	enum class sval { start, end, anon_str, anon_start };
 
 	template<sval N, stype V> // can't have constexpr decompositions! (but why not?)
@@ -732,17 +733,6 @@ class conjure_type
 		return fixed_string<result.size()>(result);
 	}
 #else
-// enum class stype { enum_t, type_t, extype_t0, extype_t1 };
-// enum class sval { start, end, anon_str, anon_start };
-
-//			{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "::tpeek", '<', "enum `anonymous-namespace'", '`' },
-//				{ "", '\0', "enum", '\0' }, { "", '\0', "class", '\0' },
-
-// const char *__cdecl conjure_type<int>::tpeek(void) noexcept
-// const char *__cdecl conjure_type<class std::basic_string_view<char,struct std::char_traits<char> > >::tpeek(void) noexcept
-// const char *__cdecl conjure_type<class std::vector<class std::tuple<int,char,class std::basic_string_view<char,struct std::char_traits<char> > >,
-//		class std::allocator<class std::tuple<int,char,class std::basic_string_view<char,struct std::char_traits<char> > > > > >::tpeek(void) noexcept
-
 		constexpr auto ep { from.rfind(cs::get_spec<sval::start,stype::type_t>()) };
 		if constexpr (ep == std::string_view::npos)
 			return {};
@@ -756,6 +746,7 @@ class conjure_type
 			else chkstr0(extype_t0);
 			else chkstr0(extype_t1);
 			else chkstr0(extype_t2);
+			else chkstr0(extype_t3);
 		}
 		return {};
 	}

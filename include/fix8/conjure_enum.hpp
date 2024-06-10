@@ -743,10 +743,10 @@ class conjure_type
 	if constexpr (constexpr auto ep##x { e1.find(cs::get_spec<sval::anon_str,stype::x>()) }; ep##x != std::string_view::npos) \
 		return e1.substr(ep##x + cs::get_spec<sval::anon_str,stype::x>().size(), e1.size() - ep##x - cs::get_spec<sval::anon_str,stype::x>().size())
 			chkstr0(type_t);
-			else chkstr0(extype_t0);
-			else chkstr0(extype_t1);
-			else chkstr0(extype_t2);
-			else chkstr0(extype_t3);
+			chkstr0(extype_t0);
+			chkstr0(extype_t1);
+			chkstr0(extype_t2);
+			chkstr0(extype_t3);
 		}
 		return {};
 	}

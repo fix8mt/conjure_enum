@@ -96,8 +96,8 @@ class cs
 #elif defined __GNUC__
 			{ "e = ", ';', "<unnamed>", '<' }, { "T = ", ']', "{anonymous}", '{' },
 #elif defined _MSC_VER
-			{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "::tpeek", '<', "enum `anonymous-namespace'::", '\0' },
-				{ "", '\0', "`anonymous-namespace'::", '\0' },
+			{ "epeek<", '>', "`anonymous namespace'", '`' }, { "::tpeek", '<', "enum `anonymous namespace'::", '\0' },
+				{ "", '\0', "`anonymous namespace'::", '\0' },
 				{ "", '\0', "enum ", '\0' }, { "", '\0', "class ", '\0' }, { "", '\0', "struct ", '\0' },
 			//{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "enum ", '>', "enum `anonymous-namespace'", '`' }, { "class ", '>', "", 0 },
 #else
@@ -743,10 +743,10 @@ class conjure_type
 	if constexpr (constexpr auto ep##x { e1.find(cs::get_spec<sval::anon_str,stype::x>()) }; ep##x != std::string_view::npos) \
 		return e1.substr(ep##x + cs::get_spec<sval::anon_str,stype::x>().size(), e1.size() - (ep##x + cs::get_spec<sval::anon_str,stype::x>().size()))
 			chkstr0(type_t);
-	//		else chkstr0(extype_t0);
-	//		else chkstr0(extype_t1);
-	//		else chkstr0(extype_t2);
-	//		else chkstr0(extype_t3);
+			else chkstr0(extype_t0);
+			else chkstr0(extype_t1);
+			else chkstr0(extype_t2);
+			else chkstr0(extype_t3);
 		}
 		return {};
 	}

@@ -54,7 +54,7 @@
 
 This page shows the output of the included program [`srcloctest`](https://github.com/fix8mt/conjure_enum/blob/master/examples/srcloctest.cpp)
 from different compilers.
-There are seven different sets of tests for each compiler. `conjure_enum` and `conjure_type`
+There are eight different sets of tests for each compiler. `conjure_enum` and `conjure_type`
 use this information to inform the parsing algorithm that extracts the enum and type info.
 
 ---

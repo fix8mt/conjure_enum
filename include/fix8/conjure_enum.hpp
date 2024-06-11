@@ -665,7 +665,7 @@ public:
 		return for_each(std::bind(std::forward<Fn>(func), obj, std::placeholders::_1, std::forward<Args>(args)...));
 	}
 
-	/// create a bitset from enum separated enum string
+	/// create a bitset from custom separated enum string
 	static constexpr U factory(std::string_view src, bool anyscope, char sep, bool ignore_errors)
 	{
 		enum_bitset result;
@@ -729,7 +729,22 @@ class conjure_type
 	static constexpr std::string_view _get_name() noexcept
 	{
 		constexpr std::string_view from{tpeek()};
-#if !defined _MSC_VER
+#if defined _MSC_VER
+		constexpr auto ep { from.rfind(cs::get_spec<sval::start,stype::type_t>()) };
+		if constexpr (ep == std::string_view::npos)
+			return {};
+		if constexpr (constexpr auto lc { from.find_first_of(cs::get_spec<sval::end,stype::type_t>()) }; lc != std::string_view::npos)
+		{
+			constexpr auto e1 { from.substr(lc + 1, ep - lc - 2) };
+			chkstr0(e1,type_t);
+			chkstr0(e1,extype_t0);
+			chkstr0(e1,extype_t1);
+			chkstr0(e1,extype_t2);
+			chkstr0(e1,extype_t3);
+		}
+		return {};
+	}
+#else
 		constexpr auto ep { from.rfind(cs::get_spec<sval::start,stype::type_t>()) };
 		if constexpr (ep == std::string_view::npos)
 			return {};
@@ -749,21 +764,6 @@ class conjure_type
 	{
 		constexpr auto result { _get_name() };
 		return fixed_string<result.size()>(result);
-	}
-#else
-		constexpr auto ep { from.rfind(cs::get_spec<sval::start,stype::type_t>()) };
-		if constexpr (ep == std::string_view::npos)
-			return {};
-		if constexpr (constexpr auto lc { from.find_first_of(cs::get_spec<sval::end,stype::type_t>()) }; lc != std::string_view::npos)
-		{
-			constexpr auto e1 { from.substr(lc + 1, ep - lc - 2) };
-			chkstr0(e1,type_t);
-			chkstr0(e1,extype_t0);
-			chkstr0(e1,extype_t1);
-			chkstr0(e1,extype_t2);
-			chkstr0(e1,extype_t3);
-		}
-		return {};
 	}
 #endif
 

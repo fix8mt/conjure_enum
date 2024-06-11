@@ -97,9 +97,8 @@ class cs
 			{ "e = ", ';', "<unnamed>", '<' }, { "T = ", ']', "{anonymous}", '{' },
 #elif defined _MSC_VER
 			{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "::tpeek", '<', "enum `anonymous namespace'::", '\0' },
-				{ "", '\0', "`anonymous namespace'::", '\0' },
-				{ "", '\0', "enum ", '\0' }, { "", '\0', "class ", '\0' }, { "", '\0', "struct ", '\0' },
-			//{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "enum ", '>', "enum `anonymous-namespace'", '`' }, { "class ", '>', "", 0 },
+			{ "", '\0', "`anonymous namespace'::", '\0' }, { "", '\0', "enum ", '\0' }, { "", '\0', "class ", '\0' },
+			{ "", '\0', "struct ", '\0' },
 #else
 # error "conjure_enum not supported by your compiler"
 #endif
@@ -360,6 +359,7 @@ public:
 		}
 		else
 			return {};
+#undef chkstr0
 #endif
 	}
 
@@ -766,6 +766,7 @@ class conjure_type
 		}
 		return {};
 	}
+#undef chkstr0
 #endif
 
 public:

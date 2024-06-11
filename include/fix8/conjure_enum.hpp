@@ -358,8 +358,9 @@ public:
 			chkstr0(type_t);
 			chkstr0(extype_t1);
 		}
+		else
+			return {};
 #endif
-		return {};
 	}
 
 	struct is_scoped : std::integral_constant<bool, requires

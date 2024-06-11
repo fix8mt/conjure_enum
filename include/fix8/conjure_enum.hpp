@@ -336,6 +336,7 @@ public:
 	static constexpr std::string_view type_name() noexcept
 	{
 		constexpr std::string_view from{tpeek()};
+#if !defined _MSC_VER
 		if constexpr (constexpr auto ep { from.rfind(cs::get_spec<sval::start,stype::type_t>()) }; ep != std::string_view::npos)
 		{
 			constexpr std::string_view result { from.substr(ep + cs::get_spec<sval::start,stype::type_t>().size()) };
@@ -344,6 +345,20 @@ public:
 		}
 		else
 			return {};
+#else
+		constexpr auto ep { from.rfind(cs::get_spec<sval::start,stype::type_t>()) };
+		if constexpr (ep == std::string_view::npos)
+			return {};
+		if constexpr (constexpr auto lc { from.find_first_of(cs::get_spec<sval::end,stype::type_t>()) }; lc != std::string_view::npos)
+		{
+			constexpr std::string_view e1 { from.substr(lc + 1, ep - lc - 2) };
+#define chkstr0(x) \
+	if constexpr (constexpr auto ep##x { e1.find(cs::get_spec<sval::anon_str,stype::x>()) }; ep##x != std::string_view::npos) \
+		return e1.substr(ep##x + cs::get_spec<sval::anon_str,stype::x>().size(), e1.size() - (ep##x + cs::get_spec<sval::anon_str,stype::x>().size()))
+			chkstr0(type_t);
+			chkstr0(extype_t1);
+		}
+#endif
 		return {};
 	}
 

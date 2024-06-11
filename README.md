@@ -42,6 +42,8 @@
 <a href="https://opensource.org/license/mit"><img src="assets/badgemitlic.svg"></a>
 
 # 1. Quick links
+.center[
+
 |**Link**|**Description**|
 --|--
 |[Here](include/fix8/conjure_enum.hpp)| For implementation|
@@ -53,6 +55,8 @@
 |[Compilers](#8-compiler-support)| Supported compilers|
 |[Compiler issues](#9-compiler-issues)| Workarounds for various compiler issues|
 |[Results of `source_location`](reference/source_location.md)| For implementation specific `std::source_location` results|
+
+]
 > [!TIP]
 > Use the built-in [table of contents](https://github.blog/changelog/2021-04-13-table-of-contents-support-in-markdown-files/) to navigate this guide.
 > Even better in [full read view](./README.md) of this page.
@@ -83,7 +87,7 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
   - scoped and unscoped enums
   - enum **aliases**
   - **gaps**
-  - anonymous and namespaced enums and types.
+  - anonymous and named namespaced enums and types.
 - ***Simple & Easy to Use***:  Class-based approach with intuitive syntax.
 - ***Convenient***:  `enum_bitset` offers an enhanced `std::bitset`.
 - ***Useful***:  `conjure_type` lets you obtain the type string of _any type!_

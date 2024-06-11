@@ -64,6 +64,12 @@ namespace FIX8 {
 # define ENUM_MAX_VALUE 127
 #endif
 
+#if defined _MSC_VER
+#define chkstr0(e, x) \
+	if constexpr (constexpr auto ep##x { e.find(cs::get_spec<sval::anon_str,stype::x>()) }; ep##x != std::string_view::npos) \
+		return e.substr(ep##x + cs::get_spec<sval::anon_str,stype::x>().size(), e.size() - (ep##x + cs::get_spec<sval::anon_str,stype::x>().size()))
+#endif
+
 //-----------------------------------------------------------------------------------------
 template<std::size_t N>
 class fixed_string final
@@ -338,7 +344,7 @@ public:
 #if !defined _MSC_VER
 		if constexpr (constexpr auto ep { from.rfind(cs::get_spec<sval::start,stype::type_t>()) }; ep != std::string_view::npos)
 		{
-			constexpr std::string_view result { from.substr(ep + cs::get_spec<sval::start,stype::type_t>().size()) };
+			constexpr auto result { from.substr(ep + cs::get_spec<sval::start,stype::type_t>().size()) };
 			if constexpr (constexpr auto lc { result.find_first_of(cs::get_spec<sval::end,stype::type_t>()) }; lc != std::string_view::npos)
 				return result.substr(0, lc);
 		}
@@ -350,16 +356,12 @@ public:
 			return {};
 		if constexpr (constexpr auto lc { from.find_first_of(cs::get_spec<sval::end,stype::type_t>()) }; lc != std::string_view::npos)
 		{
-			constexpr std::string_view e1 { from.substr(lc + 1, ep - lc - 2) };
-#define chkstr0(x) \
-	if constexpr (constexpr auto ep##x { e1.find(cs::get_spec<sval::anon_str,stype::x>()) }; ep##x != std::string_view::npos) \
-		return e1.substr(ep##x + cs::get_spec<sval::anon_str,stype::x>().size(), e1.size() - (ep##x + cs::get_spec<sval::anon_str,stype::x>().size()))
-			chkstr0(type_t);
-			chkstr0(extype_t1);
+			constexpr auto e1 { from.substr(lc + 1, ep - lc - 2) };
+			chkstr0(e1,type_t);
+			chkstr0(e1,extype_t1);
 		}
 		else
 			return {};
-#undef chkstr0
 #endif
 	}
 
@@ -738,7 +740,7 @@ class conjure_type
 					if constexpr (constexpr auto lc { lstr.find_first_of(cs::get_spec<sval::end,stype::type_t>()) }; lc != std::string_view::npos)
 						return lstr.substr(cs::get_spec<sval::anon_str,stype::type_t>().size() + 2, lc - (cs::get_spec<sval::anon_str,stype::type_t>().size() + 2)); // eat "::"
 		}
-		constexpr std::string_view result { from.substr(ep + cs::get_spec<sval::start,stype::type_t>().size()) };
+		constexpr auto result { from.substr(ep + cs::get_spec<sval::start,stype::type_t>().size()) };
 		if constexpr (constexpr auto lc { result.find_first_of(cs::get_spec<sval::end,stype::type_t>()) }; lc != std::string_view::npos)
 			return result.substr(0, lc);
 		return {};
@@ -754,19 +756,15 @@ class conjure_type
 			return {};
 		if constexpr (constexpr auto lc { from.find_first_of(cs::get_spec<sval::end,stype::type_t>()) }; lc != std::string_view::npos)
 		{
-			constexpr std::string_view e1 { from.substr(lc + 1, ep - lc - 2) };
-#define chkstr0(x) \
-	if constexpr (constexpr auto ep##x { e1.find(cs::get_spec<sval::anon_str,stype::x>()) }; ep##x != std::string_view::npos) \
-		return e1.substr(ep##x + cs::get_spec<sval::anon_str,stype::x>().size(), e1.size() - (ep##x + cs::get_spec<sval::anon_str,stype::x>().size()))
-			chkstr0(type_t);
-			chkstr0(extype_t0);
-			chkstr0(extype_t1);
-			chkstr0(extype_t2);
-			chkstr0(extype_t3);
+			constexpr auto e1 { from.substr(lc + 1, ep - lc - 2) };
+			chkstr0(e1,type_t);
+			chkstr0(e1,extype_t0);
+			chkstr0(e1,extype_t1);
+			chkstr0(e1,extype_t2);
+			chkstr0(e1,extype_t3);
 		}
 		return {};
 	}
-#undef chkstr0
 #endif
 
 public:

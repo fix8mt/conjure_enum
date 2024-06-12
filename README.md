@@ -76,7 +76,7 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
 
 ## c) Key Benefits
 
-- ***Lightweight***:  Designed for performance without unnecessary overhead.
+- ***Lightweight***:  Designed for performance without additional overhead.
 - ***Single Header-Only***:  No external dependencies, simplifying integration into your project.
 - ***Modern C++20***:  Entirely `constexpr` for compile-time safety, efficiency and performance.
 - ***Broad Support***:  Works with:

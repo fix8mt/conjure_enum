@@ -130,7 +130,7 @@ component::path
 path
 ```
 ### Aliases
-Because all methods in `conjure_enum` are defined within a `class` instead of individual template functions in a `namespace`, you can reduce your
+Because all methods in `conjure_enum` are defined _within_ a `class` instead of individual template functions in a `namespace`, you can reduce your
 typing with standard aliases:
 ```c++
 using ec = conjure_enum<component>;

@@ -48,6 +48,5 @@ int main(void)
 		std::cout << a << '\n';
 	for(const auto& a : conjure_enum<component>::unscoped_names)
 		std::cout << a << '\n';
-
 	return 0;
 }

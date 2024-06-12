@@ -65,7 +65,7 @@ namespace FIX8 {
 #endif
 
 #if defined _MSC_VER
-#define chkstr0(e, x) \
+#define Chkmsstr(e, x) \
 	if constexpr (constexpr auto ep##x { e.find(cs::get_spec<sval::anon_str,stype::x>()) }; ep##x != std::string_view::npos) \
 		return e.substr(ep##x + cs::get_spec<sval::anon_str,stype::x>().size(), e.size() - (ep##x + cs::get_spec<sval::anon_str,stype::x>().size()))
 #endif
@@ -127,6 +127,7 @@ public:
 	{
 		return std::get<static_cast<int>(N)>(_specifics[static_cast<int>(V)]);
 	}
+	static constexpr auto size() noexcept { return sizeof(_specifics); }
 };
 using stype = cs::stype;
 using sval = cs::sval;
@@ -235,7 +236,7 @@ private:
 		if constexpr (from[ep + cs::get_spec<sval::start,stype::enum_t>().size()] == '(')
 		{
 			if constexpr (from[ep + cs::get_spec<sval::start,stype::enum_t>().size() + 1] == '(')
-				return false; // check for ((anonymous namespace)
+				return false;
 			if constexpr (constexpr auto lstr { from.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()) };
 				lstr.find(cs::get_spec<sval::anon_str,stype::enum_t>()) != std::string_view::npos)	// is anon
 					return true;
@@ -298,7 +299,7 @@ private:
 		{
 #if defined __clang__
 			if constexpr (from[ep + cs::get_spec<sval::start,stype::enum_t>().size() + 1] == cs::get_spec<sval::anon_start,stype::enum_t>())
-				return {}; // check for ((anonymous namespace)
+				return {};
 #endif
 			if (constexpr auto lstr { from.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()) };
 				lstr.find(cs::get_spec<sval::anon_str,stype::enum_t>()) != std::string_view::npos)	// is anon
@@ -348,8 +349,8 @@ public:
 		if constexpr (constexpr auto lc { from.find_first_of(cs::get_spec<sval::end,stype::type_t>()) }; lc != std::string_view::npos)
 		{
 			constexpr auto e1 { from.substr(lc + 1, ep - lc - 2) };
-			chkstr0(e1,type_t);
-			chkstr0(e1,extype_t1);
+			Chkmsstr(e1,type_t);
+			Chkmsstr(e1,extype_t1);
 		}
 		else
 			return {};
@@ -736,11 +737,11 @@ class conjure_type
 		if constexpr (constexpr auto lc { from.find_first_of(cs::get_spec<sval::end,stype::type_t>()) }; lc != std::string_view::npos)
 		{
 			constexpr auto e1 { from.substr(lc + 1, ep - lc - 2) };
-			chkstr0(e1,type_t);
-			chkstr0(e1,extype_t0);
-			chkstr0(e1,extype_t1);
-			chkstr0(e1,extype_t2);
-			chkstr0(e1,extype_t3);
+			Chkmsstr(e1,type_t);
+			Chkmsstr(e1,extype_t0);
+			Chkmsstr(e1,extype_t1);
+			Chkmsstr(e1,extype_t2);
+			Chkmsstr(e1,extype_t3);
 		}
 		return {};
 	}

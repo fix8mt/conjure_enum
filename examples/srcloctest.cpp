@@ -161,10 +161,11 @@ int main(int argc, char **argv)
 		if (md)
 			std::cout << "# ";
 #if defined _MSC_VER
-#define TOSTRING(x) #x
 #define MESSAGE "MSVC: "
-#define _MSC_VER_STR TOSTRING(_MSC_VER)  // Define a helper macro with stringified value
-#define FULL_MESSAGE MESSAGE _MSC_VER_STR
+#define TOSTRING(x) #x
+#define _MSC_VER_STR TOSTRING(_MSC_VER)
+#define CONCAT(x, y) x ## y
+#define FULL_MESSAGE CONCAT(MESSAGE, TOSTRING(_MSC_VER))
 #endif
 		std::cout << "Compiler: "
 #if defined __clang__

@@ -161,11 +161,10 @@ int main(int argc, char **argv)
 		if (md)
 			std::cout << "# ";
 #if defined _MSC_VER
-#define MESSAGE "MSVC: "
-#define TOSTRING(x) #x
-#define _MSC_VER_STR TOSTRING(_MSC_VER)
-#define CONCAT(x, y) x ## y
-#define FULL_MESSAGE CONCAT(MESSAGE, _MSC_VER_STR)
+#define STRINGIZE(x) #x
+#define STRINGIZE_VALUE_OF(x) STRINGIZE(x)
+// Concatenate "MSVC:" with the value of _MSC_VER
+#define MSVC_VERSION "MSVC:" STRINGIZE_VALUE_OF(_MSC_VER)
 #endif
 		std::cout << "Compiler: "
 #if defined __clang__
@@ -173,7 +172,7 @@ int main(int argc, char **argv)
 #elif defined __GNUC__
 			"GCC: " __VERSION__
 #elif defined _MSC_VER
-			FULL_MESSAGE
+			MSVC_VERSION
 #else
 # error "Not Supported"
 #endif

@@ -168,7 +168,8 @@ int main(int argc, char **argv)
 #elif defined _MSC_VER
 #define STRINGIFY(x) #x
 #define CONCAT(x, y) x ## y
-			CONCAT("MSVC: ",STRINGIFY(_MSC_VER))
+#define MESSAGE "MSVC: "
+			CONCAT(MESSAGE,STRINGIFY(_MSC_VER))
 #else
 # error "Not Supported"
 #endif

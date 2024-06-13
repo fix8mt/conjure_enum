@@ -162,9 +162,7 @@ int main(int argc, char **argv)
 			std::cout << "# ";
 #if defined _MSC_VER
 #define STRINGIZE(x) #x
-#define STRINGIZE_VALUE_OF(x) STRINGIZE(x)
-// Concatenate "MSVC:" with the value of _MSC_VER
-#define MSVC_VERSION "MSVC:" STRINGIZE_VALUE_OF(_MSC_VER)
+#define STRINGIZE_VALUE(x) STRINGIZE(x)
 #endif
 		std::cout << "Compiler: "
 #if defined __clang__
@@ -172,7 +170,7 @@ int main(int argc, char **argv)
 #elif defined __GNUC__
 			"GCC: " __VERSION__
 #elif defined _MSC_VER
-			MSVC_VERSION
+			"MSVC: " STRINGIZE_VALUE(_MSC_VER)
 #else
 # error "Not Supported"
 #endif

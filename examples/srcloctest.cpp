@@ -163,7 +163,7 @@ int main(int argc, char **argv)
 #if defined _MSC_VER
 #define STRINGIFY(x) #x
 #define CONCAT(x, y) x ## y
-#define MESSAGE("MSVC: ")
+#define MESSAGE "MSVC: "
 #define FULL_MESSAGE CONCAT(MESSAGE, STRINGIFY(_MSC_VER))
 #endif
 		std::cout << "Compiler: "

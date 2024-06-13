@@ -163,7 +163,8 @@ int main(int argc, char **argv)
 #if defined _MSC_VER
 #define STRINGIFY(x) #x
 #define CONCAT(x, y) x ## y
-#define MESSAGE CONCAT("MSVC: ",STRINGIFY(_MSC_VER))
+#define MESSAGE("MSVC: ")
+#define FULL_MESSAGE CONCAT(MESSAGE, STRINGIFY(_MSC_VER))
 #endif
 		std::cout << "Compiler: "
 #if defined __clang__
@@ -171,7 +172,7 @@ int main(int argc, char **argv)
 #elif defined __GNUC__
 			"GCC: " __VERSION__
 #elif defined _MSC_VER
-			MESSAGE
+			FULL_MESSAGE
 #else
 # error "Not Supported"
 #endif

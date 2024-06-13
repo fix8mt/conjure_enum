@@ -165,7 +165,7 @@ int main(int argc, char **argv)
 #define TOSTRING(x) #x
 #define _MSC_VER_STR TOSTRING(_MSC_VER)
 #define CONCAT(x, y) x ## y
-#define FULL_MESSAGE CONCAT(MESSAGE, TOSTRING(_MSC_VER))
+#define FULL_MESSAGE CONCAT(MESSAGE, _MSC_VER_STR)
 #endif
 		std::cout << "Compiler: "
 #if defined __clang__

@@ -164,11 +164,11 @@ int main(int argc, char **argv)
 			std::cout << "# ";
 		std::cout << "Compiler: "
 #if defined __clang__
-			"Clang" ": " __VERSION__
+			"Clang: " __VERSION__
 #elif defined __GNUC__
-			"GCC" ": " __VERSION__
+			"GCC: " __VERSION__
 #elif defined _MSC_VER
-			COMBINE("MSVC" ": ",_MSC_VER)
+			COMBINE("MSVC: ",_MSC_VER)
 #else
 # error "Not Supported"
 #endif

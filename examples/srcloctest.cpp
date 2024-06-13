@@ -166,9 +166,9 @@ int main(int argc, char **argv)
 #elif defined __GNUC__
 			"GCC: " __VERSION__
 #elif defined _MSC_VER
-#define COMBINE1(X,Y) X ## Y  // helper macro
-#define COMBINE(X,Y) COMBINE1(X,Y)
-			COMBINE("MSVC: ",_MSC_VER)
+#define STRINGIFY(x) #x
+#define CONCAT(x, y) x ## y
+			CONCAT("MSVC: ",STRINGIFY(_MSC_VER))
 #else
 # error "Not Supported"
 #endif

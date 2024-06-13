@@ -165,7 +165,7 @@ int main(int argc, char **argv)
 #elif defined __GNUC__
 			"GCC" ": " __VERSION__
 #elif defined _MSC_VER
-			"MSVC" ": "##_MSC_VER
+			"MSVC" ": " ##_MSC_VER
 #else
 # error "Not Supported"
 #endif

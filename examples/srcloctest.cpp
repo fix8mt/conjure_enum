@@ -160,16 +160,18 @@ int main(int argc, char **argv)
 	{
 		if (md)
 			std::cout << "# ";
+#if defined _MSC_VER
+#define STRINGIFY(x) #x
+#define CONCAT(x, y) x ## y
+#define MESSAGE CONCAT("MSVC: ",STRINGIFY(_MSC_VER))
+#endif
 		std::cout << "Compiler: "
 #if defined __clang__
 			"Clang: " __VERSION__
 #elif defined __GNUC__
 			"GCC: " __VERSION__
 #elif defined _MSC_VER
-#define STRINGIFY(x) #x
-#define CONCAT(x, y) x ## y
-#define MESSAGE "MSVC: "
-			CONCAT(MESSAGE,STRINGIFY(_MSC_VER))
+			MESSAGE
 #else
 # error "Not Supported"
 #endif

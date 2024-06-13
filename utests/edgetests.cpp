@@ -34,6 +34,8 @@
 #include <fix8/conjure_enum.hpp>
 
 //-----------------------------------------------------------------------------------------
+class foobat{};
+
 namespace
 {
 	enum class NineEnums : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
@@ -42,7 +44,9 @@ namespace
 	{
 		enum class NineEnums : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
 		enum NineEnums1 : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
+		class foo{};
 	}
+	class foo{};
 }
 
 namespace TEST
@@ -53,7 +57,9 @@ namespace TEST
 	{
 		enum class NineEnums : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
 		enum NineEnums1 : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
+		class foo{};
 	}
+	class foo{};
 }
 
 namespace test::rsp::gd
@@ -231,7 +237,7 @@ TEST_CASE("nested namespaced entries")
 }
 
 //-----------------------------------------------------------------------------------------
-TEST_CASE("anonymous type")
+TEST_CASE("anonymous enum")
 {
 	REQUIRE(conjure_type<NineEnums>::as_string_view() == "NineEnums");
 	REQUIRE(conjure_type<NineEnums1>::as_string_view() == "NineEnums1");
@@ -240,7 +246,7 @@ TEST_CASE("anonymous type")
 }
 
 //-----------------------------------------------------------------------------------------
-TEST_CASE("nested anonymous type")
+TEST_CASE("nested anonymous enum")
 {
 	REQUIRE(conjure_type<TEST1::NineEnums>::as_string_view() == "TEST1::NineEnums");
 	REQUIRE(conjure_type<TEST1::NineEnums1>::as_string_view() == "TEST1::NineEnums1");
@@ -252,5 +258,20 @@ TEST_CASE("nested anonymous type")
 TEST_CASE("nested structured enum")
 {
 	REQUIRE(test::util::countOf<test::rsp::gd::AFrame::PreFrames>() == 1);
+}
+
+//-----------------------------------------------------------------------------------------
+TEST_CASE("anonymous type")
+{
+	REQUIRE(conjure_type<foobat>::as_string_view() == "foobat");
+	REQUIRE(conjure_type<TEST::foo>::as_string_view() == "TEST::foo");
+	REQUIRE(conjure_type<TEST1::foo>::as_string_view() == "TEST1::foo");
+}
+
+//-----------------------------------------------------------------------------------------
+TEST_CASE("nested type")
+{
+	REQUIRE(conjure_type<TEST1::foo>::as_string_view() == "TEST1::foo");
+	REQUIRE(conjure_type<TEST::TEST1::foo>::as_string_view() == "TEST::TEST1::foo");
 }
 

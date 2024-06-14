@@ -158,12 +158,12 @@ int main(int argc, char **argv)
 
 	if (comp)
 	{
-		if (md)
-			std::cout << "# ";
 #if defined _MSC_VER
 #define STRINGIZE(x) #x
 #define STRINGIZE_VALUE(x) STRINGIZE(x)
 #endif
+		if (md)
+			std::cout << "# ";
 		std::cout << "Compiler: "
 #if defined __clang__
 			"Clang: " __VERSION__

@@ -1017,10 +1017,6 @@ By default the unit tests are built (which will download Catch2). To prevent thi
 ```cmake
 cmake -DBUILD_UNITTESTS=false ..
 ```
-To disable certain C++20 features that cause issues with some builds:
-```cmake
-cmake -DBUILD_CONSRVCPP20=true ..
-```
 To disable stripping of the executables:
 ```cmake
 cmake -DBUILD_STRIP_EXE=false ..

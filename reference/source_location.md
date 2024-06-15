@@ -51,7 +51,7 @@
 //														|<-    	 ->|
 //---------------------------------------------------------------------------------------->
 <p align="center">
-  <a href="https://www.fix8mt.com"><img src="assets/conjure_enum_logo.png" width="200"></a>
+  <a href="https://www.fix8mt.com"><img src="../assets/conjure_enum_logo.png" width="200"></a>
 </p>
 
 # What is this?

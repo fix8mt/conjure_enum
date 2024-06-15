@@ -28,9 +28,15 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+//-----------------------------------------------------------------------------------------
 // This program generates std::source_location from different compilers.
 // There are eight different sets of tests for each compiler. `conjure_enum` and `conjure_type`
 // use this information to inform the parsing algorithm that extracts the enum and type info.
+// For most compilers, there will be few if any differences between compiler versions - certainly few that impact
+// conjure_enum - however there have been a couple of changes with earlier releases. Since std::source_location
+// is entirely implementation dependent, future changes may occur.
+//
+// Belore are some of the parsing rules:
 //
 // clang
 // static const char *FIX8::conjure_enum<component>::epeek() [T = component, e = component::path] // valid
@@ -63,6 +69,9 @@ This page shows the output of the included program [`srcloctest`](https://github
 from different compilers.
 There are eight different sets of tests for each compiler. `conjure_enum` and `conjure_type`
 use this information to inform the parsing algorithm that extracts the enum and type info.
+For most compilers, there will be few if any differences between compiler versions - certainly few that impact
+`conjure_enum` - however there have been a couple of changes with earlier releases. Since `std::source_location`
+is entirely implementation dependent, future changes may occur.
 
 ## Want to add your compiler to this list?
 Update [this document](https://github.com/fix8mt/conjure_enum/blob/dev/reference/source_location.md) and open a pull request to the [dev](https://github.com/fix8mt/conjure_enum/tree/dev) branch.

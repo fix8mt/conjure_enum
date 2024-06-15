@@ -74,7 +74,7 @@ For most compilers, there will be few if any differences between compiler versio
 is entirely implementation dependent, future changes may occur.
 
 ## Want to add your compiler to this list?
-Update [this document](./reference/source_location.md) in your fork
+Run `srcloctest` with the `-m` switch, append the output to [this document](./reference/source_location.md) in your fork
 and open a pull request to the [dev](https://github.com/fix8mt/conjure_enum/tree/dev) branch.
 
 ---

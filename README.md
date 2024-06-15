@@ -68,33 +68,31 @@ added general purpose type reflection for any type.
 
 ## b) Embrace the Future with C++20
 
-`conjure_enum`[^1] takes full advantage of the latest C++20 features. We've leveraged the convenience of `std::source_location` and
+`conjure_enum`[^1] takes full advantage of recently added C++20 features. We've leveraged the convenience of `std::source_location` and
 unlocked the potential of `constexpr` algorithms and concepts. This translates to:
 
 - ***Improved Performance***  Optimized code for faster and smoother operation - get your compiler to do more!
-- ***Enhanced Developer Experience***  Write cleaner, more concise, and more powerful C++ code.
+- ***Enhanced Developer Experience***  Write cleaner, more concise, and more powerful C++ code
 
 ## c) Key Benefits
 
-- ***Lightweight***:  Designed for performance without additional overhead.
-- ***Single Header-Only***:  No external dependencies, simplifying integration into your project.
-- ***Modern C++20***:  Entirely `constexpr` for compile-time safety, efficiency and performance.
-- ***Broad Support***:  Works with:
+- ***Lightweight***: Designed for performance without additional overhead
+- ***Single Header-Only***: No external dependencies, simplifying integration into your project
+- ***Modern C++20***: Entirely `constexpr` for compile-time safety, efficiency and performance
+- ***Broad Support***: Works with:
   - scoped and unscoped enums
   - enum **aliases**
   - **gaps**
-  - anonymous and named namespaced enums and types.
-- ***Simple & Easy to Use***:  Class-based approach with intuitive syntax.
-- ***Convenient***:  `enum_bitset` offers an enhanced `std::bitset`.
-- ***Useful***:  `conjure_type` lets you obtain the type string of _any type!_
-- ***Wide Compiler Compatibility***:  Support for:
+  - anonymous and named namespaced enums and types
+- ***Simple & Easy to Use***: Class-based approach with intuitive syntax
+- ***Convenient***: `enum_bitset` provides an enhanced enum aware `std::bitset`
+- ***Useful***: `conjure_type` gives you the type string of _any type!_
+- ***Wide Compiler Compatibility***: Support for:
   - GCC
   - Clang
   - MSVC
-  - XCode/Clang
-  - `x86_64`
-  - `AArch64`
-- ***Confidence in Quality***:  Includes comprehensive unit tests for reliable functionality.
+  - XCode/Apple Clang
+- ***Confidence in Quality***:  Includes comprehensive unit tests for reliable functionality
 - ***Expanded***:  Enhanced API:
   - `add_scope`
   - `remove_scope`

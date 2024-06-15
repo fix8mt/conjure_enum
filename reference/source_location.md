@@ -67,10 +67,10 @@
 # What is this?
 This page shows the output of the included program [`srcloctest`](https://github.com/fix8mt/conjure_enum/blob/master/examples/srcloctest.cpp)
 from different compilers.
-There are eight different sets of tests for each compiler. `conjure_enum` and `conjure_type`
-use this information to inform the parsing algorithm that extracts the enum and type info.
+There are eight different sets of tests for each compiler - `conjure_enum` and `conjure_type`
+use this information to inform the parsing algorithm to extract enum and type info.
 For most compilers, there will be few if any differences between compiler versions - certainly few that impact
-`conjure_enum` - however there have been a couple of changes with earlier releases. Since `std::source_location`
+`conjure_enum` - however there have been a couple of changes with earlier releases. Since the output of `std::source_location`
 is entirely implementation dependent, future changes may occur.
 
 ## Want to add your compiler to this list?

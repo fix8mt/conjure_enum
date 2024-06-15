@@ -498,6 +498,7 @@ namespace ostream_enum_operator
 }
 
 //-----------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------
 template<typename T>
 concept valid_bitset_enum = valid_enum<T> and requires(T)
 {
@@ -713,6 +714,7 @@ template<typename T>
 constexpr enum_bitset<T> operator^(const enum_bitset<T>& lh, const enum_bitset<T>& rh) noexcept
 	{ return lh.operator^(rh.to_ulong()); }
 
+//-----------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------
 template<typename T>
 class conjure_type

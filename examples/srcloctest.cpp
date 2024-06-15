@@ -28,6 +28,10 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //----------------------------------------------------------------------------------------
+// Rudimentary conjure_enum and conjure_type implementations that only report the
+// output of std::source_location.
+// Should compile with any compiler supporting C++20
+//----------------------------------------------------------------------------------------
 #include <iostream>
 #include <array>
 #include <vector>
@@ -134,11 +138,20 @@ int main(int argc, char **argv)
 		"8. other types",
 			conjure_type<int>::tpeek(),
 			conjure_type<std::string_view>::tpeek(),
-			conjure_type<UType>::tpeek(),
+			conjure_type<UType>::tpeek(), "",
+		"9. edge enum types",
+			conjure_type<NineEnums>::tpeek(),
+			conjure_type<NineEnums1>::tpeek(),
+			conjure_type<TEST::NineEnums>::tpeek(),
+			conjure_type<TEST::NineEnums1>::tpeek(),
+			conjure_type<TEST1::NineEnums>::tpeek(),
+			conjure_type<TEST1::NineEnums1>::tpeek(),
+			conjure_type<TEST::TEST1::NineEnums>::tpeek(),
+			conjure_type<TEST::TEST1::NineEnums1>::tpeek()
    };
 
-	bool mkd{}, ext{}, cpl{true}, hlp{};
-	auto opts { std::to_array<std::tuple<std::string_view, bool&>>({{"-m",mkd},{"-c",cpl},{"-e",ext},{"-h",hlp}}) };
+	bool mkd{}, cpl{true}, hlp{};
+	auto opts { std::to_array<std::tuple<std::string_view, bool&>>({{"-m",mkd},{"-c",cpl},{"-h",hlp}}) };
 	for (int ii{1}; ii < argc; ++ii)
 		for (const auto& pp : opts)
 			if (std::string_view(argv[ii]) == std::get<std::string_view>(pp))
@@ -146,8 +159,7 @@ int main(int argc, char **argv)
 
 	if (hlp)
 	{
-		std::cout << "Usage: " << argv[0] << " [-ecmh]" << R"(
--e run extended enum test
+		std::cout << "Usage: " << argv[0] << " [-cmh]" << R"(
 -c show compiler (default true)
 -m output using markdown
 -h help
@@ -191,20 +203,6 @@ int main(int argc, char **argv)
 	}
 	if (mkd)
 		std::cout << "```\n";
-
-	if (ext)
-	{
-		std::cout << "\n9. edge enum types\n"
-			<< conjure_type<NineEnums>::tpeek() << '\n'
-			<< conjure_type<NineEnums1>::tpeek() << '\n'
-			<< conjure_type<TEST::NineEnums>::tpeek() << '\n'
-			<< conjure_type<TEST::NineEnums1>::tpeek() << '\n';
-
-		std::cout << conjure_type<TEST1::NineEnums>::tpeek() << '\n'
-			<< conjure_type<TEST1::NineEnums1>::tpeek() << '\n'
-			<< conjure_type<TEST::TEST1::NineEnums>::tpeek() << '\n'
-			<< conjure_type<TEST::TEST1::NineEnums1>::tpeek() << '\n';
-	}
 
 	return 0;
 }

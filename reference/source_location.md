@@ -61,6 +61,9 @@ from different compilers.
 There are eight different sets of tests for each compiler. `conjure_enum` and `conjure_type`
 use this information to inform the parsing algorithm that extracts the enum and type info.
 
+## Want to add your compiler to this list?
+Update [this document](https://github.com/fix8mt/conjure_enum/blob/dev/reference/source_location.md) and open a pull request to the [dev](https://github.com/fix8mt/conjure_enum/tree/dev) branch.
+
 ---
 # Compiler: Clang: Ubuntu Clang 16.0.6 (23ubuntu4)
 ## 1. scoped enum

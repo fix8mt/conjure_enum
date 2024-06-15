@@ -98,7 +98,7 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
   - `remove_scope`
   - `unscoped_string_to_enum`
   - iterators and more!
-- ***Transparency***: Compiler implementation variablity fully documented, verifiable and reportable
+- ***Transparency***: Compiler implementation variability fully documented, verifiable and reportable
 
 ---
 # 3. API and Examples

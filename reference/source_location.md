@@ -251,6 +251,17 @@ const char *__cdecl conjure_type<int>::tpeek(void) noexcept
 const char *__cdecl conjure_type<class std::basic_string_view<char,struct std::char_traits<char> > >::tpeek(void) noexcept
 const char *__cdecl conjure_type<class std::vector<class std::tuple<int,char,class std::basic_string_view<char,struct std::char_traits<char> > >,class std::allocator<class std::tuple<int,char,class std::basic_string_view<char,struct std::char_traits<char> > > > > >::tpeek(void) noexcept
 ```
+## 9. edge enum types
+```c++
+const char *__cdecl conjure_type<enum `anonymous namespace'::NineEnums>::tpeek(void) noexcept
+const char *__cdecl conjure_type<enum `anonymous namespace'::NineEnums1>::tpeek(void) noexcept
+const char *__cdecl conjure_type<enum TEST::NineEnums>::tpeek(void) noexcept
+const char *__cdecl conjure_type<enum TEST::NineEnums1>::tpeek(void) noexcept
+const char *__cdecl conjure_type<enum `anonymous namespace'::TEST1::NineEnums>::tpeek(void) noexcept
+const char *__cdecl conjure_type<enum `anonymous namespace'::TEST1::NineEnums1>::tpeek(void) noexcept
+const char *__cdecl conjure_type<enum TEST::TEST1::NineEnums>::tpeek(void) noexcept
+const char *__cdecl conjure_type<enum TEST::TEST1::NineEnums1>::tpeek(void) noexcept
+```
 
 ---
 # Compiler: MSVC: 1939
@@ -303,6 +314,24 @@ const char *__cdecl conjure_type<class std::basic_string_view<char,struct std::c
 const char *__cdecl conjure_type<class std::vector<class std::tuple<int,char,class std::basic_string_view<char,struct std::char_traits<char> > >,class std::allocator<class std::tuple<int,char,class std::basic_string_view<char,struct std::char_traits<char> > > > > >::tpeek(void) noexcept
 ```
 
+## 8. other types
+```c++
+const char *__cdecl conjure_type<int>::tpeek(void) noexcept
+const char *__cdecl conjure_type<class std::basic_string_view<char,struct std::char_traits<char> > >::tpeek(void) noexcept
+const char *__cdecl conjure_type<class std::vector<class std::tuple<int,char,class std::basic_string_view<char,struct std::char_traits<char> > >,class std::allocator<class std::tuple<int,char,class std::basic_string_view<char,struct std::char_traits<char> > > > > >::tpeek(void) noexcept
+```
+## 9. edge enum types
+```c++
+const char *__cdecl conjure_type<enum `anonymous namespace'::NineEnums>::tpeek(void) noexcept
+const char *__cdecl conjure_type<enum `anonymous namespace'::NineEnums1>::tpeek(void) noexcept
+const char *__cdecl conjure_type<enum TEST::NineEnums>::tpeek(void) noexcept
+const char *__cdecl conjure_type<enum TEST::NineEnums1>::tpeek(void) noexcept
+const char *__cdecl conjure_type<enum `anonymous namespace'::TEST1::NineEnums>::tpeek(void) noexcept
+const char *__cdecl conjure_type<enum `anonymous namespace'::TEST1::NineEnums1>::tpeek(void) noexcept
+const char *__cdecl conjure_type<enum TEST::TEST1::NineEnums>::tpeek(void) noexcept
+const char *__cdecl conjure_type<enum TEST::TEST1::NineEnums1>::tpeek(void) noexcept
+```
+
 ---
 # Compiler: Clang: Apple LLVM 15.0.0 (clang-1500.3.9.4)
 ## 1. scoped enum
@@ -352,6 +381,17 @@ static const char *conjure_type<(anonymous namespace)::Anon_Foo>::tpeek() [T = (
 static const char *conjure_type<int>::tpeek() [T = int]
 static const char *conjure_type<std::string_view>::tpeek() [T = std::string_view]
 static const char *conjure_type<std::vector<std::tuple<int, char, std::string_view>>>::tpeek() [T = std::vector<std::tuple<int, char, std::string_view>>]
+```
+## 9. edge enum types
+```c++
+static const char *conjure_type<(anonymous namespace)::NineEnums>::tpeek() [T = (anonymous namespace)::NineEnums]
+static const char *conjure_type<(anonymous namespace)::NineEnums1>::tpeek() [T = (anonymous namespace)::NineEnums1]
+static const char *conjure_type<TEST::NineEnums>::tpeek() [T = TEST::NineEnums]
+static const char *conjure_type<TEST::NineEnums1>::tpeek() [T = TEST::NineEnums1]
+static const char *conjure_type<(anonymous namespace)::TEST1::NineEnums>::tpeek() [T = (anonymous namespace)::TEST1::NineEnums]
+static const char *conjure_type<(anonymous namespace)::TEST1::NineEnums1>::tpeek() [T = (anonymous namespace)::TEST1::NineEnums1]
+static const char *conjure_type<TEST::TEST1::NineEnums>::tpeek() [T = TEST::TEST1::NineEnums]
+static const char *conjure_type<TEST::TEST1::NineEnums1>::tpeek() [T = TEST::TEST1::NineEnums1]
 ```
 
 ---

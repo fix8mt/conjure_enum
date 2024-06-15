@@ -50,6 +50,10 @@
 // const char *__cdecl FIX8::conjure_enum<enum numbers>::tpeek(void) noexcept
 //														|<-    	 ->|
 //---------------------------------------------------------------------------------------->
+<p align="center">
+  <a href="https://www.fix8mt.com"><img src="assets/conjure_enum_logo.png" width="200"></a>
+</p>
+
 # What is this?
 
 This page shows the output of the included program [`srcloctest`](https://github.com/fix8mt/conjure_enum/blob/master/examples/srcloctest.cpp)

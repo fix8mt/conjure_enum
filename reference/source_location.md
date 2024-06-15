@@ -74,7 +74,8 @@ For most compilers, there will be few if any differences between compiler versio
 is entirely implementation dependent, future changes may occur.
 
 ## Want to add your compiler to this list?
-Update [this document](https://github.com/fix8mt/conjure_enum/blob/dev/reference/source_location.md) and open a pull request to the [dev](https://github.com/fix8mt/conjure_enum/tree/dev) branch.
+Update [this document](https://github.com/fix8mt/conjure_enum/blob/dev/reference/source_location.md) in your fork
+and open a pull request to the [dev](https://github.com/fix8mt/conjure_enum/tree/dev) branch.
 
 ---
 # Compiler: Clang: Ubuntu Clang 16.0.6 (23ubuntu4)

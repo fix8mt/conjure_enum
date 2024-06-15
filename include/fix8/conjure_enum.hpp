@@ -253,28 +253,11 @@ private:
 #endif
 	}
 
-#if defined BUILD_CONSRVCPP20
-	template<std::size_t N>
-	static constexpr auto count_if_constexpr(const bool (&valid)[N]) noexcept
-	{
-		std::size_t cnt{};
-		for(std::size_t nn{}; nn < N; ++nn)
-			if (valid[nn])
-				++cnt;
-		return cnt;
-	}
-#endif
-
 	template<std::size_t... I>
 	static constexpr auto _values(std::index_sequence<I...>) noexcept
 	{
-#if defined BUILD_CONSRVCPP20
-		constexpr bool valid[sizeof...(I)] { _is_valid<static_cast<T>(enum_min_value + I)>()... };
-		constexpr auto num_valid { count_if_constexpr(valid) };
-#else
 		constexpr std::array<bool, sizeof...(I)> valid { _is_valid<static_cast<T>(enum_min_value + I)>()... };
 		constexpr auto num_valid { std::count_if(valid.cbegin(), valid.cend(), [](bool val) noexcept { return val; }) };
-#endif
 		static_assert(num_valid > 0, "conjure_enum requires non-empty enum");
 		std::array<T, num_valid> vals{};
 		for(std::size_t offset{}, nn{}; nn < num_valid; ++offset)
@@ -515,11 +498,18 @@ namespace ostream_enum_operator
 }
 
 //-----------------------------------------------------------------------------------------
+template<typename T>
+concept valid_bitset_enum = valid_enum<T> and requires(T)
+{
+	requires conjure_enum<T>::count() > 0;
+	requires static_cast<std::size_t>(conjure_enum<T>::values.back()) < conjure_enum<T>::count();
+};
+
+//-----------------------------------------------------------------------------------------
 // bitset based on supplied enum
 // Note: your enum sequence must be continuous with the last enum value < count of enumerations
 //-----------------------------------------------------------------------------------------
-template<valid_enum T>
-requires (conjure_enum<T>::count() > 0) && (static_cast<std::size_t>(conjure_enum<T>::values.back()) < conjure_enum<T>::count())
+template<valid_bitset_enum T>
 class enum_bitset
 {
 	using U = std::underlying_type_t<std::decay_t<T>>;
@@ -536,7 +526,7 @@ public:
 	constexpr enum_bitset(std::string_view from, bool anyscope=false, char sep='|', bool ignore_errors=true)
 		: _present(factory(from, anyscope, sep, ignore_errors)) {}
 
-	template<valid_enum... E>
+	template<valid_bitset_enum... E>
 	constexpr enum_bitset(E... comp) noexcept : _present((0u | ... | (1 << to_underlying(comp)))) {}
 
 	template<std::integral... I>
@@ -568,7 +558,7 @@ public:
 	template<T... comp>
 	constexpr void set_all() noexcept { (set<comp>(),...); }
 
-	template<valid_enum... E>
+	template<valid_bitset_enum... E>
 	constexpr void set_all(E... comp) noexcept { return (... | (set(comp))); }
 
 	template<T what>
@@ -616,7 +606,7 @@ public:
 	template<std::integral... I>
 	constexpr bool test_any(I...comp) const noexcept { return (... || test(comp)); }
 
-	template<valid_enum... E>
+	template<valid_bitset_enum... E>
 	constexpr bool test_any(E...comp) const noexcept { return (... || test(comp)); }
 
 	template<T... comp>
@@ -625,7 +615,7 @@ public:
 	template<std::integral... I>
 	constexpr bool test_all(I...comp) const noexcept { return (... && test(comp)); }
 
-	template<valid_enum... E>
+	template<valid_bitset_enum... E>
 	constexpr bool test_all(E...comp) const noexcept { return (... && test(comp)); }
 
 	constexpr enum_bitset& operator<<=(std::size_t pos) noexcept { _present <<= pos; return *this; }
@@ -670,12 +660,12 @@ public:
 	static constexpr U factory(std::string_view src, bool anyscope, char sep, bool ignore_errors)
 	{
 		enum_bitset result;
-		auto trim([](std::string_view src) noexcept ->std::string_view
+		auto trim([](std::string_view src) noexcept ->auto
 		{
 		   const auto bg(src.find_first_not_of(" \t"));
 			return bg == std::string_view::npos ? src : src.substr(bg, src.find_last_not_of(" \t") - bg + 1);
 		});
-		auto process([anyscope,&result](std::string_view src) noexcept ->bool
+		auto process([anyscope,&result](std::string_view src) noexcept ->auto
 		{
 			if (anyscope && !conjure_enum<T>::has_scope(src))
 				src = conjure_enum<T>::add_scope(src);

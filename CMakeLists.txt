@@ -35,11 +35,6 @@ project (conjure_enum
    DESCRIPTION "Lightweight C++20 enum and type reflection"
    VERSION 1.0.0)
 
-# to enable conservative C++20 build:
-# cmake -DBUILD_CONSRVCPP20=true ..
-option(BUILD_CONSRVCPP20 "enable conservative C++20 build" false)
-message("-- Build conservative C++20: ${BUILD_CONSRVCPP20}")
-
 # to disable strip:
 # cmake -DBUILD_STRIP_EXE=false ..
 option(BUILD_STRIP_EXE "enable stripping of non-unittest executables" true)
@@ -60,9 +55,6 @@ function(build loc x)
 	add_dependencies(${x} srcloctest) # srcloctest should be built even if errors with conjure_enum
 	set_target_properties(${x} PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED true)
 	target_include_directories(${x} PRIVATE include)
-	if (BUILD_CONSRVCPP20)
-		target_compile_definitions(${x} PRIVATE BUILD_CONSRVCPP20)
-	endif()
 	if(BUILD_ALL_WARNINGS)
 		target_compile_options(${x} PRIVATE
 			$<$<CXX_COMPILER_ID:MSVC>:/W4>

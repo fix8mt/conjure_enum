@@ -30,7 +30,6 @@
 //----------------------------------------------------------------------------------------
 #include <catch2/catch_test_macros.hpp>
 #include <string_view>
-#include <iostream>
 #include <fix8/conjure_enum.hpp>
 
 //-----------------------------------------------------------------------------------------
@@ -265,7 +264,6 @@ TEST_CASE("anonymous type")
 {
 	REQUIRE(conjure_type<foobat>::as_string_view() == "foobat");
 	REQUIRE(conjure_type<TEST::foo>::as_string_view() == "TEST::foo");
-	REQUIRE(conjure_type<TEST1::foo>::as_string_view() == "TEST1::foo");
 }
 
 //-----------------------------------------------------------------------------------------

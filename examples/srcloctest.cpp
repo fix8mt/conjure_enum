@@ -137,12 +137,12 @@ int main(int argc, char **argv)
 			conjure_type<UType>::tpeek(),
    };
 
-	bool md{}, ext{}, comp{true}, hlp{};
-	auto opts { std::to_array<std::tuple<std::string_view, bool&>> ({{"-m",md},{"-c",comp},{"-e",ext},{"-h",hlp}}) };
+	bool mkd{}, ext{}, cpl{true}, hlp{};
+	auto opts { std::to_array<std::tuple<std::string_view, bool&>>({{"-m",mkd},{"-c",cpl},{"-e",ext},{"-h",hlp}}) };
 	for (int ii{1}; ii < argc; ++ii)
 		for (const auto& pp : opts)
-			if (std::string_view(argv[ii]) == std::get<0>(pp))
-				std::get<1>(pp) ^= 1;
+			if (std::string_view(argv[ii]) == std::get<std::string_view>(pp))
+				std::get<bool&>(pp) ^= true;
 
 	if (hlp)
 	{
@@ -155,14 +155,13 @@ int main(int argc, char **argv)
 		return 0;
 	}
 
-
-	if (comp)
+	if (cpl)
 	{
 #if defined _MSC_VER
 #define STRINGIZE(x) #x
 #define STRINGIZE_VALUE(x) STRINGIZE(x)
 #endif
-		if (md)
+		if (mkd)
 			std::cout << "# ";
 		std::cout << "Compiler: "
 #if defined __clang__
@@ -179,18 +178,18 @@ int main(int argc, char **argv)
 
 	for (const auto *pp : srclocstrs)
 	{
-		if (md && std::isdigit(pp[0]))
+		if (mkd && std::isdigit(pp[0]))
 		{
 			if (pp != srclocstrs[0])
 				std::cout << "```\n";
 			std::cout << "## ";
 		}
-		if (!md || pp[0])
+		if (!mkd || pp[0])
 			std::cout << pp << '\n';
-		if (md && std::isdigit(pp[0]))
+		if (mkd && std::isdigit(pp[0]))
 			std::cout << "```c++\n";
 	}
-	if (md)
+	if (mkd)
 		std::cout << "```\n";
 
 	if (ext)

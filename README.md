@@ -92,12 +92,13 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
   - Clang
   - MSVC
   - XCode/Apple Clang
-- ***Confidence in Quality***:  Includes comprehensive unit tests for reliable functionality
-- ***Expanded***:  Enhanced API:
+- ***Confidence in Quality***: Includes comprehensive unit tests for reliable functionality
+- ***Expanded***: Enhanced API:
   - `add_scope`
   - `remove_scope`
   - `unscoped_string_to_enum`
   - iterators and more!
+- ***Transparency***: Compiler implementation variablity fully documented, verifiable and reportable
 
 ---
 # 3. API and Examples

@@ -65,7 +65,7 @@
 </p>
 
 # What is this?
-This page shows the output of the included program [`srcloctest`](https://github.com/fix8mt/conjure_enum/blob/master/examples/srcloctest.cpp)
+This page shows the output of the included program [`srcloctest`](./examples/srcloctest.cpp)
 from different compilers.
 There are eight different sets of tests for each compiler - `conjure_enum` and `conjure_type`
 use this information to inform the parsing algorithm to extract enum and type info.

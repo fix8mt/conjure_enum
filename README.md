@@ -1132,7 +1132,7 @@ These definitions set the minimum and maximum enum values that are supported. Yo
 All methods in this class are _static_. You cannot instantiate an object of this type. The same goes for `conjure_type`.
 
 ## c) It's not _real_ reflection
-This library provides a workaround (`hack` :smirk:) to current limitations of C++. There are proposals out there for future versions of the language that will provide proper reflection.
+This library provides a workaround (hack :smirk:) to current limitations of C++. There are proposals out there for future versions of the language that will provide proper reflection.
 See [Reflection TS](https://en.cppreference.com/w/cpp/experimental/reflect) and [Reflection for C++26](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2023/p2996r0.html)
 for examples of some of these.
 

@@ -45,7 +45,7 @@
 ||**Link**|**Description**|
 --|--|--
 |1|[Here](include/fix8/conjure_enum.hpp)| For implementation|
-|2|[`conjure_enum` API and Examples](#3-api-and-examples)| General examples|
+|2|[`conjure_enum` API and Examples](#3-api-and-examples-using-conjure_enum)| General examples|
 |3|[`enum_bitset` API and Examples](#4-api-and-examples-using-enum_bitset)| enhanced enum aware `std::bitset`|
 |4|[`conjure_type` API and Examples](#5-api-and-examples-using-conjure_type)| any type string extractor|
 |5|[Building](#6-building)| How to build or include|
@@ -101,7 +101,7 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
 - ***Transparency***: Compiler implementation variability fully documented, verifiable and reportable (see 9 above)
 
 ---
-# 3. API and Examples
+# 3. API and Examples using `conjure_enum`
 All examples refer to the following enums:
 ```c++
 enum class component { scheme, authority, userinfo, user, password, host, port, path=12, test=path, query, fragment };
@@ -1106,6 +1106,17 @@ static const char *conjure_type<(anonymous namespace)::Anon_Foo>::tpeek() [T = (
 static const char *conjure_type<int>::tpeek() [T = int]
 static const char *conjure_type<std::basic_string_view<char>>::tpeek() [T = std::basic_string_view<char>]
 static const char *conjure_type<std::vector<std::tuple<int, char, std::basic_string_view<char>>>>::tpeek() [T = std::vector<std::tuple<int, char, std::basic_string_view<char>>>]
+
+## 9. edge enum types
+```c++
+static const char *conjure_type<(anonymous namespace)::NineEnums>::tpeek() [T = (anonymous namespace)::NineEnums]
+static const char *conjure_type<(anonymous namespace)::NineEnums1>::tpeek() [T = (anonymous namespace)::NineEnums1]
+static const char *conjure_type<TEST::NineEnums>::tpeek() [T = TEST::NineEnums]
+static const char *conjure_type<TEST::NineEnums1>::tpeek() [T = TEST::NineEnums1]
+static const char *conjure_type<(anonymous namespace)::TEST1::NineEnums>::tpeek() [T = (anonymous namespace)::TEST1::NineEnums]
+static const char *conjure_type<(anonymous namespace)::TEST1::NineEnums1>::tpeek() [T = (anonymous namespace)::TEST1::NineEnums1]
+static const char *conjure_type<TEST::TEST1::NineEnums>::tpeek() [T = TEST::TEST1::NineEnums]
+static const char *conjure_type<TEST::TEST1::NineEnums1>::tpeek() [T = TEST::TEST1::NineEnums1]
 $
 ```
 

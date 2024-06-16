@@ -102,9 +102,9 @@ class cs
 #elif defined __GNUC__
 			{ "e = ", ';', "<unnamed>", '<' }, { "T = ", ']', "{anonymous}", '{' },
 #elif defined _MSC_VER
-			{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "::tpeek", '<', "enum `anonymous namespace'::", 0 },
-			{ "", 0, "`anonymous namespace'::", 0 }, { "", 0, "enum ", 0 }, { "", 0, "class ", 0 },
-			{ "", 0, "struct ", 0 },
+			{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "::tpeek", '<', "enum `anonymous namespace'::", '\0' },
+			{ "", '\0', "`anonymous namespace'::", '\0' }, { "", '\0', "enum ", '\0' }, { "", '\0', "class ", '\0' },
+			{ "", '\0', "struct ", '\0' },
 #else
 # error "conjure_enum not supported by your compiler"
 #endif

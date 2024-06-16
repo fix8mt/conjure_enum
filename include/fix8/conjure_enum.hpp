@@ -362,24 +362,20 @@ public:
 	static constexpr std::string_view remove_scope(std::string_view what) noexcept
 	{
 		if constexpr (is_scoped())
-		{
 			if (const auto result { std::equal_range(rev_scoped_entries.cbegin(),
 				rev_scoped_entries.cend(), scoped_tuple(what, std::string_view()), scoped_comp) };
 					result.first != result.second)
 						return std::get<1>(*result.first);
-		}
 		return what;
 	}
 
 	static constexpr std::string_view add_scope(std::string_view what) noexcept
 	{
 		if constexpr (is_scoped())
-		{
 			if (const auto result { std::equal_range(scoped_entries.cbegin(),
 				scoped_entries.cend(), scoped_tuple(what, std::string_view()), scoped_comp) };
 					result.first != result.second)
 						return std::get<1>(*result.first);
-		}
 		return what;
 	}
 
@@ -742,12 +738,10 @@ class conjure_type
 		if constexpr (ep == std::string_view::npos)
 			return {};
 		if constexpr (from[ep + cs::get_spec<sval::start,stype::type_t>().size()] == cs::get_spec<sval::anon_start,stype::type_t>())
-		{
 			if (constexpr auto lstr { from.substr(ep + cs::get_spec<sval::start,stype::type_t>().size()) };
 				lstr.find(cs::get_spec<sval::anon_str,stype::type_t>()) != std::string_view::npos)	// is anon
 					if constexpr (constexpr auto lc { lstr.find_first_of(cs::get_spec<sval::end,stype::type_t>()) }; lc != std::string_view::npos)
 						return lstr.substr(cs::get_spec<sval::anon_str,stype::type_t>().size() + 2, lc - (cs::get_spec<sval::anon_str,stype::type_t>().size() + 2)); // eat "::"
-		}
 		constexpr auto result { from.substr(ep + cs::get_spec<sval::start,stype::type_t>().size()) };
 		if constexpr (constexpr auto lc { result.find_first_of(cs::get_spec<sval::end,stype::type_t>()) }; lc != std::string_view::npos)
 			return result.substr(0, lc);

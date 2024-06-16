@@ -64,12 +64,6 @@ namespace FIX8 {
 # define ENUM_MAX_VALUE 127
 #endif
 
-#if defined _MSC_VER
-#define Chkmsstr(e, x) \
-	if constexpr (constexpr auto ep##x { e.find(cs::get_spec<sval::anon_str,stype::x>()) }; ep##x != std::string_view::npos) \
-		return e.substr(ep##x + cs::get_spec<sval::anon_str,stype::x>().size(), e.size() - (ep##x + cs::get_spec<sval::anon_str,stype::x>().size()))
-#endif
-
 //-----------------------------------------------------------------------------------------
 template<std::size_t N>
 class fixed_string final
@@ -131,6 +125,12 @@ public:
 };
 using stype = cs::stype;
 using sval = cs::sval;
+
+#if defined _MSC_VER
+#define CHKMSSTR(e, x) \
+	if constexpr (constexpr auto ep##x { e.find(cs::get_spec<sval::anon_str,stype::x>()) }; ep##x != std::string_view::npos) \
+		return e.substr(ep##x + cs::get_spec<sval::anon_str,stype::x>().size(), e.size() - (ep##x + cs::get_spec<sval::anon_str,stype::x>().size()))
+#endif
 
 //-----------------------------------------------------------------------------------------
 template<typename T>
@@ -332,8 +332,8 @@ public:
 		if constexpr (constexpr auto lc { from.find_first_of(cs::get_spec<sval::end,stype::type_t>()) }; lc != std::string_view::npos)
 		{
 			constexpr auto e1 { from.substr(lc + 1, ep - lc - 2) };
-			Chkmsstr(e1,type_t);
-			Chkmsstr(e1,extype_t1);
+			CHKMSSTR(e1,type_t);
+			CHKMSSTR(e1,extype_t1);
 		}
 		else
 			return {};
@@ -725,11 +725,11 @@ class conjure_type
 		if constexpr (constexpr auto lc { from.find_first_of(cs::get_spec<sval::end,stype::type_t>()) }; lc != std::string_view::npos)
 		{
 			constexpr auto e1 { from.substr(lc + 1, ep - lc - 2) };
-			Chkmsstr(e1,type_t);
-			Chkmsstr(e1,extype_t0);
-			Chkmsstr(e1,extype_t1);
-			Chkmsstr(e1,extype_t2);
-			Chkmsstr(e1,extype_t3);
+			CHKMSSTR(e1,type_t);
+			CHKMSSTR(e1,extype_t0);
+			CHKMSSTR(e1,extype_t1);
+			CHKMSSTR(e1,extype_t2);
+			CHKMSSTR(e1,extype_t3);
 		}
 		return {};
 	}

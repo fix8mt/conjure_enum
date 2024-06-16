@@ -85,9 +85,9 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
   - **gaps**
   - anonymous and named namespaced enums and types
 - ***Simple & Easy to Use***: Class-based approach with intuitive syntax
-- ***Convenient***: `enum_bitset` provides an enhanced enum aware `std::bitset`
-- ***Useful***: `conjure_type` gives you the type string of _any type!_
-- ***Wide Compiler Compatibility***: Support for:
+- ***Convenient***: `enum_bitset` provides an enhanced enum aware `std::bitset` (see 3 above)
+- ***Useful***: `conjure_type` gives you the type string of _any type!_ (see 4 above)
+- ***Wide Compiler Compatibility***: Support for: (see 7 above)
   - GCC
   - Clang
   - MSVC
@@ -98,7 +98,7 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
   - `remove_scope`
   - `unscoped_string_to_enum`
   - iterators and more!
-- ***Transparency***: Compiler implementation variability fully documented, verifiable and reportable
+- ***Transparency***: Compiler implementation variability fully documented, verifiable and reportable (see 9 above)
 
 ---
 # 3. API and Examples

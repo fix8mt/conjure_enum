@@ -81,37 +81,37 @@ and open a pull request to the [dev](https://github.com/fix8mt/conjure_enum/tree
 # Compiler: Clang: Ubuntu Clang 16.0.6 (23ubuntu4)
 ## 1. scoped enum
 ```c++
-static const char *conjure_enum<Namespace_Enum_Type>::tpeek() [T = Namespace_Enum_Type]
+static const char *conjure_type<Namespace_Enum_Type>::tpeek() [T = Namespace_Enum_Type]
 static const char *conjure_enum<Namespace_Enum_Type>::epeek() [T = Namespace_Enum_Type, e = Namespace_Enum_Type::Value]
 static const char *conjure_enum<Namespace_Enum_Type>::epeek() [T = Namespace_Enum_Type, e = (Namespace_Enum_Type)100]
 ```
 ## 2. unscoped enum
 ```c++
-static const char *conjure_enum<Namespace_Enum_Type1>::tpeek() [T = Namespace_Enum_Type1]
+static const char *conjure_type<Namespace_Enum_Type1>::tpeek() [T = Namespace_Enum_Type1]
 static const char *conjure_enum<Namespace_Enum_Type1>::epeek() [T = Namespace_Enum_Type1, e = Value]
 static const char *conjure_enum<Namespace_Enum_Type1>::epeek() [T = Namespace_Enum_Type1, e = (Namespace_Enum_Type1)100]
 ```
 ## 3. scoped enum in anonymous namespace
 ```c++
-static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type>::tpeek() [T = (anonymous namespace)::Anon_Enum_Type]
+static const char *conjure_type<(anonymous namespace)::Anon_Enum_Type>::tpeek() [T = (anonymous namespace)::Anon_Enum_Type]
 static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type>::epeek() [T = (anonymous namespace)::Anon_Enum_Type, e = (anonymous namespace)::Anon_Enum_Type::Value]
 static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type>::epeek() [T = (anonymous namespace)::Anon_Enum_Type, e = ((anonymous namespace)::Anon_Enum_Type)100]
 ```
 ## 4. unscoped enum in anonymous namespace
 ```c++
-static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type1>::tpeek() [T = (anonymous namespace)::Anon_Enum_Type1]
+static const char *conjure_type<(anonymous namespace)::Anon_Enum_Type1>::tpeek() [T = (anonymous namespace)::Anon_Enum_Type1]
 static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type1>::epeek() [T = (anonymous namespace)::Anon_Enum_Type1, e = (anonymous namespace)::Value]
 static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type1>::epeek() [T = (anonymous namespace)::Anon_Enum_Type1, e = ((anonymous namespace)::Anon_Enum_Type1)100]
 ```
 ## 5. scoped enum in namespace
 ```c++
-static const char *conjure_enum<Namespace::Namespace_Enum_Type>::tpeek() [T = Namespace::Namespace_Enum_Type]
+static const char *conjure_type<Namespace::Namespace_Enum_Type>::tpeek() [T = Namespace::Namespace_Enum_Type]
 static const char *conjure_enum<Namespace::Namespace_Enum_Type>::epeek() [T = Namespace::Namespace_Enum_Type, e = Namespace::Namespace_Enum_Type::Value]
 static const char *conjure_enum<Namespace::Namespace_Enum_Type>::epeek() [T = Namespace::Namespace_Enum_Type, e = (Namespace::Namespace_Enum_Type)100]
 ```
 ## 6. unscoped enum in namespace
 ```c++
-static const char *conjure_enum<Namespace::Namespace_Enum_Type1>::tpeek() [T = Namespace::Namespace_Enum_Type1]
+static const char *conjure_type<Namespace::Namespace_Enum_Type1>::tpeek() [T = Namespace::Namespace_Enum_Type1]
 static const char *conjure_enum<Namespace::Namespace_Enum_Type1>::epeek() [T = Namespace::Namespace_Enum_Type1, e = Namespace::Value]
 static const char *conjure_enum<Namespace::Namespace_Enum_Type1>::epeek() [T = Namespace::Namespace_Enum_Type1, e = (Namespace::Namespace_Enum_Type1)100]
 ```
@@ -143,37 +143,37 @@ static const char *conjure_type<TEST::TEST1::NineEnums1>::tpeek() [T = TEST::TES
 # Compiler: GCC: 14.0.1 20240412 (experimental) [master r14-9935-g67e1433a94f]
 ## 1. scoped enum
 ```c++
-static consteval const char* conjure_enum<T>::tpeek() [with T = Namespace_Enum_Type]
+static consteval const char* conjure_type<T>::tpeek() [with T = Namespace_Enum_Type]
 static consteval const char* conjure_enum<T>::epeek() [with T e = Namespace_Enum_Type::Value; T = Namespace_Enum_Type]
 static consteval const char* conjure_enum<T>::epeek() [with T e = (Namespace_Enum_Type)100; T = Namespace_Enum_Type]
 ```
 ## 2. unscoped enum
 ```c++
-static consteval const char* conjure_enum<T>::tpeek() [with T = Namespace_Enum_Type1]
+static consteval const char* conjure_type<T>::tpeek() [with T = Namespace_Enum_Type1]
 static consteval const char* conjure_enum<T>::epeek() [with T e = Value; T = Namespace_Enum_Type1]
 static consteval const char* conjure_enum<T>::epeek() [with T e = (Namespace_Enum_Type1)100; T = Namespace_Enum_Type1]
 ```
 ## 3. scoped enum in anonymous namespace
 ```c++
-static consteval const char* conjure_enum<T>::tpeek() [with T = {anonymous}::Anon_Enum_Type]
+static consteval const char* conjure_type<T>::tpeek() [with T = {anonymous}::Anon_Enum_Type]
 static consteval const char* conjure_enum<T>::epeek() [with T e = <unnamed>::Anon_Enum_Type::Value; T = {anonymous}::Anon_Enum_Type]
 static consteval const char* conjure_enum<T>::epeek() [with T e = (<unnamed>::Anon_Enum_Type)100; T = {anonymous}::Anon_Enum_Type]
 ```
 ## 4. unscoped enum in anonymous namespace
 ```c++
-static consteval const char* conjure_enum<T>::tpeek() [with T = {anonymous}::Anon_Enum_Type1]
+static consteval const char* conjure_type<T>::tpeek() [with T = {anonymous}::Anon_Enum_Type1]
 static consteval const char* conjure_enum<T>::epeek() [with T e = <unnamed>::Value; T = {anonymous}::Anon_Enum_Type1]
 static consteval const char* conjure_enum<T>::epeek() [with T e = (<unnamed>::Anon_Enum_Type1)100; T = {anonymous}::Anon_Enum_Type1]
 ```
 ## 5. scoped enum in namespace
 ```c++
-static consteval const char* conjure_enum<T>::tpeek() [with T = Namespace::Namespace_Enum_Type]
+static consteval const char* conjure_type<T>::tpeek() [with T = Namespace::Namespace_Enum_Type]
 static consteval const char* conjure_enum<T>::epeek() [with T e = Namespace::Namespace_Enum_Type::Value; T = Namespace::Namespace_Enum_Type]
 static consteval const char* conjure_enum<T>::epeek() [with T e = (Namespace::Namespace_Enum_Type)100; T = Namespace::Namespace_Enum_Type]
 ```
 ## 6. unscoped enum in namespace
 ```c++
-static consteval const char* conjure_enum<T>::tpeek() [with T = Namespace::Namespace_Enum_Type1]
+static consteval const char* conjure_type<T>::tpeek() [with T = Namespace::Namespace_Enum_Type1]
 static consteval const char* conjure_enum<T>::epeek() [with T e = Namespace::Value; T = Namespace::Namespace_Enum_Type1]
 static consteval const char* conjure_enum<T>::epeek() [with T e = (Namespace::Namespace_Enum_Type1)100; T = Namespace::Namespace_Enum_Type1]
 ```
@@ -205,37 +205,37 @@ static consteval const char* conjure_type<T>::tpeek() [with T = TEST::TEST1::Nin
 # Compiler: MSVC: 1940
 ## 1. scoped enum
 ```c++
-const char *__cdecl conjure_enum<enum Namespace_Enum_Type>::tpeek(void) noexcept
+const char *__cdecl conjure_type<enum Namespace_Enum_Type>::tpeek(void) noexcept
 const char *__cdecl conjure_enum<enum Namespace_Enum_Type>::epeek<Namespace_Enum_Type::Value>(void) noexcept
 const char *__cdecl conjure_enum<enum Namespace_Enum_Type>::epeek<(enum Namespace_Enum_Type)0x64>(void) noexcept
 ```
 ## 2. unscoped enum
 ```c++
-const char *__cdecl conjure_enum<enum Namespace_Enum_Type1>::tpeek(void) noexcept
+const char *__cdecl conjure_type<enum Namespace_Enum_Type1>::tpeek(void) noexcept
 const char *__cdecl conjure_enum<enum Namespace_Enum_Type1>::epeek<Value>(void) noexcept
 const char *__cdecl conjure_enum<enum Namespace_Enum_Type1>::epeek<(enum Namespace_Enum_Type1)0x64>(void) noexcept
 ```
 ## 3. scoped enum in anonymous namespace
 ```c++
-const char *__cdecl conjure_enum<enum `anonymous namespace'::Anon_Enum_Type>::tpeek(void) noexcept
+const char *__cdecl conjure_type<enum `anonymous namespace'::Anon_Enum_Type>::tpeek(void) noexcept
 const char *__cdecl conjure_enum<enum `anonymous namespace'::Anon_Enum_Type>::epeek<`anonymous-namespace'::Anon_Enum_Type::Value>(void) noexcept
 const char *__cdecl conjure_enum<enum `anonymous namespace'::Anon_Enum_Type>::epeek<(enum `anonymous-namespace'::Anon_Enum_Type)0x64>(void) noexcept
 ```
 ## 4. unscoped enum in anonymous namespace
 ```c++
-const char *__cdecl conjure_enum<enum `anonymous namespace'::Anon_Enum_Type1>::tpeek(void) noexcept
+const char *__cdecl conjure_type<enum `anonymous namespace'::Anon_Enum_Type1>::tpeek(void) noexcept
 const char *__cdecl conjure_enum<enum `anonymous namespace'::Anon_Enum_Type1>::epeek<`anonymous-namespace'::Value>(void) noexcept
 const char *__cdecl conjure_enum<enum `anonymous namespace'::Anon_Enum_Type1>::epeek<(enum `anonymous-namespace'::Anon_Enum_Type1)0x64>(void) noexcept
 ```
 ## 5. scoped enum in namespace
 ```c++
-const char *__cdecl conjure_enum<enum Namespace::Namespace_Enum_Type>::tpeek(void) noexcept
+const char *__cdecl conjure_type<enum Namespace::Namespace_Enum_Type>::tpeek(void) noexcept
 const char *__cdecl conjure_enum<enum Namespace::Namespace_Enum_Type>::epeek<Namespace::Namespace_Enum_Type::Value>(void) noexcept
 const char *__cdecl conjure_enum<enum Namespace::Namespace_Enum_Type>::epeek<(enum Namespace::Namespace_Enum_Type)0x64>(void) noexcept
 ```
 ## 6. unscoped enum in namespace
 ```c++
-const char *__cdecl conjure_enum<enum Namespace::Namespace_Enum_Type1>::tpeek(void) noexcept
+const char *__cdecl conjure_type<enum Namespace::Namespace_Enum_Type1>::tpeek(void) noexcept
 const char *__cdecl conjure_enum<enum Namespace::Namespace_Enum_Type1>::epeek<Namespace::Value>(void) noexcept
 const char *__cdecl conjure_enum<enum Namespace::Namespace_Enum_Type1>::epeek<(enum Namespace::Namespace_Enum_Type1)0x64>(void) noexcept
 ```
@@ -336,37 +336,37 @@ const char *__cdecl conjure_type<enum TEST::TEST1::NineEnums1>::tpeek(void) noex
 # Compiler: Clang: Apple LLVM 15.0.0 (clang-1500.3.9.4)
 ## 1. scoped enum
 ```c++
-static const char *conjure_enum<Namespace_Enum_Type>::tpeek() [T = Namespace_Enum_Type]
+static const char *conjure_type<Namespace_Enum_Type>::tpeek() [T = Namespace_Enum_Type]
 static const char *conjure_enum<Namespace_Enum_Type>::epeek() [T = Namespace_Enum_Type, e = Namespace_Enum_Type::Value]
 static const char *conjure_enum<Namespace_Enum_Type>::epeek() [T = Namespace_Enum_Type, e = (Namespace_Enum_Type)100]
 ```
 ## 2. unscoped enum
 ```c++
-static const char *conjure_enum<Namespace_Enum_Type1>::tpeek() [T = Namespace_Enum_Type1]
+static const char *conjure_type<Namespace_Enum_Type1>::tpeek() [T = Namespace_Enum_Type1]
 static const char *conjure_enum<Namespace_Enum_Type1>::epeek() [T = Namespace_Enum_Type1, e = Value]
 static const char *conjure_enum<Namespace_Enum_Type1>::epeek() [T = Namespace_Enum_Type1, e = (Namespace_Enum_Type1)100]
 ```
 ## 3. scoped enum in anonymous namespace
 ```c++
-static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type>::tpeek() [T = (anonymous namespace)::Anon_Enum_Type]
+static const char *conjure_type<(anonymous namespace)::Anon_Enum_Type>::tpeek() [T = (anonymous namespace)::Anon_Enum_Type]
 static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type>::epeek() [T = (anonymous namespace)::Anon_Enum_Type, e = (anonymous namespace)::Anon_Enum_Type::Value]
 static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type>::epeek() [T = (anonymous namespace)::Anon_Enum_Type, e = ((anonymous namespace)::Anon_Enum_Type)100]
 ```
 ## 4. unscoped enum in anonymous namespace
 ```c++
-static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type1>::tpeek() [T = (anonymous namespace)::Anon_Enum_Type1]
+static const char *conjure_type<(anonymous namespace)::Anon_Enum_Type1>::tpeek() [T = (anonymous namespace)::Anon_Enum_Type1]
 static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type1>::epeek() [T = (anonymous namespace)::Anon_Enum_Type1, e = (anonymous namespace)::Value]
 static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type1>::epeek() [T = (anonymous namespace)::Anon_Enum_Type1, e = ((anonymous namespace)::Anon_Enum_Type1)100]
 ```
 ## 5. scoped enum in namespace
 ```c++
-static const char *conjure_enum<Namespace::Namespace_Enum_Type>::tpeek() [T = Namespace::Namespace_Enum_Type]
+static const char *conjure_type<Namespace::Namespace_Enum_Type>::tpeek() [T = Namespace::Namespace_Enum_Type]
 static const char *conjure_enum<Namespace::Namespace_Enum_Type>::epeek() [T = Namespace::Namespace_Enum_Type, e = Namespace::Namespace_Enum_Type::Value]
 static const char *conjure_enum<Namespace::Namespace_Enum_Type>::epeek() [T = Namespace::Namespace_Enum_Type, e = (Namespace::Namespace_Enum_Type)100]
 ```
 ## 6. unscoped enum in namespace
 ```c++
-static const char *conjure_enum<Namespace::Namespace_Enum_Type1>::tpeek() [T = Namespace::Namespace_Enum_Type1]
+static const char *conjure_type<Namespace::Namespace_Enum_Type1>::tpeek() [T = Namespace::Namespace_Enum_Type1]
 static const char *conjure_enum<Namespace::Namespace_Enum_Type1>::epeek() [T = Namespace::Namespace_Enum_Type1, e = Namespace::Value]
 static const char *conjure_enum<Namespace::Namespace_Enum_Type1>::epeek() [T = Namespace::Namespace_Enum_Type1, e = (Namespace::Namespace_Enum_Type1)100]
 ```
@@ -398,37 +398,37 @@ static const char *conjure_type<TEST::TEST1::NineEnums1>::tpeek() [T = TEST::TES
 # Compiler: GCC: 11.4.0
 ## 1. scoped enum
 ```c++
-static consteval const char* conjure_enum<T>::tpeek() [with T = Namespace_Enum_Type]
+static consteval const char* conjure_type<T>::tpeek() [with T = Namespace_Enum_Type]
 static consteval const char* conjure_enum<T>::epeek() [with T e = Namespace_Enum_Type::Value; T = Namespace_Enum_Type]
 static consteval const char* conjure_enum<T>::epeek() [with T e = (Namespace_Enum_Type)100; T = Namespace_Enum_Type]
 ```
 ## 2. unscoped enum
 ```c++
-static consteval const char* conjure_enum<T>::tpeek() [with T = Namespace_Enum_Type1]
+static consteval const char* conjure_type<T>::tpeek() [with T = Namespace_Enum_Type1]
 static consteval const char* conjure_enum<T>::epeek() [with T e = Value; T = Namespace_Enum_Type1]
 static consteval const char* conjure_enum<T>::epeek() [with T e = (Namespace_Enum_Type1)100; T = Namespace_Enum_Type1]
 ```
 ## 3. scoped enum in anonymous namespace
 ```c++
-static consteval const char* conjure_enum<T>::tpeek() [with T = {anonymous}::Anon_Enum_Type]
+static consteval const char* conjure_type<T>::tpeek() [with T = {anonymous}::Anon_Enum_Type]
 static consteval const char* conjure_enum<T>::epeek() [with T e = <unnamed>::Anon_Enum_Type::Value; T = {anonymous}::Anon_Enum_Type]
 static consteval const char* conjure_enum<T>::epeek() [with T e = (<unnamed>::Anon_Enum_Type)100; T = {anonymous}::Anon_Enum_Type]
 ```
 ## 4. unscoped enum in anonymous namespace
 ```c++
-static consteval const char* conjure_enum<T>::tpeek() [with T = {anonymous}::Anon_Enum_Type1]
+static consteval const char* conjure_type<T>::tpeek() [with T = {anonymous}::Anon_Enum_Type1]
 static consteval const char* conjure_enum<T>::epeek() [with T e = <unnamed>::Value; T = {anonymous}::Anon_Enum_Type1]
 static consteval const char* conjure_enum<T>::epeek() [with T e = (<unnamed>::Anon_Enum_Type1)100; T = {anonymous}::Anon_Enum_Type1]
 ```
 ## 5. scoped enum in namespace
 ```c++
-static consteval const char* conjure_enum<T>::tpeek() [with T = Namespace::Namespace_Enum_Type]
+static consteval const char* conjure_type<T>::tpeek() [with T = Namespace::Namespace_Enum_Type]
 static consteval const char* conjure_enum<T>::epeek() [with T e = Namespace::Namespace_Enum_Type::Value; T = Namespace::Namespace_Enum_Type]
 static consteval const char* conjure_enum<T>::epeek() [with T e = (Namespace::Namespace_Enum_Type)100; T = Namespace::Namespace_Enum_Type]
 ```
 ## 6. unscoped enum in namespace
 ```c++
-static consteval const char* conjure_enum<T>::tpeek() [with T = Namespace::Namespace_Enum_Type1]
+static consteval const char* conjure_type<T>::tpeek() [with T = Namespace::Namespace_Enum_Type1]
 static consteval const char* conjure_enum<T>::epeek() [with T e = Namespace::Value; T = Namespace::Namespace_Enum_Type1]
 static consteval const char* conjure_enum<T>::epeek() [with T e = (Namespace::Namespace_Enum_Type1)100; T = Namespace::Namespace_Enum_Type1]
 ```
@@ -460,37 +460,37 @@ static consteval const char* conjure_type<T>::tpeek() [with T = TEST::TEST1::Nin
 # Compiler: Clang: Ubuntu Clang 18.1.3 (1)
 ## 1. scoped enum
 ```c++
-static const char *conjure_enum<Namespace_Enum_Type>::tpeek() [T = Namespace_Enum_Type]
+static const char *conjure_type<Namespace_Enum_Type>::tpeek() [T = Namespace_Enum_Type]
 static const char *conjure_enum<Namespace_Enum_Type>::epeek() [T = Namespace_Enum_Type, e = Namespace_Enum_Type::Value]
 static const char *conjure_enum<Namespace_Enum_Type>::epeek() [T = Namespace_Enum_Type, e = (Namespace_Enum_Type)100]
 ```
 ## 2. unscoped enum
 ```c++
-static const char *conjure_enum<Namespace_Enum_Type1>::tpeek() [T = Namespace_Enum_Type1]
+static const char *conjure_type<Namespace_Enum_Type1>::tpeek() [T = Namespace_Enum_Type1]
 static const char *conjure_enum<Namespace_Enum_Type1>::epeek() [T = Namespace_Enum_Type1, e = Value]
 static const char *conjure_enum<Namespace_Enum_Type1>::epeek() [T = Namespace_Enum_Type1, e = (Namespace_Enum_Type1)100]
 ```
 ## 3. scoped enum in anonymous namespace
 ```c++
-static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type>::tpeek() [T = (anonymous namespace)::Anon_Enum_Type]
+static const char *conjure_type<(anonymous namespace)::Anon_Enum_Type>::tpeek() [T = (anonymous namespace)::Anon_Enum_Type]
 static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type>::epeek() [T = (anonymous namespace)::Anon_Enum_Type, e = (anonymous namespace)::Anon_Enum_Type::Value]
 static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type>::epeek() [T = (anonymous namespace)::Anon_Enum_Type, e = ((anonymous namespace)::Anon_Enum_Type)100]
 ```
 ## 4. unscoped enum in anonymous namespace
 ```c++
-static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type1>::tpeek() [T = (anonymous namespace)::Anon_Enum_Type1]
+static const char *conjure_type<(anonymous namespace)::Anon_Enum_Type1>::tpeek() [T = (anonymous namespace)::Anon_Enum_Type1]
 static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type1>::epeek() [T = (anonymous namespace)::Anon_Enum_Type1, e = (anonymous namespace)::Value]
 static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type1>::epeek() [T = (anonymous namespace)::Anon_Enum_Type1, e = ((anonymous namespace)::Anon_Enum_Type1)100]
 ```
 ## 5. scoped enum in namespace
 ```c++
-static const char *conjure_enum<Namespace::Namespace_Enum_Type>::tpeek() [T = Namespace::Namespace_Enum_Type]
+static const char *conjure_type<Namespace::Namespace_Enum_Type>::tpeek() [T = Namespace::Namespace_Enum_Type]
 static const char *conjure_enum<Namespace::Namespace_Enum_Type>::epeek() [T = Namespace::Namespace_Enum_Type, e = Namespace::Namespace_Enum_Type::Value]
 static const char *conjure_enum<Namespace::Namespace_Enum_Type>::epeek() [T = Namespace::Namespace_Enum_Type, e = (Namespace::Namespace_Enum_Type)100]
 ```
 ## 6. unscoped enum in namespace
 ```c++
-static const char *conjure_enum<Namespace::Namespace_Enum_Type1>::tpeek() [T = Namespace::Namespace_Enum_Type1]
+static const char *conjure_type<Namespace::Namespace_Enum_Type1>::tpeek() [T = Namespace::Namespace_Enum_Type1]
 static const char *conjure_enum<Namespace::Namespace_Enum_Type1>::epeek() [T = Namespace::Namespace_Enum_Type1, e = Namespace::Value]
 static const char *conjure_enum<Namespace::Namespace_Enum_Type1>::epeek() [T = Namespace::Namespace_Enum_Type1, e = (Namespace::Namespace_Enum_Type1)100]
 ```
@@ -522,37 +522,37 @@ static const char *conjure_type<TEST::TEST1::NineEnums1>::tpeek() [T = TEST::TES
 # Compiler: GCC: 12.3.0
 ## 1. scoped enum
 ```c++
-static consteval const char* conjure_enum<T>::tpeek() [with T = Namespace_Enum_Type]
+static consteval const char* conjure_type<T>::tpeek() [with T = Namespace_Enum_Type]
 static consteval const char* conjure_enum<T>::epeek() [with T e = Namespace_Enum_Type::Value; T = Namespace_Enum_Type]
 static consteval const char* conjure_enum<T>::epeek() [with T e = (Namespace_Enum_Type)100; T = Namespace_Enum_Type]
 ```
 ## 2. unscoped enum
 ```c++
-static consteval const char* conjure_enum<T>::tpeek() [with T = Namespace_Enum_Type1]
+static consteval const char* conjure_type<T>::tpeek() [with T = Namespace_Enum_Type1]
 static consteval const char* conjure_enum<T>::epeek() [with T e = Value; T = Namespace_Enum_Type1]
 static consteval const char* conjure_enum<T>::epeek() [with T e = (Namespace_Enum_Type1)100; T = Namespace_Enum_Type1]
 ```
 ## 3. scoped enum in anonymous namespace
 ```c++
-static consteval const char* conjure_enum<T>::tpeek() [with T = {anonymous}::Anon_Enum_Type]
+static consteval const char* conjure_type<T>::tpeek() [with T = {anonymous}::Anon_Enum_Type]
 static consteval const char* conjure_enum<T>::epeek() [with T e = <unnamed>::Anon_Enum_Type::Value; T = {anonymous}::Anon_Enum_Type]
 static consteval const char* conjure_enum<T>::epeek() [with T e = (<unnamed>::Anon_Enum_Type)100; T = {anonymous}::Anon_Enum_Type]
 ```
 ## 4. unscoped enum in anonymous namespace
 ```c++
-static consteval const char* conjure_enum<T>::tpeek() [with T = {anonymous}::Anon_Enum_Type1]
+static consteval const char* conjure_type<T>::tpeek() [with T = {anonymous}::Anon_Enum_Type1]
 static consteval const char* conjure_enum<T>::epeek() [with T e = <unnamed>::Value; T = {anonymous}::Anon_Enum_Type1]
 static consteval const char* conjure_enum<T>::epeek() [with T e = (<unnamed>::Anon_Enum_Type1)100; T = {anonymous}::Anon_Enum_Type1]
 ```
 ## 5. scoped enum in namespace
 ```c++
-static consteval const char* conjure_enum<T>::tpeek() [with T = Namespace::Namespace_Enum_Type]
+static consteval const char* conjure_type<T>::tpeek() [with T = Namespace::Namespace_Enum_Type]
 static consteval const char* conjure_enum<T>::epeek() [with T e = Namespace::Namespace_Enum_Type::Value; T = Namespace::Namespace_Enum_Type]
 static consteval const char* conjure_enum<T>::epeek() [with T e = (Namespace::Namespace_Enum_Type)100; T = Namespace::Namespace_Enum_Type]
 ```
 ## 6. unscoped enum in namespace
 ```c++
-static consteval const char* conjure_enum<T>::tpeek() [with T = Namespace::Namespace_Enum_Type1]
+static consteval const char* conjure_type<T>::tpeek() [with T = Namespace::Namespace_Enum_Type1]
 static consteval const char* conjure_enum<T>::epeek() [with T e = Namespace::Value; T = Namespace::Namespace_Enum_Type1]
 static consteval const char* conjure_enum<T>::epeek() [with T e = (Namespace::Namespace_Enum_Type1)100; T = Namespace::Namespace_Enum_Type1]
 ```
@@ -583,37 +583,37 @@ static consteval const char* conjure_type<T>::tpeek() [with T = TEST::TEST1::Nin
 # Compiler: GCC: 13.2.0
 ## 1. scoped enum
 ```c++
-static consteval const char* conjure_enum<T>::tpeek() [with T = Namespace_Enum_Type]
+static consteval const char* conjure_type<T>::tpeek() [with T = Namespace_Enum_Type]
 static consteval const char* conjure_enum<T>::epeek() [with T e = Namespace_Enum_Type::Value; T = Namespace_Enum_Type]
 static consteval const char* conjure_enum<T>::epeek() [with T e = (Namespace_Enum_Type)100; T = Namespace_Enum_Type]
 ```
 ## 2. unscoped enum
 ```c++
-static consteval const char* conjure_enum<T>::tpeek() [with T = Namespace_Enum_Type1]
+static consteval const char* conjure_type<T>::tpeek() [with T = Namespace_Enum_Type1]
 static consteval const char* conjure_enum<T>::epeek() [with T e = Value; T = Namespace_Enum_Type1]
 static consteval const char* conjure_enum<T>::epeek() [with T e = (Namespace_Enum_Type1)100; T = Namespace_Enum_Type1]
 ```
 ## 3. scoped enum in anonymous namespace
 ```c++
-static consteval const char* conjure_enum<T>::tpeek() [with T = {anonymous}::Anon_Enum_Type]
+static consteval const char* conjure_type<T>::tpeek() [with T = {anonymous}::Anon_Enum_Type]
 static consteval const char* conjure_enum<T>::epeek() [with T e = <unnamed>::Anon_Enum_Type::Value; T = {anonymous}::Anon_Enum_Type]
 static consteval const char* conjure_enum<T>::epeek() [with T e = (<unnamed>::Anon_Enum_Type)100; T = {anonymous}::Anon_Enum_Type]
 ```
 ## 4. unscoped enum in anonymous namespace
 ```c++
-static consteval const char* conjure_enum<T>::tpeek() [with T = {anonymous}::Anon_Enum_Type1]
+static consteval const char* conjure_type<T>::tpeek() [with T = {anonymous}::Anon_Enum_Type1]
 static consteval const char* conjure_enum<T>::epeek() [with T e = <unnamed>::Value; T = {anonymous}::Anon_Enum_Type1]
 static consteval const char* conjure_enum<T>::epeek() [with T e = (<unnamed>::Anon_Enum_Type1)100; T = {anonymous}::Anon_Enum_Type1]
 ```
 ## 5. scoped enum in namespace
 ```c++
-static consteval const char* conjure_enum<T>::tpeek() [with T = Namespace::Namespace_Enum_Type]
+static consteval const char* conjure_type<T>::tpeek() [with T = Namespace::Namespace_Enum_Type]
 static consteval const char* conjure_enum<T>::epeek() [with T e = Namespace::Namespace_Enum_Type::Value; T = Namespace::Namespace_Enum_Type]
 static consteval const char* conjure_enum<T>::epeek() [with T e = (Namespace::Namespace_Enum_Type)100; T = Namespace::Namespace_Enum_Type]
 ```
 ## 6. unscoped enum in namespace
 ```c++
-static consteval const char* conjure_enum<T>::tpeek() [with T = Namespace::Namespace_Enum_Type1]
+static consteval const char* conjure_type<T>::tpeek() [with T = Namespace::Namespace_Enum_Type1]
 static consteval const char* conjure_enum<T>::epeek() [with T e = Namespace::Value; T = Namespace::Namespace_Enum_Type1]
 static consteval const char* conjure_enum<T>::epeek() [with T e = (Namespace::Namespace_Enum_Type1)100; T = Namespace::Namespace_Enum_Type1]
 ```
@@ -644,36 +644,36 @@ static consteval const char* conjure_type<T>::tpeek() [with T = TEST::TEST1::Nin
 # Compiler: Clang: Ubuntu Clang 17.0.6 (9ubuntu1)
 ## 1. scoped enum
 ```c++
-static const char *conjure_enum<Namespace_Enum_Type>::tpeek() [T = Namespace_Enum_Type]
+static const char *conjure_type<Namespace_Enum_Type>::tpeek() [T = Namespace_Enum_Type]
 static const char *conjure_enum<Namespace_Enum_Type>::epeek() [T = Namespace_Enum_Type, e = Namespace_Enum_Type::Value]
 static const char *conjure_enum<Namespace_Enum_Type>::epeek() [T = Namespace_Enum_Type, e = (Namespace_Enum_Type)100]
 ```
 ## 2. unscoped enum
 ```c++
-static const char *conjure_enum<Namespace_Enum_Type1>::tpeek() [T = Namespace_Enum_Type1]
+static const char *conjure_type<Namespace_Enum_Type1>::tpeek() [T = Namespace_Enum_Type1]
 static const char *conjure_enum<Namespace_Enum_Type1>::epeek() [T = Namespace_Enum_Type1, e = Value]
 static const char *conjure_enum<Namespace_Enum_Type1>::epeek() [T = Namespace_Enum_Type1, e = (Namespace_Enum_Type1)100]
 ```
 ## 3. scoped enum in anonymous namespace
 ```c++
-static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type>::tpeek() [T = (anonymous namespace)::Anon_Enum_Type]
+static const char *conjure_type<(anonymous namespace)::Anon_Enum_Type>::tpeek() [T = (anonymous namespace)::Anon_Enum_Type]
 static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type>::epeek() [T = (anonymous namespace)::Anon_Enum_Type, e = (anonymous namespace)::Anon_Enum_Type::Value]
 static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type>::epeek() [T = (anonymous namespace)::Anon_Enum_Type, e = ((anonymous namespace)::Anon_Enum_Type)100]
 ```
 ## 4. unscoped enum in anonymous namespace
 ```c++
-static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type1>::tpeek() [T = (anonymous namespace)::Anon_Enum_Type1]
+static const char *conjure_type<(anonymous namespace)::Anon_Enum_Type1>::tpeek() [T = (anonymous namespace)::Anon_Enum_Type1]
 static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type1>::epeek() [T = (anonymous namespace)::Anon_Enum_Type1, e = (anonymous namespace)::Value]
 static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type1>::epeek() [T = (anonymous namespace)::Anon_Enum_Type1, e = ((anonymous namespace)::Anon_Enum_Type1)100]
 ```                                                                                                                                                                                                                                                  ## 5. scoped enum in namespace
 ```c++
-static const char *conjure_enum<Namespace::Namespace_Enum_Type>::tpeek() [T = Namespace::Namespace_Enum_Type]
+static const char *conjure_type<Namespace::Namespace_Enum_Type>::tpeek() [T = Namespace::Namespace_Enum_Type]
 static const char *conjure_enum<Namespace::Namespace_Enum_Type>::epeek() [T = Namespace::Namespace_Enum_Type, e = Namespace::Namespace_Enum_Type::Value]
 static const char *conjure_enum<Namespace::Namespace_Enum_Type>::epeek() [T = Namespace::Namespace_Enum_Type, e = (Namespace::Namespace_Enum_Type)100]
 ```
 ## 6. unscoped enum in namespace
 ```c++
-static const char *conjure_enum<Namespace::Namespace_Enum_Type1>::tpeek() [T = Namespace::Namespace_Enum_Type1]
+static const char *conjure_type<Namespace::Namespace_Enum_Type1>::tpeek() [T = Namespace::Namespace_Enum_Type1]
 static const char *conjure_enum<Namespace::Namespace_Enum_Type1>::epeek() [T = Namespace::Namespace_Enum_Type1, e = Namespace::Value]
 static const char *conjure_enum<Namespace::Namespace_Enum_Type1>::epeek() [T = Namespace::Namespace_Enum_Type1, e = (Namespace::Namespace_Enum_Type1)100]
 ```

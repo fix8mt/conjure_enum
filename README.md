@@ -1068,32 +1068,32 @@ You should attach the output of this application with your issue.
 $ ./srcloctest
 Compiler: Clang: Ubuntu Clang 16.0.6 (23ubuntu4)
 1. scoped enum
-static const char *conjure_enum<Namespace_Enum_Type>::tpeek() [T = Namespace_Enum_Type]
+static const char *conjure_type<Namespace_Enum_Type>::tpeek() [T = Namespace_Enum_Type]
 static const char *conjure_enum<Namespace_Enum_Type>::epeek() [T = Namespace_Enum_Type, e = Namespace_Enum_Type::Value]
 static const char *conjure_enum<Namespace_Enum_Type>::epeek() [T = Namespace_Enum_Type, e = (Namespace_Enum_Type)100]
 
 2. unscoped enum
-static const char *conjure_enum<Namespace_Enum_Type1>::tpeek() [T = Namespace_Enum_Type1]
+static const char *conjure_type<Namespace_Enum_Type1>::tpeek() [T = Namespace_Enum_Type1]
 static const char *conjure_enum<Namespace_Enum_Type1>::epeek() [T = Namespace_Enum_Type1, e = Value]
 static const char *conjure_enum<Namespace_Enum_Type1>::epeek() [T = Namespace_Enum_Type1, e = (Namespace_Enum_Type1)100]
 
 3. scoped enum in anonymous namespace
-static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type>::tpeek() [T = (anonymous namespace)::Anon_Enum_Type]
+static const char *conjure_type<(anonymous namespace)::Anon_Enum_Type>::tpeek() [T = (anonymous namespace)::Anon_Enum_Type]
 static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type>::epeek() [T = (anonymous namespace)::Anon_Enum_Type, e = (anonymous namespace)::Anon_Enum_Type::Value]
 static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type>::epeek() [T = (anonymous namespace)::Anon_Enum_Type, e = ((anonymous namespace)::Anon_Enum_Type)100]
 
 4. unscoped enum in anonymous namespace
-static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type1>::tpeek() [T = (anonymous namespace)::Anon_Enum_Type1]
+static const char *conjure_type<(anonymous namespace)::Anon_Enum_Type1>::tpeek() [T = (anonymous namespace)::Anon_Enum_Type1]
 static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type1>::epeek() [T = (anonymous namespace)::Anon_Enum_Type1, e = (anonymous namespace)::Value]
 static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type1>::epeek() [T = (anonymous namespace)::Anon_Enum_Type1, e = ((anonymous namespace)::Anon_Enum_Type1)100]
 
 5. scoped enum in namespace
-static const char *conjure_enum<Namespace::Namespace_Enum_Type>::tpeek() [T = Namespace::Namespace_Enum_Type]
+static const char *conjure_type<Namespace::Namespace_Enum_Type>::tpeek() [T = Namespace::Namespace_Enum_Type]
 static const char *conjure_enum<Namespace::Namespace_Enum_Type>::epeek() [T = Namespace::Namespace_Enum_Type, e = Namespace::Namespace_Enum_Type::Value]
 static const char *conjure_enum<Namespace::Namespace_Enum_Type>::epeek() [T = Namespace::Namespace_Enum_Type, e = (Namespace::Namespace_Enum_Type)100]
 
 6. unscoped enum in namespace
-static const char *conjure_enum<Namespace::Namespace_Enum_Type1>::tpeek() [T = Namespace::Namespace_Enum_Type1]
+static const char *conjure_type<Namespace::Namespace_Enum_Type1>::tpeek() [T = Namespace::Namespace_Enum_Type1]
 static const char *conjure_enum<Namespace::Namespace_Enum_Type1>::epeek() [T = Namespace::Namespace_Enum_Type1, e = Namespace::Value]
 static const char *conjure_enum<Namespace::Namespace_Enum_Type1>::epeek() [T = Namespace::Namespace_Enum_Type1, e = (Namespace::Namespace_Enum_Type1)100]
 
@@ -1108,7 +1108,6 @@ static const char *conjure_type<std::basic_string_view<char>>::tpeek() [T = std:
 static const char *conjure_type<std::vector<std::tuple<int, char, std::basic_string_view<char>>>>::tpeek() [T = std::vector<std::tuple<int, char, std::basic_string_view<char>>>]
 
 ## 9. edge enum types
-```c++
 static const char *conjure_type<(anonymous namespace)::NineEnums>::tpeek() [T = (anonymous namespace)::NineEnums]
 static const char *conjure_type<(anonymous namespace)::NineEnums1>::tpeek() [T = (anonymous namespace)::NineEnums1]
 static const char *conjure_type<TEST::NineEnums>::tpeek() [T = TEST::NineEnums]

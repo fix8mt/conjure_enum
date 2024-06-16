@@ -60,20 +60,18 @@ namespace Namespace
 }
 
 template<typename T>
-class conjure_enum
-{
-public:
-	static consteval const char *tpeek() noexcept { return std::source_location::current().function_name(); }
-
-	template<T e>
-	static consteval const char *epeek() noexcept { return std::source_location::current().function_name(); }
-};
-
-template<typename T>
 class conjure_type
 {
 public:
 	static consteval const char *tpeek() noexcept { return std::source_location::current().function_name(); }
+};
+
+template<typename T>
+class conjure_enum : public conjure_type<T>
+{
+public:
+	template<T e>
+	static consteval const char *epeek() noexcept { return std::source_location::current().function_name(); }
 };
 
 using UType = std::vector<std::tuple<int, char, std::string_view>>;
@@ -174,7 +172,7 @@ int main(int argc, char **argv)
 #define STRINGIZE_VALUE(x) STRINGIZE(x)
 #endif
 		if (mkd)
-			std::cout << "# ";
+			std::cout << "---\n# ";
 		std::cout << "Compiler: "
 #if defined __clang__
 			"Clang: " __VERSION__

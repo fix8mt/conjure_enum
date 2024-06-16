@@ -42,17 +42,17 @@
 <a href="https://opensource.org/license/mit"><img src="assets/badgemitlic.svg"></a>
 
 # 1. Quick links
-|**Link**|**Description**|
---|--
-|[Here](include/fix8/conjure_enum.hpp)| For implementation|
-|[`conjure_enum` API and Examples](#3-api-and-examples)| General examples|
-|[`enum_bitset` API and Examples](#4-api-and-examples-using-enum_bitset)| enhanced enum aware `std::bitset`|
-|[`conjure_type` API and Examples](#5-api-and-examples-using-conjure_type)| any type string extractor|
-|[Building](#6-building)| How to build or include|
-|[Notes](#7-notes)| Notes on the implementation, limits, etc|
-|[Compilers](#8-compiler-support)| Supported compilers|
-|[Compiler issues](#9-compiler-issues)| Workarounds for various compiler issues|
-|[Results of `source_location`](reference/source_location.md)| For implementation specific `std::source_location` results|
+||**Link**|**Description**|
+--|--|--
+|1|[Here](include/fix8/conjure_enum.hpp)| For implementation|
+|2|[`conjure_enum` API and Examples](#3-api-and-examples)| General examples|
+|3|[`enum_bitset` API and Examples](#4-api-and-examples-using-enum_bitset)| enhanced enum aware `std::bitset`|
+|4|[`conjure_type` API and Examples](#5-api-and-examples-using-conjure_type)| any type string extractor|
+|5|[Building](#6-building)| How to build or include|
+|6|[Notes](#7-notes)| Notes on the implementation, limits, etc|
+|7|[Compilers](#8-compiler-support)| Supported compilers|
+|8|[Compiler issues](#9-compiler-issues)| Workarounds for various compiler issues|
+|9|[Results of `source_location`](reference/source_location.md)| For implementation specific `std::source_location` results|
 > [!TIP]
 > Use the built-in [table of contents](https://github.blog/changelog/2021-04-13-table-of-contents-support-in-markdown-files/) to navigate this guide.
 > Even better in [full read view](./README.md) of this page.

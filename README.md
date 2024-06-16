@@ -45,9 +45,9 @@
 ||**Link**|**Description**|
 --|--|--
 |1|[Here](include/fix8/conjure_enum.hpp)| For implementation|
-|2|[`conjure_enum` API and Examples](#3-api-and-examples)| General examples|
-|3|[`enum_bitset` API and Examples](#4-api-and-examples-using-enum_bitset)| enhanced enum aware `std::bitset`|
-|4|[`conjure_type` API and Examples](#5-api-and-examples-using-conjure_type)| any type string extractor|
+|2|[`conjure_enum`: API and Examples](#3-api-and-examples)| General examples|
+|3|[`enum_bitset`: API and Examples](#4-api-and-examples-using-enum_bitset)| enhanced enum aware `std::bitset`|
+|4|[`conjure_type`: API and Examples](#5-api-and-examples-using-conjure_type)| any type string extractor|
 |5|[Building](#6-building)| How to build or include|
 |6|[Notes](#7-notes)| Notes on the implementation, limits, etc|
 |7|[Compilers](#8-compiler-support)| Supported compilers|

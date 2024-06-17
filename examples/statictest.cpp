@@ -32,10 +32,10 @@
 #include <fix8/conjure_enum.hpp>
 
 //-----------------------------------------------------------------------------------------
-using namespace FIX8;
+enum class component : int { scheme, authority, userinfo, user, password, host, port, path, query, fragment };
 
 //-----------------------------------------------------------------------------------------
-enum class component : int { scheme, authority, userinfo, user, password, host, port, path, query, fragment };
+using namespace FIX8;
 
 //-----------------------------------------------------------------------------------------
 int main(void)

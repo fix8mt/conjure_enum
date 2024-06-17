@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 // SPDX-FileCopyrightText: Copyright (C) 2024 Fix8 Market Technologies Pty Ltd
 // SPDX-FileType: SOURCE
-
+//
 // conjure_enum (header only)
 //   by David L. Dight
 // see https://github.com/fix8mt/conjure_enum
@@ -215,8 +215,8 @@ int main(void)
 	std::cout << conjure_type<decltype(strv)>::name << '\n';
 	std::cout << conjure_type<std::underlying_type_t<numbers>>::name << '\n';
 
-	for(const auto& [a, b] : conjure_enum<component>::unscoped_entries)
-		std::cout << static_cast<int>(a) << ' ' << b << '\n';
+	for(const auto& [a3, b3] : conjure_enum<component>::unscoped_entries)
+		std::cout << static_cast<int>(a3) << ' ' << b3 << '\n';
 
 	std::cout << conjure_type<conjure_type<conjure_enum<numbers>>>::name << '\n';
 

@@ -31,28 +31,6 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //----------------------------------------------------------------------------------------
-// clang
-// static const char *FIX8::conjure_enum<component>::epeek() [T = component, e = component::path] // valid
-// 																								  |<--				-->|
-// static const char *FIX8::conjure_enum<component>::epeek() [T = component, e = (component)100] // invalid
-//																									  |<--           -->|
-// static const char *FIX8::conjure_enum<component>::tpeek() [T = component]
-//																				  |<--		-->|
-// gcc
-// static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::path; T = component] // valid
-//																						     |<--				-->|
-// static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = (component)100; T = component] // invalid
-//																		 					  |<--           -->|
-// static consteval const char* FIX8::conjure_type<T>::tpeek() [with T = component]
-//																							|<--		 -->|
-// msvc
-// const char *__cdecl FIX8::conjure_enum<enum numbers>::epeek<numbers::two>(void) noexcept			// valid
-//																					|<--		-->|
-// const char *__cdecl FIX8::conjure_enum<enum numbers>::epeek<(enum numbers)0xa>(void) noexcept	// invalid
-//																			|<--		 		 -->|
-// const char *__cdecl FIX8::conjure_enum<enum numbers>::tpeek(void) noexcept
-//														|<--   	-->|
-//----------------------------------------------------------------------------------------
 #ifndef FIX8_CONJURE_ENUM_HPP_
 #define FIX8_CONJURE_ENUM_HPP_
 
@@ -105,26 +83,54 @@ public:
 };
 
 //-----------------------------------------------------------------------------------------
-template<int N, int V> // can't have constexpr decompositions! (but why not?)
-constexpr auto get_spec() noexcept
+// compiler specifics
+//-----------------------------------------------------------------------------------------
+class cs
 {
-	constexpr auto compiler_specifics
+	static constexpr auto _specifics
 	{
-		std::to_array<std::tuple<std::string_view, char>>
+		std::to_array<std::tuple<std::string_view, char, std::string_view, char>>
 		({
 #if defined __clang__
-			{ "e = ", ']' }, { "T = ", ']' },
+			{ "e = ", ']', "(anonymous namespace)", '(' }, { "T = ", ']', "(anonymous namespace)", '(' },
 #elif defined __GNUC__
-			{ "e = ", ';' }, { "T = ", ']' },
+			{ "e = ", ';', "<unnamed>", '<' }, { "T = ", ']', "{anonymous}", '{' },
 #elif defined _MSC_VER
-			{ "epeek<", '>' }, { "enum ", '>' },
+			{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "::tpeek", '<', "enum `anonymous namespace'::", '\0' },
+			{ "", '\0', "`anonymous namespace'::", '\0' }, { "", '\0', "enum ", '\0' }, { "", '\0', "class ", '\0' },
+			{ "", '\0', "struct ", '\0' },
 #else
 # error "conjure_enum not supported by your compiler"
 #endif
 		})
 	};
-	return std::get<N>(compiler_specifics[V]);
-}
+
+public:
+	cs() = delete;
+	~cs() = delete;
+	cs(const cs&) = delete;
+	cs& operator=(const cs&) = delete;
+	cs(cs&&) = delete;
+	cs& operator=(cs&&) = delete;
+
+	enum class stype { enum_t, type_t, extype_t0, extype_t1, extype_t2, extype_t3 };
+	enum class sval { start, end, anon_str, anon_start };
+
+	template<sval N, stype V> // can't have constexpr decompositions! (but why not?)
+	static constexpr auto get_spec() noexcept
+	{
+		return std::get<static_cast<int>(N)>(_specifics[static_cast<int>(V)]);
+	}
+	static constexpr auto size() noexcept { return sizeof(_specifics); }
+};
+using stype = cs::stype;
+using sval = cs::sval;
+
+#if defined _MSC_VER
+#define CHKMSSTR(e, x) \
+	if constexpr (constexpr auto ep##x { e.find(cs::get_spec<sval::anon_str,stype::x>()) }; ep##x != std::string_view::npos) \
+		return e.substr(ep##x + cs::get_spec<sval::anon_str,stype::x>().size(), e.size() - (ep##x + cs::get_spec<sval::anon_str,stype::x>().size()))
+#endif
 
 //-----------------------------------------------------------------------------------------
 template<typename T>
@@ -223,36 +229,35 @@ private:
 	static constexpr bool _is_valid() noexcept
 	{
 		constexpr std::string_view from{epeek<e>()};
-		constexpr auto ep { from.rfind(get_spec<0,0>()) };
-		if constexpr (ep != std::string_view::npos && from[ep + get_spec<0,0>().size()] != '('
-			&& from.substr(ep + get_spec<0,0>().size()).find_first_of(get_spec<1,0>()) != std::string_view::npos)
+		constexpr auto ep { from.rfind(cs::get_spec<sval::start,stype::enum_t>()) };
+		if constexpr (ep == std::string_view::npos)
+			return false;
+#if defined __clang__
+		if constexpr (from[ep + cs::get_spec<sval::start,stype::enum_t>().size()] == '(')
+		{
+			if constexpr (from[ep + cs::get_spec<sval::start,stype::enum_t>().size() + 1] == '(')
+				return false;
+			if constexpr (constexpr auto lstr { from.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()) };
+				lstr.find(cs::get_spec<sval::anon_str,stype::enum_t>()) != std::string_view::npos)	// is anon
+					return true;
+		}
+		else if constexpr (from.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()).find_first_of(cs::get_spec<sval::end,stype::enum_t>()) != std::string_view::npos)
+			return true;
+		return false;
+#else
+		if constexpr (from[ep + cs::get_spec<sval::start,stype::enum_t>().size()] != '('
+			&& from.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()).find_first_of(cs::get_spec<sval::end,stype::enum_t>()) != std::string_view::npos)
 				return true;
 		else
 			return false;
-	}
-
-#if defined BUILD_CONSRVCPP20
-	template<std::size_t N>
-	static constexpr auto count_if_constexpr(const bool (&valid)[N]) noexcept
-	{
-		std::size_t cnt{};
-		for(std::size_t nn{}; nn < N; ++nn)
-			if (valid[nn])
-				++cnt;
-		return cnt;
-	}
 #endif
+	}
 
 	template<std::size_t... I>
 	static constexpr auto _values(std::index_sequence<I...>) noexcept
 	{
-#if defined BUILD_CONSRVCPP20
-		constexpr bool valid[sizeof...(I)] { _is_valid<static_cast<T>(enum_min_value + I)>()... };
-		constexpr auto num_valid { count_if_constexpr(valid) };
-#else
 		constexpr std::array<bool, sizeof...(I)> valid { _is_valid<static_cast<T>(enum_min_value + I)>()... };
 		constexpr auto num_valid { std::count_if(valid.cbegin(), valid.cend(), [](bool val) noexcept { return val; }) };
-#endif
 		static_assert(num_valid > 0, "conjure_enum requires non-empty enum");
 		std::array<T, num_valid> vals{};
 		for(std::size_t offset{}, nn{}; nn < num_valid; ++offset)
@@ -270,12 +275,23 @@ private:
 	static constexpr std::string_view _get_name() noexcept
 	{
 		constexpr std::string_view from{epeek<e>()};
-		if constexpr (constexpr auto ep { from.rfind(get_spec<0,0>()) }; ep != std::string_view::npos && from[ep + get_spec<0,0>().size()] != '(')
+		constexpr auto ep { from.rfind(cs::get_spec<sval::start,stype::enum_t>()) };
+		if constexpr (ep == std::string_view::npos)
+			return {};
+		if constexpr (from[ep + cs::get_spec<sval::start,stype::enum_t>().size()] == cs::get_spec<sval::anon_start,stype::enum_t>())
 		{
-			constexpr std::string_view result { from.substr(ep + get_spec<0,0>().size()) };
-			if constexpr (constexpr auto lc { result.find_first_of(get_spec<1,0>()) }; lc != std::string_view::npos)
-				return result.substr(0, lc);
+#if defined __clang__
+			if constexpr (from[ep + cs::get_spec<sval::start,stype::enum_t>().size() + 1] == cs::get_spec<sval::anon_start,stype::enum_t>())
+				return {};
+#endif
+			if (constexpr auto lstr { from.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()) };
+				lstr.find(cs::get_spec<sval::anon_str,stype::enum_t>()) != std::string_view::npos)	// is anon
+					if constexpr (constexpr auto lc { lstr.find_first_of(cs::get_spec<sval::end,stype::enum_t>()) }; lc != std::string_view::npos)
+						return lstr.substr(cs::get_spec<sval::anon_str,stype::enum_t>().size() + 2, lc - (cs::get_spec<sval::anon_str,stype::enum_t>().size() + 2)); // eat "::"
 		}
+		constexpr std::string_view result { from.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()) };
+		if constexpr (constexpr auto lc { result.find_first_of(cs::get_spec<sval::end,stype::enum_t>()) }; lc != std::string_view::npos)
+			return result.substr(0, lc);
 		else
 			return {};
 	}
@@ -309,14 +325,28 @@ public:
 	static constexpr std::string_view type_name() noexcept
 	{
 		constexpr std::string_view from{tpeek()};
-		if constexpr (constexpr auto ep { from.rfind(get_spec<0,1>()) }; ep != std::string_view::npos)
+#if defined _MSC_VER
+		constexpr auto ep { from.rfind(cs::get_spec<sval::start,stype::type_t>()) };
+		if constexpr (ep == std::string_view::npos)
+			return {};
+		if constexpr (constexpr auto lc { from.find_first_of(cs::get_spec<sval::end,stype::type_t>()) }; lc != std::string_view::npos)
 		{
-			constexpr std::string_view result { from.substr(ep + get_spec<0,1>().size()) };
-			if constexpr (constexpr auto lc { result.find_first_of(get_spec<1,1>()) }; lc != std::string_view::npos)
+			constexpr auto e1 { from.substr(lc + 1, ep - lc - 2) };
+			CHKMSSTR(e1,type_t);
+			CHKMSSTR(e1,extype_t1);
+		}
+		else
+			return {};
+#else
+		if constexpr (constexpr auto ep { from.rfind(cs::get_spec<sval::start,stype::type_t>()) }; ep != std::string_view::npos)
+		{
+			constexpr auto result { from.substr(ep + cs::get_spec<sval::start,stype::type_t>().size()) };
+			if constexpr (constexpr auto lc { result.find_first_of(cs::get_spec<sval::end,stype::type_t>()) }; lc != std::string_view::npos)
 				return result.substr(0, lc);
 		}
 		else
 			return {};
+#endif
 	}
 
 	struct is_scoped : std::integral_constant<bool, requires
@@ -332,24 +362,20 @@ public:
 	static constexpr std::string_view remove_scope(std::string_view what) noexcept
 	{
 		if constexpr (is_scoped())
-		{
 			if (const auto result { std::equal_range(rev_scoped_entries.cbegin(),
 				rev_scoped_entries.cend(), scoped_tuple(what, std::string_view()), scoped_comp) };
 					result.first != result.second)
 						return std::get<1>(*result.first);
-		}
 		return what;
 	}
 
 	static constexpr std::string_view add_scope(std::string_view what) noexcept
 	{
 		if constexpr (is_scoped())
-		{
 			if (const auto result { std::equal_range(scoped_entries.cbegin(),
 				scoped_entries.cend(), scoped_tuple(what, std::string_view()), scoped_comp) };
 					result.first != result.second)
 						return std::get<1>(*result.first);
-		}
 		return what;
 	}
 
@@ -468,14 +494,22 @@ namespace ostream_enum_operator
 }
 
 //-----------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------
+template<typename T>
+concept valid_bitset_enum = valid_enum<T> and requires(T)
+{
+	requires conjure_enum<T>::count() > 0;
+	requires static_cast<std::size_t>(conjure_enum<T>::values.back()) < conjure_enum<T>::count();
+};
+
+//-----------------------------------------------------------------------------------------
 // bitset based on supplied enum
 // Note: your enum sequence must be continuous with the last enum value < count of enumerations
 //-----------------------------------------------------------------------------------------
-template<valid_enum T>
-requires (conjure_enum<T>::count() > 0) && (static_cast<std::size_t>(conjure_enum<T>::values.back()) < conjure_enum<T>::count())
+template<valid_bitset_enum T>
 class enum_bitset
 {
-	using U = std::underlying_type_t<std::decay_t<T>>;
+	using U = std::underlying_type_t<T>;
 	static constexpr auto countof { conjure_enum<T>::count() };
 
 	template<T val>
@@ -489,7 +523,7 @@ public:
 	constexpr enum_bitset(std::string_view from, bool anyscope=false, char sep='|', bool ignore_errors=true)
 		: _present(factory(from, anyscope, sep, ignore_errors)) {}
 
-	template<valid_enum... E>
+	template<valid_bitset_enum... E>
 	constexpr enum_bitset(E... comp) noexcept : _present((0u | ... | (1 << to_underlying(comp)))) {}
 
 	template<std::integral... I>
@@ -521,7 +555,7 @@ public:
 	template<T... comp>
 	constexpr void set_all() noexcept { (set<comp>(),...); }
 
-	template<valid_enum... E>
+	template<valid_bitset_enum... E>
 	constexpr void set_all(E... comp) noexcept { return (... | (set(comp))); }
 
 	template<T what>
@@ -561,6 +595,8 @@ public:
 	{
 		if constexpr (constexpr auto uu{to_underlying<what>()}; uu < countof)
 			return test(uu);
+		else
+			return false;
 	}
 
 	template<T... comp>
@@ -569,7 +605,7 @@ public:
 	template<std::integral... I>
 	constexpr bool test_any(I...comp) const noexcept { return (... || test(comp)); }
 
-	template<valid_enum... E>
+	template<valid_bitset_enum... E>
 	constexpr bool test_any(E...comp) const noexcept { return (... || test(comp)); }
 
 	template<T... comp>
@@ -578,7 +614,7 @@ public:
 	template<std::integral... I>
 	constexpr bool test_all(I...comp) const noexcept { return (... && test(comp)); }
 
-	template<valid_enum... E>
+	template<valid_bitset_enum... E>
 	constexpr bool test_all(E...comp) const noexcept { return (... && test(comp)); }
 
 	constexpr enum_bitset& operator<<=(std::size_t pos) noexcept { _present <<= pos; return *this; }
@@ -619,16 +655,16 @@ public:
 		return for_each(std::bind(std::forward<Fn>(func), obj, std::placeholders::_1, std::forward<Args>(args)...));
 	}
 
-	/// create a bitset from enum separated enum string
-	constexpr static U factory(std::string_view src, bool anyscope, char sep, bool ignore_errors)
+	/// create a bitset from custom separated enum string
+	static constexpr U factory(std::string_view src, bool anyscope, char sep, bool ignore_errors)
 	{
 		enum_bitset result;
-		auto trim([](std::string_view src) noexcept ->std::string_view
+		constexpr auto trim([](std::string_view src) noexcept ->auto
 		{
 		   const auto bg(src.find_first_not_of(" \t"));
 			return bg == std::string_view::npos ? src : src.substr(bg, src.find_last_not_of(" \t") - bg + 1);
 		});
-		auto process([anyscope,&result](std::string_view src) noexcept ->bool
+		auto process([anyscope,&result](std::string_view src) noexcept ->auto
 		{
 			if (anyscope && !conjure_enum<T>::has_scope(src))
 				src = conjure_enum<T>::add_scope(src);
@@ -677,23 +713,42 @@ constexpr enum_bitset<T> operator^(const enum_bitset<T>& lh, const enum_bitset<T
 	{ return lh.operator^(rh.to_ulong()); }
 
 //-----------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------
 template<typename T>
 class conjure_type
 {
 	static constexpr std::string_view _get_name() noexcept
 	{
 		constexpr std::string_view from{tpeek()};
-		constexpr auto ep { from.rfind(get_spec<0,1>()) };
-		if constexpr (ep != std::string_view::npos)
-		{
-			constexpr std::string_view result { from.substr(ep + get_spec<0,1>().size()) };
-			if constexpr (constexpr auto lc { result.find_first_of(get_spec<1,1>()) }; lc != std::string_view::npos)
-				return result.substr(0, lc);
-		}
-		else
+#if defined _MSC_VER
+		constexpr auto ep { from.rfind(cs::get_spec<sval::start,stype::type_t>()) };
+		if constexpr (ep == std::string_view::npos)
 			return {};
+		if constexpr (constexpr auto lc { from.find_first_of(cs::get_spec<sval::end,stype::type_t>()) }; lc != std::string_view::npos)
+		{
+			constexpr auto e1 { from.substr(lc + 1, ep - lc - 2) };
+			CHKMSSTR(e1,type_t);
+			CHKMSSTR(e1,extype_t0);
+			CHKMSSTR(e1,extype_t1);
+			CHKMSSTR(e1,extype_t2);
+			CHKMSSTR(e1,extype_t3);
+		}
+		return {};
 	}
-#if !defined _MSC_VER
+#else
+		constexpr auto ep { from.rfind(cs::get_spec<sval::start,stype::type_t>()) };
+		if constexpr (ep == std::string_view::npos)
+			return {};
+		if constexpr (from[ep + cs::get_spec<sval::start,stype::type_t>().size()] == cs::get_spec<sval::anon_start,stype::type_t>())
+			if (constexpr auto lstr { from.substr(ep + cs::get_spec<sval::start,stype::type_t>().size()) };
+				lstr.find(cs::get_spec<sval::anon_str,stype::type_t>()) != std::string_view::npos)	// is anon
+					if constexpr (constexpr auto lc { lstr.find_first_of(cs::get_spec<sval::end,stype::type_t>()) }; lc != std::string_view::npos)
+						return lstr.substr(cs::get_spec<sval::anon_str,stype::type_t>().size() + 2, lc - (cs::get_spec<sval::anon_str,stype::type_t>().size() + 2)); // eat "::"
+		constexpr auto result { from.substr(ep + cs::get_spec<sval::start,stype::type_t>().size()) };
+		if constexpr (constexpr auto lc { result.find_first_of(cs::get_spec<sval::end,stype::type_t>()) }; lc != std::string_view::npos)
+			return result.substr(0, lc);
+		return {};
+	}
 	static constexpr auto _type_name() noexcept
 	{
 		constexpr auto result { _get_name() };

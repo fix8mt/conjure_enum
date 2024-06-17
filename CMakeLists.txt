@@ -32,14 +32,13 @@ cmake_minimum_required (VERSION 3.20)
 project (conjure_enum
    LANGUAGES CXX
 	HOMEPAGE_URL https://github.com/fix8mt/conjure_enum
-   DESCRIPTION "Lightweight C++20 enum reflection"
-   VERSION 1.0.0
-)
+   DESCRIPTION "Lightweight C++20 enum and type reflection"
+   VERSION 1.0.0)
 
-# to enable conservative C++20 build:
-# cmake -DBUILD_CONSRVCPP20=true ..
-option(BUILD_CONSRVCPP20 "enable conservative C++20 build" false)
-message("-- Build conservative C++20: ${BUILD_CONSRVCPP20}")
+# to disable strip:
+# cmake -DBUILD_STRIP_EXE=false ..
+option(BUILD_STRIP_EXE "enable stripping of non-unittest executables" true)
+message("-- Build strip exes: ${BUILD_STRIP_EXE}")
 
 # to disable warnings:
 # cmake -DBUILD_ALL_WARNINGS=false ..
@@ -51,46 +50,41 @@ message("-- Build with all warnings : ${BUILD_ALL_WARNINGS}")
 option(BUILD_UNITTESTS "enable building unit tests" true)
 message("-- Build unit tests: ${BUILD_UNITTESTS}")
 
+function(build loc x)
+	add_executable(${x} ${loc}/${x}.cpp)
+	add_dependencies(${x} srcloctest) # srcloctest should be built even if errors with conjure_enum
+	set_target_properties(${x} PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED true)
+	target_include_directories(${x} PRIVATE include)
+	if(BUILD_ALL_WARNINGS)
+		target_compile_options(${x} PRIVATE
+			$<$<CXX_COMPILER_ID:MSVC>:/W4>
+			$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic>)
+	endif()
+	get_target_property(cppstd ${x} CXX_STANDARD)
+	message("-- adding ${x}.cpp CXX_STANDARD: C++${cppstd} (${CMAKE_CXX_COMPILER_ID})")
+endfunction()
+
+foreach(x srcloctest example statictest)
+	build(examples ${x})
+	if(BUILD_STRIP_EXE)
+		add_custom_command(TARGET ${x} POST_BUILD COMMAND ${CMAKE_STRIP} ${x})
+	endif()
+endforeach()
+
 if(BUILD_UNITTESTS)
 	include(FetchContent)
 	FetchContent_Declare(Catch2
 		GIT_REPOSITORY https://github.com/catchorg/Catch2.git
 		GIT_SHALLOW ON
-		GIT_TAG devel
-	)
+		GIT_TAG devel)
 	FetchContent_MakeAvailable(Catch2)
 	list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
 	target_compile_features(Catch2 PRIVATE cxx_std_20)
-endif()
-
-set(files srcloctest.cpp example.cpp statictest.cpp)
-if(BUILD_UNITTESTS)
-   list(APPEND files unittests.cpp)
-endif()
-foreach(x IN LISTS files)
-	cmake_path(GET x STEM LAST_ONLY target)
-	add_executable(${target} examples/${x})
-	set_target_properties(${target} PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED true)
-	target_include_directories(${target} PRIVATE include)
-	if (BUILD_CONSRVCPP20)
-		target_compile_definitions(${target} PRIVATE BUILD_CONSRVCPP20)
-	endif()
-	if(BUILD_ALL_WARNINGS)
-		target_compile_options(${target} PRIVATE
-			$<$<CXX_COMPILER_ID:MSVC>:/W4>
-			$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic>)
-	endif()
-	if(BUILD_UNITTESTS)
-		target_link_libraries(${target} PRIVATE Catch2::Catch2WithMain)
-	endif()
-	add_custom_command(TARGET ${target} POST_BUILD COMMAND ${CMAKE_STRIP} ${target})
-	cmake_path(GET x FILENAME fname)
-	get_target_property(cppstd ${target} CXX_STANDARD)
-	message("-- adding ${fname} CXX_STANDARD: C++${cppstd} (${CMAKE_CXX_COMPILER_ID})")
-endforeach()
-
-if(BUILD_UNITTESTS)
 	include(Catch)
 	enable_testing()
-	catch_discover_tests(unittests)
+	foreach(x unittests edgetests)
+		build(utests ${x})
+		target_link_libraries(${x} PRIVATE Catch2::Catch2WithMain)
+		catch_discover_tests(${x})
+	endforeach()
 endif()

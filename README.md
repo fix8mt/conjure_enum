@@ -1,7 +1,7 @@
 <!-----------------------------------------------------------------------------------------
 // SPDX-License-Identifier: MIT
 // SPDX-FileCopyrightText: Copyright (C) 2024 Fix8 Market Technologies Pty Ltd
-// SPDX-FileType: SOURCE
+// SPDX-FileType: DOCUMENTATION
 //
 // conjure_enum (header only)
 //   by David L. Dight
@@ -29,66 +29,79 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //---------------------------------------------------------------------------------------->
 <p align="center">
-  <a href="https://www.fix8mt.com"><img src="https://github.com/fix8mt/conjure_enum/blob/master/assets/fix8mt_Master_Logo_Green_Trans.png" width="200"></a>
+  <a href="https://www.fix8mt.com"><img src="assets/conjure_enum_logo.png" width="200"></a>
 </p>
 
-# `conjure_enum`
-
-### Lightweight header-only C++20 enum and type reflection
+<h3 align="center">Lightweight header-only C++20 enum and type reflection</h3>
 
 ---
+
 [![clang](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-clang-latest.yml/badge.svg)](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-clang-latest.yml)
 [![gcc](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-gcc-latest.yml/badge.svg)](https://github.com/fix8mt/conjure_enum/actions/workflows/Ubuntu-gcc-latest.yml)
-<a href="https://en.wikipedia.org/wiki/C%2B%2B20"><img src="https://github.com/fix8mt/conjure_enum/blob/master/assets/badgecpprequired.svg"></a>
-<a href="https://opensource.org/license/mit"><img src="https://github.com/fix8mt/conjure_enum/blob/master/assets/badgemitlic.svg"></a>
+<a href="https://en.wikipedia.org/wiki/C%2B%2B20"><img src="assets/badgecpprequired.svg"></a>
+<a href="https://opensource.org/license/mit"><img src="assets/badgemitlic.svg"></a>
 
 # 1. Quick links
-|**Link**|**Description**|
---|--
-|[Here](https://github.com/fix8mt/conjure_enum/blob/master/include/fix8/conjure_enum.hpp)| For implementation|
-|[API and Examples](#3-api-and-examples)| General examples|
-|[API and Examples for `enum_bitset`](#4-api-and-examples-using-enum_bitset)| `std::bitset` replacement|
-|[API and Examples for `conjure_type`](#5-api-and-examples-using-conjure_type)| any type string extractor|
-|[Building](#6-building)| How to build or include|
-|[Notes](#7-notes)| Notes on the implementation, limits, etc|
-|[Compilers](#8-compiler-support)| Supported compilers|
-|[Compiler issues](#9-compiler-issues)| Workarounds for various compiler issues|
-|[Review `std::source_location`](https://github.com/fix8mt/conjure_enum/blob/master/reference/source_location.md)| For implementation specific `source_location` results|
+||**Link**|**Description**|
+--|--|--
+|1|[Here](include/fix8/conjure_enum.hpp)| For implementation|
+|2|[`conjure_enum` API and Examples](#3-api-and-examples-using-conjure_enum)| General examples|
+|3|[`enum_bitset` API and Examples](#4-api-and-examples-using-enum_bitset)| enhanced enum aware `std::bitset`|
+|4|[`conjure_type` API and Examples](#5-api-and-examples-using-conjure_type)| any type string extractor|
+|5|[Building](#6-building)| How to build or include|
+|6|[Notes](#7-notes)| Notes on the implementation, limits, etc|
+|7|[Compilers](#8-compiler-support)| Supported compilers|
+|8|[Compiler issues](#9-compiler-issues)| Workarounds for various compiler issues|
+|9|[Results of `source_location`](reference/source_location.md)| For implementation specific `std::source_location` results|
 > [!TIP]
 > Use the built-in [table of contents](https://github.blog/changelog/2021-04-13-table-of-contents-support-in-markdown-files/) to navigate this guide.
+> Even better in [full read view](./README.md) of this page.
 
 ---
 # 2. Introduction
 ## a) Supercharge Your C++ Enums with This Lightweight Reflection Library!
 
-Based on the awesome work of [`magic_enum`](https://github.com/Neargye/magic_enum)[^2] and [`boost::desribe`](https://github.com/boostorg/describe),
+Based on the awesome work in [`magic_enum`](https://github.com/Neargye/magic_enum)[^2] and [`boost::describe`](https://github.com/boostorg/describe),
 this library offers a streamlined and powerful way to add reflection capabilities to your C++ enums and other types. We've optimized the core functionality,
-focusing on the main features developers usually need while enhancing and expanding them for a more efficient and expressive experience. We've also
+focusing on the main features developers usually want while enhancing and expanding them for a more efficient and expressive experience. We've also
 added general purpose type reflection for any type.
 
 ## b) Embrace the Future with C++20
 
-`conjure_enum`[^1] takes full advantage of the latest C++20 features. We've leveraged the convenience of `std::source_location` and
+`conjure_enum`[^1] takes full advantage of recently added C++20 features. We've leveraged the convenience of `std::source_location` and
 unlocked the potential of `constexpr` algorithms and concepts. This translates to:
 
 - ***Improved Performance***  Optimized code for faster and smoother operation - get your compiler to do more!
-- ***Enhanced Developer Experience***  Write cleaner, more concise, and more powerful C++ code.
+- ***Enhanced Developer Experience***  Write cleaner, more concise, and more powerful C++ code
 
 ## c) Key Benefits
 
-- ***Lightweight***:  Designed for performance without unnecessary overhead.
-- ***Single Header-Only***:  No external dependencies, simplifying integration into your project.
-- ***Modern C++20***:  Entirely `constexpr` for compile-time safety, efficiency and performance.
-- ***Broad Support***:  Works with scoped and unscoped enums, enum **aliases** and even with **gaps**.
-- ***Simple & Easy to Use***:  Class-based approach with intuitive syntax.
-- ***Convenient***:  `enum_bitset` offers an enhanced `std::bitset`.
-- ***Useful***:  `conjure_type` lets you obtain the type string of _any type!_
-- ***Wide Compiler Compatibility***:  Supports GCC, Clang, MSVC and XCode/Clang; `x86_64`, `AArch64`
-- ***Confidence in Quality***:  Includes comprehensive unit tests for reliable functionality.
-- ***Expanded***:  Enhanced API such as `add_scope`, `remove_scope`, `unscoped_string_to_enum`, iterators and more!
+- ***Lightweight***: Designed for performance without additional overhead
+- ***Single Header-Only***: No external dependencies, simplifying integration into your project
+- ***Modern C++20***: Entirely `constexpr` for compile-time safety, efficiency and performance
+- ***Broad Support***: Works with:
+  - scoped and unscoped enums
+  - enum **aliases**
+  - **gaps**
+  - anonymous and named namespaced enums and types
+- ***Simple & Easy to Use***: Class-based approach with intuitive syntax
+- ***Convenient***: `enum_bitset` provides an enhanced enum aware `std::bitset` (see 3 above)
+- ***Useful***: `conjure_type` gives you the type string of _any type!_ (see 4 above)
+- ***Wide Compiler Compatibility***: Support for: (see 7 above)
+  - GCC
+  - Clang
+  - MSVC
+  - XCode/Apple Clang
+- ***Confidence in Quality***: Includes comprehensive unit tests for reliable functionality
+- ***Expanded***: Enhanced API:
+  - `add_scope`
+  - `remove_scope`
+  - `unscoped_string_to_enum`
+  - iterators and more!
+- ***Transparency***: Compiler implementation variability fully documented, verifiable and reportable (see 9 above)
 
 ---
-# 3. API and Examples
+# 3. API and Examples using `conjure_enum`
 All examples refer to the following enums:
 ```c++
 enum class component { scheme, authority, userinfo, user, password, host, port, path=12, test=path, query, fragment };
@@ -116,7 +129,7 @@ component::path
 path
 ```
 ### Aliases
-Because all methods in `conjure_enum` are within a `class` instead of individual template functions in a `namespace`, you can reduce your
+Because all methods in `conjure_enum` are defined _within_ a `class` instead of individual template functions in a `namespace`, you can reduce your
 typing with standard aliases:
 ```c++
 using ec = conjure_enum<component>;
@@ -198,7 +211,8 @@ _output_
 static constexpr int enum_to_int(T value);
 static constexpr std::underlying_type_t<T> enum_to_underlying(T value);
 ```
-Returns an `int` or the `underlying` value for the given enum value.
+Returns an `int` or the `underlying` value for the given enum value. These are added for completeness. For unscoped enums
+you can always just use the value like an int, or for scoped enums just `static_cast<int>` it first.
 ```c++
 std::cout << conjure_enum<component>::enum_to_int(component::path) << '\n';
 std::cout << conjure_enum<component>::enum_to_underlying(component::path) << '\n';
@@ -558,7 +572,7 @@ path
 ```c++
 static constexpr bool has_scope(std::string_view what);
 ```
-Returns `true` if the supplied string is scoped (and is valid).
+Returns `true` if the supplied string representation is scoped (and is valid).
 ```c++
 std::cout << std::format("{}\n", conjure_enum<component>::has_scope("component::scheme"));
 std::cout << std::format("{}\n", conjure_enum<component>::has_scope("scheme"));
@@ -666,9 +680,7 @@ template<T e>
 static consteval const char *epeek();
 ```
 These functions return `std::source_location::current().function_name()` as `const char*` strings for the enum type or enum value.
-The actual output is implementation dependent.
-> [!TIP]
-> If you want to report an issue please include the output of these methods.
+The actual output is implementation dependent. See [Results of `source_location`](reference/source_location.md) for implementation specific `std::source_location` results.
 
 The following code:
 ```c++
@@ -919,7 +931,7 @@ numbers::nine
 ---
 # 5. API and Examples using `conjure_type`
 `conjure_type` is a general purpose class allowing you to extract a string representation of any type.
-The string will be stored statically by the compiler, so use the statically generated value `name` for your type.
+The string will be stored statically by the compiler, so you can use the statically generated value `name` to obtain your type.
 ```c++
 template<typename T>
 class conjure_type;
@@ -984,7 +996,7 @@ std::basic_string_view<char>
 This implementation is header only. Apart from standard C++20 includes there are no external dependencies needed in your application.
 [Catch2](https://github.com/catchorg/Catch2.git) is used for the built-in unit tests.
 
-## a) Obtaining the source, building the examples
+## a) Obtaining the source, building the unittests and examples
 ### \*nix based environments
 To clone and default build the test app, unit tests and the benchmark:
 ```bash
@@ -994,7 +1006,7 @@ mkdir build
 cd build
 cmake ..
 make -j4
-make test (or ctest)
+ctest (or make test)
 ```
 By default all warnings are enabled. To prevent this, pass the following to cmake:
 ```cmake
@@ -1004,9 +1016,9 @@ By default the unit tests are built (which will download Catch2). To prevent thi
 ```cmake
 cmake -DBUILD_UNITTESTS=false ..
 ```
-To disable certain C++20 features that cause issues with some builds:
+To disable stripping of the executables:
 ```cmake
-cmake -DBUILD_CONSRVCPP20=true ..
+cmake -DBUILD_STRIP_EXE=false ..
 ```
 ### Windows environments
 Create a new console project. Add the repo `https://github.com/fix8mt/conjure_enum.git` and clone the source.
@@ -1044,6 +1056,69 @@ FetchContent_MakeAvailable(conjure_enum)
 target_include_directories(myproj PRIVATE ${conjure_enum_SOURCE_DIR}/include)
 ```
 
+## d) Reporting issues
+Raise an [issue](https://github.com/fix8mt/conjure_enum/issues) on the github page.
+The executable `srcloctest` should be built when you build the package by default. This application
+does not use any of the `conjure_enum` library and is designed to report on how your compiler handles `std::source_location`.
+You should attach the output of this application with your issue.
+> [!TIP]
+> Passing the switch `-m` causes `srcloctest` to generate github markdown which you can paste directly into the issue.
+
+```C++
+$ ./srcloctest
+Compiler: Clang: Ubuntu Clang 16.0.6 (23ubuntu4)
+1. scoped enum
+static const char *conjure_type<Namespace_Enum_Type>::tpeek() [T = Namespace_Enum_Type]
+static const char *conjure_enum<Namespace_Enum_Type>::epeek() [T = Namespace_Enum_Type, e = Namespace_Enum_Type::Value]
+static const char *conjure_enum<Namespace_Enum_Type>::epeek() [T = Namespace_Enum_Type, e = (Namespace_Enum_Type)100]
+
+2. unscoped enum
+static const char *conjure_type<Namespace_Enum_Type1>::tpeek() [T = Namespace_Enum_Type1]
+static const char *conjure_enum<Namespace_Enum_Type1>::epeek() [T = Namespace_Enum_Type1, e = Value]
+static const char *conjure_enum<Namespace_Enum_Type1>::epeek() [T = Namespace_Enum_Type1, e = (Namespace_Enum_Type1)100]
+
+3. scoped enum in anonymous namespace
+static const char *conjure_type<(anonymous namespace)::Anon_Enum_Type>::tpeek() [T = (anonymous namespace)::Anon_Enum_Type]
+static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type>::epeek() [T = (anonymous namespace)::Anon_Enum_Type, e = (anonymous namespace)::Anon_Enum_Type::Value]
+static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type>::epeek() [T = (anonymous namespace)::Anon_Enum_Type, e = ((anonymous namespace)::Anon_Enum_Type)100]
+
+4. unscoped enum in anonymous namespace
+static const char *conjure_type<(anonymous namespace)::Anon_Enum_Type1>::tpeek() [T = (anonymous namespace)::Anon_Enum_Type1]
+static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type1>::epeek() [T = (anonymous namespace)::Anon_Enum_Type1, e = (anonymous namespace)::Value]
+static const char *conjure_enum<(anonymous namespace)::Anon_Enum_Type1>::epeek() [T = (anonymous namespace)::Anon_Enum_Type1, e = ((anonymous namespace)::Anon_Enum_Type1)100]
+
+5. scoped enum in namespace
+static const char *conjure_type<Namespace::Namespace_Enum_Type>::tpeek() [T = Namespace::Namespace_Enum_Type]
+static const char *conjure_enum<Namespace::Namespace_Enum_Type>::epeek() [T = Namespace::Namespace_Enum_Type, e = Namespace::Namespace_Enum_Type::Value]
+static const char *conjure_enum<Namespace::Namespace_Enum_Type>::epeek() [T = Namespace::Namespace_Enum_Type, e = (Namespace::Namespace_Enum_Type)100]
+
+6. unscoped enum in namespace
+static const char *conjure_type<Namespace::Namespace_Enum_Type1>::tpeek() [T = Namespace::Namespace_Enum_Type1]
+static const char *conjure_enum<Namespace::Namespace_Enum_Type1>::epeek() [T = Namespace::Namespace_Enum_Type1, e = Namespace::Value]
+static const char *conjure_enum<Namespace::Namespace_Enum_Type1>::epeek() [T = Namespace::Namespace_Enum_Type1, e = (Namespace::Namespace_Enum_Type1)100]
+
+7. types in named and anonymous namespaces
+static const char *conjure_type<Foo>::tpeek() [T = Foo]
+static const char *conjure_type<Namespace::Namespace_Foo>::tpeek() [T = Namespace::Namespace_Foo]
+static const char *conjure_type<(anonymous namespace)::Anon_Foo>::tpeek() [T = (anonymous namespace)::Anon_Foo]
+
+## 8. other types
+static const char *conjure_type<int>::tpeek() [T = int]
+static const char *conjure_type<std::basic_string_view<char>>::tpeek() [T = std::basic_string_view<char>]
+static const char *conjure_type<std::vector<std::tuple<int, char, std::basic_string_view<char>>>>::tpeek() [T = std::vector<std::tuple<int, char, std::basic_string_view<char>>>]
+
+## 9. edge enum types
+static const char *conjure_type<(anonymous namespace)::NineEnums>::tpeek() [T = (anonymous namespace)::NineEnums]
+static const char *conjure_type<(anonymous namespace)::NineEnums1>::tpeek() [T = (anonymous namespace)::NineEnums1]
+static const char *conjure_type<TEST::NineEnums>::tpeek() [T = TEST::NineEnums]
+static const char *conjure_type<TEST::NineEnums1>::tpeek() [T = TEST::NineEnums1]
+static const char *conjure_type<(anonymous namespace)::TEST1::NineEnums>::tpeek() [T = (anonymous namespace)::TEST1::NineEnums]
+static const char *conjure_type<(anonymous namespace)::TEST1::NineEnums1>::tpeek() [T = (anonymous namespace)::TEST1::NineEnums1]
+static const char *conjure_type<TEST::TEST1::NineEnums>::tpeek() [T = TEST::TEST1::NineEnums]
+static const char *conjure_type<TEST::TEST1::NineEnums1>::tpeek() [T = TEST::TEST1::NineEnums1]
+$
+```
+
 ---
 # 7. Notes
 ## a) enum limits
@@ -1064,10 +1139,10 @@ The following are the default settings:
 These definitions set the minimum and maximum enum values that are supported. You can adjust them to suit your requirements but for most use cases the defaults are sufficient.
 
 ## b) Class `conjure_enum` is not constructible
-All methods in this class are _static_. You cannot instantiate an object of this type.
+All methods in this class are _static_. You cannot instantiate an object of this type. The same goes for `conjure_type`.
 
 ## c) It's not _real_ reflection
-This library provides a workaround to current limitations of C++. There are proposals out there for future versions of the language that will provide proper reflection.
+This library provides a workaround (hack :smirk:) to current limitations of C++. There are proposals out there for future versions of the language that will provide proper reflection.
 See [Reflection TS](https://en.cppreference.com/w/cpp/experimental/reflect) and [Reflection for C++26](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2023/p2996r0.html)
 for examples of some of these.
 
@@ -1221,8 +1296,8 @@ It can be observed that there is only _one_ copy of the scoped enum value string
 | :--- | :--- | :--- | ---: |
 | [gcc](https://gcc.gnu.org/projects/cxx-status.html) | `11`, `12`, `13`, `14`| `std::format` not complete in `11`, `12` | `<= 10` |
 | [clang](https://clang.llvm.org/cxx_status.html) | `15`, `16`, `17`, `18`| Catch2 needs `cxx_std_20` in `15` | `<= 14` |
-| [msvc](https://learn.microsoft.com/en-us/cpp/overview/visual-cpp-language-conformance) | `16`, `17` | Visual Studio 2019,2022, latest `17.9.5`| `<= 16.9`|
-| [xcode](https://developer.apple.com/support/xcode/) | `15` | Some issues with `constexpr`, workarounds| `<= 14`|
+| [msvc](https://learn.microsoft.com/en-us/cpp/overview/visual-cpp-language-conformance) | `16`, `17` | Visual Studio 2019,2022, latest `17.10.2`| `<= 16.9`|
+| [xcode](https://developer.apple.com/support/xcode/) | `15` | Apple LLVM 15.0.0, some issues with `constexpr`, workarounds| `<= 14`|
 
 # 9. Compiler issues
 | Compiler | Version(s) | Issues | Workaround |
@@ -1231,3 +1306,8 @@ It can be observed that there is only _one_ copy of the scoped enum value string
 
 [^1]:&copy; 2024 Fix8 Market Technologies Pty Ltd, David L. Dight.
 [^2]:&copy; 2019 - 2024 Daniil Goncharov
+#
+<p align="center">
+  <a href="https://www.fix8mt.com"><img src="assets/fix8mt_Master_Logo_Green_Trans.png" width="120"></a>
+</p>
+

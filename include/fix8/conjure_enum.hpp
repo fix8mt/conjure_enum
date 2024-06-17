@@ -509,7 +509,7 @@ concept valid_bitset_enum = valid_enum<T> and requires(T)
 template<valid_bitset_enum T>
 class enum_bitset
 {
-	using U = std::underlying_type_t<std::decay_t<T>>;
+	using U = std::underlying_type_t<T>;
 	static constexpr auto countof { conjure_enum<T>::count() };
 
 	template<T val>
@@ -595,6 +595,8 @@ public:
 	{
 		if constexpr (constexpr auto uu{to_underlying<what>()}; uu < countof)
 			return test(uu);
+		else
+			return false;
 	}
 
 	template<T... comp>

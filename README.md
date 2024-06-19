@@ -414,7 +414,7 @@ _output_
 true
 false
 ```
-## n) `for_each`
+## n) `for_each`, `for_each_n`
 ```c++
 template<typename Fn, typename... Args>
 requires std::invocable<Fn&&, T, Args...>
@@ -423,9 +423,18 @@ requires std::invocable<Fn&&, T, Args...>
 template<typename Fn, typename C, typename... Args> // specialisation for member function with object
 requires std::invocable<Fn&&, C, T, Args...>
 [[maybe_unused]] static constexpr auto for_each(Fn&& func, C *obj, Args&&... args);
+
+template<typename Fn, typename... Args>
+requires std::invocable<Fn&&, T, Args...>
+[[maybe_unused]] static constexpr auto for_each_n(int n, Fn&& func, Args&&... args);
+
+template<typename Fn, typename C, typename... Args> // specialisation for member function with object
+requires std::invocable<Fn&&, C, T, Args...>
+[[maybe_unused]] static constexpr auto for_each_n(int n, Fn&& func, C *obj, Args&&... args);
 ```
 Call supplied invocable for _each_ enum value. Similar to `std::for_each` except the first parameter of your invocable must accept an enum value (passed by `for_each`).
-Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. The second version is intended to be used
+Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. You can limit the number of calls to your
+invokable by using the `for_each_n` version with the first parameter being the maximum number to call. The second version of `for_each` and `for_each_n` is intended to be used
 when using a member function - the _second_ parameter passed by your call must be the `this` pointer of the object.
 If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
 
@@ -451,6 +460,19 @@ _output_
 12 10
 13 10
 14 10
+```
+Above example using `for_each_n`, limiting to 3:
+```c++
+conjure_enum<component>::for_each_n(3, [](component val, int other)
+{
+   std::cout << static_cast<int>(val) << ' ' << other << '\n';
+}, 10);
+```
+_output_
+```CSV
+0 10
+1 10
+2 10
 ```
 Example using returned object and additional reference parameter:
 ```c++

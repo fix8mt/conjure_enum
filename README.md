@@ -97,6 +97,7 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
   - `add_scope`
   - `remove_scope`
   - `unscoped_string_to_enum`
+  - `for_each_n`
   - iterators and more!
 - ***Transparency***: Compiler implementation variability fully documented, verifiable and reportable (see 9 above)
 
@@ -909,7 +910,7 @@ _output_
 0001001010
 ---+--+-+-
 ```
-### iii. `for_each`
+### iii. `for_each`, `for_each_n`
 ```c++
 template<typename Fn, typename... Args>
 requires std::invocable<Fn&&, T, Args...>
@@ -918,9 +919,18 @@ requires std::invocable<Fn&&, T, Args...>
 template<typename C, typename Fn, typename... Args> // specialisation for member function with object
 requires std::invocable<Fn&&, C, T, Args...>
 [[maybe_unused]] constexpr auto for_each(Fn&& func, C *obj, Args&&... args);
+
+template<typename Fn, typename... Args>
+requires std::invocable<Fn&&, T, Args...>
+[[maybe_unused]] constexpr auto for_each_n(int n, Fn&& func, Args&&... args);
+
+template<typename C, typename Fn, typename... Args> // specialisation for member function with object
+requires std::invocable<Fn&&, C, T, Args...>
+[[maybe_unused]] constexpr auto for_each_n(int n, Fn&& func, C *obj, Args&&... args);
 ```
 Call supplied invocable for _each bit that is on_. Similar to `std::for_each` except first parameter of your invocable must accept an enum value (passed by `for_each`).
-Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. The second version is intended to be used
+Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. You can limit the number of calls to your
+invokable by using the `for_each_n` version with the first parameter being the maximum number to call. The second version of `for_each` and `for_each_n` is intended to be used
 when using a member function - the _second_ parameter passed by your call must be the `this` pointer of the object.
 If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
 
@@ -948,6 +958,16 @@ numbers::zero
 numbers::two
 numbers::five
 numbers::nine
+```
+Above example using `for_each_n`, limiting to 3:
+```c++
+ec.for_each_n(3, &foo::printer, &bar, std::ref(std::cout));
+```
+_output_
+```CSV
+numbers::zero
+numbers::two
+numbers::five
 ```
 
 ---

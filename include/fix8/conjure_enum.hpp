@@ -458,6 +458,28 @@ public:
 		return for_each(std::bind(std::forward<Fn>(func), obj, std::placeholders::_1, std::forward<Args>(args)...));
 	}
 
+	template<typename Fn, typename... Args>
+	requires std::invocable<Fn&&, T, Args...>
+	[[maybe_unused]] static constexpr auto for_each_n(int n, Fn&& func, Args&&... args) noexcept
+	{
+		for (int ii{}; const auto ev : values)
+		{
+			if (ii++ < n)
+				std::invoke(std::forward<Fn>(func), ev, std::forward<Args>(args)...);
+			else
+				break;
+		}
+		return std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...);
+	}
+
+	// specialisation for member function with object
+	template<typename Fn, typename C, typename... Args>
+	requires std::invocable<Fn&&, C, T, Args...>
+	[[maybe_unused]] static constexpr auto for_each_n(int n, Fn&& func, C *obj, Args&&... args) noexcept
+	{
+		return for_each_n(n, std::bind(std::forward<Fn>(func), obj, std::placeholders::_1, std::forward<Args>(args)...));
+	}
+
 	// public constexpr data structures
 	static constexpr auto values { _values() };
 	static constexpr auto entries { _entries(std::make_index_sequence<values.size()>()) };
@@ -653,6 +675,30 @@ public:
 	[[maybe_unused]] constexpr auto for_each(Fn&& func, C *obj, Args&&... args) noexcept
 	{
 		return for_each(std::bind(std::forward<Fn>(func), obj, std::placeholders::_1, std::forward<Args>(args)...));
+	}
+
+	template<typename Fn, typename... Args>
+	requires std::invocable<Fn&&, T, Args...>
+	[[maybe_unused]] constexpr auto for_each_n(int n, Fn&& func, Args&&... args) noexcept
+	{
+		for (int ii{}; const auto ev : conjure_enum<T>::values)
+		{
+			if (test(ev))
+			{
+				if (ii++ < n)
+					std::invoke(std::forward<Fn>(func), ev, std::forward<Args>(args)...);
+				else
+					break;
+			}
+		}
+		return std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...);
+	}
+
+	template<typename C, typename Fn, typename... Args> // specialisation for member function with object
+	requires std::invocable<Fn&&, C, T, Args...>
+	[[maybe_unused]] constexpr auto for_each_n(int n, Fn&& func, C *obj, Args&&... args) noexcept
+	{
+		return for_each_n(n, std::bind(std::forward<Fn>(func), obj, std::placeholders::_1, std::forward<Args>(args)...));
 	}
 
 	/// create a bitset from custom separated enum string

@@ -327,6 +327,29 @@ TEST_CASE("for_each")
 }
 
 //-----------------------------------------------------------------------------------------
+TEST_CASE("for_each_n")
+{
+	int total{};
+	conjure_enum<component>::for_each_n(3, [](component val, int& tot)
+	{
+		tot += static_cast<int>(val);
+	}, std::ref(total));
+	REQUIRE(total == 3);
+
+	struct foo
+	{
+		void process(component val, int offset, int& tot)
+		{
+			tot += offset + static_cast<int>(val);
+		}
+	};
+	foo bar;
+	total = 0;
+	conjure_enum<component>::for_each_n(3, &foo::process, &bar, 10, std::ref(total));
+	REQUIRE(total == 33);
+}
+
+//-----------------------------------------------------------------------------------------
 TEST_CASE("enum_bitset")
 {
 	enum_bitset<numbers> eb;
@@ -422,5 +445,29 @@ numbers::seven(7)
 		tot += static_cast<int>(val);
 	}, std::ref(total));
 	REQUIRE(total == 16);
+}
+
+//-----------------------------------------------------------------------------------------
+TEST_CASE("enum_bitset::for_each_n")
+{
+	enum_bitset<numbers> ee(0b10101010);
+	std::ostringstream ostr;
+	ee.for_each_n(3, [&ostr](numbers val) noexcept
+	{
+		ostr << conjure_enum<numbers>::enum_to_string(val) << '(' << static_cast<int>(val) << ')' << '\n';
+	});
+	REQUIRE(ostr.str() ==
+R"(numbers::one(1)
+numbers::three(3)
+numbers::five(5)
+)");
+
+	int total{};
+	enum_bitset<numbers> enc(numbers::two,numbers::three,numbers::four,numbers::seven);
+	enc.for_each_n(3, [](numbers val, int& tot)
+	{
+		tot += static_cast<int>(val);
+	}, std::ref(total));
+	REQUIRE(total == 9);
 }
 

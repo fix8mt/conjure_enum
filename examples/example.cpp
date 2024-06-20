@@ -73,6 +73,7 @@ const std::string demangle() noexcept
 
 int main(void)
 {
+	conjure_enum<component>::for_each_n(3, [](component val, int other) { std::cout << static_cast<int>(val) << ' ' << other << '\n'; }, 200);
 	int total{};
 	auto myfunc { conjure_enum<component>::for_each([](component val, int other, int& tot)
 	{
@@ -195,6 +196,7 @@ int main(void)
 		}
 	};
 	const foo bar;
+	conjure_enum<numbers>::for_each_n(3, &foo::printer, &bar, 1000);
 	ek.for_each(std::bind(&foo::printer, &bar, std::placeholders::_1, 10));
 	ek.for_each(&foo::printer, &bar, 10);
 	[[maybe_unused]] enum_bitset<numbers> er("one|three|four|eight"sv, true);

@@ -842,14 +842,19 @@ All of the standard accessors and mutators are supported.
 | `count` | count of bits on |
 | `size` | number of bits in bitset |
 | `operator[]` | test bit at position |
+| `any` | return true if any bit is on |
+| `all` | return true if all bits are on |
+| `none` | return true if no bits are on |
 
 Additional methods
 | Method | Description |
 | :--- | :--- |
 | `set_all` | set all specified bits |
 | `reset_all` | reset all specified bits |
-| `test_any` | test for one or more bits |
-| `test_all` | test for all specified bits |
+| `any_of` | test for one or more bits |
+| `all_of` | test for all specified bits |
+
+Take a look at the [implementation](include/fix8/conjure_enum.hpp) for more detail on the various API functions available.
 
 All accessors and mutators work with enum values or integers as with operators. They also work with multiple values, either as template parameters or
 as variadic arguments:
@@ -857,11 +862,11 @@ as variadic arguments:
 enum_bitset<numbers> eb;
 eb.set_all<numbers::zero,numbers::two,numbers::five,numbers::nine>();
 std::cout << eb << '\n';
-std::cout << std::boolalpha << eb.test_all<numbers::zero,numbers::two,numbers::five,numbers::nine>() << '\n';
+std::cout << std::boolalpha << eb.all_of<numbers::zero,numbers::two,numbers::five,numbers::nine>() << '\n';
 eb.reset<numbers::five,numbers::two>();
-std::cout << std::boolalpha << eb.test_all(0, 2, 5, 9) << '\n';
-std::cout << std::boolalpha << eb.test_any(0, 2, 5, 9) << '\n';
-std::cout << std::boolalpha << eb.test_all(numbers::zero,numbers::nine) << '\n';
+std::cout << std::boolalpha << eb.all_of(0, 2, 5, 9) << '\n';
+std::cout << std::boolalpha << eb.any_of(0, 2, 5, 9) << '\n';
+std::cout << std::boolalpha << eb.all_of(numbers::zero,numbers::nine) << '\n';
 std::cout << eb << '\n';
 eb.reset(numbers::nine)
 std::cout << ec << '\n';

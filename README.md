@@ -731,7 +731,7 @@ constexpr enum_bitset(U bits);
 constexpr enum_bitset(std::string_view from, bool anyscope=false,
    char sep='|', bool ignore_errors=true);
 
-template<valid_enum... E>
+template<valid_bitset_enum... E>
 constexpr enum_bitset(E... comp);
 
 template<std::integral... I>
@@ -1167,6 +1167,10 @@ static const char *conjure_type<TEST::TEST1::NineEnums>::tpeek() [T = TEST::TEST
 static const char *conjure_type<TEST::TEST1::NineEnums1>::tpeek() [T = TEST::TEST1::NineEnums1]
 $
 ```
+
+## e) Contributing
+Contributions are welcome. Make your changes in [your fork on the dev branch](https://github.com/fix8mt/conjure_enum/tree/dev) and open a pull request from there. PRs to
+master will not be accepted.
 
 ---
 # 7. Notes

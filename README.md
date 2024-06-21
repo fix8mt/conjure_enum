@@ -32,7 +32,7 @@
   <a href="https://www.fix8mt.com"><img src="assets/conjure_enum_logo.png" width="200"></a>
 </p>
 
-<h3 align="center">Lightweight header-only C++20 enum and type reflection</h3>
+<h3 align="center">Lightweight header-only C++20 enum and typename reflection</h3>
 
 ---
 
@@ -64,7 +64,7 @@
 Based on the awesome work in [`magic_enum`](https://github.com/Neargye/magic_enum)[^2] and [`boost::describe`](https://github.com/boostorg/describe),
 this library offers a streamlined and powerful way to add reflection capabilities to your C++ enums and other types. We've optimized the core functionality,
 focusing on the main features developers usually want while enhancing and expanding them for a more efficient and expressive experience. We've also
-added general purpose type reflection for any type.
+added general purpose typename reflection for any type.
 
 ## b) Embrace the Future with C++20
 
@@ -834,7 +834,7 @@ All of the standard accessors and mutators are supported.
 | Method | Description |
 | :--- | :--- |
 | `test` | test for bit(s)|
-| `set` | set bit(s)|
+| `set` | set all or 1 bit, optionally set to off|
 | `reset` | reset bits(s)|
 | `flip` | flip bits(s)|
 | `to_ulong` | convert to `unsigned long` |
@@ -849,10 +849,12 @@ All of the standard accessors and mutators are supported.
 Additional methods
 | Method | Description |
 | :--- | :--- |
-| `set_all` | set all specified bits |
-| `reset_all` | reset all specified bits |
-| `any_of` | test for one or more bits |
-| `all_of` | test for all specified bits |
+| `set` | set all specified bits, templated |
+| `reset` | reset all specified bits, templated |
+| `any_of` | test for one or more bits, templated, function, types and underlyings |
+| `all_of` | test for all specified bits, templated, function, types and underlyings |
+| `none_of` | test for all specified bits set to off, templated, function, types and underlyings |
+| `not_count` | complement of count, count of off bits |
 
 Take a look at the [implementation](include/fix8/conjure_enum.hpp) for more detail on the various API functions available.
 
@@ -860,7 +862,7 @@ All accessors and mutators work with enum values or integers as with operators. 
 as variadic arguments:
 ```c++
 enum_bitset<numbers> eb;
-eb.set_all<numbers::zero,numbers::two,numbers::five,numbers::nine>();
+eb.set<numbers::zero,numbers::two,numbers::five,numbers::nine>();
 std::cout << eb << '\n';
 std::cout << std::boolalpha << eb.all_of<numbers::zero,numbers::two,numbers::five,numbers::nine>() << '\n';
 eb.reset<numbers::five,numbers::two>();
@@ -977,7 +979,7 @@ numbers::five
 
 ---
 # 5. API and Examples using `conjure_type`
-`conjure_type` is a general purpose class allowing you to extract a string representation of any type.
+`conjure_type` is a general purpose class allowing you to extract a string representation of any typename.
 The string will be stored statically by the compiler, so you can use the statically generated value `name` to obtain your type.
 ```c++
 template<typename T>

@@ -518,7 +518,6 @@ namespace ostream_enum_operator
 template<typename T>
 concept valid_bitset_enum = valid_enum<T> and requires(T)
 {
-	requires conjure_enum<T>::count() > 0;
 	requires static_cast<std::size_t>(conjure_enum<T>::values.back()) < conjure_enum<T>::count();
 };
 

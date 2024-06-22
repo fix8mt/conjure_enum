@@ -296,7 +296,7 @@ private:
 			return {};
 	}
 
-	static constexpr std::string_view _process_scope(const auto& entr, std::string_view what) noexcept
+	static constexpr std::string_view _process_scope([[maybe_unused]] const auto& entr, std::string_view what) noexcept
 	{
 		if constexpr (is_scoped())
 			if (const auto result { std::equal_range(entr.cbegin(),
@@ -461,7 +461,7 @@ public:
 	requires std::invocable<Fn&&, T, Args...>
 	[[maybe_unused]] static constexpr auto for_each(Fn&& func, Args&&... args) noexcept
 	{
-		return _for_each_n(count(), std::forward<Fn>(func), std::forward<Args>(args)...);
+		return _for_each_n(static_cast<int>(count()), std::forward<Fn>(func), std::forward<Args>(args)...);
 	}
 
 	template<typename Fn, typename C, typename... Args> // specialisation for member function with object
@@ -708,7 +708,7 @@ public:
 	requires std::invocable<Fn&&, T, Args...>
 	[[maybe_unused]] constexpr auto for_each(Fn&& func, Args&&... args) noexcept
 	{
-		return _for_each_n(countof, std::forward<Fn>(func), std::forward<Args>(args)...);
+		return _for_each_n(static_cast<int>(countof), std::forward<Fn>(func), std::forward<Args>(args)...);
 	}
 
 	template<typename C, typename Fn, typename... Args> // specialisation for member function with object

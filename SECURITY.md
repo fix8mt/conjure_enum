@@ -7,7 +7,7 @@
 //   by David L. Dight
 // see https://github.com/fix8mt/conjure_enum
 //
-// Lightweight header-only C++20 enum and type reflection
+// Lightweight header-only C++20 enum and typename reflection
 //
 // Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 //
@@ -30,18 +30,18 @@
 //---------------------------------------------------------------------------------------->
 # Security Policy
 Security Policy
-This document outlines the security policy for the conjure_enum project. Here, we detail how to report vulnerabilities and how we handle them.
+This document outlines the security policy for the `conjure_enum` project. Here, we detail how to report vulnerabilities and how we handle them.
 
 ## Reporting a Vulnerability
 
-If you discover a potential security vulnerability in conjure_enum, we encourage you to report it responsibly. Here's how:
+If you discover a potential security vulnerability in `conjure_enum`, we encourage you to report it responsibly. Here's how:
 
 - **Privately Contact Us:** Please file a [detailed report](https://github.com/fix8mt/conjure_enum/security/advisories/new).
 - **Include Details:** In your email, please provide the following information (if applicable):
   - A clear description of the vulnerability.
   -  Steps to reproduce the vulnerability (if possible).
   - The potential impact of the vulnerability.
-We appreciate your cooperation in keeping conjure_enum secure. We will work with you confidentially to address the vulnerability as quickly as possible.
+We appreciate your cooperation in keeping `conjure_enum` secure. We will work with you confidentially to address the vulnerability as quickly as possible.
 
 ## Disclosure Process
 

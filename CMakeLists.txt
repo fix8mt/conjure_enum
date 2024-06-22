@@ -7,7 +7,7 @@
 #   by David L. Dight
 # see https://github.com/fix8mt/conjure_enum
 #
-# Lightweight header-only C++20 enum and type reflection
+# Lightweight header-only C++20 enum and typename reflection
 #
 # Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 #
@@ -32,7 +32,7 @@ cmake_minimum_required (VERSION 3.20)
 project (conjure_enum
    LANGUAGES CXX
 	HOMEPAGE_URL https://github.com/fix8mt/conjure_enum
-   DESCRIPTION "Lightweight C++20 enum and type reflection"
+   DESCRIPTION "Lightweight C++20 enum and typename reflection"
    VERSION 1.0.0)
 
 # to disable strip:
@@ -52,7 +52,9 @@ message("-- Build unit tests: ${BUILD_UNITTESTS}")
 
 function(build loc x)
 	add_executable(${x} ${loc}/${x}.cpp)
-	add_dependencies(${x} srcloctest) # srcloctest should be built even if errors with conjure_enum
+	if(NOT ${x} STREQUAL srcloctest)
+		add_dependencies(${x} srcloctest) # srcloctest should be built even if errors with conjure_enum
+	endif()
 	set_target_properties(${x} PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED true)
 	target_include_directories(${x} PRIVATE include)
 	if(BUILD_ALL_WARNINGS)

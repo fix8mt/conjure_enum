@@ -7,7 +7,7 @@
 //   by David L. Dight
 // see https://github.com/fix8mt/conjure_enum
 //
-// Lightweight header-only C++20 enum and type reflection
+// Lightweight header-only C++20 enum and typename reflection
 //
 // Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 //
@@ -32,7 +32,7 @@
   <a href="https://www.fix8mt.com"><img src="assets/conjure_enum_logo.png" width="200"></a>
 </p>
 
-<h3 align="center">Lightweight header-only C++20 enum and type reflection</h3>
+<h3 align="center">Lightweight header-only C++20 enum and typename reflection</h3>
 
 ---
 
@@ -64,7 +64,7 @@
 Based on the awesome work in [`magic_enum`](https://github.com/Neargye/magic_enum)[^2] and [`boost::describe`](https://github.com/boostorg/describe),
 this library offers a streamlined and powerful way to add reflection capabilities to your C++ enums and other types. We've optimized the core functionality,
 focusing on the main features developers usually want while enhancing and expanding them for a more efficient and expressive experience. We've also
-added general purpose type reflection for any type.
+added general purpose typename reflection for any type.
 
 ## b) Embrace the Future with C++20
 
@@ -97,6 +97,7 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
   - `add_scope`
   - `remove_scope`
   - `unscoped_string_to_enum`
+  - `for_each_n`
   - iterators and more!
 - ***Transparency***: Compiler implementation variability fully documented, verifiable and reportable (see 9 above)
 
@@ -414,7 +415,7 @@ _output_
 true
 false
 ```
-## n) `for_each`
+## n) `for_each`, `for_each_n`
 ```c++
 template<typename Fn, typename... Args>
 requires std::invocable<Fn&&, T, Args...>
@@ -423,9 +424,18 @@ requires std::invocable<Fn&&, T, Args...>
 template<typename Fn, typename C, typename... Args> // specialisation for member function with object
 requires std::invocable<Fn&&, C, T, Args...>
 [[maybe_unused]] static constexpr auto for_each(Fn&& func, C *obj, Args&&... args);
+
+template<typename Fn, typename... Args>
+requires std::invocable<Fn&&, T, Args...>
+[[maybe_unused]] static constexpr auto for_each_n(int n, Fn&& func, Args&&... args);
+
+template<typename Fn, typename C, typename... Args> // specialisation for member function with object
+requires std::invocable<Fn&&, C, T, Args...>
+[[maybe_unused]] static constexpr auto for_each_n(int n, Fn&& func, C *obj, Args&&... args);
 ```
 Call supplied invocable for _each_ enum value. Similar to `std::for_each` except the first parameter of your invocable must accept an enum value (passed by `for_each`).
-Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. The second version is intended to be used
+Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. You can limit the number of calls to your
+invokable by using the `for_each_n` version with the first parameter being the maximum number to call. The second version of `for_each` and `for_each_n` is intended to be used
 when using a member function - the _second_ parameter passed by your call must be the `this` pointer of the object.
 If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
 
@@ -451,6 +461,19 @@ _output_
 12 10
 13 10
 14 10
+```
+Above example using `for_each_n`, limiting to 3:
+```c++
+conjure_enum<component>::for_each_n(3, [](component val, int other)
+{
+   std::cout << static_cast<int>(val) << ' ' << other << '\n';
+}, 10);
+```
+_output_
+```CSV
+0 10
+1 10
+2 10
 ```
 Example using returned object and additional reference parameter:
 ```c++
@@ -708,7 +731,7 @@ constexpr enum_bitset(U bits);
 constexpr enum_bitset(std::string_view from, bool anyscope=false,
    char sep='|', bool ignore_errors=true);
 
-template<valid_enum... E>
+template<valid_bitset_enum... E>
 constexpr enum_bitset(E... comp);
 
 template<std::integral... I>
@@ -811,7 +834,7 @@ All of the standard accessors and mutators are supported.
 | Method | Description |
 | :--- | :--- |
 | `test` | test for bit(s)|
-| `set` | set bit(s)|
+| `set` | set all or 1 bit, optionally set to off|
 | `reset` | reset bits(s)|
 | `flip` | flip bits(s)|
 | `to_ulong` | convert to `unsigned long` |
@@ -819,26 +842,33 @@ All of the standard accessors and mutators are supported.
 | `count` | count of bits on |
 | `size` | number of bits in bitset |
 | `operator[]` | test bit at position |
+| `any` | return true if any bit is on |
+| `all` | return true if all bits are on |
+| `none` | return true if no bits are on |
 
 Additional methods
 | Method | Description |
 | :--- | :--- |
-| `set_all` | set all specified bits |
-| `reset_all` | reset all specified bits |
-| `test_any` | test for one or more bits |
-| `test_all` | test for all specified bits |
+| `set` | set all specified bits, templated |
+| `reset` | reset all specified bits, templated |
+| `any_of` | test for one or more bits, templated, function, types and underlyings |
+| `all_of` | test for all specified bits, templated, function, types and underlyings |
+| `none_of` | test for all specified bits set to off, templated, function, types and underlyings |
+| `not_count` | complement of count, count of off bits |
+
+Take a look at the [implementation](include/fix8/conjure_enum.hpp) for more detail on the various API functions available.
 
 All accessors and mutators work with enum values or integers as with operators. They also work with multiple values, either as template parameters or
 as variadic arguments:
 ```c++
 enum_bitset<numbers> eb;
-eb.set_all<numbers::zero,numbers::two,numbers::five,numbers::nine>();
+eb.set<numbers::zero,numbers::two,numbers::five,numbers::nine>();
 std::cout << eb << '\n';
-std::cout << std::boolalpha << eb.test_all<numbers::zero,numbers::two,numbers::five,numbers::nine>() << '\n';
+std::cout << std::boolalpha << eb.all_of<numbers::zero,numbers::two,numbers::five,numbers::nine>() << '\n';
 eb.reset<numbers::five,numbers::two>();
-std::cout << std::boolalpha << eb.test_all(0, 2, 5, 9) << '\n';
-std::cout << std::boolalpha << eb.test_any(0, 2, 5, 9) << '\n';
-std::cout << std::boolalpha << eb.test_all(numbers::zero,numbers::nine) << '\n';
+std::cout << std::boolalpha << eb.all_of(0, 2, 5, 9) << '\n';
+std::cout << std::boolalpha << eb.any_of(0, 2, 5, 9) << '\n';
+std::cout << std::boolalpha << eb.all_of(numbers::zero,numbers::nine) << '\n';
 std::cout << eb << '\n';
 eb.reset(numbers::nine)
 std::cout << ec << '\n';
@@ -887,7 +917,7 @@ _output_
 0001001010
 ---+--+-+-
 ```
-### iii. `for_each`
+### iii. `for_each`, `for_each_n`
 ```c++
 template<typename Fn, typename... Args>
 requires std::invocable<Fn&&, T, Args...>
@@ -896,9 +926,18 @@ requires std::invocable<Fn&&, T, Args...>
 template<typename C, typename Fn, typename... Args> // specialisation for member function with object
 requires std::invocable<Fn&&, C, T, Args...>
 [[maybe_unused]] constexpr auto for_each(Fn&& func, C *obj, Args&&... args);
+
+template<typename Fn, typename... Args>
+requires std::invocable<Fn&&, T, Args...>
+[[maybe_unused]] constexpr auto for_each_n(int n, Fn&& func, Args&&... args);
+
+template<typename C, typename Fn, typename... Args> // specialisation for member function with object
+requires std::invocable<Fn&&, C, T, Args...>
+[[maybe_unused]] constexpr auto for_each_n(int n, Fn&& func, C *obj, Args&&... args);
 ```
 Call supplied invocable for _each bit that is on_. Similar to `std::for_each` except first parameter of your invocable must accept an enum value (passed by `for_each`).
-Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. The second version is intended to be used
+Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. You can limit the number of calls to your
+invokable by using the `for_each_n` version with the first parameter being the maximum number to call. The second version of `for_each` and `for_each_n` is intended to be used
 when using a member function - the _second_ parameter passed by your call must be the `this` pointer of the object.
 If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
 
@@ -927,10 +966,20 @@ numbers::two
 numbers::five
 numbers::nine
 ```
+Above example using `for_each_n`, limiting to 3:
+```c++
+ec.for_each_n(3, &foo::printer, &bar, std::ref(std::cout));
+```
+_output_
+```CSV
+numbers::zero
+numbers::two
+numbers::five
+```
 
 ---
 # 5. API and Examples using `conjure_type`
-`conjure_type` is a general purpose class allowing you to extract a string representation of any type.
+`conjure_type` is a general purpose class allowing you to extract a string representation of any typename.
 The string will be stored statically by the compiler, so you can use the statically generated value `name` to obtain your type.
 ```c++
 template<typename T>
@@ -1118,6 +1167,10 @@ static const char *conjure_type<TEST::TEST1::NineEnums>::tpeek() [T = TEST::TEST
 static const char *conjure_type<TEST::TEST1::NineEnums1>::tpeek() [T = TEST::TEST1::NineEnums1]
 $
 ```
+
+## e) Contributing
+Contributions are welcome. Make your changes in [your fork on the dev branch](https://github.com/fix8mt/conjure_enum/tree/dev) and open a pull request from there. PRs to
+master will not be considered.
 
 ---
 # 7. Notes

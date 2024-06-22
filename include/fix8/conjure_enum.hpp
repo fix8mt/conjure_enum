@@ -7,7 +7,7 @@
 //   by David L. Dight
 // see https://github.com/fix8mt/conjure_enum
 //
-// Lightweight header-only C++20 enum and type reflection
+// Lightweight header-only C++20 enum and typename reflection
 //
 //   Parts based on magic_enum <https://github.com/Neargye/magic_enum>
 //   Copyright (c) 2019 - 2024 Daniil Goncharov <neargye@gmail.com>.
@@ -179,7 +179,7 @@ private:
 	static constexpr auto _unscoped_entries(std::index_sequence<I...>) noexcept
 	{
 		std::array<enum_tuple, sizeof...(I)> tmp{{{ values[I], _remove_scope(_enum_name_v<values[I]>)}...}};
-		std::sort(tmp.begin(), tmp.end(), tuple_comp_rev);
+		std::sort(tmp.begin(), tmp.end(), _tuple_comp_rev);
 		return tmp;
 	}
 
@@ -194,7 +194,7 @@ private:
 	static constexpr auto _scoped_entries(std::index_sequence<I...>) noexcept
 	{
 		std::array<scoped_tuple, sizeof...(I)> tmp{{{ _remove_scope(_enum_name_v<values[I]>), _enum_name_v<values[I]>}...}};
-		std::sort(tmp.begin(), tmp.end(), scoped_comp);
+		std::sort(tmp.begin(), tmp.end(), _scoped_comp);
 		return tmp;
 	}
 
@@ -202,14 +202,14 @@ private:
 	static constexpr auto _rev_scoped_entries(std::index_sequence<I...>) noexcept
 	{
 		std::array<scoped_tuple, sizeof...(I)> tmp{{{ _enum_name_v<values[I]>, _remove_scope(_enum_name_v<values[I]>)}...}};
-		std::sort(tmp.begin(), tmp.end(), scoped_comp);
+		std::sort(tmp.begin(), tmp.end(), _scoped_comp);
 		return tmp;
 	}
 
 	static constexpr auto _sorted_entries() noexcept
 	{
 		auto tmp { entries };
-		std::sort(tmp.begin(), tmp.end(), tuple_comp_rev);
+		std::sort(tmp.begin(), tmp.end(), _tuple_comp_rev);
 		return tmp;
 	}
 
@@ -296,19 +296,30 @@ private:
 			return {};
 	}
 
-	static constexpr bool value_comp(const T& pl, const T& pr) noexcept
+	static constexpr std::string_view _process_scope([[maybe_unused]] const auto& entr, std::string_view what) noexcept
+	{
+		if constexpr (is_scoped())
+			if (const auto result { std::equal_range(entr.cbegin(),
+				entr.cend(), scoped_tuple(what, std::string_view()), _scoped_comp) };
+					result.first != result.second)
+						return std::get<1>(*result.first);
+		return what;
+	}
+
+	/// comparators
+	static constexpr bool _value_comp(const T& pl, const T& pr) noexcept
 	{
 		return static_cast<int>(pl) < static_cast<int>(pr);
 	}
-	static constexpr bool tuple_comp(const enum_tuple& pl, const enum_tuple& pr) noexcept
+	static constexpr bool _tuple_comp(const enum_tuple& pl, const enum_tuple& pr) noexcept
 	{
 		return static_cast<int>(std::get<T>(pl)) < static_cast<int>(std::get<T>(pr));
 	}
-	static constexpr bool tuple_comp_rev(const enum_tuple& pl, const enum_tuple& pr) noexcept
+	static constexpr bool _tuple_comp_rev(const enum_tuple& pl, const enum_tuple& pr) noexcept
 	{
 		return std::get<std::string_view>(pl) < std::get<std::string_view>(pr);
 	}
-	static constexpr bool scoped_comp(const scoped_tuple& pl, const scoped_tuple& pr) noexcept
+	static constexpr bool _scoped_comp(const scoped_tuple& pl, const scoped_tuple& pr) noexcept
 	{
 		return std::get<0>(pl) < std::get<0>(pr);
 	}
@@ -361,22 +372,12 @@ public:
 
 	static constexpr std::string_view remove_scope(std::string_view what) noexcept
 	{
-		if constexpr (is_scoped())
-			if (const auto result { std::equal_range(rev_scoped_entries.cbegin(),
-				rev_scoped_entries.cend(), scoped_tuple(what, std::string_view()), scoped_comp) };
-					result.first != result.second)
-						return std::get<1>(*result.first);
-		return what;
+		return _process_scope(rev_scoped_entries, what);
 	}
 
 	static constexpr std::string_view add_scope(std::string_view what) noexcept
 	{
-		if constexpr (is_scoped())
-			if (const auto result { std::equal_range(scoped_entries.cbegin(),
-				scoped_entries.cend(), scoped_tuple(what, std::string_view()), scoped_comp) };
-					result.first != result.second)
-						return std::get<1>(*result.first);
-		return what;
+		return _process_scope(scoped_entries, what);
 	}
 
 	static constexpr bool has_scope(std::string_view what) noexcept
@@ -404,58 +405,77 @@ public:
 	}
 	static constexpr std::optional<T> int_to_enum(int value) noexcept
 	{
-		if (const auto result { std::equal_range(values.cbegin(), values.cend(), static_cast<T>(value), value_comp) };
+		if (const auto result { std::equal_range(values.cbegin(), values.cend(), static_cast<T>(value), _value_comp) };
 			result.first != result.second)
 				return *result.first;
 		return {};
 	}
 	static constexpr bool contains(T value) noexcept
 	{
-		const auto result { std::equal_range(values.cbegin(), values.cend(), value, value_comp) };
+		const auto result { std::equal_range(values.cbegin(), values.cend(), value, _value_comp) };
 		return result.first != result.second;
    }
 	static constexpr bool contains(std::string_view str) noexcept
 	{
-		const auto result { std::equal_range(sorted_entries.cbegin(), sorted_entries.cend(), enum_tuple(T{}, str), tuple_comp_rev) };
+		const auto result { std::equal_range(sorted_entries.cbegin(), sorted_entries.cend(), enum_tuple(T{}, str), _tuple_comp_rev) };
 		return result.first != result.second;
 	}
 	static constexpr std::string_view enum_to_string(T value, bool noscope=false) noexcept
 	{
-		if (const auto result { std::equal_range(entries.cbegin(), entries.cend(), enum_tuple(value, std::string_view()), tuple_comp) };
+		if (const auto result { std::equal_range(entries.cbegin(), entries.cend(), enum_tuple(value, std::string_view()), _tuple_comp) };
 			result.first != result.second)
 				return noscope ? remove_scope(std::get<std::string_view>(*result.first)) : std::get<std::string_view>(*result.first);
 		return {};
 	}
 	static constexpr std::optional<T> string_to_enum(std::string_view str) noexcept
 	{
-		if (const auto result { std::equal_range(sorted_entries.cbegin(), sorted_entries.cend(), enum_tuple(T{}, str), tuple_comp_rev) };
+		if (const auto result { std::equal_range(sorted_entries.cbegin(), sorted_entries.cend(), enum_tuple(T{}, str), _tuple_comp_rev) };
 			result.first != result.second)
 				return std::get<T>(*result.first);
 		return {};
 	}
 	static constexpr std::optional<T> unscoped_string_to_enum(std::string_view str) noexcept
 	{
-		if (const auto result { std::equal_range(unscoped_entries.cbegin(), unscoped_entries.cend(), enum_tuple(T{}, str), tuple_comp_rev) };
+		if (const auto result { std::equal_range(unscoped_entries.cbegin(), unscoped_entries.cend(), enum_tuple(T{}, str), _tuple_comp_rev) };
 			result.first != result.second)
 				return std::get<T>(*result.first);
 		return {};
 	}
 
+	/// for_each, for_each_n
 	template<typename Fn, typename... Args>
 	requires std::invocable<Fn&&, T, Args...>
 	[[maybe_unused]] static constexpr auto for_each(Fn&& func, Args&&... args) noexcept
 	{
-		for (const auto ev : values)
-			std::invoke(std::forward<Fn>(func), ev, std::forward<Args>(args)...);
-		return std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...);
+		return for_each_n(static_cast<int>(count()), std::forward<Fn>(func), std::forward<Args>(args)...);
 	}
 
-	// specialisation for member function with object
-	template<typename Fn, typename C, typename... Args>
+	template<typename Fn, typename C, typename... Args> // specialisation for member function with object
 	requires std::invocable<Fn&&, C, T, Args...>
 	[[maybe_unused]] static constexpr auto for_each(Fn&& func, C *obj, Args&&... args) noexcept
 	{
 		return for_each(std::bind(std::forward<Fn>(func), obj, std::placeholders::_1, std::forward<Args>(args)...));
+	}
+
+	template<typename Fn, typename... Args>
+	requires std::invocable<Fn&&, T, Args...>
+	[[maybe_unused]] static constexpr auto for_each_n(int n, Fn&& func, Args&&... args) noexcept
+	{
+		for (int ii{}; const auto ev : values)
+		{
+			if (ii++ < n)
+				std::invoke(std::forward<Fn>(func), ev, std::forward<Args>(args)...);
+			else
+				break;
+		}
+		return std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...);
+	}
+
+	template<typename Fn, typename C, typename... Args> // specialisation for member function with object
+	requires std::invocable<Fn&&, C, T, Args...>
+	[[maybe_unused]] static constexpr auto for_each_n(int n, Fn&& func, C *obj, Args&&... args) noexcept
+	{
+		return for_each_n(n, std::bind(std::forward<Fn>(func), obj, std::placeholders::_1, std::forward<Args>(args)...));
 	}
 
 	// public constexpr data structures
@@ -498,7 +518,6 @@ namespace ostream_enum_operator
 template<typename T>
 concept valid_bitset_enum = valid_enum<T> and requires(T)
 {
-	requires conjure_enum<T>::count() > 0;
 	requires static_cast<std::size_t>(conjure_enum<T>::values.back()) < conjure_enum<T>::count();
 };
 
@@ -534,6 +553,7 @@ public:
 
 	constexpr std::size_t count() const noexcept
 		{ return std::popcount(static_cast<std::make_unsigned_t<U>>(_present)); } // C++23: upgrade to std::bitset when count is constexpr
+	constexpr std::size_t not_count() const noexcept { return countof - count(); }
 	constexpr std::size_t size() const noexcept { return countof; }
 	constexpr U to_ulong() const noexcept { return _present; }
 	constexpr unsigned long long to_ullong() const noexcept { return _present; }
@@ -541,34 +561,39 @@ public:
 	constexpr bool operator[](std::size_t pos) const noexcept { return test(pos); }
 	constexpr bool operator[](T what) const noexcept { return test(what); }
 
-	constexpr void set(U pos) noexcept { _present |= (1 << pos); }
-	constexpr void set(T what) noexcept { set(to_underlying(what)); }
+	/// set
+	constexpr void set(U pos, bool value=true) noexcept { value ? _present |= 1 << pos : _present &= ~(1 << pos); }
+	constexpr void set(T what, bool value=true) noexcept { set(to_underlying(what), value); }
 	constexpr void set() noexcept { _present = all_bits; }
 
 	template<T what>
 	constexpr void set() noexcept
 	{
 		if constexpr (constexpr auto uu{to_underlying<what>()}; uu < countof)
-			_present |= (1 << uu);
+			_present |= 1 << uu;
 	}
 
 	template<T... comp>
-	constexpr void set_all() noexcept { (set<comp>(),...); }
+	requires (sizeof...(comp) > 1)
+	constexpr void set() noexcept { (set<comp>(),...); }
 
 	template<valid_bitset_enum... E>
-	constexpr void set_all(E... comp) noexcept { return (... | (set(comp))); }
+	requires (sizeof...(E) > 1)
+	constexpr void set(E... comp) noexcept { return (... | (set(comp))); }
 
+	/// flip
 	template<T what>
 	constexpr void flip() noexcept
 	{
 		if constexpr (constexpr auto uu{to_underlying<what>()}; uu < countof)
-			_present ^= (1 << uu);
+			_present ^= 1 << uu;
 	}
 
 	constexpr void flip() noexcept { _present = ~_present & all_bits; }
-	constexpr void flip(U pos) noexcept { _present ^= (1 << pos); }
+	constexpr void flip(U pos) noexcept { _present ^= 1 << pos; }
 	constexpr void flip(T what) noexcept { flip(to_underlying(what)); }
 
+	/// reset
 	template<T what>
 	constexpr void reset() noexcept
 	{
@@ -581,12 +606,14 @@ public:
 	constexpr void reset(T what) noexcept { reset(to_underlying(what)); }
 
 	template<T... comp>
-	constexpr void reset_all() noexcept { (reset<comp>(),...); }
+	requires (sizeof...(comp) > 1)
+	constexpr void reset() noexcept { (reset<comp>(),...); }
 
 	template<std::integral... I>
-	constexpr void reset_all(I...comp) noexcept { (reset(comp),...); }
+	constexpr void reset(I...comp) noexcept { (reset(comp),...); }
 
-	constexpr bool test(U pos) const noexcept { return _present & (1 << pos); }
+	/// test
+	constexpr bool test(U pos) const noexcept { return _present & 1 << pos; }
 	constexpr bool test(T what) const noexcept { return test(to_underlying(what)); }
 	constexpr bool test() const noexcept { return _present; }
 
@@ -600,52 +627,63 @@ public:
 	}
 
 	template<T... comp>
-	constexpr bool test_any() const noexcept { return (... || test<comp>()); }
+	constexpr bool any_of() const noexcept { return (... || test<comp>()); }
 
 	template<std::integral... I>
-	constexpr bool test_any(I...comp) const noexcept { return (... || test(comp)); }
+	constexpr bool any_of(I...comp) const noexcept { return (... || test(comp)); }
 
 	template<valid_bitset_enum... E>
-	constexpr bool test_any(E...comp) const noexcept { return (... || test(comp)); }
+	constexpr bool any_of(E...comp) const noexcept { return (... || test(comp)); }
 
 	template<T... comp>
-	constexpr bool test_all() const noexcept { return (... && test<comp>()); }
+	constexpr bool all_of() const noexcept { return (... && test<comp>()); }
 
 	template<std::integral... I>
-	constexpr bool test_all(I...comp) const noexcept { return (... && test(comp)); }
+	constexpr bool all_of(I...comp) const noexcept { return (... && test(comp)); }
 
 	template<valid_bitset_enum... E>
-	constexpr bool test_all(E...comp) const noexcept { return (... && test(comp)); }
+	constexpr bool all_of(E...comp) const noexcept { return (... && test(comp)); }
 
+	template<T... comp>
+	constexpr bool none_of() const noexcept { return (... && !test<comp>()); }
+
+	template<std::integral... I>
+	constexpr bool none_of(I...comp) const noexcept { return (... && !test(comp)); }
+
+	template<valid_bitset_enum... E>
+	constexpr bool none_of(E...comp) const noexcept { return (... && !test(comp)); }
+
+	constexpr bool any() const noexcept { return count(); }
+	constexpr bool all() const noexcept { return _present == all_bits; }
+	constexpr bool none() const noexcept { return !*this; }
+
+	/// operators
+	constexpr operator bool() const noexcept { return count(); }
 	constexpr enum_bitset& operator<<=(std::size_t pos) noexcept { _present <<= pos; return *this; }
 	constexpr enum_bitset& operator>>=(std::size_t pos) noexcept { _present >>= pos; return *this; }
-	constexpr enum_bitset& operator&=(T other) noexcept { _present &= (1 << to_underlying(other)); return *this; }
-	constexpr enum_bitset& operator|=(T other) noexcept { _present |= (1 << to_underlying(other)); return *this; }
-	constexpr enum_bitset& operator^=(T other) noexcept { _present ^= (1 << to_underlying(other)); return *this; }
+	constexpr enum_bitset& operator&=(T other) noexcept { _present &= 1 << to_underlying(other); return *this; }
+	constexpr enum_bitset& operator|=(T other) noexcept { _present |= 1 << to_underlying(other); return *this; }
+	constexpr enum_bitset& operator^=(T other) noexcept { _present ^= 1 << to_underlying(other); return *this; }
 	constexpr enum_bitset& operator&=(U other) noexcept { _present &= other; return *this; }
 	constexpr enum_bitset& operator|=(U other) noexcept { _present |= other; return *this; }
 	constexpr enum_bitset& operator^=(U other) noexcept { _present ^= other; return *this; }
 
 	constexpr enum_bitset operator<<(int pos) const noexcept { return enum_bitset(_present << pos); }
 	constexpr enum_bitset operator>>(int pos) const noexcept { return enum_bitset(_present >> pos); }
-	constexpr enum_bitset operator&(T other) const noexcept { return enum_bitset(_present & (1 << to_underlying(other))); }
-	constexpr enum_bitset operator|(T other) const noexcept { return enum_bitset(_present | (1 << to_underlying(other))); }
-	constexpr enum_bitset operator^(T other) const noexcept { return enum_bitset(_present ^ (1 << to_underlying(other))); }
+	constexpr enum_bitset operator&(T other) const noexcept { return enum_bitset(_present & 1 << to_underlying(other)); }
+	constexpr enum_bitset operator|(T other) const noexcept { return enum_bitset(_present | 1 << to_underlying(other)); }
+	constexpr enum_bitset operator^(T other) const noexcept { return enum_bitset(_present ^ 1 << to_underlying(other)); }
 	constexpr enum_bitset operator&(U other) const noexcept { return enum_bitset(_present & other); }
 	constexpr enum_bitset operator|(U other) const noexcept { return enum_bitset(_present | other); }
 	constexpr enum_bitset operator^(U other) const noexcept { return enum_bitset(_present ^ other); }
 	constexpr enum_bitset operator~() const noexcept { return enum_bitset(~_present & all_bits); }
 
-	constexpr operator bool() const noexcept { return count(); }
-
+	/// for_each, for_each_n
 	template<typename Fn, typename... Args>
 	requires std::invocable<Fn&&, T, Args...>
 	[[maybe_unused]] constexpr auto for_each(Fn&& func, Args&&... args) noexcept
 	{
-		for (const auto ev : conjure_enum<T>::values)
-			if (test(ev))
-				std::invoke(std::forward<Fn>(func), ev, std::forward<Args>(args)...);
-		return std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...);
+		return for_each_n(static_cast<int>(countof), std::forward<Fn>(func), std::forward<Args>(args)...);
 	}
 
 	template<typename C, typename Fn, typename... Args> // specialisation for member function with object
@@ -653,6 +691,30 @@ public:
 	[[maybe_unused]] constexpr auto for_each(Fn&& func, C *obj, Args&&... args) noexcept
 	{
 		return for_each(std::bind(std::forward<Fn>(func), obj, std::placeholders::_1, std::forward<Args>(args)...));
+	}
+
+	template<typename Fn, typename... Args>
+	requires std::invocable<Fn&&, T, Args...>
+	[[maybe_unused]] constexpr auto for_each_n(int n, Fn&& func, Args&&... args) noexcept
+	{
+		for (int ii{}; const auto ev : conjure_enum<T>::values)
+		{
+			if (test(ev))
+			{
+				if (ii++ < n)
+					std::invoke(std::forward<Fn>(func), ev, std::forward<Args>(args)...);
+				else
+					break;
+			}
+		}
+		return std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...);
+	}
+
+	template<typename C, typename Fn, typename... Args> // specialisation for member function with object
+	requires std::invocable<Fn&&, C, T, Args...>
+	[[maybe_unused]] constexpr auto for_each_n(int n, Fn&& func, C *obj, Args&&... args) noexcept
+	{
+		return for_each_n(n, std::bind(std::forward<Fn>(func), obj, std::placeholders::_1, std::forward<Args>(args)...));
 	}
 
 	/// create a bitset from custom separated enum string

@@ -7,7 +7,7 @@
 //   by David L. Dight
 // see https://github.com/fix8mt/conjure_enum
 //
-// Lightweight header-only C++20 enum and type reflection
+// Lightweight header-only C++20 enum and typename reflection
 //
 // Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 //
@@ -327,13 +327,36 @@ TEST_CASE("for_each")
 }
 
 //-----------------------------------------------------------------------------------------
+TEST_CASE("for_each_n")
+{
+	int total{};
+	conjure_enum<component>::for_each_n(3, [](component val, int& tot)
+	{
+		tot += static_cast<int>(val);
+	}, std::ref(total));
+	REQUIRE(total == 3);
+
+	struct foo
+	{
+		void process(component val, int offset, int& tot)
+		{
+			tot += offset + static_cast<int>(val);
+		}
+	};
+	foo bar;
+	total = 0;
+	conjure_enum<component>::for_each_n(3, &foo::process, &bar, 10, std::ref(total));
+	REQUIRE(total == 33);
+}
+
+//-----------------------------------------------------------------------------------------
 TEST_CASE("enum_bitset")
 {
 	enum_bitset<numbers> eb;
-	eb.set_all<numbers::zero,numbers::two,numbers::five,numbers::nine>();
-	REQUIRE(eb.test_all<numbers::zero,numbers::two,numbers::five,numbers::nine>());
+	eb.set<numbers::zero,numbers::two,numbers::five,numbers::nine>();
+	REQUIRE(eb.all_of<numbers::zero,numbers::two,numbers::five,numbers::nine>());
 	eb.reset<numbers::FIVE>(); // use alias
-	REQUIRE(!eb.test_all<numbers::zero,numbers::two,numbers::five,numbers::nine>());
+	REQUIRE(!eb.all_of<numbers::zero,numbers::two,numbers::five,numbers::nine>());
 	eb.reset(numbers::nine);
 	REQUIRE(!eb.test(numbers::nine));
 
@@ -360,14 +383,15 @@ TEST_CASE("enum_bitset")
 	REQUIRE(!ec.test<numbers::three>());
 	ec.set(numbers::three);
 	REQUIRE(ec.test<numbers::three>());
+	ec.set(numbers::three, false);
+	REQUIRE(ec.test<numbers::three>() == false);
+	REQUIRE(ec.any());
 }
 
 //-----------------------------------------------------------------------------------------
 TEST_CASE("enum_bitset ops")
 {
 	enum_bitset<numbers> ed(numbers::two,numbers::three,numbers::four,numbers::seven);
-	REQUIRE(ed.test_all<numbers::two,numbers::three,numbers::four,numbers::seven>());
-	REQUIRE(ed.test_any<numbers::two,numbers::three,numbers::four,numbers::seven>());
 	REQUIRE((ed << 1).to_ulong() == 0b0100111000);
 	ed <<= 1;
 	REQUIRE(ed.to_ulong() == 0b0100111000);
@@ -388,6 +412,24 @@ TEST_CASE("enum_bitset ops")
 	REQUIRE((ed ^ numbers::one).to_ulong()  == 0b010);
 	ed ^= numbers::one;
 	REQUIRE(ed.to_ulong() == 0b010);
+}
+
+//-----------------------------------------------------------------------------------------
+TEST_CASE("enum_bitset ext ops")
+{
+	enum_bitset<numbers> ed;
+	REQUIRE(ed.none());
+	ed.set();
+	REQUIRE(ed.all());
+	enum_bitset<numbers> ee(numbers::one,numbers::two,numbers::three,numbers::four,numbers::five);
+	REQUIRE(ee.all_of<numbers::one,numbers::two,numbers::three,numbers::four,numbers::five>());
+	REQUIRE(ee.any_of<numbers::two,numbers::three,numbers::five>());
+	int a{static_cast<int>(numbers::two)}, b{static_cast<int>(numbers::three)}, c{static_cast<int>(numbers::four)}, d{static_cast<int>(numbers::five)};
+	REQUIRE(ee.any_of(a,b,c,d));
+	ee.reset<numbers::one,numbers::three,numbers::five>();
+	REQUIRE(ee.none_of<numbers::one,numbers::three,numbers::five>());
+	REQUIRE(ee.all_of<numbers::two,numbers::four>());
+	REQUIRE(ee.not_count() == 10 - 2);
 }
 
 //-----------------------------------------------------------------------------------------
@@ -422,5 +464,29 @@ numbers::seven(7)
 		tot += static_cast<int>(val);
 	}, std::ref(total));
 	REQUIRE(total == 16);
+}
+
+//-----------------------------------------------------------------------------------------
+TEST_CASE("enum_bitset::for_each_n")
+{
+	enum_bitset<numbers> ee(0b10101010);
+	std::ostringstream ostr;
+	ee.for_each_n(3, [&ostr](numbers val) noexcept
+	{
+		ostr << conjure_enum<numbers>::enum_to_string(val) << '(' << static_cast<int>(val) << ')' << '\n';
+	});
+	REQUIRE(ostr.str() ==
+R"(numbers::one(1)
+numbers::three(3)
+numbers::five(5)
+)");
+
+	int total{};
+	enum_bitset<numbers> enc(numbers::two,numbers::three,numbers::four,numbers::seven);
+	enc.for_each_n(3, [](numbers val, int& tot)
+	{
+		tot += static_cast<int>(val);
+	}, std::ref(total));
+	REQUIRE(total == 9);
 }
 

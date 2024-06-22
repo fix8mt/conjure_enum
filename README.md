@@ -1170,7 +1170,7 @@ $
 
 ## e) Contributing
 Contributions are welcome. Make your changes in [your fork on the dev branch](https://github.com/fix8mt/conjure_enum/tree/dev) and open a pull request from there. PRs to
-master will not be accepted.
+master will not be considered.
 
 ---
 # 7. Notes

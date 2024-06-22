@@ -7,7 +7,7 @@
 //   by David L. Dight
 // see https://github.com/fix8mt/conjure_enum
 //
-// Lightweight header-only C++20 enum and type reflection
+// Lightweight header-only C++20 enum and typename reflection
 //
 // Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 //
@@ -84,13 +84,13 @@ int main(void)
 	std::cout << total << '\n';
 
 	enum_bitset<numbers> eb;
-	eb.set_all<numbers::zero,numbers::two,numbers::five,numbers::nine>();
+	eb.set<numbers::zero,numbers::two,numbers::five,numbers::nine>();
 	std::cout << eb << '\n';
-	std::cout << std::boolalpha << eb.test_all<numbers::zero,numbers::two,numbers::five,numbers::nine>() << '\n';
-	eb.reset_all<numbers::five,numbers::two>();
-	std::cout << std::boolalpha << eb.test_all(0, 2, 5, 9) << '\n';
-	std::cout << std::boolalpha << eb.test_any(0, 2, 5, 9) << '\n';
-	std::cout << std::boolalpha << eb.test_all(numbers::zero,numbers::nine) << '\n';
+	std::cout << std::boolalpha << eb.all_of<numbers::zero,numbers::two,numbers::five,numbers::nine>() << '\n';
+	eb.reset<numbers::five,numbers::two>();
+	std::cout << std::boolalpha << eb.all_of(0, 2, 5, 9) << '\n';
+	std::cout << std::boolalpha << eb.any_of(0, 2, 5, 9) << '\n';
+	std::cout << std::boolalpha << eb.all_of(numbers::zero,numbers::nine) << '\n';
 	std::cout << eb << '\n';
 	eb.reset(numbers::nine);
 	std::cout << eb << '\n';

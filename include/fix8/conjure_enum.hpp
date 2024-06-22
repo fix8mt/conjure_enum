@@ -324,20 +324,6 @@ private:
 		return std::get<0>(pl) < std::get<0>(pr);
 	}
 
-	/// for_each base
-	template<typename Fn, typename... Args>
-	[[maybe_unused]] static constexpr auto _for_each_n(int n, Fn&& func, Args&&... args) noexcept
-	{
-		for (int ii{}; const auto ev : values)
-		{
-			if (ii++ < n)
-				std::invoke(std::forward<Fn>(func), ev, std::forward<Args>(args)...);
-			else
-				break;
-		}
-		return std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...);
-	}
-
 public:
 	static consteval const char *tpeek() noexcept { return std::source_location::current().function_name(); }
 
@@ -461,7 +447,7 @@ public:
 	requires std::invocable<Fn&&, T, Args...>
 	[[maybe_unused]] static constexpr auto for_each(Fn&& func, Args&&... args) noexcept
 	{
-		return _for_each_n(static_cast<int>(count()), std::forward<Fn>(func), std::forward<Args>(args)...);
+		return for_each_n(static_cast<int>(count()), std::forward<Fn>(func), std::forward<Args>(args)...);
 	}
 
 	template<typename Fn, typename C, typename... Args> // specialisation for member function with object
@@ -475,7 +461,14 @@ public:
 	requires std::invocable<Fn&&, T, Args...>
 	[[maybe_unused]] static constexpr auto for_each_n(int n, Fn&& func, Args&&... args) noexcept
 	{
-		return _for_each_n(n, std::forward<Fn>(func), std::forward<Args>(args)...);
+		for (int ii{}; const auto ev : values)
+		{
+			if (ii++ < n)
+				std::invoke(std::forward<Fn>(func), ev, std::forward<Args>(args)...);
+			else
+				break;
+		}
+		return std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...);
 	}
 
 	template<typename Fn, typename C, typename... Args> // specialisation for member function with object
@@ -544,23 +537,6 @@ class enum_bitset
 	static constexpr U to_underlying(T val) noexcept { return static_cast<U>(val); }
 	static constexpr U all_bits { (1 << countof) - 1 };
 	U _present{};
-
-	/// for_each base
-	template<typename Fn, typename... Args>
-	[[maybe_unused]] constexpr auto _for_each_n(int n, Fn&& func, Args&&... args) noexcept
-	{
-		for (int ii{}; const auto ev : conjure_enum<T>::values)
-		{
-			if (test(ev))
-			{
-				if (ii++ < n)
-					std::invoke(std::forward<Fn>(func), ev, std::forward<Args>(args)...);
-				else
-					break;
-			}
-		}
-		return std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...);
-	}
 
 public:
 	explicit constexpr enum_bitset(U bits) noexcept : _present(bits) {}
@@ -708,7 +684,7 @@ public:
 	requires std::invocable<Fn&&, T, Args...>
 	[[maybe_unused]] constexpr auto for_each(Fn&& func, Args&&... args) noexcept
 	{
-		return _for_each_n(static_cast<int>(countof), std::forward<Fn>(func), std::forward<Args>(args)...);
+		return for_each_n(static_cast<int>(countof), std::forward<Fn>(func), std::forward<Args>(args)...);
 	}
 
 	template<typename C, typename Fn, typename... Args> // specialisation for member function with object
@@ -722,7 +698,17 @@ public:
 	requires std::invocable<Fn&&, T, Args...>
 	[[maybe_unused]] constexpr auto for_each_n(int n, Fn&& func, Args&&... args) noexcept
 	{
-		return _for_each_n(n, std::forward<Fn>(func), std::forward<Args>(args)...);
+		for (int ii{}; const auto ev : conjure_enum<T>::values)
+		{
+			if (test(ev))
+			{
+				if (ii++ < n)
+					std::invoke(std::forward<Fn>(func), ev, std::forward<Args>(args)...);
+				else
+					break;
+			}
+		}
+		return std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...);
 	}
 
 	template<typename C, typename Fn, typename... Args> // specialisation for member function with object

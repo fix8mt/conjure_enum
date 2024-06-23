@@ -461,7 +461,7 @@ public:
 	requires std::invocable<Fn&&, T, Args...>
 	[[maybe_unused]] static constexpr auto for_each_n(int n, Fn&& func, Args&&... args) noexcept
 	{
-		const auto mnv { std::min<int>(count(), n) };
+		const auto mnv { std::min(static_cast<int>(count()), n) };
 		for (int ii{}; ii < mnv; ++ii)
 			std::invoke(std::forward<Fn>(func), values[ii], std::forward<Args>(args)...);
 		return std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...);

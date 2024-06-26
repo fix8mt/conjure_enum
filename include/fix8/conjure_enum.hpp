@@ -85,7 +85,7 @@ public:
 //-----------------------------------------------------------------------------------------
 class no_ctor_or_assign
 {
-public:
+protected:
 	no_ctor_or_assign() = delete;
 	~no_ctor_or_assign() = delete;
 	no_ctor_or_assign(const no_ctor_or_assign&) = delete;
@@ -97,7 +97,7 @@ public:
 //-----------------------------------------------------------------------------------------
 // compiler specifics
 //-----------------------------------------------------------------------------------------
-class cs : public no_ctor_or_assign
+class cs : protected no_ctor_or_assign
 {
 	static constexpr auto _specifics
 	{
@@ -147,7 +147,7 @@ concept valid_enum = requires(T)
 
 //-----------------------------------------------------------------------------------------
 template<valid_enum T>
-class conjure_enum : public no_ctor_or_assign
+class conjure_enum : protected no_ctor_or_assign
 {
 	static constexpr int enum_min_value{ENUM_MIN_VALUE}, enum_max_value{ENUM_MAX_VALUE};
 	static_assert(enum_max_value > enum_min_value, "ENUM_MAX_VALUE must be greater than ENUM_MIN_VALUE");
@@ -764,7 +764,7 @@ constexpr enum_bitset<T> operator^(const enum_bitset<T>& lh, const enum_bitset<T
 //-----------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------
 template<typename T>
-class conjure_type : public no_ctor_or_assign
+class conjure_type : protected no_ctor_or_assign
 {
 	static constexpr std::string_view _get_name() noexcept
 	{

@@ -83,9 +83,21 @@ public:
 };
 
 //-----------------------------------------------------------------------------------------
+class no_ctor_or_assign
+{
+protected:
+	no_ctor_or_assign() = delete;
+	~no_ctor_or_assign() = delete;
+	no_ctor_or_assign(const no_ctor_or_assign&) = delete;
+	no_ctor_or_assign& operator=(const no_ctor_or_assign&) = delete;
+	no_ctor_or_assign(no_ctor_or_assign&&) = delete;
+	no_ctor_or_assign& operator=(no_ctor_or_assign&&) = delete;
+};
+
+//-----------------------------------------------------------------------------------------
 // compiler specifics
 //-----------------------------------------------------------------------------------------
-class cs
+class cs : public no_ctor_or_assign
 {
 	static constexpr auto _specifics
 	{
@@ -106,13 +118,6 @@ class cs
 	};
 
 public:
-	cs() = delete;
-	~cs() = delete;
-	cs(const cs&) = delete;
-	cs& operator=(const cs&) = delete;
-	cs(cs&&) = delete;
-	cs& operator=(cs&&) = delete;
-
 	enum class stype { enum_t, type_t, extype_t0, extype_t1, extype_t2, extype_t3 };
 	enum class sval { start, end, anon_str, anon_start };
 
@@ -142,19 +147,12 @@ concept valid_enum = requires(T)
 
 //-----------------------------------------------------------------------------------------
 template<valid_enum T>
-class conjure_enum
+class conjure_enum : public no_ctor_or_assign
 {
 	static constexpr int enum_min_value{ENUM_MIN_VALUE}, enum_max_value{ENUM_MAX_VALUE};
 	static_assert(enum_max_value > enum_min_value, "ENUM_MAX_VALUE must be greater than ENUM_MIN_VALUE");
 
 public:
-	conjure_enum() = delete;
-	~conjure_enum() = delete;
-	conjure_enum(const conjure_enum&) = delete;
-	conjure_enum& operator=(const conjure_enum&) = delete;
-	conjure_enum(conjure_enum&&) = delete;
-	conjure_enum& operator=(conjure_enum&&) = delete;
-
 	using enum_tuple = std::tuple<T, std::string_view>;
 	using scoped_tuple = std::tuple<std::string_view, std::string_view>;
 
@@ -766,7 +764,7 @@ constexpr enum_bitset<T> operator^(const enum_bitset<T>& lh, const enum_bitset<T
 //-----------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------
 template<typename T>
-class conjure_type
+class conjure_type : public no_ctor_or_assign
 {
 	static constexpr std::string_view _get_name() noexcept
 	{
@@ -808,13 +806,6 @@ class conjure_type
 #endif
 
 public:
-	conjure_type() = delete;
-	~conjure_type() = delete;
-	conjure_type(const conjure_type&) = delete;
-	conjure_type& operator=(const conjure_type&) = delete;
-	conjure_type(conjure_type&&) = delete;
-	conjure_type& operator=(conjure_type&&) = delete;
-
 	static consteval const char *tpeek() noexcept { return std::source_location::current().function_name(); }
 	static constexpr auto name
 	{

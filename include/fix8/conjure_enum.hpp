@@ -87,7 +87,11 @@ class no_ctor_or_assign
 {
 protected:
 	no_ctor_or_assign() = delete;
-	~no_ctor_or_assign() = default;
+#if defined _MSC_VER
+	~no_ctor_or_assign() = default; // warning C4624
+#else
+	~no_ctor_or_assign() = delete;
+#endif
 	no_ctor_or_assign(const no_ctor_or_assign&) = delete;
 	no_ctor_or_assign& operator=(const no_ctor_or_assign&) = delete;
 	no_ctor_or_assign(no_ctor_or_assign&&) = delete;

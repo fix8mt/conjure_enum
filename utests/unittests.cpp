@@ -329,12 +329,14 @@ TEST_CASE("for_each")
 //-----------------------------------------------------------------------------------------
 TEST_CASE("for_each_n")
 {
-	int total{};
-	conjure_enum<component>::for_each_n(3, [](component val, int& tot)
+	int total{}, count{};
+	conjure_enum<component>::for_each_n(3, [](component val, int& tot, int& cnt)
 	{
 		tot += static_cast<int>(val);
-	}, std::ref(total));
+		++cnt;
+	}, std::ref(total), std::ref(count));
 	REQUIRE(total == 3);
+	REQUIRE(count == 3);
 
 	struct foo
 	{

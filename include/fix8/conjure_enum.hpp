@@ -461,13 +461,9 @@ public:
 	requires std::invocable<Fn&&, T, Args...>
 	[[maybe_unused]] static constexpr auto for_each_n(int n, Fn&& func, Args&&... args) noexcept
 	{
-		for (int ii{}; const auto ev : values)
-		{
-			if (ii++ < n)
-				std::invoke(std::forward<Fn>(func), ev, std::forward<Args>(args)...);
-			else
-				break;
-		}
+		const auto mnv { std::min(static_cast<int>(count()), n) };
+		for (int ii{}; ii < mnv; ++ii)
+			std::invoke(std::forward<Fn>(func), values[ii], std::forward<Args>(args)...);
 		return std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...);
 	}
 
@@ -697,16 +693,9 @@ public:
 	requires std::invocable<Fn&&, T, Args...>
 	[[maybe_unused]] constexpr auto for_each_n(int n, Fn&& func, Args&&... args) noexcept
 	{
-		for (int ii{}; const auto ev : conjure_enum<T>::values)
-		{
-			if (test(ev))
-			{
-				if (ii++ < n)
-					std::invoke(std::forward<Fn>(func), ev, std::forward<Args>(args)...);
-				else
-					break;
-			}
-		}
+		for (int ii{}, jj{}; ii < static_cast<int>(countof) && jj < n; ++ii)
+			if (const auto ev{conjure_enum<T>::values[ii]}; test(ev))
+				std::invoke(std::forward<Fn>(func), ev, std::forward<Args>(args)...), ++jj;
 		return std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...);
 	}
 

@@ -63,23 +63,18 @@ namespace TEST
 
 namespace test::rsp::gd
 {
-
-class AFrame
-{
- public:
-  enum class PreFrames
-  { one };
-};
+	class AFrame
+	{
+	public:
+		enum class PreFrames { one };
+	};
 }
 
 namespace test::util
 {
 	template <typename E>
 	[[nodiscard]]
-	constexpr size_t countOf()
-	{
-	  return FIX8::conjure_enum<E>::count();
-	}
+	constexpr size_t countOf() { return FIX8::conjure_enum<E>::count(); }
 }
 
 //-----------------------------------------------------------------------------------------

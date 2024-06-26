@@ -85,7 +85,7 @@ public:
 //-----------------------------------------------------------------------------------------
 class no_ctor_or_assign
 {
-protected:
+public:
 	no_ctor_or_assign() = delete;
 	~no_ctor_or_assign() = delete;
 	no_ctor_or_assign(const no_ctor_or_assign&) = delete;

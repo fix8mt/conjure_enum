@@ -83,25 +83,25 @@ public:
 };
 
 //-----------------------------------------------------------------------------------------
-class no_ctor_assign_move
+class static_only
 {
 protected:
-	no_ctor_assign_move() = delete;
+	static_only() = delete;
 #if defined _MSC_VER
-	~no_ctor_assign_move() = default; // warning C4624
+	~static_only() = default; // warning C4624
 #else
-	~no_ctor_assign_move() = delete;
+	~static_only() = delete;
 #endif
-	no_ctor_assign_move(const no_ctor_assign_move&) = delete;
-	no_ctor_assign_move& operator=(const no_ctor_assign_move&) = delete;
-	no_ctor_assign_move(no_ctor_assign_move&&) = delete;
-	no_ctor_assign_move& operator=(no_ctor_assign_move&&) = delete;
+	static_only(const static_only&) = delete;
+	static_only& operator=(const static_only&) = delete;
+	static_only(static_only&&) = delete;
+	static_only& operator=(static_only&&) = delete;
 };
 
 //-----------------------------------------------------------------------------------------
 // compiler specifics
 //-----------------------------------------------------------------------------------------
-class cs : public no_ctor_assign_move
+class cs : public static_only
 {
 	static constexpr auto _specifics
 	{
@@ -151,7 +151,7 @@ concept valid_enum = requires(T)
 
 //-----------------------------------------------------------------------------------------
 template<valid_enum T>
-class conjure_enum : public no_ctor_assign_move
+class conjure_enum : public static_only
 {
 	static constexpr int enum_min_value{ENUM_MIN_VALUE}, enum_max_value{ENUM_MAX_VALUE};
 	static_assert(enum_max_value > enum_min_value, "ENUM_MAX_VALUE must be greater than ENUM_MIN_VALUE");
@@ -768,7 +768,7 @@ constexpr enum_bitset<T> operator^(const enum_bitset<T>& lh, const enum_bitset<T
 //-----------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------
 template<typename T>
-class conjure_type : public no_ctor_assign_move
+class conjure_type : public static_only
 {
 	static constexpr std::string_view _get_name() noexcept
 	{

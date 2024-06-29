@@ -225,8 +225,10 @@ TEST_CASE("iterators")
 	REQUIRE(cnt == conjure_enum<component>::count());
 	REQUIRE(std::get<component>(conjure_enum<component>::back()) == component::fragment);
 	REQUIRE(std::get<component>(conjure_enum<component>::front()) == component::scheme);
-	REQUIRE(std::get<component>(conjure_enum<component>::front()) == component::scheme);
 	REQUIRE(std::get<component>(conjure_enum<component>::back()) == std::get<component>(*conjure_enum<component>::crbegin()));
+	REQUIRE(std::get<component1>(conjure_enum<component1>::front()) == scheme);
+	REQUIRE(std::get<component1>(conjure_enum<component1>::back()) == fragment);
+	REQUIRE(std::get<component1>(conjure_enum<component1>::back()) == std::get<component1>(*conjure_enum<component1>::crbegin()));
 }
 
 //-----------------------------------------------------------------------------------------

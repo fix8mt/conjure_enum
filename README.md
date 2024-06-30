@@ -831,7 +831,7 @@ _output_
 ## c) Standard accessors and mutators
 All of the standard accessors and mutators are supported.
 | Method | Description |
-| :--- | :--- |
+| :--- | ---: |
 | `test` | test for bit(s)|
 | `set` | set all or 1 bit, optionally set to off|
 | `reset` | reset bits(s)|
@@ -847,7 +847,7 @@ All of the standard accessors and mutators are supported.
 
 Additional methods
 | Method | Description |
-| :--- | :--- |
+| :--- | ---: |
 | `set` | set all specified bits, templated |
 | `reset` | reset all specified bits, templated |
 | `any_of` | test for one or more bits, templated, function, types and underlyings |

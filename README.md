@@ -802,17 +802,17 @@ All of the standard operators are supported. Assignment operators return a `enum
 
 | Operator | Description |
 | :--- | :--- |
-| `<<=` | right shift assign |
-| `>>=` | left shift assign |
-| `&=` | `and` assign |
-| `\|=` | `or` assign |
-| `^=` | `xor` assign |
+| `&` | binary AND |
+| `\|` | binary OR |
+| `^` | binary XOR |
+| `~` | binary NOT |
 | `<<` | left shift |
 | `>>` | right shift |
-| `&` | `and` |
-| `\|` | `or` |
-| `^` | `xor` |
-| `~` | `not` |
+| `<<=` | left shift assign |
+| `>>=` | right shift assign |
+| `&=` | AND assign |
+| `\|=` | OR assign |
+| `^=` | XOR assign |
 
 Operators work with enum values or integers:
 ```c++

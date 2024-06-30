@@ -737,6 +737,7 @@ constexpr enum_bitset(I... comp);
 ```
 You can use the enum values directly in your constructor. _No_ need to `|` them - this is assumed. Just supply them comma separated:
 ```c++
+enum class numbers { zero, one, two, three, four, five, six, seven, eight, nine };
 enum_bitset<numbers> b(numbers::zero, numbers::one, numbers::two, numbers::three);
 std::cout << b << '\n';
 ```

@@ -81,8 +81,7 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
 - ***Modern C++20***: Entirely `constexpr` for compile-time safety, efficiency and performance
 - ***Broad Support***: Works with:
   - scoped and unscoped enums
-  - enum **aliases**
-  - **gaps**
+  - enums with **aliases** and **gaps**
   - anonymous and named namespaced enums and types
 - ***Simple & Easy to Use***: Class-based approach with intuitive syntax
 - ***Convenient***: `enum_bitset` provides an enhanced enum aware `std::bitset` (see 3 above)
@@ -92,7 +91,7 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
   - Clang
   - MSVC
   - XCode/Apple Clang
-- ***Confidence in Quality***: Includes comprehensive unit tests for reliable functionality
+- ***Confidence in Quality***: Includes comprehensive unit test suite for reliable functionality
 - ***Expanded***: Enhanced API:
   - `add_scope`
   - `remove_scope`
@@ -1109,6 +1108,7 @@ target_include_directories(myproj PRIVATE ${conjure_enum_SOURCE_DIR}/include)
 Raise an [issue](https://github.com/fix8mt/conjure_enum/issues) on the github page.
 The executable `srcloctest` should be built when you build the package by default. This application
 does not use any of the `conjure_enum` library and is designed to report on how your compiler handles `std::source_location`.
+The actual output is implementation dependent. See [Results of `source_location`](reference/source_location.md) for implementation specific `std::source_location` results.
 You should attach the output of this application with your issue.
 > [!TIP]
 > Passing the switch `-m` causes `srcloctest` to generate github markdown which you can paste directly into the issue.
@@ -1151,12 +1151,12 @@ static const char *conjure_type<Foo>::tpeek() [T = Foo]
 static const char *conjure_type<Namespace::Namespace_Foo>::tpeek() [T = Namespace::Namespace_Foo]
 static const char *conjure_type<(anonymous namespace)::Anon_Foo>::tpeek() [T = (anonymous namespace)::Anon_Foo]
 
-## 8. other types
+8. other types
 static const char *conjure_type<int>::tpeek() [T = int]
 static const char *conjure_type<std::basic_string_view<char>>::tpeek() [T = std::basic_string_view<char>]
 static const char *conjure_type<std::vector<std::tuple<int, char, std::basic_string_view<char>>>>::tpeek() [T = std::vector<std::tuple<int, char, std::basic_string_view<char>>>]
 
-## 9. edge enum types
+9. edge enum types
 static const char *conjure_type<(anonymous namespace)::NineEnums>::tpeek() [T = (anonymous namespace)::NineEnums]
 static const char *conjure_type<(anonymous namespace)::NineEnums1>::tpeek() [T = (anonymous namespace)::NineEnums1]
 static const char *conjure_type<TEST::NineEnums>::tpeek() [T = TEST::NineEnums]

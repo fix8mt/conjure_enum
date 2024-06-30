@@ -719,7 +719,7 @@ static consteval const char* FIX8::conjure_enum<T>::tpeek() [with T = component]
 `enum_bitset` is a convenient way of creating bitsets based on `std::bitset`. It uses your enum (scoped or unscoped)
 for the bit positions (and names).
 > [!WARNING]
-> Your enum should be continuous. The last value must be less than the count of enumerations.
+> Your enum _must_ be continuous. The last value must be less than the count of enumerations.
 > We decided on this restriction for both simplicity and practicality - bitsets only really make sense when represented in this manner.
 
 ## a) Creating an `enum_bitset`

@@ -781,7 +781,7 @@ _output_
 0000001111
 ```
 A typical use of the above is for parsing configuration bitsets. Here you can tell the constructor to throw an `std::invalid_argument`
-if a substring is invalid:
+if a substring is invalid by specifying `false` for `ignore_errors`:
 ```c++
 try
 {

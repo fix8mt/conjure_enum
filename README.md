@@ -805,8 +805,8 @@ All of the standard operators are supported. Assignment operators return a `enum
 | `<<=` | right shift assign |
 | `>>=` | left shift assign |
 | `&=` | `and` assign |
-| `\|=` | `or` shift assign |
-| `^=` | `xor` shift assign |
+| `\|=` | `or` assign |
+| `^=` | `xor` assign |
 | `<<` | left shift |
 | `>>` | right shift |
 | `&` | `and` |
@@ -841,9 +841,9 @@ All of the standard accessors and mutators are supported.
 | `count` | count of bits on |
 | `size` | number of bits in bitset |
 | `operator[]` | test bit at position |
-| `any` | return true if any bit is on |
-| `all` | return true if all bits are on |
-| `none` | return true if no bits are on |
+| `any` | return `true` if any bit is on |
+| `all` | return `true` if all bits are on |
+| `none` | return `true` if no bits are on |
 
 Additional methods
 | Method | Description |
@@ -856,6 +856,7 @@ Additional methods
 | `not_count` | complement of count, count of off bits |
 
 Take a look at the [implementation](include/fix8/conjure_enum.hpp) for more detail on the various API functions available.
+You can also review the unit test cases for examples of use.
 
 All accessors and mutators work with enum values or integers as with operators. They also work with multiple values, either as template parameters or
 as variadic arguments:

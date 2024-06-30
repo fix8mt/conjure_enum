@@ -1357,7 +1357,7 @@ It can be observed that there is only _one_ copy of the scoped enum value string
 | :--- | :--- | :--- | ---: |
 | clang | `16`, `17`, `18`| Compiler reports integers outside valid range [x,y]| specify underlying type when declaring enum eg. `enum class foo : int` |
 
-[^1]:&copy; 2024 Fix8 Market Technologies Pty Ltd, David L. Dight. Logo by Adrian An.
+[^1]:&copy; 2024 Fix8 Market Technologies Pty Ltd, David L. Dight. Logo by [Adrian An](mailto:adrian.an@mac.com).
 [^2]:&copy; 2019 - 2024 Daniil Goncharov
 #
 <p align="center">

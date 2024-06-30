@@ -801,7 +801,7 @@ exception: twenty
 All of the standard operators are supported. Assignment operators return a `enum_bitset&`, non-assignment operators return a `enum_bitset`.
 
 | Operator | Description |
-| :--- | :--- |
+| :--- | ---: |
 | `&` | binary AND |
 | `\|` | binary OR |
 | `^` | binary XOR |

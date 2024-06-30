@@ -805,7 +805,7 @@ All of the standard operators are supported. Assignment operators return a `enum
 | `&` | binary AND |
 | `\|` | binary OR |
 | `^` | binary XOR |
-| `~` | binary NOT |
+| `~` | binary NOT (ones' complement)|
 | `<<` | left shift |
 | `>>` | right shift |
 | `<<=` | left shift assign |
@@ -835,7 +835,7 @@ All of the standard accessors and mutators are supported.
 | `test` | test for bit(s)|
 | `set` | set all or 1 bit, optionally set to off|
 | `reset` | reset bits(s)|
-| `flip` | flip bits(s)|
+| `flip` | flip bits(s) (ones' complement)|
 | `to_ulong` | convert to `unsigned long` |
 | `to_ullong` | convert to `unsigned long long` |
 | `count` | count of bits on |

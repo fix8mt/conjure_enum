@@ -81,8 +81,7 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
 - ***Modern C++20***: Entirely `constexpr` for compile-time safety, efficiency and performance
 - ***Broad Support***: Works with:
   - scoped and unscoped enums
-  - enum **aliases**
-  - **gaps**
+  - enums with **aliases** and **gaps**
   - anonymous and named namespaced enums and types
 - ***Simple & Easy to Use***: Class-based approach with intuitive syntax
 - ***Convenient***: `enum_bitset` provides an enhanced enum aware `std::bitset` (see 3 above)
@@ -92,7 +91,7 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
   - Clang
   - MSVC
   - XCode/Apple Clang
-- ***Confidence in Quality***: Includes comprehensive unit tests for reliable functionality
+- ***Confidence in Quality***: Includes comprehensive unit test suite for reliable functionality
 - ***Expanded***: Enhanced API:
   - `add_scope`
   - `remove_scope`
@@ -719,10 +718,9 @@ static consteval const char* FIX8::conjure_enum<T>::tpeek() [with T = component]
 # 4. API and Examples using `enum_bitset`
 `enum_bitset` is a convenient way of creating bitsets based on `std::bitset`. It uses your enum (scoped or unscoped)
 for the bit positions (and names).
-> [!NOTE]
-> Your enum should be continuous. The last value must be less than the count of enumerations.
-
-We decided on this restriction for both simplicity and practicality - bitsets only really make sense when represented in this manner.
+> [!WARNING]
+> Your enum _must_ be continuous. The last value must be less than the count of enumerations.
+> We decided on this restriction for both simplicity and practicality - bitsets only really make sense when represented in this manner.
 
 ## a) Creating an `enum_bitset`
 ```c++
@@ -739,6 +737,7 @@ constexpr enum_bitset(I... comp);
 ```
 You can use the enum values directly in your constructor. _No_ need to `|` them - this is assumed. Just supply them comma separated:
 ```c++
+enum class numbers { zero, one, two, three, four, five, six, seven, eight, nine };
 enum_bitset<numbers> b(numbers::zero, numbers::one, numbers::two, numbers::three);
 std::cout << b << '\n';
 ```
@@ -782,7 +781,7 @@ _output_
 0000001111
 ```
 A typical use of the above is for parsing configuration bitsets. Here you can tell the constructor to throw an `std::invalid_argument`
-if a substring is invalid:
+if a substring is invalid by specifying `false` for `ignore_errors`:
 ```c++
 try
 {
@@ -803,17 +802,17 @@ All of the standard operators are supported. Assignment operators return a `enum
 
 | Operator | Description |
 | :--- | :--- |
-| `<<=` | right shift assign |
-| `>>=` | left shift assign |
-| `&=` | `and` assign |
-| `\|=` | `or` shift assign |
-| `^=` | `xor` shift assign |
+| `&` | binary AND |
+| `\|` | binary OR |
+| `^` | binary XOR |
+| `~` | binary NOT (ones' complement)|
 | `<<` | left shift |
 | `>>` | right shift |
-| `&` | `and` |
-| `\|` | `or` |
-| `^` | `xor` |
-| `~` | `not` |
+| `<<=` | left shift assign |
+| `>>=` | right shift assign |
+| `&=` | AND assign |
+| `\|=` | OR assign |
+| `^=` | XOR assign |
 
 Operators work with enum values or integers:
 ```c++
@@ -836,15 +835,15 @@ All of the standard accessors and mutators are supported.
 | `test` | test for bit(s)|
 | `set` | set all or 1 bit, optionally set to off|
 | `reset` | reset bits(s)|
-| `flip` | flip bits(s)|
+| `flip` | flip bits(s) (ones' complement)|
 | `to_ulong` | convert to `unsigned long` |
 | `to_ullong` | convert to `unsigned long long` |
 | `count` | count of bits on |
 | `size` | number of bits in bitset |
 | `operator[]` | test bit at position |
-| `any` | return true if any bit is on |
-| `all` | return true if all bits are on |
-| `none` | return true if no bits are on |
+| `any` | return `true` if any bit is on |
+| `all` | return `true` if all bits are on |
+| `none` | return `true` if no bits are on |
 
 Additional methods
 | Method | Description |
@@ -857,6 +856,7 @@ Additional methods
 | `not_count` | complement of count, count of off bits |
 
 Take a look at the [implementation](include/fix8/conjure_enum.hpp) for more detail on the various API functions available.
+You can also review the unit test cases for examples of use.
 
 All accessors and mutators work with enum values or integers as with operators. They also work with multiple values, either as template parameters or
 as variadic arguments:
@@ -1109,6 +1109,7 @@ target_include_directories(myproj PRIVATE ${conjure_enum_SOURCE_DIR}/include)
 Raise an [issue](https://github.com/fix8mt/conjure_enum/issues) on the github page.
 The executable `srcloctest` should be built when you build the package by default. This application
 does not use any of the `conjure_enum` library and is designed to report on how your compiler handles `std::source_location`.
+The actual output is implementation dependent. See [Results of `source_location`](reference/source_location.md) for implementation specific `std::source_location` results.
 You should attach the output of this application with your issue.
 > [!TIP]
 > Passing the switch `-m` causes `srcloctest` to generate github markdown which you can paste directly into the issue.
@@ -1151,12 +1152,12 @@ static const char *conjure_type<Foo>::tpeek() [T = Foo]
 static const char *conjure_type<Namespace::Namespace_Foo>::tpeek() [T = Namespace::Namespace_Foo]
 static const char *conjure_type<(anonymous namespace)::Anon_Foo>::tpeek() [T = (anonymous namespace)::Anon_Foo]
 
-## 8. other types
+8. other types
 static const char *conjure_type<int>::tpeek() [T = int]
 static const char *conjure_type<std::basic_string_view<char>>::tpeek() [T = std::basic_string_view<char>]
 static const char *conjure_type<std::vector<std::tuple<int, char, std::basic_string_view<char>>>>::tpeek() [T = std::vector<std::tuple<int, char, std::basic_string_view<char>>>]
 
-## 9. edge enum types
+9. edge enum types
 static const char *conjure_type<(anonymous namespace)::NineEnums>::tpeek() [T = (anonymous namespace)::NineEnums]
 static const char *conjure_type<(anonymous namespace)::NineEnums1>::tpeek() [T = (anonymous namespace)::NineEnums1]
 static const char *conjure_type<TEST::NineEnums>::tpeek() [T = TEST::NineEnums]
@@ -1357,8 +1358,10 @@ It can be observed that there is only _one_ copy of the scoped enum value string
 | :--- | :--- | :--- | ---: |
 | clang | `16`, `17`, `18`| Compiler reports integers outside valid range [x,y]| specify underlying type when declaring enum eg. `enum class foo : int` |
 
-[^1]:&copy; 2024 Fix8 Market Technologies Pty Ltd, David L. Dight.
-[^2]:&copy; 2019 - 2024 Daniil Goncharov
+[^1]: &copy; 2024 Fix8 Market Technologies Pty Ltd, David L. Dight.
+  Logo by [Adrian An](mailto:adrian.an[at]mac.com).
+[^2]: &copy; 2019 - 2024 Daniil Goncharov
+
 #
 <p align="center">
   <a href="https://www.fix8mt.com"><img src="assets/fix8mt_Master_Logo_Green_Trans.png" width="120"></a>

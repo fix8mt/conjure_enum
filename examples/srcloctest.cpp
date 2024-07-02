@@ -34,6 +34,7 @@
 //----------------------------------------------------------------------------------------
 #include <iostream>
 #include <array>
+#include <map>
 #include <vector>
 #include <cctype>
 #include <tuple>
@@ -151,12 +152,10 @@ int main(int argc, char **argv)
    };
 
 	bool mkd{}, cpl{true}, hlp{};
-	auto opts { std::to_array<std::tuple<std::string_view, bool&>>({{"-m",mkd},{"-c",cpl},{"-h",hlp}}) };
+	std::map<std::string_view, bool&> opts { {"-m",mkd},{"-c",cpl},{"-h",hlp} };
 	for (int ii{1}; ii < argc; ++ii)
-		for (const auto& pp : opts)
-			if (std::string_view(argv[ii]) == std::get<std::string_view>(pp))
-				std::get<bool&>(pp) ^= true;
-
+		if (auto result{opts.find(std::string_view(argv[ii]))}; result != opts.cend())
+			result->second ^= true;
 	if (hlp)
 	{
 		std::cout << "Usage: " << argv[0] << " [-cmh]" << R"(

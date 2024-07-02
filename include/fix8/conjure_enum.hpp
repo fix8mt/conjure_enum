@@ -83,9 +83,25 @@ public:
 };
 
 //-----------------------------------------------------------------------------------------
+class static_only
+{
+protected:
+	static_only() = delete;
+#if defined _MSC_VER
+	~static_only() = default; // warning C4624
+#else
+	~static_only() = delete;
+#endif
+	static_only(const static_only&) = delete;
+	static_only& operator=(const static_only&) = delete;
+	static_only(static_only&&) = delete;
+	static_only& operator=(static_only&&) = delete;
+};
+
+//-----------------------------------------------------------------------------------------
 // compiler specifics
 //-----------------------------------------------------------------------------------------
-class cs
+class cs : public static_only
 {
 	static constexpr auto _specifics
 	{
@@ -106,13 +122,6 @@ class cs
 	};
 
 public:
-	cs() = delete;
-	~cs() = delete;
-	cs(const cs&) = delete;
-	cs& operator=(const cs&) = delete;
-	cs(cs&&) = delete;
-	cs& operator=(cs&&) = delete;
-
 	enum class stype { enum_t, type_t, extype_t0, extype_t1, extype_t2, extype_t3 };
 	enum class sval { start, end, anon_str, anon_start };
 
@@ -142,19 +151,12 @@ concept valid_enum = requires(T)
 
 //-----------------------------------------------------------------------------------------
 template<valid_enum T>
-class conjure_enum
+class conjure_enum : public static_only
 {
 	static constexpr int enum_min_value{ENUM_MIN_VALUE}, enum_max_value{ENUM_MAX_VALUE};
 	static_assert(enum_max_value > enum_min_value, "ENUM_MAX_VALUE must be greater than ENUM_MIN_VALUE");
 
 public:
-	conjure_enum() = delete;
-	~conjure_enum() = delete;
-	conjure_enum(const conjure_enum&) = delete;
-	conjure_enum& operator=(const conjure_enum&) = delete;
-	conjure_enum(conjure_enum&&) = delete;
-	conjure_enum& operator=(conjure_enum&&) = delete;
-
 	using enum_tuple = std::tuple<T, std::string_view>;
 	using scoped_tuple = std::tuple<std::string_view, std::string_view>;
 
@@ -461,9 +463,12 @@ public:
 	requires std::invocable<Fn&&, T, Args...>
 	[[maybe_unused]] static constexpr auto for_each_n(int n, Fn&& func, Args&&... args) noexcept
 	{
-		const auto mnv { std::min(static_cast<int>(count()), n) };
-		for (int ii{}; ii < mnv; ++ii)
-			std::invoke(std::forward<Fn>(func), values[ii], std::forward<Args>(args)...);
+		for (int ii{}; const auto ev : conjure_enum<T>::values)
+		{
+			if (ii++ >= n)
+				break;
+			std::invoke(std::forward<Fn>(func), ev, std::forward<Args>(args)...);
+		}
 		return std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...);
 	}
 
@@ -766,7 +771,7 @@ constexpr enum_bitset<T> operator^(const enum_bitset<T>& lh, const enum_bitset<T
 //-----------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------
 template<typename T>
-class conjure_type
+class conjure_type : public static_only
 {
 	static constexpr std::string_view _get_name() noexcept
 	{
@@ -808,13 +813,6 @@ class conjure_type
 #endif
 
 public:
-	conjure_type() = delete;
-	~conjure_type() = delete;
-	conjure_type(const conjure_type&) = delete;
-	conjure_type& operator=(const conjure_type&) = delete;
-	conjure_type(conjure_type&&) = delete;
-	conjure_type& operator=(conjure_type&&) = delete;
-
 	static consteval const char *tpeek() noexcept { return std::source_location::current().function_name(); }
 	static constexpr auto name
 	{

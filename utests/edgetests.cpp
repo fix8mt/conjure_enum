@@ -73,8 +73,7 @@ namespace test::rsp::gd
 namespace test::util
 {
 	template <typename E>
-	[[nodiscard]]
-	constexpr size_t countOf() { return FIX8::conjure_enum<E>::count(); }
+	[[nodiscard]] constexpr size_t countOf() { return FIX8::conjure_enum<E>::count(); }
 }
 
 //-----------------------------------------------------------------------------------------

@@ -539,6 +539,8 @@ Optionally provide any additional parameters. Works with lambdas, member functio
 To user member functions, use `std::bind` to bind the this pointer and any parameter placeholders.
 If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
 
+This method is intended to be used where complex event handling is required, with predefined actions as methods, functions or lambdas.
+
 There are two versions of `dispatch` - the first takes an enum value, a 'not found' value, and a `std::array` of `std::tuple` of enum and invocable.
 The second version takes an enum value, and a `std::array` of `std::tuple` of enum and invocable. The last element of the array is called if the enum is not found.
 This version is intended for use with `void` return invocables.

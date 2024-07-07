@@ -479,6 +479,30 @@ public:
 		return for_each_n(n, std::bind(std::forward<Fn>(func), obj, std::placeholders::_1, std::forward<Args>(args)...));
 	}
 
+	// dispatch
+	template<typename Fn>
+	static constexpr bool tuple_comp(const std::tuple<T, Fn>& pl, const std::tuple<T, Fn>& pr) noexcept
+	{
+		return static_cast<int>(std::get<T>(pl)) < static_cast<int>(std::get<T>(pr));
+	}
+
+	template<std::size_t I, typename R, typename Fn, typename... Args> // specialisation with not found value(nval) for return
+	requires std::invocable<Fn&&, T, Args...>
+	[[maybe_unused]] static constexpr R dispatch(T ev, R nval, const std::array<std::tuple<T, Fn>, I>& disp, Args&&... args) noexcept
+	{
+		const auto result { std::equal_range(disp.cbegin(), disp.cend(), std::make_tuple(ev, Fn()), tuple_comp<Fn>) };
+		return result.first != result.second ? std::invoke(std::get<Fn>(*result.first), ev, std::forward<Args>(args)...) : nval;
+	}
+
+	template<std::size_t I, typename Fn, typename... Args> // specialisation for void func with not found call to last element
+	requires (std::invocable<Fn&&, T, Args...> && I > 0)
+	static constexpr void dispatch(T ev, const std::array<std::tuple<T, Fn>, I>& disp, Args&&... args) noexcept
+	{
+		const auto result { std::equal_range(disp.cbegin(), std::prev(disp.cend()), std::make_tuple(ev, Fn()), tuple_comp<Fn>) };
+		return result.first != result.second ? std::invoke(std::get<Fn>(*result.first), ev, std::forward<Args>(args)...)
+														 : std::invoke(std::get<Fn>(*std::prev(disp.cend())), ev, std::forward<Args>(args)...);
+	}
+
 	// public constexpr data structures
 	static constexpr auto values { _values() };
 	static constexpr auto entries { _entries(std::make_index_sequence<values.size()>()) };

@@ -500,8 +500,7 @@ _output_
 14 10
 14 10 <== invoked with returned object
 74
-```
-Example with pointer to member function with additional parameters:
+```Example with pointer to member function with additional parameters:
 ```c++
 struct foo
 {
@@ -532,7 +531,8 @@ template<std::size_t I, typename Fn, typename... Args> // specialisation for voi
 requires (std::invocable<Fn&&, T, Args...> && I > 0)
 static constexpr void dispatch(T ev, const std::array<std::tuple<T, Fn>, I>& disp, Args&&... args);
 ```
-With a given enum, search and call user supplied invocable. Use this method where complex event handling is required, with predefined actions as methods, functions or lambdas.
+With a given enum, search and call user supplied invocable. Use this method where complex event handling is required, allowing you to easily declare predefined invocable actions
+for different enum values.
 
 Where invocable returns a value, return this value or a user supplied "not found" value.
 Where invocable is void, call user supplied "not found" invocable.

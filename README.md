@@ -555,9 +555,9 @@ const auto tarr
 {
    std::to_array<std::tuple<component, std::function<void(component, int&)>>>
    ({
-      { component::scheme, [](component ev, int& a) { a += 1000; } },
-      { component::port, [](component ev, int& a) { a += 2000; } },
-      { component::fragment, [](component ev, int& a) { a += 3000; } },
+      { component::scheme, [](component ev, int& a) { a = 1000; } },
+      { component::port, [](component ev, int& a) { a = 2000; } },
+      { component::fragment, [](component ev, int& a) { a = 3000; } },
       { static_cast<component>(-1), []([[maybe_unused]] component ev, int& a) { a = -1; } }, // not found func
    })
 };

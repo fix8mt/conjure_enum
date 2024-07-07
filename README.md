@@ -551,23 +551,26 @@ If you wish to provide a `constexpr` array, you will need to use a simple functi
 > The `dispatch` method performs a binary search on the array. Complexity for a sorted array is at most $2log_2(N)+O(1)$ comparisons.
 > If the array is _not_ sorted, complexity is linear.
 ```c++
-conjure_enum<component>::for_each([](component val, int other)
+const auto tarr
 {
-   std::cout << static_cast<int>(val) << ' ' << other << '\n';
-}, 10);
+	std::to_array<std::tuple<component, std::function<void(component, int&)>>>
+	({
+		{ component::scheme, [](component ev, int& a) { a += 1000; } },
+		{ component::port, [](component ev, int& a) { a += 2000; } },
+		{ component::fragment, [](component ev, int& a) { a += 3000; } },
+		{ static_cast<component>(-1), []([[maybe_unused]] component ev, int& a) { a = -1; } }, // not found func
+	})
+};
+int total{};
+conjure_enum<component>::dispatch(component::port, tarr, std::ref(total));
+std::cout << total << '\n';
+conjure_enum<component>::dispatch(component::path, tarr, std::ref(total));
+std::cout << total << '\n';
 ```
 _output_
 ```CSV
-0 10
-1 10
-2 10
-3 10
-4 10
-5 10
-6 10
-12 10
-13 10
-14 10
+2006
+-1
 ```
 ## p) `is_scoped`
 ```c++

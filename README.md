@@ -542,7 +542,7 @@ There are two versions of `dispatch` - the first takes an enum value, a 'not fou
 The second version takes an enum value, and a `std::array` of `std::tuple` of enum and invokable. The last element of the array is called if the enum is not found.
 This version is intended for use with void invokables.
 > [!TIP]
-> Your `std::array` of `std::tuple` should be sorted by enum - the `dispatch` method performs a binary search on the array. Complexity for a sorted array is $\2log_2(N)+O(1)$
+> Your `std::array` of `std::tuple` should be sorted by enum - the `dispatch` method performs a binary search on the array. Complexity for a sorted array is $2log_2(N)+O(1)$
 > If the array is _not_ sorted, complexity is linear.
 ```c++
 conjure_enum<component>::for_each([](component val, int other)

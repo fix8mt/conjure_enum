@@ -435,7 +435,7 @@ requires std::invocable<Fn&&, C, T, Args...>
 ```
 Call supplied invocable for _each_ enum value. Similar to `std::for_each` except the first parameter of your invocable must accept an enum value (passed by `for_each`).
 Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. You can limit the number of calls to your
-invokable by using the `for_each_n` version with the first parameter being the maximum number to call. The second version of `for_each` and `for_each_n` is intended to be used
+invocable by using the `for_each_n` version with the first parameter being the maximum number to call. The second version of `for_each` and `for_each_n` is intended to be used
 when using a member function - the _second_ parameter passed by your call must be the `this` pointer of the object.
 If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
 
@@ -532,16 +532,16 @@ template<std::size_t I, typename Fn, typename... Args> // specialisation for voi
 requires (std::invocable<Fn&&, T, Args...> && I > 0)
 static constexpr void dispatch(T ev, const std::array<std::tuple<T, Fn>, I>& disp, Args&&... args);
 ```
-With a given enum, search and call user supplied invokable. Where invokable returns a value, return this value or a user supplied "not found" value.
-Where invokable is void, call user supplied "not found" invokable.
+With a given enum, search and call user supplied invocable. Where invocable returns a value, return this value or a user supplied "not found" value.
+Where invocable is void, call user supplied "not found" invocable.
 The first parameter of your invocable must accept an enum value (passed by `dispatch`).
 Optionally provide any additional parameters. Works with lambdas, member functions, functions etc.
 To user member functions, use `std::bind` to bind the this pointer and any parameter placeholders.
 If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
 
-There are two versions of `dispatch` - the first takes an enum value, a 'not found' value, and a `std::array` of `std::tuple` of enum and invokable.
-The second version takes an enum value, and a `std::array` of `std::tuple` of enum and invokable. The last element of the array is called if the enum is not found.
-This version is intended for use with `void` return invokables.
+There are two versions of `dispatch` - the first takes an enum value, a 'not found' value, and a `std::array` of `std::tuple` of enum and invocable.
+The second version takes an enum value, and a `std::array` of `std::tuple` of enum and invocable. The last element of the array is called if the enum is not found.
+This version is intended for use with `void` return invocables.
 > [!TIP]
 > Your `std::array` of `std::tuple` should be sorted by enum.
 > The `dispatch` method performs a binary search on the array. Complexity for a sorted array is at most $2log_2(N)+O(1)$ comparisons.
@@ -984,7 +984,7 @@ requires std::invocable<Fn&&, C, T, Args...>
 ```
 Call supplied invocable for _each bit that is on_. Similar to `std::for_each` except first parameter of your invocable must accept an enum value (passed by `for_each`).
 Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. You can limit the number of calls to your
-invokable by using the `for_each_n` version with the first parameter being the maximum number to call. The second version of `for_each` and `for_each_n` is intended to be used
+invocable by using the `for_each_n` version with the first parameter being the maximum number to call. The second version of `for_each` and `for_each_n` is intended to be used
 when using a member function - the _second_ parameter passed by your call must be the `this` pointer of the object.
 If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
 

@@ -519,7 +519,51 @@ _output_
 ```CSV
 160
 ```
-## o) `is_scoped`
+## o) `dispatch`
+```c++
+template<typename Fn>
+static constexpr bool tuple_comp(const std::tuple<T, Fn>& pl, const std::tuple<T, Fn>& pr);
+
+template<std::size_t I, typename R, typename Fn, typename... Args> // specialisation with not found value(nval) for return
+requires std::invocable<Fn&&, T, Args...>
+[[maybe_unused]] static constexpr R dispatch(T ev, R nval, const std::array<std::tuple<T, Fn>, I>& disp, Args&&... args);
+
+template<std::size_t I, typename Fn, typename... Args> // specialisation for void func with not found call to last element
+requires (std::invocable<Fn&&, T, Args...> && I > 0)
+static constexpr void dispatch(T ev, const std::array<std::tuple<T, Fn>, I>& disp, Args&&... args);
+```
+With a given enum, search and call user supplied invokable. Where invokable returns a value, return this value or a user supplied "not found" value.
+Where invokable is void, call user supplied "not found" invokable.
+The first parameter of your invocable must accept an enum value (passed by `dispatch`).
+Optionally provide any additional parameters. Works with lambdas, member functions, functions etc.
+To user member functions, use `std::bind` to bind the this pointer and any parameter placeholders.
+If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
+There are two versions of `dispatch` - the first takes an enum value, a 'not found' value, and a `std::array` of `std::tuple` of enum and invokable.
+The second version takes an enum value, and a `std::array` of `std::tuple` of enum and invokable. The last element of the array is called if the enum is not found.
+This version is intended for use with void invokables.
+> [!TIP]
+> Your `std::array` of `std::tuple` should be sorted by enum - the `dispatch` method performs a binary search on the array. Complexity for a sorted array is $\2log_2(N)+O(1)$
+> If the array is _not_ sorted, complexity is linear.
+```c++
+conjure_enum<component>::for_each([](component val, int other)
+{
+   std::cout << static_cast<int>(val) << ' ' << other << '\n';
+}, 10);
+```
+_output_
+```CSV
+0 10
+1 10
+2 10
+3 10
+4 10
+5 10
+6 10
+12 10
+13 10
+14 10
+```
+## p) `is_scoped`
 ```c++
 struct is_scoped : std::integral_constant<bool, requires
    { requires !std::is_convertible_v<T, std::underlying_type_t<T>>; }>{};
@@ -534,7 +578,7 @@ _output_
 true
 false
 ```
-## p) `is_valid`
+## q) `is_valid`
 ```c++
 template<T e>
 static constexpr bool is_valid();
@@ -549,7 +593,7 @@ _output_
 true
 false
 ```
-## q) `type_name`
+## r) `type_name`
 ```c++
 static constexpr std::string_view type_name();
 ```
@@ -563,7 +607,7 @@ _output_
 component
 component1
 ```
-## r) `remove_scope`
+## s) `remove_scope`
 ```c++
 static constexpr std::string_view remove_scope(std::string_view what);
 ```
@@ -577,7 +621,7 @@ _output_
 path
 path
 ```
-## s) `add_scope`
+## t) `add_scope`
 ```c++
 static constexpr std::string_view add_scope(std::string_view what);
 ```
@@ -591,7 +635,7 @@ _output_
 component::path
 path
 ```
-## t) `has_scope`
+## u) `has_scope`
 ```c++
 static constexpr bool has_scope(std::string_view what);
 ```
@@ -607,7 +651,7 @@ true
 false
 false
 ```
-## u) `iterators`
+## v) `iterators`
 ```c++
 static constexpr auto cbegin();
 static constexpr auto cend();
@@ -634,7 +678,7 @@ _output_
 8 numbers::eight
 9 numbers::nine
 ```
-## v) `iterator_adaptor`
+## w) `iterator_adaptor`
 ```c++
 template<valid_enum T>
 struct iterator_adaptor;
@@ -657,7 +701,7 @@ _output_
 8
 9
 ```
-## w) `front, back`
+## x) `front, back`
 ```c++
 static constexpr auto front();
 static constexpr auto back();
@@ -674,7 +718,7 @@ _output_
 0 numbers::zero
 9 numbers::nine
 ```
-## x) `ostream_enum_operator`
+## y) `ostream_enum_operator`
 ```c++
 template<typename CharT, typename Traits=std::char_traits<CharT>, valid_enum T>
 constexpr std::basic_ostream<CharT, Traits>& operator<<(std::basic_ostream<CharT, Traits>& os, T value);
@@ -696,7 +740,7 @@ _output_
 "host"
 "100"
 ```
-## y) `epeek, tpeek`
+## z) `epeek, tpeek`
 ```c++
 static consteval const char *tpeek();
 template<T e>

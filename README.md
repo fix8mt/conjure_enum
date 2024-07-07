@@ -538,6 +538,7 @@ The first parameter of your invocable must accept an enum value (passed by `disp
 Optionally provide any additional parameters. Works with lambdas, member functions, functions etc.
 To user member functions, use `std::bind` to bind the this pointer and any parameter placeholders.
 If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
+
 There are two versions of `dispatch` - the first takes an enum value, a 'not found' value, and a `std::array` of `std::tuple` of enum and invokable.
 The second version takes an enum value, and a `std::array` of `std::tuple` of enum and invokable. The last element of the array is called if the enum is not found.
 This version is intended for use with void invokables.

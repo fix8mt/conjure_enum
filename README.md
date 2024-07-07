@@ -553,13 +553,13 @@ If you wish to provide a `constexpr` array, you will need to use a simple functi
 ```c++
 const auto tarr
 {
-	std::to_array<std::tuple<component, std::function<void(component, int&)>>>
-	({
-		{ component::scheme, [](component ev, int& a) { a += 1000; } },
-		{ component::port, [](component ev, int& a) { a += 2000; } },
-		{ component::fragment, [](component ev, int& a) { a += 3000; } },
-		{ static_cast<component>(-1), []([[maybe_unused]] component ev, int& a) { a = -1; } }, // not found func
-	})
+   std::to_array<std::tuple<component, std::function<void(component, int&)>>>
+   ({
+      { component::scheme, [](component ev, int& a) { a += 1000; } },
+      { component::port, [](component ev, int& a) { a += 2000; } },
+      { component::fragment, [](component ev, int& a) { a += 3000; } },
+      { static_cast<component>(-1), []([[maybe_unused]] component ev, int& a) { a = -1; } }, // not found func
+   })
 };
 int total{};
 conjure_enum<component>::dispatch(component::port, tarr, std::ref(total));

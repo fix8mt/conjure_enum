@@ -551,25 +551,28 @@ If you wish to provide a `constexpr` array, you will need to use a simple functi
 > The `dispatch` method performs a binary search on the array. Complexity for a sorted array is at most $2log_2(N)+O(1)$ comparisons.
 > If the array is _not_ sorted, complexity is linear.
 ```c++
-const auto tarr
+enum class directions { left, right, up, down, forward, backward, notfound=-1 };
+static constexpr auto prn([](directions ev) { std::cout << conjure_enum<directions>::enum_to_string(ev) << '\n'; });
+static constexpr auto tarr
 {
-   std::to_array<std::tuple<component, std::function<void(component, int&)>>>
+   std::to_array<std::tuple<directions, void(*)(directions)>>
    ({
-      { component::scheme, [](component ev, int& a) { a = static_cast<int>(ev) + 1000; } },
-      { component::port, [](component ev, int& a) { a = static_cast<int>(ev) + 2000; } },
-      { component::fragment, [](component ev, int& a) { a = static_cast<int>(ev) + 3000; } },
-      { static_cast<component>(-1), [](component ev, int& a) { a = static_cast<int>(ev); } }, // not found func
+      { directions::left, prn },
+      { directions::right, prn },
+      { directions::up, prn },
+      { directions::down, prn },
+      { directions::backward, prn },
+      { directions::notfound, [](directions ev) { std::cout << "not found: "; prn(ev); } }, // not found func
    })
 };
-int total{};
-conjure_enum<component>::dispatch(component::port, tarr, std::ref(total));
-std::cout << total << '\n';
-conjure_enum<component>::dispatch(component::path, tarr, std::ref(total));
-std::cout << total << '\n';
+conjure_enum<directions>::dispatch(directions::right, tarr);
+conjure_enum<directions>::dispatch(directions::forward, tarr);
+std::cout << conjure_enum<directions>::enum_to_int(directions::notfound) << '\n';
 ```
 _output_
 ```CSV
-2006
+directions::right
+not found: directions::forward
 -1
 ```
 ## p) `is_scoped`

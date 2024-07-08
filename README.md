@@ -523,13 +523,21 @@ _output_
 template<typename Fn>
 static constexpr bool tuple_comp(const std::tuple<T, Fn>& pl, const std::tuple<T, Fn>& pr);
 
-template<std::size_t I, typename R, typename Fn, typename... Args> // specialisation with not found value(nval) for return
+template<std::size_t I, typename R, typename Fn, typename... Args> // with not found value(nval) for return
 requires std::invocable<Fn&&, T, Args...>
 [[maybe_unused]] static constexpr R dispatch(T ev, R nval, const std::array<std::tuple<T, Fn>, I>& disp, Args&&... args);
 
-template<std::size_t I, typename Fn, typename... Args> // specialisation for void func with not found call to last element
+template<std::size_t I, typename R, typename Fn, typename C, typename... Args> // specialisation for member function with not found value(nval) for return
+requires std::invocable<Fn&&, C, T, Args...>
+[[maybe_unused]] static constexpr R dispatch(T ev, R nval, const std::array<std::tuple<T, Fn>, I>& disp, C *obj, Args&&... args);
+
+template<std::size_t I, typename Fn, typename... Args> // void func with not found call to last element
 requires (std::invocable<Fn&&, T, Args...> && I > 0)
 static constexpr void dispatch(T ev, const std::array<std::tuple<T, Fn>, I>& disp, Args&&... args);
+
+template<std::size_t I, typename Fn, typename C, typename... Args> // specialisation for void member function with not found call to last element
+requires (std::invocable<Fn&&, C, T, Args...> && I > 0)
+static constexpr void dispatch(T ev, const std::array<std::tuple<T, Fn>, I>& disp, C *obj, Args&&... args);
 ```
 With a given enum, search and call user supplied invocable. Use this method where complex event handling is required, allowing you to easily declare predefined invocable actions
 for different enum values.
@@ -538,12 +546,13 @@ Where invocable returns a value, return this value or a user supplied "not found
 Where invocable is void, call user supplied "not found" invocable.
 The first parameter of your invocable must accept an enum value (passed by `dispatch`).
 Optionally provide any additional parameters. Works with lambdas, member functions, functions etc.
-To user member functions, use `std::bind` to bind the this pointer and any parameter placeholders.
-If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
 
 There are two versions of `dispatch` - the first takes an enum value, a 'not found' value, and a `std::array` of `std::tuple` of enum and invocable.
 The second version takes an enum value, and a `std::array` of `std::tuple` of enum and invocable. The last element of the array is called if the enum is not found.
 This version is intended for use with `void` return invocables.
+The second version of each of the above is intended to be used when using a member function - the _second_ parameter passed by your call must be the `this` pointer of the object.
+You can also use `std::bind` to bind the this pointer and any parameter placeholders when declaring your array.
+If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
 
 If you wish to provide a `constexpr` array, you will need to use a simple function prototype, since `std::function` is not constexpr (see unit tests for examples).
 > [!TIP]
@@ -574,6 +583,35 @@ _output_
 directions::right
 not found: directions::forward
 -1
+```
+This example uses member functions:
+```c++
+struct foo
+{
+   int process(component val, int aint)
+   {
+      return aint * static_cast<int>(val);
+   }
+   int process1(component val, int aint)
+   {
+      return aint + static_cast<int>(val);
+   }
+};
+constexpr auto tarr1
+{
+   std::to_array<std::tuple<component, int (foo::*)(component, int)>>
+   ({
+      { component::scheme, &foo::process },
+      { component::port, &foo::process },
+      { component::fragment, &foo::process1 },
+   })
+};
+foo bar;
+std::cout << conjure_enum<component>::dispatch(component::port, -1, tarr1, &bar, 1000) << '\n';
+```
+_output_
+```CSV
+6000
 ```
 ## p) `is_scoped`
 ```c++

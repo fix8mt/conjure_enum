@@ -810,8 +810,8 @@ std::cout << conjure_enum<component>::epeek<component::scheme>() << '\n';
 ```
 Generates this output with gcc:
 ```CSV
-static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::path; T = component]
 static consteval const char* FIX8::conjure_enum<T>::tpeek() [with T = component]
+static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::path; T = component]
 ```
 ---
 # 4. API and Examples using `enum_bitset`

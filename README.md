@@ -78,7 +78,7 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
 
 - ***Lightweight***: Designed for performance without additional overhead
 - ***Single Header-Only***: No external dependencies, simplifying integration into your project
-- ***Modern C++20***: Entirely `constexpr` for compile-time safety, efficiency and performance
+- ***Modern C++20***: Entirely `constexpr` for compile-time safety, efficiency and performance; no macros
 - ***Broad Support***: Works with:
   - scoped and unscoped enums
   - enums with **aliases** and **gaps**

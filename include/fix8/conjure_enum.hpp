@@ -486,7 +486,7 @@ public:
 		return static_cast<int>(std::get<T>(pl)) < static_cast<int>(std::get<T>(pr));
 	}
 
-	template<std::size_t I, typename R, typename Fn, typename... Args> // specialisation with not found value(nval) for return
+	template<std::size_t I, typename R, typename Fn, typename... Args> // with not found value(nval) for return
 	requires std::invocable<Fn&&, T, Args...>
 	[[maybe_unused]] static constexpr R dispatch(T ev, R nval, const std::array<std::tuple<T, Fn>, I>& disp, Args&&... args) noexcept
 	{
@@ -494,7 +494,15 @@ public:
 		return result.first != result.second ? std::invoke(std::get<Fn>(*result.first), ev, std::forward<Args>(args)...) : nval;
 	}
 
-	template<std::size_t I, typename Fn, typename... Args> // specialisation for void func with not found call to last element
+	template<std::size_t I, typename R, typename Fn, typename C, typename... Args> // specialisation for member function with not found value(nval) for return
+	requires std::invocable<Fn&&, C, T, Args...>
+	[[maybe_unused]] static constexpr R dispatch(T ev, R nval, const std::array<std::tuple<T, Fn>, I>& disp, C *obj, Args&&... args) noexcept
+	{
+		const auto result { std::equal_range(disp.cbegin(), disp.cend(), std::make_tuple(ev, Fn()), tuple_comp<Fn>) };
+		return result.first != result.second ? std::invoke(std::get<Fn>(*result.first), obj, ev, std::forward<Args>(args)...) : nval;
+	}
+
+	template<std::size_t I, typename Fn, typename... Args> // void func with not found call to last element
 	requires (std::invocable<Fn&&, T, Args...> && I > 0)
 	static constexpr void dispatch(T ev, const std::array<std::tuple<T, Fn>, I>& disp, Args&&... args) noexcept
 	{
@@ -503,6 +511,14 @@ public:
 														 : std::invoke(std::get<Fn>(*std::prev(disp.cend())), ev, std::forward<Args>(args)...);
 	}
 
+	template<std::size_t I, typename Fn, typename C, typename... Args> // specialisation for void member function with not found call to last element
+	requires (std::invocable<Fn&&, C, T, Args...> && I > 0)
+	static constexpr void dispatch(T ev, const std::array<std::tuple<T, Fn>, I>& disp, C *obj, Args&&... args) noexcept
+	{
+		const auto result { std::equal_range(disp.cbegin(), std::prev(disp.cend()), std::make_tuple(ev, Fn()), tuple_comp<Fn>) };
+		return result.first != result.second ? std::invoke(std::get<Fn>(*result.first), obj, ev, std::forward<Args>(args)...)
+														 : std::invoke(std::get<Fn>(*std::prev(disp.cend())), obj, ev, std::forward<Args>(args)...);
+	}
 	// public constexpr data structures
 	static constexpr auto values { _values() };
 	static constexpr auto entries { _entries(std::make_index_sequence<values.size()>()) };

@@ -44,6 +44,7 @@ using namespace std::literals::string_literals;
 enum class component : int { scheme, authority, userinfo, user, password, host, port, path=12, test=path, query, fragment };
 enum component1 : int { scheme, authority, userinfo, user, password, host, port, path=12, query, fragment };
 enum class numbers : int { zero, one, two, three, four, five, FIVE=five, six, seven, eight, nine };
+enum class directions { left, right, up, down, forward, backward, notfound=-1 };
 
 //-----------------------------------------------------------------------------------------
 // run as: ctest --output-on-failure
@@ -385,6 +386,16 @@ TEST_CASE("dispatch")
 		})
 	};
 	REQUIRE(conjure_enum<component>::dispatch(component::port, -1, dd2, 1000) == 6000);
+	const auto dd2a
+	{
+		std::to_array<std::tuple<component, int (foo::*)(component, int)>>
+		({
+			{ component::scheme, &foo::process },
+			{ component::port, &foo::process },
+			{ component::fragment, &foo::process },
+		})
+	};
+	REQUIRE(conjure_enum<component>::dispatch(component::port, -1, dd2a, &bar, 1000) == 6000);
 
 	const auto dd3
 	{
@@ -444,6 +455,25 @@ TEST_CASE("constexpr dispatch")
 	conjure_enum<component>::dispatch(component::path, dd2, std::ref(total));
 	REQUIRE(total == -1);
 
+	struct foo
+	{
+		int process(component val, int aint)
+		{
+			return aint * static_cast<int>(val);
+		}
+	};
+	foo bar;
+	constexpr auto dd2a
+	{
+		std::to_array<std::tuple<component, int (foo::*)(component, int)>>
+		({
+			{ component::scheme, &foo::process },
+			{ component::port, &foo::process },
+			{ component::fragment, &foo::process },
+		})
+	};
+	REQUIRE(conjure_enum<component>::dispatch(component::port, -1, dd2a, &bar, 1000) == 6000);
+
 	// test empty
 	constexpr std::array<std::tuple<component, int (*)(component)>, 0> dd4;
 	REQUIRE(conjure_enum<component>::dispatch(component::path, -1, dd4) == -1);
@@ -453,6 +483,25 @@ TEST_CASE("constexpr dispatch")
 	int total1{};
 	conjure_enum<component>::dispatch(component::path, dd5, std::ref(total1));
 	REQUIRE(total1 == -1);
+
+	static constexpr auto prn([](directions ev, int& a) { a = conjure_enum<directions>::enum_to_int(ev); });
+	static constexpr auto tarr
+	{
+		std::to_array<std::tuple<directions, void(*)(directions, int&)>>
+		({
+			{ directions::left, prn },
+			{ directions::right, prn },
+			{ directions::up, prn },
+			{ directions::down, prn },
+			{ directions::backward, prn },
+			{ directions::notfound, []([[maybe_unused]] directions ev, int& a) { a = -1; } }, // not found func
+		})
+	};
+	int val;
+	conjure_enum<directions>::dispatch(directions::right, tarr, std::ref(val));
+	REQUIRE(val == 1);
+	conjure_enum<directions>::dispatch(directions::forward, tarr, std::ref(val));
+	REQUIRE(val == -1);
 }
 
 //-----------------------------------------------------------------------------------------

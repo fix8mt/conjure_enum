@@ -607,13 +607,15 @@ constexpr auto tarr1
    })
 };
 foo bar;
-std::cout << conjure_enum<component>::dispatch(component::port, -1, tarr1, &bar, 1000) << '\n';
-std::cout << conjure_enum<component>::dispatch(component::path, -1, tarr1, &bar, 1000) << '\n';
+for (auto val : { component::scheme, component::path, component::port, component::fragment })
+   std::cout << conjure_enum<component>::dispatch(val, -1, tarr1, &bar, 1000) << '\n';
 ```
 _output_
 ```CSV
-6000
+0
 -1
+6000
+1015
 ```
 ## p) `is_scoped`
 ```c++

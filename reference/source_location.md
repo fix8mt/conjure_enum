@@ -457,7 +457,7 @@ static consteval const char* conjure_type<T>::tpeek() [with T = TEST::TEST1::Nin
 ```
 
 ---
-# Compiler: Clang: Ubuntu Clang 18.1.3 (1)
+# Compiler: Clang: Ubuntu Clang 18.1.3 (1ubuntu1)
 ## 1. scoped enum
 ```c++
 static const char *conjure_type<Namespace_Enum_Type>::tpeek() [T = Namespace_Enum_Type]

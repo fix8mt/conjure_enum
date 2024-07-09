@@ -44,6 +44,7 @@ using namespace std::literals::string_literals;
 enum class component : int { scheme, authority, userinfo, user, password, host, port, path=12, test=path, query, fragment };
 enum component1 : int { scheme, authority, userinfo, user, password, host, port, path=12, query, fragment };
 enum class numbers : int { zero, one, two, three, four, five, FIVE=five, six, seven, eight, nine };
+enum class directions { left, right, up, down, forward, backward, notfound=-1 };
 
 //-----------------------------------------------------------------------------------------
 // run as: ctest --output-on-failure
@@ -351,6 +352,156 @@ TEST_CASE("for_each_n")
 	total = 0;
 	conjure_enum<component>::for_each_n(3, &foo::process, &bar, 10, std::ref(total));
 	REQUIRE(total == 33);
+}
+
+//-----------------------------------------------------------------------------------------
+TEST_CASE("dispatch")
+{
+	const auto dd1
+	{
+		std::to_array<std::tuple<component, std::function<int(component, int)>>>
+		({
+			{ component::scheme, [](component ev, int a) { return a * 100 + conjure_enum<component>::enum_to_int(ev); } },
+			{ component::port, [](component ev, int a) { return a * 200 + conjure_enum<component>::enum_to_int(ev); } },
+			{ component::fragment, [](component ev, int a) { return a * 300 + conjure_enum<component>::enum_to_int(ev); } },
+		})
+	};
+	REQUIRE(conjure_enum<component>::dispatch(component::port, -1, dd1, 10) == 2006);
+
+	struct foo
+	{
+		int process(component val, int aint)
+		{
+			return aint * static_cast<int>(val);
+		}
+	};
+	foo bar;
+	const auto dd2
+	{
+		std::to_array<std::tuple<component, std::function<int(component, int)>>>
+		({
+			{ component::scheme, std::bind(&foo::process, &bar, std::placeholders::_1, std::placeholders::_2) },
+			{ component::port, std::bind(&foo::process, &bar, std::placeholders::_1, std::placeholders::_2) },
+			{ component::fragment, std::bind(&foo::process, &bar, std::placeholders::_1, std::placeholders::_2) },
+		})
+	};
+	REQUIRE(conjure_enum<component>::dispatch(component::port, -1, dd2, 1000) == 6000);
+	const auto dd2a
+	{
+		std::to_array<std::tuple<component, int (foo::*)(component, int)>>
+		({
+			{ component::scheme, &foo::process },
+			{ component::port, &foo::process },
+			{ component::fragment, &foo::process },
+		})
+	};
+	REQUIRE(conjure_enum<component>::dispatch(component::port, -1, dd2a, &bar, 1000) == 6000);
+
+	const auto dd3
+	{
+		std::to_array<std::tuple<component, std::function<void(component, int&)>>>
+		({
+			{ component::scheme, [](component ev, int& a) { a += 1000 + conjure_enum<component>::enum_to_int(ev); } },
+			{ component::port, [](component ev, int& a) { a += 2000 + conjure_enum<component>::enum_to_int(ev); } },
+			{ component::fragment, [](component ev, int& a) { a += 3000 + conjure_enum<component>::enum_to_int(ev); } },
+			{ static_cast<component>(-1), []([[maybe_unused]] component ev, int& a) { a = -1; } }, // not found func
+		})
+	};
+	int total1{};
+	conjure_enum<component>::dispatch(component::port, dd3, std::ref(total1));
+	REQUIRE(total1 == 2006);
+	conjure_enum<component>::dispatch(component::path, dd3, std::ref(total1));
+	REQUIRE(total1 == -1);
+
+	// test empty
+	const std::array<std::tuple<component, std::function<int(component)>>, 0> dd4;
+	REQUIRE(conjure_enum<component>::dispatch(component::path, -1, dd4) == -1);
+
+	const std::array<std::tuple<component, std::function<void(component, int&)>>, 1> dd5
+		{{{ static_cast<component>(-1), []([[maybe_unused]] component ev, int& a) { a = -1; }}}};
+	total1 = 0;
+	conjure_enum<component>::dispatch(component::path, dd5, std::ref(total1));
+	REQUIRE(total1 == -1);
+}
+
+//-----------------------------------------------------------------------------------------
+TEST_CASE("constexpr dispatch")
+{
+	constexpr auto dd1
+	{
+		std::to_array<std::tuple<component, int (*)(component, int)>>
+		({
+			{ component::scheme, [](component ev, int a) { return a * 1000 + conjure_enum<component>::enum_to_int(ev); } },
+			{ component::port, [](component ev, int a) { return a * 2000 + conjure_enum<component>::enum_to_int(ev); } },
+			{ component::fragment, [](component ev, int a) { return a * 3000 + conjure_enum<component>::enum_to_int(ev); } },
+		})
+	};
+	REQUIRE(conjure_enum<component>::dispatch(component::port, -1, dd1, 1000) == 2000006);
+	REQUIRE(conjure_enum<component>::dispatch(component::path, -1, dd1, 1000) == -1);
+
+	constexpr auto dd2
+	{
+		std::to_array<std::tuple<component, void (*)(component, int&)>>
+		({
+			{ component::scheme, [](component ev, int& a) { a += 1000 + conjure_enum<component>::enum_to_int(ev); } },
+			{ component::port, [](component ev, int& a) { a += 2000 + conjure_enum<component>::enum_to_int(ev); } },
+			{ component::fragment, [](component ev, int& a) { a += 3000 + conjure_enum<component>::enum_to_int(ev); } },
+			{ static_cast<component>(-1), []([[maybe_unused]] component ev, int& a) { a = -1; } }, // not found func
+		})
+	};
+	int total{};
+	conjure_enum<component>::dispatch(component::port, dd2, std::ref(total));
+	REQUIRE(total == 2006);
+	conjure_enum<component>::dispatch(component::path, dd2, std::ref(total));
+	REQUIRE(total == -1);
+
+	struct foo
+	{
+		int process(component val, int aint)
+		{
+			return aint * static_cast<int>(val);
+		}
+	};
+	foo bar;
+	constexpr auto dd2a
+	{
+		std::to_array<std::tuple<component, int (foo::*)(component, int)>>
+		({
+			{ component::scheme, &foo::process },
+			{ component::port, &foo::process },
+			{ component::fragment, &foo::process },
+		})
+	};
+	REQUIRE(conjure_enum<component>::dispatch(component::port, -1, dd2a, &bar, 1000) == 6000);
+
+	// test empty
+	constexpr std::array<std::tuple<component, int (*)(component)>, 0> dd4;
+	REQUIRE(conjure_enum<component>::dispatch(component::path, -1, dd4) == -1);
+
+	constexpr std::array<std::tuple<component, void (*)(component, int&)>, 1> dd5
+	{{{ static_cast<component>(-1), []([[maybe_unused]] component ev, int& a) { a = -1; }}}};
+	int total1{};
+	conjure_enum<component>::dispatch(component::path, dd5, std::ref(total1));
+	REQUIRE(total1 == -1);
+
+	static constexpr auto prn([](directions ev, int& a) { a = conjure_enum<directions>::enum_to_int(ev); });
+	static constexpr auto tarr
+	{
+		std::to_array<std::tuple<directions, void(*)(directions, int&)>>
+		({
+			{ directions::left, prn },
+			{ directions::right, prn },
+			{ directions::up, prn },
+			{ directions::down, prn },
+			{ directions::backward, prn },
+			{ directions::notfound, []([[maybe_unused]] directions ev, int& a) { a = -1; } }, // not found func
+		})
+	};
+	int val;
+	conjure_enum<directions>::dispatch(directions::right, tarr, std::ref(val));
+	REQUIRE(val == 1);
+	conjure_enum<directions>::dispatch(directions::forward, tarr, std::ref(val));
+	REQUIRE(val == -1);
 }
 
 //-----------------------------------------------------------------------------------------

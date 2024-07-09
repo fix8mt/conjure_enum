@@ -97,6 +97,7 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
   - `remove_scope`
   - `unscoped_string_to_enum`
   - `for_each_n`
+  - `dispatch`
   - iterators and more!
 - ***Transparency***: Compiler implementation variability fully documented, verifiable and reportable (see 9 above)
 
@@ -434,7 +435,7 @@ requires std::invocable<Fn&&, C, T, Args...>
 ```
 Call supplied invocable for _each_ enum value. Similar to `std::for_each` except the first parameter of your invocable must accept an enum value (passed by `for_each`).
 Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. You can limit the number of calls to your
-invokable by using the `for_each_n` version with the first parameter being the maximum number to call. The second version of `for_each` and `for_each_n` is intended to be used
+invocable by using the `for_each_n` version with the first parameter being the maximum number to call. The second version of `for_each` and `for_each_n` is intended to be used
 when using a member function - the _second_ parameter passed by your call must be the `this` pointer of the object.
 If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
 
@@ -499,8 +500,7 @@ _output_
 14 10
 14 10 <== invoked with returned object
 74
-```
-Example with pointer to member function with additional parameters:
+```Example with pointer to member function with additional parameters:
 ```c++
 struct foo
 {
@@ -518,7 +518,106 @@ _output_
 ```CSV
 160
 ```
-## o) `is_scoped`
+## o) `dispatch`
+```c++
+template<typename Fn>
+static constexpr bool tuple_comp(const std::tuple<T, Fn>& pl, const std::tuple<T, Fn>& pr);
+
+template<std::size_t I, typename R, typename Fn, typename... Args> // with not found value(nval) for return
+requires std::invocable<Fn&&, T, Args...>
+[[maybe_unused]] static constexpr R dispatch(T ev, R nval, const std::array<std::tuple<T, Fn>, I>& disp, Args&&... args);
+
+template<std::size_t I, typename R, typename Fn, typename C, typename... Args> // specialisation for member function with not found value(nval) for return
+requires std::invocable<Fn&&, C, T, Args...>
+[[maybe_unused]] static constexpr R dispatch(T ev, R nval, const std::array<std::tuple<T, Fn>, I>& disp, C *obj, Args&&... args);
+
+template<std::size_t I, typename Fn, typename... Args> // void func with not found call to last element
+requires (std::invocable<Fn&&, T, Args...> && I > 0)
+static constexpr void dispatch(T ev, const std::array<std::tuple<T, Fn>, I>& disp, Args&&... args);
+
+template<std::size_t I, typename Fn, typename C, typename... Args> // specialisation for void member function with not found call to last element
+requires (std::invocable<Fn&&, C, T, Args...> && I > 0)
+static constexpr void dispatch(T ev, const std::array<std::tuple<T, Fn>, I>& disp, C *obj, Args&&... args);
+```
+With a given enum, search and call user supplied invocable. Use this method where complex event handling is required, allowing you to easily declare predefined invocable actions
+for different enum values.
+
+Where invocable returns a value, return this value or a user supplied "not found" value.
+Where invocable is void, call user supplied "not found" invocable.
+The first parameter of your invocable must accept an enum value (passed by `dispatch`).
+Optionally provide any additional parameters. Works with lambdas, member functions, functions etc.
+
+There are two versions of `dispatch` - the first takes an enum value, a 'not found' value, and a `std::array` of `std::tuple` of enum and invocable.
+The second version takes an enum value, and a `std::array` of `std::tuple` of enum and invocable. The last element of the array is called if the enum is not found.
+This version is intended for use with `void` return invocables.
+The second version of each of the above is intended to be used when using a member function - the _second_ parameter passed by your call must be the `this` pointer of the object.
+You can also use `std::bind` to bind the this pointer and any parameter placeholders when declaring your array.
+If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
+
+If you wish to provide a `constexpr` array, you will need to use a simple function prototype, since `std::function` is not constexpr (see unit tests for examples).
+> [!TIP]
+> Your `std::array` of `std::tuple` should be sorted by enum.
+> The `dispatch` method performs a binary search on the array. Complexity for a sorted array is at most $2log_2(N)+O(1)$ comparisons.
+> If the array is _not_ sorted, complexity is linear.
+```c++
+enum class directions { left, right, up, down, forward, backward, notfound=-1 };
+static constexpr auto prn([](directions ev) { std::cout << conjure_enum<directions>::enum_to_string(ev) << '\n'; });
+static constexpr auto tarr
+{
+   std::to_array<std::tuple<directions, void(*)(directions)>>
+   ({
+      { directions::left, prn },
+      { directions::right, prn },
+      { directions::up, prn },
+      { directions::down, prn },
+      { directions::backward, prn },
+      { directions::notfound, [](directions ev) { std::cout << "not found: "; prn(ev); } }, // not found func
+   })
+};
+conjure_enum<directions>::dispatch(directions::right, tarr);
+conjure_enum<directions>::dispatch(directions::forward, tarr);
+std::cout << conjure_enum<directions>::enum_to_int(directions::notfound) << '\n';
+```
+_output_
+```CSV
+directions::right
+not found: directions::forward
+-1
+```
+This example uses member functions:
+```c++
+struct foo
+{
+   int process(component val, int aint)
+   {
+      return aint * static_cast<int>(val);
+   }
+   int process1(component val, int aint)
+   {
+      return aint + static_cast<int>(val);
+   }
+};
+constexpr auto tarr1
+{
+   std::to_array<std::tuple<component, int (foo::*)(component, int)>>
+   ({
+      { component::scheme, &foo::process },
+      { component::port, &foo::process },
+      { component::fragment, &foo::process1 },
+   })
+};
+foo bar;
+for (auto val : { component::scheme, component::path, component::port, component::fragment })
+   std::cout << conjure_enum<component>::dispatch(val, -1, tarr1, &bar, 1000) << '\n';
+```
+_output_
+```CSV
+0
+-1
+6000
+1015
+```
+## p) `is_scoped`
 ```c++
 struct is_scoped : std::integral_constant<bool, requires
    { requires !std::is_convertible_v<T, std::underlying_type_t<T>>; }>{};
@@ -533,7 +632,7 @@ _output_
 true
 false
 ```
-## p) `is_valid`
+## q) `is_valid`
 ```c++
 template<T e>
 static constexpr bool is_valid();
@@ -548,7 +647,7 @@ _output_
 true
 false
 ```
-## q) `type_name`
+## r) `type_name`
 ```c++
 static constexpr std::string_view type_name();
 ```
@@ -562,7 +661,7 @@ _output_
 component
 component1
 ```
-## r) `remove_scope`
+## s) `remove_scope`
 ```c++
 static constexpr std::string_view remove_scope(std::string_view what);
 ```
@@ -576,7 +675,7 @@ _output_
 path
 path
 ```
-## s) `add_scope`
+## t) `add_scope`
 ```c++
 static constexpr std::string_view add_scope(std::string_view what);
 ```
@@ -590,7 +689,7 @@ _output_
 component::path
 path
 ```
-## t) `has_scope`
+## u) `has_scope`
 ```c++
 static constexpr bool has_scope(std::string_view what);
 ```
@@ -606,7 +705,7 @@ true
 false
 false
 ```
-## u) `iterators`
+## v) `iterators`
 ```c++
 static constexpr auto cbegin();
 static constexpr auto cend();
@@ -633,7 +732,7 @@ _output_
 8 numbers::eight
 9 numbers::nine
 ```
-## v) `iterator_adaptor`
+## w) `iterator_adaptor`
 ```c++
 template<valid_enum T>
 struct iterator_adaptor;
@@ -656,7 +755,7 @@ _output_
 8
 9
 ```
-## w) `front, back`
+## x) `front, back`
 ```c++
 static constexpr auto front();
 static constexpr auto back();
@@ -673,7 +772,7 @@ _output_
 0 numbers::zero
 9 numbers::nine
 ```
-## x) `ostream_enum_operator`
+## y) `ostream_enum_operator`
 ```c++
 template<typename CharT, typename Traits=std::char_traits<CharT>, valid_enum T>
 constexpr std::basic_ostream<CharT, Traits>& operator<<(std::basic_ostream<CharT, Traits>& os, T value);
@@ -695,7 +794,7 @@ _output_
 "host"
 "100"
 ```
-## y) `epeek, tpeek`
+## z) `epeek, tpeek`
 ```c++
 static consteval const char *tpeek();
 template<T e>
@@ -937,7 +1036,7 @@ requires std::invocable<Fn&&, C, T, Args...>
 ```
 Call supplied invocable for _each bit that is on_. Similar to `std::for_each` except first parameter of your invocable must accept an enum value (passed by `for_each`).
 Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. You can limit the number of calls to your
-invokable by using the `for_each_n` version with the first parameter being the maximum number to call. The second version of `for_each` and `for_each_n` is intended to be used
+invocable by using the `for_each_n` version with the first parameter being the maximum number to call. The second version of `for_each` and `for_each_n` is intended to be used
 when using a member function - the _second_ parameter passed by your call must be the `this` pointer of the object.
 If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
 

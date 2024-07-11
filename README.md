@@ -500,7 +500,8 @@ _output_
 14 10
 14 10 <== invoked with returned object
 74
-```Example with pointer to member function with additional parameters:
+```
+Example with pointer to member function with additional parameters:
 ```c++
 struct foo
 {

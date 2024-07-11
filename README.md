@@ -78,7 +78,7 @@ unlocked the potential of `constexpr` algorithms and concepts. This translates t
 
 - ***Lightweight***: Designed for performance without additional overhead
 - ***Single Header-Only***: No external dependencies, simplifying integration into your project
-- ***Modern C++20***: Entirely `constexpr` for compile-time safety, efficiency and performance
+- ***Modern C++20***: Entirely `constexpr` for compile-time safety, efficiency and performance; no macros
 - ***Broad Support***: Works with:
   - scoped and unscoped enums
   - enums with **aliases** and **gaps**
@@ -550,7 +550,7 @@ Optionally provide any additional parameters. Works with lambdas, member functio
 There are two versions of `dispatch` - the first takes an enum value, a 'not found' value, and a `std::array` of `std::tuple` of enum and invocable.
 The second version takes an enum value, and a `std::array` of `std::tuple` of enum and invocable. The last element of the array is called if the enum is not found.
 This version is intended for use with `void` return invocables.
-The second version of each of the above is intended to be used when using a member function - the _second_ parameter passed by your call must be the `this` pointer of the object.
+The second version of each of the above is intended to be used when using a member function - the _first_ parameter passed after your array must be the `this` pointer of the object.
 You can also use `std::bind` to bind the this pointer and any parameter placeholders when declaring your array.
 If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
 
@@ -810,8 +810,8 @@ std::cout << conjure_enum<component>::epeek<component::scheme>() << '\n';
 ```
 Generates this output with gcc:
 ```CSV
-static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::path; T = component]
 static consteval const char* FIX8::conjure_enum<T>::tpeek() [with T = component]
+static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::path; T = component]
 ```
 ---
 # 4. API and Examples using `enum_bitset`

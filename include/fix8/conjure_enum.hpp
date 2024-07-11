@@ -332,9 +332,6 @@ public:
 	template<T e>
 	static consteval const char *epeek() noexcept { return std::source_location::current().function_name(); }
 
-	template<T e>
-	static constexpr std::string_view enum_to_string() noexcept { return _get_name<e>(); }
-
 	static constexpr std::string_view type_name() noexcept
 	{
 		constexpr std::string_view from{tpeek()};
@@ -372,6 +369,7 @@ public:
 
 	static constexpr auto count() noexcept { return values.size(); }
 
+	// scope ops
 	static constexpr std::string_view remove_scope(std::string_view what) noexcept
 	{
 		return _process_scope(rev_scoped_entries, what);
@@ -390,6 +388,7 @@ public:
 			return false;
 	}
 
+	// iterators
 	static constexpr auto cbegin() noexcept { return entries.cbegin(); }
 	static constexpr auto cend() noexcept { return entries.cend(); }
 	static constexpr auto crbegin() noexcept { return entries.crbegin(); }
@@ -397,6 +396,7 @@ public:
 	static constexpr auto front() noexcept { return *cbegin(); }
 	static constexpr auto back() noexcept { return *std::prev(cend()); }
 
+	// enum <==> int
 	static constexpr int enum_to_int(T value) noexcept
 	{
 		return static_cast<int>(value);
@@ -412,6 +412,8 @@ public:
 				return *result.first;
 		return {};
 	}
+
+	// contains
 	static constexpr bool contains(T value) noexcept
 	{
 		const auto result { std::equal_range(values.cbegin(), values.cend(), value, _value_comp) };
@@ -422,6 +424,11 @@ public:
 		const auto result { std::equal_range(sorted_entries.cbegin(), sorted_entries.cend(), enum_tuple(T{}, str), _tuple_comp_rev) };
 		return result.first != result.second;
 	}
+
+	// string <==> enum
+	template<T e>
+	static constexpr std::string_view enum_to_string() noexcept { return _get_name<e>(); }
+
 	static constexpr std::string_view enum_to_string(T value, bool noscope=false) noexcept
 	{
 		if (const auto result { std::equal_range(entries.cbegin(), entries.cend(), enum_tuple(value, std::string_view()), _tuple_comp) };
@@ -519,6 +526,7 @@ public:
 		return result.first != result.second ? std::invoke(std::get<Fn>(*result.first), obj, ev, std::forward<Args>(args)...)
 														 : std::invoke(std::get<Fn>(*std::prev(disp.cend())), obj, ev, std::forward<Args>(args)...);
 	}
+
 	// public constexpr data structures
 	static constexpr auto values { _values() };
 	static constexpr auto entries { _entries(std::make_index_sequence<values.size()>()) };
@@ -809,6 +817,8 @@ constexpr enum_bitset<T> operator^(const enum_bitset<T>& lh, const enum_bitset<T
 	{ return lh.operator^(rh.to_ulong()); }
 
 //-----------------------------------------------------------------------------------------
+// General purpose class allowing you to extract a string representation of any typename.
+// The string will be stored statically by the compiler, so you can use the statically generated value `name` to obtain your type.
 //-----------------------------------------------------------------------------------------
 template<typename T>
 class conjure_type : public static_only

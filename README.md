@@ -1078,7 +1078,7 @@ numbers::five
 ```
 
 ### iv. Using `conjure_enum::dispatch` with `enum_bitset`
-Using an `enum_bitset` can be a convenient way of iterating through a set of bits to call specific functions on each. The following demonstrates this:
+Using an `enum_bitset` wth `conjure_enum::dispatch` can be a convenient way of iterating through a set of bits to call specific functions using `for_each`. The following demonstrates this:
 ```c++
 const auto dd3
 {

@@ -1084,10 +1084,14 @@ const auto dd3
 {
    std::to_array<std::tuple<numbers, std::function<void(numbers, int)>>>
    ({
-      { numbers::one, [](numbers ev, int a) { std::cout << 1000 + a + conjure_enum<numbers>::enum_to_int(ev) << '\n'; } },
-      { numbers::two, [](numbers ev, int a) { std::cout << 2000 + a + conjure_enum<numbers>::enum_to_int(ev) << '\n'; } },
-      { numbers::three, [](numbers ev, int a) { std::cout << 3000 + a + conjure_enum<numbers>::enum_to_int(ev) << '\n'; } },
-      { static_cast<numbers>(-1), [](numbers ev, [[maybe_unused]] int a) { std::cout << "not found: " << conjure_enum<numbers>::enum_to_int(ev) << '\n'; } }, // not found func
+      { numbers::one, [](numbers ev, int a)
+         { std::cout << 1000 + a + conjure_enum<numbers>::enum_to_int(ev) << '\n'; } },
+      { numbers::two, [](numbers ev, int a)
+         { std::cout << 2000 + a + conjure_enum<numbers>::enum_to_int(ev) << '\n'; } },
+      { numbers::three, [](numbers ev, int a)
+         { std::cout << 3000 + a + conjure_enum<numbers>::enum_to_int(ev) << '\n'; } },
+      { static_cast<numbers>(-1), [](numbers ev, [[maybe_unused]] int a)
+         { std::cout << "not found: " << conjure_enum<numbers>::enum_to_int(ev) << '\n'; } }, // not found func
    })
 };
 enum_bitset<numbers>(1,2,3,5).for_each([](numbers val, const auto& arr, int num)

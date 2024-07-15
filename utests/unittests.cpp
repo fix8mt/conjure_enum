@@ -423,7 +423,7 @@ TEST_CASE("dispatch")
 	REQUIRE(total1 == -1);
 
 	// test empty
-	const std::array<std::tuple<component, std::function<int(component)>>, 0> dd4;
+	const std::array<std::tuple<component, std::function<int(component)>>, 0> dd4{};
 	REQUIRE(conjure_enum<component>::dispatch(component::path, -1, dd4) == -1);
 
 	const std::array<std::tuple<component, std::function<void(component, int&)>>, 1> dd5

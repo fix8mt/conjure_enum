@@ -484,7 +484,7 @@ TEST_CASE("constexpr dispatch")
 	REQUIRE(conjure_enum<component>::dispatch(component::port, -1, dd2a, &bar, 1000) == 6000);
 
 	// test empty
-	constexpr std::array<std::tuple<component, int (*)(component)>, 0> dd4;
+	constexpr std::array<std::tuple<component, int (*)(component)>, 0> dd4{};
 	REQUIRE(conjure_enum<component>::dispatch(component::path, -1, dd4) == -1);
 
 	constexpr std::array<std::tuple<component, void (*)(component, int&)>, 1> dd5

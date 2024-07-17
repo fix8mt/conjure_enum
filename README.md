@@ -500,7 +500,8 @@ _output_
 14 10
 14 10 <== invoked with returned object
 74
-```Example with pointer to member function with additional parameters:
+```
+Example with pointer to member function with additional parameters:
 ```c++
 struct foo
 {
@@ -555,7 +556,7 @@ You can also use `std::bind` to bind the this pointer and any parameter placehol
 If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
 
 If you wish to provide a `constexpr` array, you will need to use a simple function prototype, since `std::function` is not constexpr (see unit tests for examples).
-> [!TIP]
+> [!IMPORTANT]
 > Your `std::array` of `std::tuple` should be sorted by enum.
 > The `dispatch` method performs a binary search on the array. Complexity for a sorted array is at most $2log_2(N)+O(1)$ comparisons.
 > If the array is _not_ sorted, complexity is linear.
@@ -1034,7 +1035,7 @@ template<typename C, typename Fn, typename... Args> // specialisation for member
 requires std::invocable<Fn&&, C, T, Args...>
 [[maybe_unused]] constexpr auto for_each_n(int n, Fn&& func, C *obj, Args&&... args);
 ```
-Call supplied invocable for _each bit that is on_. Similar to `std::for_each` except first parameter of your invocable must accept an enum value (passed by `for_each`).
+Call supplied invocable for _every bit that is on_. Similar to `std::for_each` except first parameter of your invocable must accept an enum value (passed by `for_each`).
 Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. You can limit the number of calls to your
 invocable by using the `for_each_n` version with the first parameter being the maximum number to call. The second version of `for_each` and `for_each_n` is intended to be used
 when using a member function - the _second_ parameter passed by your call must be the `this` pointer of the object.
@@ -1043,7 +1044,7 @@ If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
 Returns `std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...)` or
 `std::bind(std::forward<Fn>(func), obj, std::placeholders::_1, std::forward<Args>(args)...)` which can be stored or immediately invoked.
 
-To iterate over each bit regardless of whether it is on or not, use `conjure_enum<T>::for_each`.
+To iterate over every bit regardless of whether it is on or not, use `conjure_enum<T>::for_each`.
 
 Example using member function:
 ```c++
@@ -1074,6 +1075,36 @@ _output_
 numbers::zero
 numbers::two
 numbers::five
+```
+
+### iv. Using `conjure_enum::dispatch` with `enum_bitset`
+Using an `enum_bitset` wth `conjure_enum::dispatch` can be a convenient way of iterating through a set of bits to call specific functions using `for_each`. The following demonstrates this:
+```c++
+const auto dd3
+{
+   std::to_array<std::tuple<numbers, std::function<void(numbers, int)>>>
+   ({
+      { numbers::one, [](numbers ev, int a)
+         { std::cout << 1000 + a + conjure_enum<numbers>::enum_to_int(ev) << '\n'; } },
+      { numbers::two, [](numbers ev, int a)
+         { std::cout << 2000 + a + conjure_enum<numbers>::enum_to_int(ev) << '\n'; } },
+      { numbers::three, [](numbers ev, int a)
+         { std::cout << 3000 + a + conjure_enum<numbers>::enum_to_int(ev) << '\n'; } },
+      { static_cast<numbers>(-1), [](numbers ev, [[maybe_unused]] int a)
+         { std::cout << "not found: " << conjure_enum<numbers>::enum_to_int(ev) << '\n'; } }, // not found func
+   })
+};
+enum_bitset<numbers>(1,2,3,5).for_each([](numbers val, const auto& arr, int num)
+{
+   conjure_enum<numbers>::dispatch(val, arr, num);
+}, dd3, 100);
+```
+_output_
+```CSV
+1101
+2102
+3103
+not found: 5
 ```
 
 ---
@@ -1449,7 +1480,7 @@ It can be observed that there is only _one_ copy of the scoped enum value string
 | :--- | :--- | :--- | ---: |
 | [gcc](https://gcc.gnu.org/projects/cxx-status.html) | `11`, `12`, `13`, `14`| `std::format` not complete in `11`, `12` | `<= 10` |
 | [clang](https://clang.llvm.org/cxx_status.html) | `15`, `16`, `17`, `18`| Catch2 needs `cxx_std_20` in `15` | `<= 14` |
-| [msvc](https://learn.microsoft.com/en-us/cpp/overview/visual-cpp-language-conformance) | `16`, `17` | Visual Studio 2019,2022, latest `17.10.3`| `<= 16.9`|
+| [msvc](https://learn.microsoft.com/en-us/cpp/overview/visual-cpp-language-conformance) | `16`, `17` | Visual Studio 2019,2022, latest `17.10.4`| `<= 16.9`|
 | [xcode](https://developer.apple.com/support/xcode/) | `15` | Apple LLVM 15.0.0, some issues with `constexpr`, workarounds| `<= 14`|
 
 # 9. Compiler issues

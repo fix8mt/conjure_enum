@@ -233,6 +233,15 @@ TEST_CASE("iterators")
 }
 
 //-----------------------------------------------------------------------------------------
+TEST_CASE("iterator_adaptor")
+{
+	int tot{};
+	for (const auto& itr : iterator_adaptor<component>())
+		tot += static_cast<int>(std::get<0>(itr));
+	REQUIRE(tot == 60);
+}
+
+//-----------------------------------------------------------------------------------------
 TEST_CASE("string_to_enum")
 {
 	REQUIRE(static_cast<int>(conjure_enum<component>::string_to_enum("component::path").value()) == 12);
@@ -414,7 +423,7 @@ TEST_CASE("dispatch")
 	REQUIRE(total1 == -1);
 
 	// test empty
-	const std::array<std::tuple<component, std::function<int(component)>>, 0> dd4;
+	const std::array<std::tuple<component, std::function<int(component)>>, 0> dd4{};
 	REQUIRE(conjure_enum<component>::dispatch(component::path, -1, dd4) == -1);
 
 	const std::array<std::tuple<component, std::function<void(component, int&)>>, 1> dd5
@@ -457,7 +466,7 @@ TEST_CASE("constexpr dispatch")
 
 	struct foo
 	{
-		int process(component val, int aint)
+		int process(component val, int aint) const
 		{
 			return aint * static_cast<int>(val);
 		}
@@ -465,7 +474,7 @@ TEST_CASE("constexpr dispatch")
 	foo bar;
 	constexpr auto dd2a
 	{
-		std::to_array<std::tuple<component, int (foo::*)(component, int)>>
+		std::to_array<std::tuple<component, int (foo::*)(component, int) const>>
 		({
 			{ component::scheme, &foo::process },
 			{ component::port, &foo::process },
@@ -475,7 +484,7 @@ TEST_CASE("constexpr dispatch")
 	REQUIRE(conjure_enum<component>::dispatch(component::port, -1, dd2a, &bar, 1000) == 6000);
 
 	// test empty
-	constexpr std::array<std::tuple<component, int (*)(component)>, 0> dd4;
+	constexpr std::array<std::tuple<component, int (*)(component)>, 0> dd4{};
 	REQUIRE(conjure_enum<component>::dispatch(component::path, -1, dd4) == -1);
 
 	constexpr std::array<std::tuple<component, void (*)(component, int&)>, 1> dd5
@@ -643,5 +652,59 @@ numbers::five(5)
 		tot += static_cast<int>(val);
 	}, std::ref(total));
 	REQUIRE(total == 9);
+}
+
+//-----------------------------------------------------------------------------------------
+TEST_CASE("enum_bitset using conjure_enum::dispatch")
+{
+	struct foo
+	{
+		int total{};
+		int process(numbers val, int aint) const
+		{
+			return aint * static_cast<int>(val);
+		}
+		int process1(numbers val, int aint) const
+		{
+			return aint + static_cast<int>(val);
+		}
+		int process2(numbers val, int aint) const
+		{
+			return aint - static_cast<int>(val);
+		}
+	};
+	constexpr auto tarr
+	{
+		std::to_array<std::tuple<numbers, int (foo::*)(numbers, int) const>>
+		({
+			{ numbers::two, &foo::process },
+			{ numbers::three, &foo::process1 },
+			{ numbers::four, &foo::process2 },
+		})
+	};
+	foo bar;
+	enum_bitset<numbers> enc(numbers::two,numbers::three,numbers::four,numbers::five);
+	enc.for_each([](numbers val, const auto& arr, foo *ptr, int extr)
+	{
+		ptr->total += conjure_enum<numbers>::dispatch(val, -1, arr, ptr, extr);
+	}, tarr, &bar, 1000);
+	REQUIRE(bar.total == 3998);
+
+	const auto dd2
+	{
+		std::to_array<std::tuple<numbers, std::function<void(numbers, int&)>>>
+		({
+			{ numbers::one, [](numbers ev, int& a) { a += 1000 + conjure_enum<numbers>::enum_to_int(ev); } },
+			{ numbers::two, [](numbers ev, int& a) { a += 2000 + conjure_enum<numbers>::enum_to_int(ev); } },
+			{ numbers::three, [](numbers ev, int& a) { a += 3000 + conjure_enum<numbers>::enum_to_int(ev); } },
+			{ static_cast<numbers>(-1), []([[maybe_unused]] numbers ev, int& a) { a += -1; } }, // not found func
+		})
+	};
+	int total{};
+	enum_bitset<numbers>(1,2,3,5).for_each([](numbers val, const auto& arr, int& tot)
+	{
+		conjure_enum<numbers>::dispatch(val, arr, tot);
+	}, dd2, std::ref(total));
+	REQUIRE(total == 6005);
 }
 

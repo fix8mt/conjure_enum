@@ -1308,7 +1308,7 @@ master will not be considered.
 ## a) enum limits
 ### `ENUM_MIN_VALUE`, `ENUM_MAX_VALUE`
 These are set by default unless you override them by defining them in your application.
-> [!NOTE]
+> [!IMPORTANT]
 > If you want to define these values they must appear _before_ you include `conjure_enum.hpp`.
 
 The following are the default settings:
@@ -1321,7 +1321,7 @@ The following are the default settings:
 #endif
 ```
 These definitions set the minimum and maximum enum values that are supported. You can adjust them to suit your requirements but for most use cases the defaults are sufficient.
-> [!INFORMATION]
+> [!TIP]
 > You can reduce compile times in some circumstances by narrowing the range of `ENUM_MIN_VALUE` and `ENUM_MAX_VALUE`. For example
 > if your enums are only within the range of say `0-16` you can set `ENUM_MIN_VALUE` and `ENUM_MAX_VALUE` to `0` and `16` respectively. If the range is _too_ narrow
 > you'll get plenty of errors from you compiler.

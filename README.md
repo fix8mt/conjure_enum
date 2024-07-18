@@ -52,7 +52,7 @@
 |6|[Notes](#7-notes)| Notes on the implementation, limits, etc|
 |7|[Compilers](#8-compiler-support)| Supported compilers|
 |8|[Compiler issues](#9-compiler-issues)| Workarounds for various compiler issues|
-|9|[Results of `source_location`](reference/source_location.md)| For implementation specific `std::source_location` results|
+|9|[Results of `std::source_location`](reference/source_location.md)| For implementation specific `std::source_location` results|
 > [!TIP]
 > Use the built-in [table of contents](https://github.blog/changelog/2021-04-13-table-of-contents-support-in-markdown-files/) to navigate this guide.
 > Even better in [full read view](./README.md) of this page.

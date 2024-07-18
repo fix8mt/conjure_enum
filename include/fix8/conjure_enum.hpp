@@ -359,7 +359,7 @@ public:
 #endif
 	}
 
-	struct is_scoped : std::integral_constant<bool, requires
+	struct is_scoped : std::bool_constant<requires
 	{
 		requires !std::convertible_to<T, std::underlying_type_t<T>>;
 	}>{};

@@ -52,7 +52,7 @@
 |6|[Notes](#7-notes)| Notes on the implementation, limits, etc|
 |7|[Compilers](#8-compiler-support)| Supported compilers|
 |8|[Compiler issues](#9-compiler-issues)| Workarounds for various compiler issues|
-|9|[Results of `source_location`](reference/source_location.md)| For implementation specific `std::source_location` results|
+|9|[Results of `std::source_location`](reference/source_location.md)| For implementation specific `std::source_location` results|
 > [!TIP]
 > Use the built-in [table of contents](https://github.blog/changelog/2021-04-13-table-of-contents-support-in-markdown-files/) to navigate this guide.
 > Even better in [full read view](./README.md) of this page.
@@ -1308,7 +1308,7 @@ master will not be considered.
 ## a) enum limits
 ### `ENUM_MIN_VALUE`, `ENUM_MAX_VALUE`
 These are set by default unless you override them by defining them in your application.
-> [!NOTE]
+> [!IMPORTANT]
 > If you want to define these values they must appear _before_ you include `conjure_enum.hpp`.
 
 The following are the default settings:
@@ -1321,6 +1321,10 @@ The following are the default settings:
 #endif
 ```
 These definitions set the minimum and maximum enum values that are supported. You can adjust them to suit your requirements but for most use cases the defaults are sufficient.
+> [!TIP]
+> You can reduce compile times in some circumstances by narrowing the range of `ENUM_MIN_VALUE` and `ENUM_MAX_VALUE`. For example
+> if your enums are only within the range of say `0-16` you can set `ENUM_MIN_VALUE` and `ENUM_MAX_VALUE` to `0` and `16` respectively. If the range is _too_ narrow
+> `conjure_enum` will **ignore enum values outside your range**.
 
 ## b) Class `conjure_enum` is not constructible
 All methods in this class are _static_. You cannot instantiate an object of this type. The same goes for `conjure_type`.

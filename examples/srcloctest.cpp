@@ -168,9 +168,9 @@ Since the output of std::source_location is entirely implementation dependent, f
 changes may occur.
 
 Usage: )" << argv[0] << " [-cmh]" << R"(
--c show compiler (default true)
--m output using markdown
--h help
+  -c show compiler (default true)
+  -m output using markdown
+  -h help
 )";
 		return 0;
 	}

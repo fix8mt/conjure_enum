@@ -57,11 +57,11 @@
 namespace FIX8 {
 
 //-----------------------------------------------------------------------------------------
-#if not defined ENUM_MIN_VALUE
-# define ENUM_MIN_VALUE -128
+#if not defined FIX8_CONJURE_ENUM_MIN_VALUE
+# define FIX8_CONJURE_ENUM_MIN_VALUE -128
 #endif
-#if not defined ENUM_MAX_VALUE
-# define ENUM_MAX_VALUE 127
+#if not defined FIX8_CONJURE_ENUM_MAX_VALUE
+# define FIX8_CONJURE_ENUM_MAX_VALUE 127
 #endif
 
 //-----------------------------------------------------------------------------------------
@@ -153,8 +153,8 @@ concept valid_enum = requires(T)
 template<valid_enum T>
 class conjure_enum : public static_only
 {
-	static constexpr int enum_min_value{ENUM_MIN_VALUE}, enum_max_value{ENUM_MAX_VALUE};
-	static_assert(enum_max_value > enum_min_value, "ENUM_MAX_VALUE must be greater than ENUM_MIN_VALUE");
+	static constexpr int enum_min_value{FIX8_CONJURE_ENUM_MIN_VALUE}, enum_max_value{FIX8_CONJURE_ENUM_MAX_VALUE};
+	static_assert(enum_max_value > enum_min_value, "FIX8_CONJURE_ENUM_MAX_VALUE must be greater than FIX8_CONJURE_ENUM_MIN_VALUE");
 
 public:
 	using enum_tuple = std::tuple<T, std::string_view>;

@@ -1306,24 +1306,24 @@ master will not be considered.
 ---
 # 7. Notes
 ## a) enum limits
-### `ENUM_MIN_VALUE`, `ENUM_MAX_VALUE`
+### `FIX8_CONJURE_ENUM_MIN_VALUE`, `FIX8_CONJURE_ENUM_MAX_VALUE`
 These are set by default unless you override them by defining them in your application.
 > [!IMPORTANT]
 > If you want to define these values they must appear _before_ you include `conjure_enum.hpp`.
 
 The following are the default settings:
 ```c++
-#if not defined ENUM_MIN_VALUE
-# define ENUM_MIN_VALUE -128
+#if not defined FIX8_CONJURE_ENUM_MIN_VALUE
+# define FIX8_CONJURE_ENUM_MIN_VALUE -128
 #endif
-#if not defined ENUM_MAX_VALUE
-# define ENUM_MAX_VALUE 127
+#if not defined FIX8_CONJURE_ENUM_MAX_VALUE
+# define FIX8_CONJURE_ENUM_MAX_VALUE 127
 #endif
 ```
 These definitions set the minimum and maximum enum values that are supported. You can adjust them to suit your requirements but for most use cases the defaults are sufficient.
 > [!TIP]
-> You can reduce compile times in some circumstances by narrowing the range of `ENUM_MIN_VALUE` and `ENUM_MAX_VALUE`. For example
-> if your enums are only within the range of say `0-16` you can set `ENUM_MIN_VALUE` and `ENUM_MAX_VALUE` to `0` and `16` respectively. If the range is _too_ narrow
+> You can reduce compile times in some circumstances by narrowing the range of `FIX8_CONJURE_ENUM_MIN_VALUE` and `FIX8_CONJURE_ENUM_MAX_VALUE`. For example
+> if your enums are only within the range of say `0-16` you can set `FIX8_CONJURE_ENUM_MIN_VALUE` and `FIX8_CONJURE_ENUM_MAX_VALUE` to `0` and `16` respectively. If the range is _too_ narrow
 > `conjure_enum` will **ignore enum values outside your range**.
 
 ## b) Class `conjure_enum` is not constructible

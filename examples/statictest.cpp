@@ -29,11 +29,11 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //----------------------------------------------------------------------------------------
 #include <iostream>
-#if not defined ENUM_MIN_VALUE
-# define ENUM_MIN_VALUE 0
+#if not defined FIX8_CONJURE_ENUM_MIN_VALUE
+# define FIX8_CONJURE_ENUM_MIN_VALUE 0
 #endif
-#if not defined ENUM_MAX_VALUE
-# define ENUM_MAX_VALUE 9
+#if not defined FIX8_CONJURE_ENUM_MAX_VALUE
+# define FIX8_CONJURE_ENUM_MAX_VALUE 9
 #endif
 #include <fix8/conjure_enum.hpp>
 

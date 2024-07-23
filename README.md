@@ -1307,7 +1307,7 @@ master will not be considered.
 # 7. Notes
 ## a) enum limits
 ### `FIX8_CONJURE_ENUM_MIN_VALUE`, `FIX8_CONJURE_ENUM_MAX_VALUE`
-These are set by default unless you override them by defining them in your application.
+These are set by default unless you override them by defining them in your application. They are the global range default for enums using `conjure_enum`.
 > [!IMPORTANT]
 > If you want to define these values they must appear _before_ you include `conjure_enum.hpp`.
 
@@ -1325,6 +1325,7 @@ These definitions set the minimum and maximum enum values that are supported. Yo
 > You can reduce compile times in some circumstances by narrowing the range of `FIX8_CONJURE_ENUM_MIN_VALUE` and `FIX8_CONJURE_ENUM_MAX_VALUE`. For example
 > if your enums are only within the range of say `0-16` you can set `FIX8_CONJURE_ENUM_MIN_VALUE` and `FIX8_CONJURE_ENUM_MAX_VALUE` to `0` and `16` respectively. If the range is _too_ narrow
 > `conjure_enum` will **ignore enum values outside your range**.
+> If you wish to set ranges on a per enum basis, use `enum_range` (see above).
 
 ## b) Class `conjure_enum` is not constructible
 All methods in this class are _static_. You cannot instantiate an object of this type. The same goes for `conjure_type`.

@@ -69,14 +69,10 @@ added general purpose typename reflection for any type.
 ## b) Embrace the Future with C++20
 
 `conjure_enum`[^1] takes full advantage of recently added C++20 features. We've leveraged the convenience of `std::source_location` and
-unlocked the potential of `constexpr` algorithms and concepts. This translates to:
-
-- ***Improved Performance***  Optimized code for faster and smoother operation - get your compiler to do more!
-- ***Enhanced Developer Experience***  Write cleaner, more concise, and more powerful C++ code
+unlocked the potential of `constexpr` algorithms and concepts.
 
 ## c) Key Benefits
 
-- ***Lightweight***: Designed for performance without additional overhead
 - ***Single Header-Only***: No external dependencies, simplifying integration into your project
 - ***Modern C++20***: Entirely `constexpr` for compile-time safety, efficiency and performance; no macros
 - ***Broad Support***: Works with:
@@ -814,6 +810,21 @@ Generates this output with gcc:
 static consteval const char* FIX8::conjure_enum<T>::tpeek() [with T = component]
 static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::path; T = component]
 ```
+
+## A) `get_enum_min_value` and `get_enum_max_value`
+```c++
+static constexpr int get_enum_min_value();
+static constexpr int get_enum_max_value();
+```
+These functions return the min and max enum range for the specified enum. If you have specialised `enum_range` then these values
+will be reported.
+```c++
+std::cout << conjure_enum<component>::get_enum_min_value() << '/' << conjure_enum<component>::get_enum_min_value() << '\n';
+```
+_output_
+```CSV
+-128/127
+```
 ---
 # 4. API and Examples using `enum_bitset`
 `enum_bitset` is a convenient way of creating bitsets based on `std::bitset`. It uses your enum (scoped or unscoped)
@@ -1327,7 +1338,30 @@ These definitions set the minimum and maximum enum values that are supported. Yo
 > `conjure_enum` will **ignore enum values outside your range**.
 
 > [!TIP]
-> If you wish to set ranges on a per enum basis, use `enum_range` (see above).
+> If you wish to set ranges on a per enum basis, use `enum_range` (see below).
+
+### using `enum_range`
+```c++
+template<valid_enum T>
+struct enum_range
+{
+	static constexpr int min{FIX8_CONJURE_ENUM_MIN_VALUE}, max{FIX8_CONJURE_ENUM_MAX_VALUE};
+};
+```
+The `min` and `max` values are used to set the range of enum values for enums in `conjure_enum`. As shown above, the default values will be
+`FIX8_CONJURE_ENUM_MIN_VALUE` and `FIX8_CONJURE_ENUM_MAX_VALUE`.
+
+You can specialise this class to override the defaults and set your own range on a per enum basis:
+```c++
+enum class range_test { first, second, third, fourth, fifth, sixth, seventh, eighth };
+template<>
+struct FIX8::enum_range<range_test>
+{
+	static constexpr int min{0}, max{8};
+};
+static_assert(conjure_enum<range_test>::get_enum_min_value() == 0);
+static_assert(conjure_enum<range_test>::get_enum_max_value() == 8);
+```
 
 ## b) Class `conjure_enum` is not constructible
 All methods in this class are _static_. You cannot instantiate an object of this type. The same goes for `conjure_type`.

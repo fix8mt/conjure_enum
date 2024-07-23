@@ -1326,7 +1326,7 @@ These definitions set the minimum and maximum enum values that are supported. Yo
 > if your enums are only within the range of say `0-16` you can set `FIX8_CONJURE_ENUM_MIN_VALUE` and `FIX8_CONJURE_ENUM_MAX_VALUE` to `0` and `16` respectively. If the range is _too_ narrow
 > `conjure_enum` will **ignore enum values outside your range**.
 
-> [!INFO]
+> [!TIP]
 > If you wish to set ranges on a per enum basis, use `enum_range` (see above).
 
 ## b) Class `conjure_enum` is not constructible

@@ -1363,15 +1363,31 @@ static_assert(conjure_enum<range_test>::get_enum_min_value() == 0);
 static_assert(conjure_enum<range_test>::get_enum_max_value() == 8);
 ```
 
-## b) Class `conjure_enum` is not constructible
+## b) Choosing the minimal build
+### `#define FIX8_CONJURE_ENUM_MINIMAL`
+You can build a minimal version of `conjure_enum` by defining `FIX8_CONJURE_ENUM_MINIMAL` _before_ you include `conjure_enum.hpp`
+
+This limits the API to a more basic set of functionality. API calls and static structures that will be excluded are:
+```c++
+scoped_entries
+unscoped_entries
+rev_scoped_entries
+unscoped_names
+remove_scope
+add_scope
+unscoped_string_to_enum
+enum_to_string [noscope option not available]
+```
+
+## c) Class `conjure_enum` is not constructible
 All methods in this class are _static_. You cannot instantiate an object of this type. The same goes for `conjure_type`.
 
-## c) It's not _real_ reflection
+## d) It's not _real_ reflection
 This library provides a workaround (hack :smirk:) to current limitations of C++. There are proposals out there for future versions of the language that will provide proper reflection.
 See [Reflection TS](https://en.cppreference.com/w/cpp/experimental/reflect) and [Reflection for C++26](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2023/p2996r0.html)
 for examples of some of these.
 
-## d) Use of `std::string_view`
+## e) Use of `std::string_view`
 All of the generated static strings and generated static tables obtained by `std::source_location` use the library defined `fixed_string`. No string copying is done at runtime, resulting in
 a single static string in your application. All `conjure_enum` methods that return strings _only_ return `std::string_view`.
 To demonstrate this, lets look at the supplied test application `statictest`:

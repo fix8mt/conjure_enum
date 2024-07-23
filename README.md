@@ -1365,9 +1365,10 @@ static_assert(conjure_enum<range_test>::get_enum_max_value() == 8);
 
 ## b) Choosing the minimal build
 ### `#define FIX8_CONJURE_ENUM_MINIMAL`
-You can build a minimal version of `conjure_enum` by defining `FIX8_CONJURE_ENUM_MINIMAL` _before_ you include `conjure_enum.hpp`
+You can select a minimal version of `conjure_enum` by defining `FIX8_CONJURE_ENUM_MINIMAL` _before_ you include `conjure_enum.hpp`
 
-This limits the API to a more basic set of functionality. API calls and static structures that will be excluded are:
+This limits the API to a more basic set of functionality. This will reduce compile times.
+API calls and static structures that will be excluded are:
 ```c++
 scoped_entries
 unscoped_entries

@@ -811,7 +811,7 @@ static consteval const char* FIX8::conjure_enum<T>::tpeek() [with T = component]
 static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::path; T = component]
 ```
 
-## A) `get_enum_min_value` and `get_enum_max_value`
+## aa) `get_enum_min_value` and `get_enum_max_value`
 ```c++
 static constexpr int get_enum_min_value();
 static constexpr int get_enum_max_value();

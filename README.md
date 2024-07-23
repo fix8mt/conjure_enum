@@ -1357,7 +1357,7 @@ enum class range_test { first, second, third, fourth, fifth, sixth, seventh, eig
 template<>
 struct FIX8::enum_range<range_test>
 {
-	static constexpr int min{0}, max{8};
+   static constexpr int min{0}, max{8};
 };
 static_assert(conjure_enum<range_test>::get_enum_min_value() == 0);
 static_assert(conjure_enum<range_test>::get_enum_max_value() == 8);

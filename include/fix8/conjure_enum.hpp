@@ -57,6 +57,8 @@
 namespace FIX8 {
 
 //-----------------------------------------------------------------------------------------
+// global default enum range
+//-----------------------------------------------------------------------------------------
 #if not defined FIX8_CONJURE_ENUM_MIN_VALUE
 # define FIX8_CONJURE_ENUM_MIN_VALUE -128
 #endif
@@ -150,10 +152,19 @@ concept valid_enum = requires(T)
 };
 
 //-----------------------------------------------------------------------------------------
+// You can specialise this class to define a custom range for your enum
+//-----------------------------------------------------------------------------------------
+template<valid_enum T>
+struct enum_range : public static_only
+{
+	static constexpr int min{FIX8_CONJURE_ENUM_MIN_VALUE}, max{FIX8_CONJURE_ENUM_MAX_VALUE};
+};
+
+//-----------------------------------------------------------------------------------------
 template<valid_enum T>
 class conjure_enum : public static_only
 {
-	static constexpr int enum_min_value{FIX8_CONJURE_ENUM_MIN_VALUE}, enum_max_value{FIX8_CONJURE_ENUM_MAX_VALUE};
+	static constexpr int enum_min_value{enum_range<T>::min}, enum_max_value{enum_range<T>::max};
 	static_assert(enum_max_value > enum_min_value, "FIX8_CONJURE_ENUM_MAX_VALUE must be greater than FIX8_CONJURE_ENUM_MIN_VALUE");
 
 public:
@@ -177,6 +188,20 @@ private:
 		return std::array<enum_tuple, sizeof...(I)>{{{ values[I], _enum_name_v<values[I]>}...}};
 	}
 
+	template<std::size_t... I>
+	static constexpr auto _names(std::index_sequence<I...>) noexcept
+	{
+		return std::array<std::string_view, sizeof...(I)>{{{ _enum_name_v<values[I]>}...}};
+	}
+
+	static constexpr auto _sorted_entries() noexcept
+	{
+		auto tmp { entries };
+		std::sort(tmp.begin(), tmp.end(), _tuple_comp_rev);
+		return tmp;
+	}
+
+#if not defined FIX8_CONJURE_ENUM_MINIMAL
 	template<std::size_t... I>
 	static constexpr auto _unscoped_entries(std::index_sequence<I...>) noexcept
 	{
@@ -208,24 +233,12 @@ private:
 		return tmp;
 	}
 
-	static constexpr auto _sorted_entries() noexcept
-	{
-		auto tmp { entries };
-		std::sort(tmp.begin(), tmp.end(), _tuple_comp_rev);
-		return tmp;
-	}
-
-	template<std::size_t... I>
-	static constexpr auto _names(std::index_sequence<I...>) noexcept
-	{
-		return std::array<std::string_view, sizeof...(I)>{{{ _enum_name_v<values[I]>}...}};
-	}
-
 	template<std::size_t... I>
 	static constexpr auto _unscoped_names(std::index_sequence<I...>) noexcept
 	{
 		return std::array<std::string_view, sizeof...(I)>{{{ _remove_scope(_enum_name_v<values[I]>)}...}};
 	}
+#endif
 
 	template<T e>
 	static constexpr bool _is_valid() noexcept
@@ -298,6 +311,7 @@ private:
 			return {};
 	}
 
+#if not defined FIX8_CONJURE_ENUM_MINIMAL
 	static constexpr std::string_view _process_scope([[maybe_unused]] const auto& entr, std::string_view what) noexcept
 	{
 		if constexpr (is_scoped())
@@ -307,6 +321,7 @@ private:
 						return std::get<1>(*result.first);
 		return what;
 	}
+#endif
 
 	/// comparators
 	static constexpr bool _value_comp(const T& pl, const T& pr) noexcept
@@ -370,6 +385,14 @@ public:
 	static constexpr auto count() noexcept { return values.size(); }
 
 	// scope ops
+	static constexpr bool has_scope(std::string_view what) noexcept
+	{
+		if constexpr (is_scoped())
+			return contains(what);
+		else
+			return false;
+	}
+#if not defined FIX8_CONJURE_ENUM_MINIMAL
 	static constexpr std::string_view remove_scope(std::string_view what) noexcept
 	{
 		return _process_scope(rev_scoped_entries, what);
@@ -379,14 +402,7 @@ public:
 	{
 		return _process_scope(scoped_entries, what);
 	}
-
-	static constexpr bool has_scope(std::string_view what) noexcept
-	{
-		if constexpr (is_scoped())
-			return contains(what);
-		else
-			return false;
-	}
+#endif
 
 	// iterators
 	static constexpr auto cbegin() noexcept { return entries.cbegin(); }
@@ -433,7 +449,11 @@ public:
 	{
 		if (const auto result { std::equal_range(entries.cbegin(), entries.cend(), enum_tuple(value, std::string_view()), _tuple_comp) };
 			result.first != result.second)
+#if not defined FIX8_CONJURE_ENUM_MINIMAL
 				return noscope ? remove_scope(std::get<std::string_view>(*result.first)) : std::get<std::string_view>(*result.first);
+#else
+				return std::get<std::string_view>(*result.first);
+#endif
 		return {};
 	}
 	static constexpr std::optional<T> string_to_enum(std::string_view str) noexcept
@@ -443,6 +463,7 @@ public:
 				return std::get<T>(*result.first);
 		return {};
 	}
+#if not defined FIX8_CONJURE_ENUM_MINIMAL
 	static constexpr std::optional<T> unscoped_string_to_enum(std::string_view str) noexcept
 	{
 		if (const auto result { std::equal_range(unscoped_entries.cbegin(), unscoped_entries.cend(), enum_tuple(T{}, str), _tuple_comp_rev) };
@@ -450,6 +471,7 @@ public:
 				return std::get<T>(*result.first);
 		return {};
 	}
+#endif
 
 	/// for_each, for_each_n
 	template<typename Fn, typename... Args>
@@ -530,12 +552,18 @@ public:
 	// public constexpr data structures
 	static constexpr auto values { _values() };
 	static constexpr auto entries { _entries(std::make_index_sequence<values.size()>()) };
+	static constexpr auto names { _names(std::make_index_sequence<values.size()>()) };
+	static constexpr auto sorted_entries { _sorted_entries() };
+#if not defined FIX8_CONJURE_ENUM_MINIMAL
 	static constexpr auto scoped_entries { _scoped_entries(std::make_index_sequence<values.size()>()) };
 	static constexpr auto unscoped_entries { _unscoped_entries(std::make_index_sequence<values.size()>()) };
 	static constexpr auto rev_scoped_entries { _rev_scoped_entries(std::make_index_sequence<values.size()>()) };
-	static constexpr auto sorted_entries { _sorted_entries() };
-	static constexpr auto names { _names(std::make_index_sequence<values.size()>()) };
 	static constexpr auto unscoped_names { _unscoped_names(std::make_index_sequence<values.size()>()) };
+#endif
+
+	// misc
+	static constexpr int get_enum_min_value() noexcept { return enum_min_value; }
+	static constexpr int get_enum_max_value() noexcept { return enum_max_value; }
 };
 
 //-----------------------------------------------------------------------------------------

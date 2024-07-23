@@ -29,12 +29,7 @@
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //----------------------------------------------------------------------------------------
 #include <iostream>
-#if not defined FIX8_CONJURE_ENUM_MIN_VALUE
-# define FIX8_CONJURE_ENUM_MIN_VALUE 0
-#endif
-#if not defined FIX8_CONJURE_ENUM_MAX_VALUE
-# define FIX8_CONJURE_ENUM_MAX_VALUE 9
-#endif
+#define FIX8_CONJURE_ENUM_MINIMAL
 #include <fix8/conjure_enum.hpp>
 
 //-----------------------------------------------------------------------------------------
@@ -48,11 +43,8 @@ int main(void)
 {
 	for(const auto& [a, b] : conjure_enum<component>::entries)
 		std::cout << conjure_enum<component>::enum_to_int(a) << ' ' << b << '\n';
-	for(const auto& [a, b] : conjure_enum<component>::unscoped_entries)
-		std::cout << conjure_enum<component>::enum_to_int(a) << ' ' << b << '\n';
 	for(const auto& a : conjure_enum<component>::names)
 		std::cout << a << '\n';
-	for(const auto& a : conjure_enum<component>::unscoped_names)
-		std::cout << a << '\n';
+	std::cout << static_cast<int>(conjure_enum<component>::string_to_enum("component::path").value()) << '\n';
 	return 0;
 }

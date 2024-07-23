@@ -1345,7 +1345,7 @@ These definitions set the minimum and maximum enum values that are supported. Yo
 template<valid_enum T>
 struct enum_range
 {
-	static constexpr int min{FIX8_CONJURE_ENUM_MIN_VALUE}, max{FIX8_CONJURE_ENUM_MAX_VALUE};
+   static constexpr int min{FIX8_CONJURE_ENUM_MIN_VALUE}, max{FIX8_CONJURE_ENUM_MAX_VALUE};
 };
 ```
 The `min` and `max` values are used to set the range of enum values for enums in `conjure_enum`. As shown above, the default values will be

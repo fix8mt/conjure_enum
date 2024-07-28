@@ -1366,7 +1366,7 @@ static_assert(conjure_enum<range_test>::get_enum_max_value() == 8);
 For convenience, two macros are provided to make it easier to set custom ranges.
 ```c++
 FIX8_CONJURE_ENUM_SET_RANGE_INTS(ec,minv,maxv)
-FIX8_CONJURE_ENUM_SET_RANGE(minv,maxv)`
+FIX8_CONJURE_ENUM_SET_RANGE(minv,maxv)
 ```
 The first macro takes an enum typename followed by a lower and upper int range value.
 The second macro takes a lower and upper enum value. For example:

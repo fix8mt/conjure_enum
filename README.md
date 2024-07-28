@@ -1317,7 +1317,7 @@ master will not be considered.
 ---
 # 7. Notes
 ## a) enum limits
-### `FIX8_CONJURE_ENUM_MIN_VALUE`, `FIX8_CONJURE_ENUM_MAX_VALUE`
+### i. `FIX8_CONJURE_ENUM_MIN_VALUE`, `FIX8_CONJURE_ENUM_MAX_VALUE`
 These are set by default unless you override them by defining them in your application. They are the global range default for enums using `conjure_enum`.
 > [!IMPORTANT]
 > If you want to define these values they must appear _before_ you include `conjure_enum.hpp`.
@@ -1340,7 +1340,7 @@ These definitions set the minimum and maximum enum values that are supported. Yo
 > [!TIP]
 > If you wish to set ranges on a per enum basis, use `enum_range` (see below).
 
-### using `enum_range`
+### ii. using `enum_range`
 ```c++
 template<valid_enum T>
 struct enum_range
@@ -1362,7 +1362,7 @@ struct FIX8::enum_range<range_test>
 static_assert(conjure_enum<range_test>::get_enum_min_value() == 0);
 static_assert(conjure_enum<range_test>::get_enum_max_value() == 8);
 ```
-### `FIX8_CONJURE_ENUM_SET_RANGE_INTS`, `FIX8_CONJURE_ENUM_SET_RANGE`
+### iii. `FIX8_CONJURE_ENUM_SET_RANGE_INTS`, `FIX8_CONJURE_ENUM_SET_RANGE`
 For convenience, two macros are provided to make it easier to set custom ranges.
 ```c++
 FIX8_CONJURE_ENUM_SET_RANGE_INTS(ec,minv,maxv)

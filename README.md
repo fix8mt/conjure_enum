@@ -64,8 +64,7 @@
 
 Based on the awesome work in [`magic_enum`](https://github.com/Neargye/magic_enum)[^2] and [`boost::describe`](https://github.com/boostorg/describe),
 this library offers a streamlined and powerful way to add reflection capabilities to your C++ enums and other types. We've optimized the core functionality,
-focusing on the main features developers usually want while enhancing and expanding them for a more efficient and expressive experience. We've also
-added general purpose typename reflection for any type.
+focusing on the main features developers usually want. We've also added general purpose typename reflection for any type.
 
 ## b) Embrace the Future with C++20
 
@@ -80,6 +79,7 @@ unlocked the potential of `constexpr` algorithms and concepts.
   - scoped and unscoped enums
   - enums with **aliases** and **gaps**
   - anonymous and named namespaced enums and types
+  - custom enum ranges
 - ***Simple & Easy to Use***: Class-based approach with intuitive syntax
 - ***Convenient***: `enum_bitset` provides an enhanced enum aware `std::bitset` (see 3 above)
 - ***Useful***: `conjure_type` gives you the type string of _any type!_ (see 4 above)

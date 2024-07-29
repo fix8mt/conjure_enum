@@ -818,7 +818,7 @@ static constexpr int get_enum_min_value();
 static constexpr int get_enum_max_value();
 ```
 These functions return the min and max enum range for the specified enum. If you have specialised `enum_range` then these values
-will be reported.
+will be reported (see below).
 ```c++
 std::cout << conjure_enum<component>::get_enum_min_value() << '/' << conjure_enum<component>::get_enum_min_value() << '\n';
 ```
@@ -1419,12 +1419,10 @@ int main(void)
 {
    for(const auto& [a, b] : conjure_enum<component>::entries)
       std::cout << conjure_enum<component>::enum_to_int(a) << ' ' << b << '\n';
-   for(const auto& [a, b] : conjure_enum<component>::unscoped_entries)
-      std::cout << conjure_enum<component>::enum_to_int(a) << ' ' << b << '\n';
    for(const auto& a : conjure_enum<component>::names)
       std::cout << a << '\n';
-   for(const auto& a : conjure_enum<component>::unscoped_names)
-      std::cout << a << '\n';
+   std::cout << static_cast<int>(conjure_enum<component>::string_to_enum("component::path").value()) << '\n';
+   std::cout << conjure_enum<component>::get_enum_min_value() << '/' << conjure_enum<component>::get_enum_max_value() << '\n';
    return 0;
 }
 ```
@@ -1441,16 +1439,6 @@ $ ./statictest
 7 component::path
 8 component::query
 9 component::fragment
-1 authority
-9 fragment
-5 host
-4 password
-7 path
-6 port
-8 query
-0 scheme
-3 user
-2 userinfo
 component::scheme
 component::authority
 component::userinfo
@@ -1461,16 +1449,8 @@ component::port
 component::path
 component::query
 component::fragment
-scheme
-authority
-userinfo
-user
-password
-host
-port
-path
-query
-fragment
+7
+0/9
 $
 ```
 
@@ -1485,6 +1465,7 @@ $ strings statictest
 __gmon_start__
 _ITM_deregisterTMCloneTable
 _ITM_registerTMCloneTable
+_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_c
 _ZNSolsEi
 _ZSt21ios_base_library_initv
 _ZSt16__ostream_insertIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_PKS3_l
@@ -1501,7 +1482,7 @@ GLIBC_2.2.5
 GLIBCXX_3.4.32
 GLIBCXX_3.4.9
 GLIBCXX_3.4
-AVAUATUH
+ATUH
 []A\A]A^
 PTE1
 u+UH
@@ -1516,7 +1497,7 @@ component::userinfo
 component::authority
 component::scheme
 9*3$"
-GCC: (Ubuntu 14-20240412-0ubuntu1) 14.0.1 20240412 (experimental) [master r14-9935-g67e1433a94f]
+GCC: (Ubuntu 13.2.0-23ubuntu4) 13.2.0
 .shstrtab
 .interp
 .note.gnu.property

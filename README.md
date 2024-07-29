@@ -1486,7 +1486,7 @@ ATUH
 []A\A]A^
 PTE1
 u+UH
-<p style="color: skyblue">component::fragment
+<span style="color:red">component::fragment
 component::query
 component::path
 component::port
@@ -1495,7 +1495,7 @@ component::password
 component::user
 component::userinfo
 component::authority
-component::scheme</p>
+component::scheme</span>
 9*3$"
 GCC: (Ubuntu 13.2.0-23ubuntu4) 13.2.0
 .shstrtab

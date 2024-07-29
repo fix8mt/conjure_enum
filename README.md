@@ -1525,9 +1525,8 @@ GCC: (Ubuntu 13.2.0-23ubuntu4) 13.2.0
 .data
 .bss
 .comment
-$</pre>
-</p>
-</details>
+$
+</pre></p></details>
 
 It can be observed that there is only _one_ copy of the scoped enum value string in the executable.
 

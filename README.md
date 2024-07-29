@@ -66,7 +66,7 @@ Based on the awesome work in [`magic_enum`](https://github.com/Neargye/magic_enu
 this library offers a streamlined and powerful way to add reflection capabilities to your C++ enums and other types. We've optimized the core functionality,
 focusing on the main features developers usually want. We've also added general purpose typename reflection for any type.
 
-## b) Embrace the Future with C++20
+## b) Embracing C++20
 
 `conjure_enum`[^1] takes full advantage of recently added C++20 features. We've leveraged the convenience of `std::source_location` and
 unlocked the potential of `constexpr` algorithms and concepts.
@@ -80,7 +80,7 @@ unlocked the potential of `constexpr` algorithms and concepts.
   - enums with **aliases** and **gaps**
   - anonymous and named namespaced enums and types
   - custom enum ranges
-- ***Simple & Easy to Use***: Class-based approach with intuitive syntax
+- ***Easy to Use***: Class-based approach with intuitive syntax
 - ***Convenient***: `enum_bitset` provides an enhanced enum aware `std::bitset` (see 3 above)
 - ***Useful***: `conjure_type` gives you the type string of _any type!_ (see 4 above)
 - ***Wide Compiler Compatibility***: Support for: (see 7 above)

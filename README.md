@@ -1413,8 +1413,10 @@ a single static string in your application. All `conjure_enum` methods that retu
 To demonstrate this, lets look at the supplied test application `statictest`:
 ```c++
 #include <iostream>
+#define FIX8_CONJURE_ENUM_MINIMAL
 #include <fix8/conjure_enum.hpp>
 enum class component : int { scheme, authority, userinfo, user, password, host, port, path, query, fragment };
+FIX8_CONJURE_ENUM_SET_RANGE(component::scheme, component::fragment)
 int main(void)
 {
    for(const auto& [a, b] : conjure_enum<component>::entries)

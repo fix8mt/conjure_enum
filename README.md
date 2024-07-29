@@ -1548,13 +1548,30 @@ $
 
 It can be observed that there is only _one_ copy of the scoped enum value string in the executable.
 
+## f) Clang compile profiling
+You can profile the compile time for Clang. Firstly install [ClangBuildAnalyzer](https://github.com/aras-p/ClangBuildAnalyzer). Then configure with:
+# see https://github.com/aras-p/ClangBuildAnalyzer
+```CMake
+cmake -DBUILD_CLANG_PROFILER=true ..
+```
+After you build the included program `cbenchmark.cpp`, run the included script [cbenchmark.sh]examples/cbenchmark.sh]. The script expects to environment variables:
+| Variable | Description |
+| :--- | :--- |
+| `ClangBuildAnalyzerLoc` | directory where ClangBuildAnalyzer can be found|
+| `ArtifactLoc` | directory where conjure_enum is built|
+for example:
+```bash
+ClangBuildAnalyzerLoc=~/prog/ClangBuildAnalyzer/build ArtifactLoc=build_clang examples/cbenchmark.sh
+```
+The results will be printed to the screen.
+
 ---
 # 8. Compiler support
 | Compiler | Version(s) | Notes | Unsupported |
 | :--- | :--- | :--- | ---: |
 | [gcc](https://gcc.gnu.org/projects/cxx-status.html) | `11`, `12`, `13`, `14`| `std::format` not complete in `11`, `12` | `<= 10` |
 | [clang](https://clang.llvm.org/cxx_status.html) | `15`, `16`, `17`, `18`| Catch2 needs `cxx_std_20` in `15` | `<= 14` |
-| [msvc](https://learn.microsoft.com/en-us/cpp/overview/visual-cpp-language-conformance) | `16`, `17` | Visual Studio 2019,2022, latest `17.10.4`| `<= 16.9`|
+| [msvc](https://learn.microsoft.com/en-us/cpp/overview/visual-cpp-language-conformance) | `16`, `17` | Visual Studio 2019,2022, latest `17.10.5`| `<= 16.9`|
 | [xcode](https://developer.apple.com/support/xcode/) | `15` | Apple LLVM 15.0.0, some issues with `constexpr`, workarounds| `<= 14`|
 
 # 9. Compiler issues

@@ -1460,7 +1460,7 @@ The default build of `statictest` performs a [strip](https://en.wikipedia.org/wi
 Then we run [strings](https://en.wikipedia.org/wiki/Strings_(Unix)) on the executable.
 <details><summary><i>shell output</i></summary>
 <p>
-<code>$ strings statictest
+<pre>$ strings statictest
 /lib64/ld-linux-x86-64.so.2
 __gmon_start__
 _ITM_deregisterTMCloneTable
@@ -1486,7 +1486,7 @@ ATUH
 []A\A]A^
 PTE1
 u+UH
-<i>component::fragment</i>
+<p style="color: red">component::fragment</p>
 <i>component::query</i>
 <i>component::path</i>
 <i>component::port</i>
@@ -1526,7 +1526,7 @@ GCC: (Ubuntu 13.2.0-23ubuntu4) 13.2.0
 .bss
 .comment
 $
-</code></p></details>
+</pre></p></details>
 
 It can be observed that there is only _one_ copy of the scoped enum value string in the executable.
 

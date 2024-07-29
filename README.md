@@ -1215,6 +1215,8 @@ Create a new console project. Add the repo `https://github.com/fix8mt/conjure_en
 Make sure you set the C++ language to C++20 in the project preferences. The project should build and run the unit tests
 by default.
 
+The package is also available on [vckpg](https://vcpkg.io/en/package/conjure-enum).
+
 ## b) Using in your application with cmake
 In `CMakeLists.txt` set your include path to:
 ```cmake

@@ -1460,7 +1460,7 @@ The default build of `statictest` performs a [strip](https://en.wikipedia.org/wi
 Then we run [strings](https://en.wikipedia.org/wiki/Strings_(Unix)) on the executable.
 <details><summary><i>shell output</i></summary>
 <p>
-<pre><code>$ strings statictest
+<pre>$ strings statictest
 /lib64/ld-linux-x86-64.so.2
 __gmon_start__
 _ITM_deregisterTMCloneTable

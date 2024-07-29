@@ -87,7 +87,7 @@ unlocked the potential of `constexpr` algorithms and concepts.
   - Clang
   - MSVC
   - XCode/Apple Clang
-- ***Confidence in Quality***: Includes comprehensive unit test suite for reliable functionality
+- ***Confidence in Quality***: Includes comprehensive unit test suite for reliable functionality and profiling
 - ***Expanded***: Enhanced API:
   - `add_scope`
   - `remove_scope`

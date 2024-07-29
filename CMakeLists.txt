@@ -50,6 +50,19 @@ message("-- Build with all warnings : ${BUILD_ALL_WARNINGS}")
 option(BUILD_UNITTESTS "enable building unit tests" true)
 message("-- Build unit tests: ${BUILD_UNITTESTS}")
 
+# to enable clang build profiler:
+# cmake -DBUILD_CLANG_PROFILER=true ..
+# see examples/cbenchmark.sh
+option(BUILD_CLANG_PROFILER "enable clang build profiler" false)
+message("-- Build clang profiler: ${BUILD_CLANG_PROFILER}")
+if(BUILD_CLANG_PROFILER)
+	if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+		add_compile_options(-ftime-trace)
+	else()
+		message(WARNING "BUILD_CLANG_PROFILER only available with Clang")
+	endif()
+endif()
+
 function(build loc x)
 	add_executable(${x} ${loc}/${x}.cpp)
 	if(NOT ${x} STREQUAL srcloctest)
@@ -66,7 +79,7 @@ function(build loc x)
 	message("-- adding ${x}.cpp CXX_STANDARD: C++${cppstd} (${CMAKE_CXX_COMPILER_ID})")
 endfunction()
 
-foreach(x srcloctest example statictest)
+foreach(x srcloctest example statictest cbenchmark)
 	build(examples ${x})
 	if(BUILD_STRIP_EXE)
 		add_custom_command(TARGET ${x} POST_BUILD COMMAND ${CMAKE_STRIP} ${x})

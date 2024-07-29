@@ -1549,11 +1549,11 @@ $
 It can be observed that there is only _one_ copy of the scoped enum value string in the executable.
 
 ## f) Clang compile profiling
-You can profile the compile time for Clang. Firstly install [ClangBuildAnalyzer](https://github.com/aras-p/ClangBuildAnalyzer). Then configure with:
+You can profile the compile time for Clang (other compilers TBA). Firstly install [ClangBuildAnalyzer](https://github.com/aras-p/ClangBuildAnalyzer). Then configure with:
 ```CMake
 cmake -DBUILD_CLANG_PROFILER=true ..
 ```
-After you build the included program `cbenchmark.cpp`, run the included script [cbenchmark.sh](examples/cbenchmark.sh). The script expects to environment variables:
+After you build the included program `cbenchmark.cpp`, run the included script [cbenchmark.sh](examples/cbenchmark.sh). The script expects the following environment variables:
 | Variable | Description |
 | :--- | :--- |
 | `ClangBuildAnalyzerLoc` | directory where ClangBuildAnalyzer can be found|

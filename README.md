@@ -1460,32 +1460,32 @@ The default build of `statictest` performs a [strip](https://en.wikipedia.org/wi
 Then we run [strings](https://en.wikipedia.org/wiki/Strings_(Unix)) on the executable.
 <details><summary><i>shell output</i></summary>
 <p>
-<pre>$ strings statictest</pre>
-<pre>/lib64/ld-linux-x86-64.so.2</pre>
-<pre>__gmon_start__</pre>
-<pre>_ITM_deregisterTMCloneTable</pre>
-<pre>_ITM_registerTMCloneTable</pre>
-<pre>_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_c</pre>
-<pre>_ZNSolsEi</pre>
-<pre>_ZSt21ios_base_library_initv</pre>
-<pre>_ZSt16__ostream_insertIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_PKS3_l</pre>
-<pre>_ZNSo3putEc</pre>
-<pre>_ZSt4cout</pre>
-<pre>__stack_chk_fail</pre>
-<pre>__libc_start_main</pre>
-<pre>__cxa_finalize</pre>
-<pre>libstdc++.so.6</pre>
-<pre>libc.so.6</pre>
-<pre>GLIBC_2.4</pre>
-<pre>GLIBC_2.34</pre>
-<pre>GLIBC_2.2.5</pre>
-<pre>GLIBCXX_3.4.32</pre>
-<pre>GLIBCXX_3.4.9</pre>
-<pre>GLIBCXX_3.4</pre>
-<pre>ATUH</pre>
-<pre>[]A\A]A^</pre>
-<pre>PTE1</pre>
-<pre>u+UH</pre>
+<pre>$ strings statictest
+/lib64/ld-linux-x86-64.so.2
+__gmon_start__
+_ITM_deregisterTMCloneTable
+_ITM_registerTMCloneTable
+_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_c
+_ZNSolsEi
+_ZSt21ios_base_library_initv
+_ZSt16__ostream_insertIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_PKS3_l
+_ZNSo3putEc
+_ZSt4cout
+__stack_chk_fail
+__libc_start_main
+__cxa_finalize
+libstdc++.so.6
+libc.so.6
+GLIBC_2.4
+GLIBC_2.34
+GLIBC_2.2.5
+GLIBCXX_3.4.32
+GLIBCXX_3.4.9
+GLIBCXX_3.4
+ATUH
+[]A\A]A^
+PTE1
+u+UH
 <span style="color:red">component::fragment
 component::query
 component::path
@@ -1496,37 +1496,47 @@ component::user
 component::userinfo
 component::authority
 component::scheme</span>
-<pre>9*3$"</pre>
-<pre>GCC: (Ubuntu 13.2.0-23ubuntu4) 13.2.0</pre>
-<pre>.shstrtab</pre>
-<pre>.interp</pre>
-<pre>.note.gnu.property</pre>
-<pre>.note.gnu.build-id</pre>
-<pre>.note.ABI-tag</pre>
-<pre>.gnu.hash</pre>
-<pre>.dynsym</pre>
-<pre>.dynstr</pre>
-<pre>.gnu.version</pre>
-<pre>.gnu.version_r</pre>
-<pre>.rela.dyn</pre>
-<pre>.rela.plt</pre>
-<pre>.init</pre>
-<pre>.plt.got</pre>
-<pre>.plt.sec</pre>
-<pre>.text</pre>
-<pre>.fini</pre>
-<pre>.rodata</pre>
-<pre>.eh_frame_hdr</pre>
-<pre>.eh_frame</pre>
-<pre>.init_array</pre>
-<pre>.fini_array</pre>
-<pre>.data.rel.ro</pre>
-<pre>.dynamic</pre>
-<pre>.data</pre>
-<pre>.bss</pre>
-<pre>.comment</pre>
-<pre>$
+9*3$"
+GCC: (Ubuntu 13.2.0-23ubuntu4) 13.2.0
+.shstrtab
+.interp
+.note.gnu.property
+.note.gnu.build-id
+.note.ABI-tag
+.gnu.hash
+.dynsym
+.dynstr
+.gnu.version
+.gnu.version_r
+.rela.dyn
+.rela.plt
+.init
+.plt.got
+.plt.sec
+.text
+.fini
+.rodata
+.eh_frame_hdr
+.eh_frame
+.init_array
+.fini_array
+.data.rel.ro
+.dynamic
+.data
+.bss
+.comment
+$
 </pre></p></details>
+<span style="color:red">component::fragment
+component::query
+component::path
+component::port
+component::host
+component::password
+component::user
+component::userinfo
+component::authority
+component::scheme</span>
 
 It can be observed that there is only _one_ copy of the scoped enum value string in the executable.
 

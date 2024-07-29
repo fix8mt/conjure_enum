@@ -1461,7 +1461,7 @@ Then we run [strings](https://en.wikipedia.org/wiki/Strings_(Unix)) on the execu
 <details><summary><i>shell output</i></summary>
 <p>
 
-```CSV{2,5-7}
+```CSV{26-36}
 $ strings statictest
 /lib64/ld-linux-x86-64.so.2
 __gmon_start__

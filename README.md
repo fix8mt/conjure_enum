@@ -44,12 +44,12 @@
 # 1. Quick links
 ||**Link**|**Description**|
 --|--|--
-|1|[Here](include/fix8/conjure_enum.hpp)| For implementation|
+|1|[Implementation](include/fix8/conjure_enum.hpp)| For header implementation|
 |2|[`conjure_enum` API and Examples](#3-api-and-examples-using-conjure_enum)| General examples|
 |3|[`enum_bitset` API and Examples](#4-api-and-examples-using-enum_bitset)| enhanced enum aware `std::bitset`|
 |4|[`conjure_type` API and Examples](#5-api-and-examples-using-conjure_type)| any type string extractor|
 |5|[Building](#6-building)| How to build or include|
-|6|[Here](https://vcpkg.io/en/package/conjure-enum)| For vcpkg |
+|6|[vcpkg](https://vcpkg.io/en/package/conjure-enum)| For vcpkg package|
 |7|[Notes](#7-notes)| Notes on the implementation, limits, etc|
 |8|[Compilers](#8-compiler-support)| Supported compilers|
 |9|[Compiler issues](#9-compiler-issues)| Workarounds for various compiler issues|

@@ -1460,7 +1460,6 @@ The default build of `statictest` performs a [strip](https://en.wikipedia.org/wi
 Then we run [strings](https://en.wikipedia.org/wiki/Strings_(Unix)) on the executable.
 <details><summary><i>shell output</i></summary>
 <p>
-
 <pre><code>
 $ strings statictest
 /lib64/ld-linux-x86-64.so.2
@@ -1488,16 +1487,16 @@ ATUH
 []A\A]A^
 PTE1
 u+UH
-component::fragment
-component::query
-component::path
-component::port
-component::host
-component::password
-component::user
-component::userinfo
-component::authority
-component::scheme
+<b>component::fragment</b>
+<b>component::query</b>
+<b>component::path</b>
+<b>component::port</b>
+<b>component::host</b>
+<b>component::password</b>
+<b>component::user</b>
+<b>component::userinfo</b>
+<b>component::authority</b>
+<b>component::scheme</b>
 9*3$"
 GCC: (Ubuntu 13.2.0-23ubuntu4) 13.2.0
 .shstrtab

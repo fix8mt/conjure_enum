@@ -49,10 +49,11 @@
 |3|[`enum_bitset` API and Examples](#4-api-and-examples-using-enum_bitset)| enhanced enum aware `std::bitset`|
 |4|[`conjure_type` API and Examples](#5-api-and-examples-using-conjure_type)| any type string extractor|
 |5|[Building](#6-building)| How to build or include|
-|6|[Notes](#7-notes)| Notes on the implementation, limits, etc|
-|7|[Compilers](#8-compiler-support)| Supported compilers|
-|8|[Compiler issues](#9-compiler-issues)| Workarounds for various compiler issues|
-|9|[Results of `std::source_location`](reference/source_location.md)| For implementation specific `std::source_location` results|
+|6|[Here](https://vcpkg.io/en/package/conjure-enum)| For vcpkg |
+|7|[Notes](#7-notes)| Notes on the implementation, limits, etc|
+|8|[Compilers](#8-compiler-support)| Supported compilers|
+|9|[Compiler issues](#9-compiler-issues)| Workarounds for various compiler issues|
+|10|[Results of `std::source_location`](reference/source_location.md)| For implementation specific `std::source_location` results|
 > [!TIP]
 > Use the built-in [table of contents](https://github.blog/changelog/2021-04-13-table-of-contents-support-in-markdown-files/) to navigate this guide.
 > Even better in [full read view](./README.md) of this page.
@@ -1359,10 +1360,10 @@ enum class range_test { first, second, third, fourth, fifth, sixth, seventh, eig
 template<>
 struct FIX8::enum_range<range_test>
 {
-   static constexpr int min{0}, max{8};
+   static constexpr int min{0}, max{7};
 };
 static_assert(conjure_enum<range_test>::get_enum_min_value() == 0);
-static_assert(conjure_enum<range_test>::get_enum_max_value() == 8);
+static_assert(conjure_enum<range_test>::get_enum_max_value() == 7);
 ```
 ### iii. `FIX8_CONJURE_ENUM_SET_RANGE_INTS`, `FIX8_CONJURE_ENUM_SET_RANGE`
 For convenience, two macros are provided to make it easier to set custom ranges.
@@ -1373,10 +1374,10 @@ For convenience, two macros are provided to make it easier to set custom ranges.
 The first macro takes an enum typename followed by a lower and upper int range value.
 The second macro takes a lower and upper enum value. For example:
 ```c++
-FIX8_CONJURE_ENUM_SET_RANGE_INTS(std::errc, 0, 71)
+FIX8_CONJURE_ENUM_SET_RANGE_INTS(numbers, 0, 7)
 ```
 ```c++
-FIX8_CONJURE_ENUM_SET_RANGE(component::scheme, component::fragment)
+FIX8_CONJURE_ENUM_SET_RANGE(numbers::first, numbers::eighth)
 ```
 
 ## b) Choosing the minimal build

@@ -1374,6 +1374,8 @@ The first macro takes an enum typename followed by a lower and upper int range v
 The second macro takes a lower and upper enum value. For example:
 ```c++
 FIX8_CONJURE_ENUM_SET_RANGE_INTS(std::errc, 0, 71)
+```
+```c++
 FIX8_CONJURE_ENUM_SET_RANGE(component::scheme, component::fragment)
 ```
 

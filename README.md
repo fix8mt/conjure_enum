@@ -1486,7 +1486,7 @@ ATUH
 []A\A]A^
 PTE1
 u+UH
-<p style="color: red">component::fragment
+<p style="color: skyblue">component::fragment
 component::query
 component::path
 component::port

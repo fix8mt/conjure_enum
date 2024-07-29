@@ -1486,16 +1486,16 @@ ATUH
 []A\A]A^
 PTE1
 u+UH
-<b>component::fragment</b>
-<b>component::query</b>
-<b>component::path</b>
-<b>component::port</b>
-<b>component::host</b>
-<b>component::password</b>
-<b>component::user</b>
-<b>component::userinfo</b>
-<b>component::authority</b>
-<b>component::scheme</b>
+<i><b>component::fragment</b></i>
+<i><b>component::query</b></i>
+<i><b>component::path</b></i>
+<i><b>component::port</b></i>
+<i><b>component::host</b></i>
+<i><b>component::password</b></i>
+<i><b>component::user</b></i>
+<i><b>component::userinfo</b></i>
+<i><b>component::authority</b></i>
+<i><b>component::scheme</b></i>
 9*3$"
 GCC: (Ubuntu 13.2.0-23ubuntu4) 13.2.0
 .shstrtab

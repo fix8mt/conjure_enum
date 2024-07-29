@@ -33,7 +33,7 @@
 #include <fix8/conjure_enum.hpp>
 
 //-----------------------------------------------------------------------------------------
-enum component : int { scheme=-2, authority, userinfo, user, password, host, port, path, query, fragment };
+enum class component : int { scheme, authority, userinfo, user, password, host, port, path, query, fragment };
 FIX8_CONJURE_ENUM_SET_RANGE(component::scheme, component::fragment)
 
 //-----------------------------------------------------------------------------------------

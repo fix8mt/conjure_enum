@@ -35,7 +35,7 @@
 #define FIX8_CONJURE_ENUM_HPP_
 
 #if defined _MSC_VER && (_MSC_VER < 1910) || !defined _MSC_VER && (__cplusplus < 202002L)
-# error "C++20 not supported by your compiler"
+# error "conjure_enum requires C++20 support"
 #endif
 
 //----------------------------------------------------------------------------------------
@@ -161,8 +161,10 @@ struct enum_range : public static_only
 };
 
 //-----------------------------------------------------------------------------------------
+// Convenience macros for above
+//-----------------------------------------------------------------------------------------
 #define FIX8_CONJURE_ENUM_SET_RANGE_INTS(ec,minv,maxv) \
-template<> struct FIX8::enum_range<ec> { static constexpr int min{minv}, max{maxv}; };
+	template<> struct FIX8::enum_range<ec> { static constexpr int min{minv}, max{maxv}; };
 
 #define FIX8_CONJURE_ENUM_SET_RANGE(minv,maxv) \
 	FIX8_CONJURE_ENUM_SET_RANGE_INTS(decltype(minv),static_cast<int>(minv), static_cast<int>(maxv))

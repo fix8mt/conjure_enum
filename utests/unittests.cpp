@@ -46,6 +46,8 @@ enum component1 : int { scheme, authority, userinfo, user, password, host, port,
 enum class numbers : int { zero, one, two, three, four, five, FIVE=five, six, seven, eight, nine };
 enum class directions { left, right, up, down, forward, backward, notfound=-1 };
 enum class range_test { first, second, third, fourth, fifth, sixth, seventh, eighth };
+enum class range_test1 { first, second, third, fourth, fifth, sixth, seventh, eighth };
+enum class range_test2 { first, second, third, fourth, fifth, sixth, seventh, eighth };
 
 //-----------------------------------------------------------------------------------------
 // run as: ctest --output-on-failure
@@ -72,13 +74,19 @@ TEST_CASE("default range")
 template<>
 struct FIX8::enum_range<range_test>
 {
-	static constexpr int min{0}, max{8};
+	static constexpr int min{0}, max{7};
 };
+FIX8_CONJURE_ENUM_SET_RANGE_INTS(range_test1,0,7)
+FIX8_CONJURE_ENUM_SET_RANGE(range_test2::first,range_test2::eighth)
 
 TEST_CASE("custom range")
 {
 	REQUIRE(conjure_enum<range_test>::get_enum_min_value() == 0);
-	REQUIRE(conjure_enum<range_test>::get_enum_max_value() == 8);
+	REQUIRE(conjure_enum<range_test>::get_enum_max_value() == 7);
+	REQUIRE(conjure_enum<range_test1>::get_enum_min_value() == 0);
+	REQUIRE(conjure_enum<range_test1>::get_enum_max_value() == 7);
+	REQUIRE(conjure_enum<range_test2>::get_enum_min_value() == 0);
+	REQUIRE(conjure_enum<range_test2>::get_enum_max_value() == 7);
 }
 
 //-----------------------------------------------------------------------------------------

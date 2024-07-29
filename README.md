@@ -1486,16 +1486,18 @@ ATUH
 []A\A]A^
 PTE1
 u+UH
-<span style="color:red">component::fragment
-component::query
-component::path
-component::port
-component::host
-component::password
-component::user
-component::userinfo
-component::authority
-component::scheme</span>
+<style>p{color:red;}</style>
+*component::fragment*
+*component::query*
+*component::path*
+*component::port*
+*component::host*
+*component::password*
+*component::user*
+*component::userinfo*
+*component::authority*
+*component::scheme*
+<style>p{}</style>
 9*3$"
 GCC: (Ubuntu 13.2.0-23ubuntu4) 13.2.0
 .shstrtab
@@ -1527,16 +1529,6 @@ GCC: (Ubuntu 13.2.0-23ubuntu4) 13.2.0
 .comment
 $
 </pre></p></details>
-<span style="color:red">component::fragment
-component::query
-component::path
-component::port
-component::host
-component::password
-component::user
-component::userinfo
-component::authority
-component::scheme</span>
 
 It can be observed that there is only _one_ copy of the scoped enum value string in the executable.
 

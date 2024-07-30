@@ -1541,7 +1541,7 @@ After you build the included program `cbenchmark.cpp`, run the included script [
 | `ClangBuildAnalyzerLoc` | directory where ClangBuildAnalyzer can be found|
 | `ArtifactLoc` | directory where conjure_enum is built|
 
-for example:
+for example, if `ClangBuildAnalyzerLoc` was built in `~/prog/ClangBuildAnalyzer/build` and your `conjure_enum` build was in `./build_clang`, then:
 ```bash
 ClangBuildAnalyzerLoc=~/prog/ClangBuildAnalyzer/build ArtifactLoc=build_clang examples/cbenchmark.sh
 ```

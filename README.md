@@ -168,7 +168,7 @@ _output_
 12
 100 <-- invalid, error value
 ```
-## c) `unscoped_string_to_enum`
+## c) `unscoped_string_to_enum` ![](assets/notminimalred.svg)
 ```c++
 static constexpr std::optional<T> unscoped_string_to_enum(std::string_view str);
 ```
@@ -270,7 +270,7 @@ path
 query
 fragment
 ```
-## h) `unscoped_names`
+## h) `unscoped_names` ![](assets/notminimalred.svg)
 ```c++
 static constexpr std::array<std::string_view, std::size_t> unscoped_names;
 ```
@@ -368,13 +368,15 @@ _output_
 3  component::user
 2  component::userinfo
 ```
-## k) `scoped_entries`
+## k) `scoped_entries`, `unscoped_entries` ![](assets/notminimalred.svg)
 ```c++
 static constexpr std::array<std::tuple<std::string_view, std::string_view>, std::size_t> scoped_entries;
 ```
 This static member is generated for your type. It is a `std::array` of a tuple of `std::string_view` pairs in enum order.
 It contains pairs of unscoped and their scoped string version. This array is sorted by unscoped name.
 For unscoped enums, these are identical.
+
+`unscoped_entries` is the same except the pair is reversed.
 ```c++
 for(const auto [a, b] : conjure_enum<component>::scoped_entries)
    std::cout << std::format("{:9} {}\n", a, b);
@@ -392,7 +394,7 @@ scheme    component::scheme
 user      component::user
 userinfo  component::userinfo
 ```
-## l) `rev_scoped_entries`
+## l) `rev_scoped_entries` ![](assets/notminimalred.svg)
 ```c++
 static constexpr std::array<std::tuple<std::string_view, std::string_view>, std::size_t> rev_scoped_entries;
 ```
@@ -673,7 +675,7 @@ _output_
 path
 path
 ```
-## t) `add_scope`
+## t) `add_scope` ![](assets/notminimalred.svg)
 ```c++
 static constexpr std::string_view add_scope(std::string_view what);
 ```
@@ -687,7 +689,7 @@ _output_
 component::path
 path
 ```
-## u) `has_scope`
+## u) `has_scope` ![](assets/notminimalred.svg)
 ```c++
 static constexpr bool has_scope(std::string_view what);
 ```

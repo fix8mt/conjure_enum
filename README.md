@@ -1400,6 +1400,7 @@ add_scope
 unscoped_string_to_enum
 enum_to_string //noscope option not available
 ```
+These are marked ![](assets/notminimalred.svg) in the API documentation above.
 
 ## c) Class `conjure_enum` is not constructible
 All methods in this class are _static_. You cannot instantiate an object of this type. The same goes for `conjure_type`.

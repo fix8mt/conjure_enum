@@ -45,6 +45,9 @@ enum class component : int { scheme, authority, userinfo, user, password, host, 
 enum component1 : int { scheme, authority, userinfo, user, password, host, port, path=12, query, fragment };
 enum class numbers : int { zero, one, two, three, four, five, FIVE=five, six, seven, eight, nine };
 enum class directions { left, right, up, down, forward, backward, notfound=-1 };
+enum class range_test { first, second, third, fourth, fifth, sixth, seventh, eighth };
+enum class range_test1 { first, second, third, fourth, fifth, sixth, seventh, eighth };
+enum class range_test2 { first, second, third, fourth, fifth, sixth, seventh, eighth };
 
 //-----------------------------------------------------------------------------------------
 // run as: ctest --output-on-failure
@@ -58,6 +61,32 @@ TEST_CASE("fixed_string")
 	REQUIRE(f1.get().size() == t1.size()); // fixed_string as string_view
 	REQUIRE(static_cast<std::string_view>(f1) == t1); // fixed_string as string_view
 	REQUIRE(static_cast<std::string_view>(f1).size() == t1.size()); // fixed_string as string_view
+}
+
+//-----------------------------------------------------------------------------------------
+TEST_CASE("default range")
+{
+	REQUIRE(conjure_enum<component>::get_enum_min_value() == FIX8_CONJURE_ENUM_MIN_VALUE);
+	REQUIRE(conjure_enum<component>::get_enum_max_value() == FIX8_CONJURE_ENUM_MAX_VALUE);
+}
+
+//-----------------------------------------------------------------------------------------
+template<>
+struct FIX8::enum_range<range_test>
+{
+	static constexpr int min{0}, max{7};
+};
+FIX8_CONJURE_ENUM_SET_RANGE_INTS(range_test1,0,7)
+FIX8_CONJURE_ENUM_SET_RANGE(range_test2::first,range_test2::eighth)
+
+TEST_CASE("custom range")
+{
+	REQUIRE(conjure_enum<range_test>::get_enum_min_value() == 0);
+	REQUIRE(conjure_enum<range_test>::get_enum_max_value() == 7);
+	REQUIRE(conjure_enum<range_test1>::get_enum_min_value() == 0);
+	REQUIRE(conjure_enum<range_test1>::get_enum_max_value() == 7);
+	REQUIRE(conjure_enum<range_test2>::get_enum_min_value() == 0);
+	REQUIRE(conjure_enum<range_test2>::get_enum_max_value() == 7);
 }
 
 //-----------------------------------------------------------------------------------------

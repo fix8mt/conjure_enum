@@ -112,6 +112,7 @@ enum class numbers { zero, one, two, three, four, five, six, seven, eight, nine 
 static constexpr std::string_view enum_to_string(T value, bool noscope=false);
 ```
 Returns a `std::string_view` or empty if not found. Optionally passing `true` will remove scope in result if present.
+`noscope` option ![](assets/notminimalred.svg).
 ```c++
 auto name { conjure_enum<component>::enum_to_string(component::path) };
 auto name_trim { conjure_enum<component>::enum_to_string(component::path, true) }; // optionally remove scope in result

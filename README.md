@@ -659,7 +659,7 @@ _output_
 component
 component1
 ```
-## s) `remove_scope`
+## s) `remove_scope` ![](assets/notminimalred.svg)
 ```c++
 static constexpr std::string_view remove_scope(std::string_view what);
 ```

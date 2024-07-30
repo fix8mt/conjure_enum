@@ -1540,6 +1540,7 @@ After you build the included program `cbenchmark.cpp`, run the included script [
 | :--- | :--- |
 | `ClangBuildAnalyzerLoc` | directory where ClangBuildAnalyzer can be found|
 | `ArtifactLoc` | directory where conjure_enum is built|
+
 for example:
 ```bash
 ClangBuildAnalyzerLoc=~/prog/ClangBuildAnalyzer/build ArtifactLoc=build_clang examples/cbenchmark.sh

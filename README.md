@@ -1535,7 +1535,9 @@ You can profile the compile time for Clang (other compilers TBA). Firstly instal
 ```CMake
 cmake -DBUILD_CLANG_PROFILER=true ..
 ```
-After you build the included program `cbenchmark.cpp`, run the included script [cbenchmark.sh](examples/cbenchmark.sh). The script expects the following environment variables:
+You can follow the instructions given on the `ClangBuildAnalyzer` page to run, alternatively after you build the included program `cbenchmark.cpp`,
+run the included script [cbenchmark.sh](examples/cbenchmark.sh). The script expects the following environment variables:
+
 | Variable | Description |
 | :--- | :--- |
 | `ClangBuildAnalyzerLoc` | directory where ClangBuildAnalyzer can be found|

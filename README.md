@@ -427,16 +427,20 @@ _output_
 ```c++
 static constexpr bool contains(T value);
 static constexpr bool contains(std::string_view str);
+template<T e>
+static constexpr bool contains();
 ```
 Returns `true` if the enum contains the given value or string.
 ```c++
 std::cout << std::format("{}\n", conjure_enum<component>::contains(component::path));
 std::cout << std::format("{}\n", conjure_enum<component1>::contains("nothing"));
+std::cout << std::format("{}\n", conjure_enum<component>::contains<component::path>());
 ```
 _output_
 ```CSV
 true
 false
+true
 ```
 ## o) `for_each`, `for_each_n`
 ```c++

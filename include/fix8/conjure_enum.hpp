@@ -434,6 +434,17 @@ public:
 		return {};
 	}
 
+	// index
+	static constexpr std::optional<size_t> index(T value) noexcept
+	{
+		if (const auto result { std::equal_range(values.cbegin(), values.cend(), value, _value_comp) };
+			result.first != result.second)
+				return &*result.first - &*values.cbegin();
+		return {};
+	}
+	template<T e>
+	static constexpr std::optional<size_t> index() noexcept { return index(e); }
+
 	// contains
 	static constexpr bool contains(T value) noexcept
 	{
@@ -445,6 +456,8 @@ public:
 		const auto result { std::equal_range(sorted_entries.cbegin(), sorted_entries.cend(), enum_tuple(T{}, str), _tuple_comp_rev) };
 		return result.first != result.second;
 	}
+	template<T e>
+	static constexpr bool contains() noexcept { return contains(e); }
 
 	// string <==> enum
 	template<T e>

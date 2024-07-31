@@ -212,6 +212,9 @@ TEST_CASE("contains")
 	REQUIRE(!conjure_enum<component>::contains(static_cast<component>(100)));
 	REQUIRE(conjure_enum<component>::contains("component::path"sv));
 	REQUIRE(conjure_enum<component1>::contains("path"sv));
+	REQUIRE(conjure_enum<component>::contains<component::path>());
+	REQUIRE(conjure_enum<component>::contains<component::test>()); // alias
+	REQUIRE(conjure_enum<component1>::contains<path>());
 }
 
 //-----------------------------------------------------------------------------------------
@@ -302,6 +305,19 @@ TEST_CASE("enum_to_int")
 	REQUIRE(conjure_enum<component1>::enum_to_int(password) == 4);
 	REQUIRE(conjure_enum<component>::enum_to_underlying(component::password) == 4);
 	REQUIRE(conjure_enum<component1>::enum_to_underlying(password) == 4);
+}
+
+//-----------------------------------------------------------------------------------------
+TEST_CASE("index")
+{
+	REQUIRE(conjure_enum<component>::index(component::scheme).value() == 0);
+	REQUIRE(conjure_enum<component>::index(component::password).value() == 4);
+	REQUIRE(conjure_enum<component>::index(component::query).value() == 8);
+	REQUIRE(conjure_enum<component>::index(component(100)).value_or(100) == 100);
+	REQUIRE(conjure_enum<component>::index<component::scheme>().value() == 0);
+	REQUIRE(conjure_enum<component>::index<component::password>().value() == 4);
+	REQUIRE(conjure_enum<component>::index<component::query>().value() == 8);
+	REQUIRE(conjure_enum<component>::index<component(100)>().value_or(100) == 100);
 }
 
 //-----------------------------------------------------------------------------------------

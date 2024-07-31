@@ -402,7 +402,28 @@ userinfo  component::userinfo
 static constexpr std::array<std::tuple<std::string_view, std::string_view>, std::size_t> rev_scoped_entries;
 ```
 Same as `scoped_entries` except reversed, sorted by scoped name. Use to lookup unscoped name.
-## m) `contains`
+## m) `index`
+```c++
+static constexpr std::optional<size_t> index(T value);
+template<T e>
+static constexpr std::optional<size_t> index();
+```
+Returns the index (position in 0 based array of values) of the supplied enum value `std::optional<size_t>`. Empty if value was not valid. Use `std::optional<T>::value_or()` to set an error value
+and avoid throwing an exception.
+```c++
+std::cout << conjure_enum<component>::index(component::password).value() << '\n';
+std::cout << conjure_enum<component>::index(component(100)).value_or(100) << '\n';
+std::cout << conjure_enum<component>::index<component::password>().value() << '\n';
+std::cout << conjure_enum<component>::index<component(100)>().value_or(100) << '\n';
+```
+_output_
+```CSV
+4
+100 <-- invalid, error value
+4
+100 <-- invalid, error value
+```
+## n) `contains`
 ```c++
 static constexpr bool contains(T value);
 static constexpr bool contains(std::string_view str);
@@ -417,7 +438,7 @@ _output_
 true
 false
 ```
-## n) `for_each`, `for_each_n`
+## o) `for_each`, `for_each_n`
 ```c++
 template<typename Fn, typename... Args>
 requires std::invocable<Fn&&, T, Args...>
@@ -521,7 +542,7 @@ _output_
 ```CSV
 160
 ```
-## o) `dispatch`
+## p) `dispatch`
 ```c++
 template<typename Fn>
 static constexpr bool tuple_comp(const std::tuple<T, Fn>& pl, const std::tuple<T, Fn>& pr);
@@ -620,7 +641,7 @@ _output_
 6000
 1015
 ```
-## p) `is_scoped`
+## q) `is_scoped`
 ```c++
 struct is_scoped : std::integral_constant<bool, requires
    { requires !std::is_convertible_v<T, std::underlying_type_t<T>>; }>{};
@@ -635,7 +656,7 @@ _output_
 true
 false
 ```
-## q) `is_valid`
+## r) `is_valid`
 ```c++
 template<T e>
 static constexpr bool is_valid();
@@ -650,7 +671,7 @@ _output_
 true
 false
 ```
-## r) `type_name`
+## s) `type_name`
 ```c++
 static constexpr std::string_view type_name();
 ```
@@ -664,7 +685,7 @@ _output_
 component
 component1
 ```
-## s) `remove_scope` ![](assets/notminimalred.svg)
+## t) `remove_scope` ![](assets/notminimalred.svg)
 ```c++
 static constexpr std::string_view remove_scope(std::string_view what);
 ```
@@ -678,7 +699,7 @@ _output_
 path
 path
 ```
-## t) `add_scope` ![](assets/notminimalred.svg)
+## u) `add_scope` ![](assets/notminimalred.svg)
 ```c++
 static constexpr std::string_view add_scope(std::string_view what);
 ```
@@ -692,7 +713,7 @@ _output_
 component::path
 path
 ```
-## u) `has_scope` ![](assets/notminimalred.svg)
+## v) `has_scope` ![](assets/notminimalred.svg)
 ```c++
 static constexpr bool has_scope(std::string_view what);
 ```
@@ -708,7 +729,7 @@ true
 false
 false
 ```
-## v) `iterators`
+## w) `iterators`
 ```c++
 static constexpr auto cbegin();
 static constexpr auto cend();
@@ -735,7 +756,7 @@ _output_
 8 numbers::eight
 9 numbers::nine
 ```
-## w) `iterator_adaptor`
+## x) `iterator_adaptor`
 ```c++
 template<valid_enum T>
 struct iterator_adaptor;
@@ -758,7 +779,7 @@ _output_
 8
 9
 ```
-## x) `front, back`
+## y) `front, back`
 ```c++
 static constexpr auto front();
 static constexpr auto back();
@@ -775,7 +796,7 @@ _output_
 0 numbers::zero
 9 numbers::nine
 ```
-## y) `ostream_enum_operator`
+## z) `ostream_enum_operator`
 ```c++
 template<typename CharT, typename Traits=std::char_traits<CharT>, valid_enum T>
 constexpr std::basic_ostream<CharT, Traits>& operator<<(std::basic_ostream<CharT, Traits>& os, T value);
@@ -797,7 +818,7 @@ _output_
 "host"
 "100"
 ```
-## z) `epeek, tpeek`
+## A) `epeek, tpeek`
 ```c++
 static consteval const char *tpeek();
 template<T e>
@@ -817,7 +838,7 @@ static consteval const char* FIX8::conjure_enum<T>::tpeek() [with T = component]
 static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::path; T = component]
 ```
 
-## aa) `get_enum_min_value` and `get_enum_max_value`
+## B) `get_enum_min_value` and `get_enum_max_value`
 ```c++
 static constexpr int get_enum_min_value();
 static constexpr int get_enum_max_value();
@@ -1257,11 +1278,11 @@ target_include_directories(myproj PRIVATE ${conjure_enum_SOURCE_DIR}/include)
 ## d) Reporting issues
 Raise an [issue](https://github.com/fix8mt/conjure_enum/issues) on the github page.
 The executable `srcloctest` should be built when you build the package by default. This application
-does not use any of the `conjure_enum` library and is designed to report on how your compiler handles `std::source_location`.
+does not use any of the `conjure_enum` library and is designed to report how your compiler handles `std::source_location`.
 The actual output is implementation dependent. See [Results of `source_location`](reference/source_location.md) for implementation specific `std::source_location` results.
 You should attach the output of this application with your issue.
 > [!TIP]
-> Passing the switch `-m` causes `srcloctest` to generate github markdown which you can paste directly into the issue.
+> Use the `-m` switch with `srcloctest` to generate github markdown which you can paste directly into the issue.
 
 ```C++
 $ ./srcloctest

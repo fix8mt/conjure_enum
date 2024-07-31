@@ -1537,19 +1537,21 @@ $
 It can be observed that there is only _one_ copy of the scoped enum value string in the executable.
 
 ## f) Clang compile profiling
-You can profile the compile time for Clang (other compilers TBA). Firstly install [ClangBuildAnalyzer](https://github.com/aras-p/ClangBuildAnalyzer). Then configure with:
+You can profile the compile time for Clang (other compilers TBA). Firstly install [ClangBuildAnalyzer](https://github.com/aras-p/ClangBuildAnalyzer).
+Then configure `conjure_enum` with:
 ```CMake
 cmake -DBUILD_CLANG_PROFILER=true ..
 ```
-You can follow the instructions given on the `ClangBuildAnalyzer` page to run, alternatively after you build the included program `cbenchmark.cpp`,
+You can follow the instructions given on the `ClangBuildAnalyzer` page to run. Alternatively after you build the included program `cbenchmark`,
 run the included script [cbenchmark.sh](examples/cbenchmark.sh). The script expects the following environment variables:
 
 | Variable | Description |
 | :--- | :--- |
 | `ClangBuildAnalyzerLoc` | directory where ClangBuildAnalyzer can be found|
-| `ArtifactLoc` | directory where conjure_enum is built|
+| `ArtifactLoc` | directory where `conjure_enum` is built|
 
-For example, if `ClangBuildAnalyzer` was built in `~/prog/ClangBuildAnalyzer/build` and your `conjure_enum` build was in `./build_clang`, then:
+For example, if `ClangBuildAnalyzer` was built in `~/prog/ClangBuildAnalyzer/build` and your `conjure_enum` build was in `./build_clang`, then you
+would run the script from the `conjure_enum` directory as follows:
 ```bash
 ClangBuildAnalyzerLoc=~/prog/ClangBuildAnalyzer/build ArtifactLoc=build_clang examples/cbenchmark.sh
 ```

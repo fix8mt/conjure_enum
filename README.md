@@ -1570,10 +1570,9 @@ would run the script from the `conjure_enum` directory as follows:
 ClangBuildAnalyzerLoc=~/prog/ClangBuildAnalyzer/build ArtifactLoc=build_clang examples/cbenchmark.sh
 ```
 The results will be printed to the screen. For example:
-<details><summary><i>shell output</i></summary>
+<details><summary><i>output</i></summary>
 <p>
-<pre>
-Processing all files and saving to 'cbenchmark.dat'...
+<pre>Processing all files and saving to 'cbenchmark.dat'...
   done in 0.0s. Run 'ClangBuildAnalyzer --analyze cbenchmark.dat' to analyze it.
 Analyzing build trace from 'cbenchmark.dat'...
 **** Time summary:
@@ -1663,8 +1662,7 @@ Compilation (2 times):
 173 ms: /usr/include/c++/14/system_error (included 1 times, avg 173 ms), included via:
   1x: <direct include>
 
-  done in 0.0s.
-</pre></p></details>
+  done in 0.0s.</pre></p></details>
 
 ---
 # 8. Compiler support

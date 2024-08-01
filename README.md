@@ -408,7 +408,8 @@ static constexpr std::optional<size_t> index(T value);
 template<T e>
 static constexpr std::optional<size_t> index();
 ```
-Returns the index (position in 0 based array of values) of the supplied enum value `std::optional<size_t>`. Empty if value was not valid. Use `std::optional<T>::value_or()` to set an error value
+Returns the index (position in 0 based array of values) of the supplied enum value as an `std::optional<size_t>`.
+Empty if value was not valid. Use `std::optional<T>::value_or()` to set an error value
 and avoid throwing an exception.
 ```c++
 std::cout << conjure_enum<component>::index(component::password).value() << '\n';

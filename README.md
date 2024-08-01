@@ -1584,6 +1584,7 @@ ClangBuildAnalyzerLoc=~/prog/ClangBuildAnalyzer/build ArtifactLoc=build_clang ex
 The results will be printed to the screen. For example:
 <details><summary><i>output</i></summary>
 <p>
+
 ```CSV
 Processing all files and saving to 'cbenchmark.dat'...
   done in 0.0s. Run 'ClangBuildAnalyzer --analyze cbenchmark.dat' to analyze it.
@@ -1677,6 +1678,7 @@ Compilation (2 times):
 
   done in 0.0s.
 ```
+
 </p></details>
 
 ---

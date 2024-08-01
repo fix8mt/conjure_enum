@@ -1677,7 +1677,7 @@ Compilation (2 times):
 
   done in 0.0s.
 ```
-</pre></p></details>
+</p></details>
 
 ---
 # 8. Compiler support

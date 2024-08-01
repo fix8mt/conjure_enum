@@ -1453,6 +1453,8 @@ int main(void)
 {
    for(const auto& [a, b] : conjure_enum<component>::entries)
       std::cout << conjure_enum<component>::enum_to_int(a) << ' ' << b << '\n';
+   for(const auto& a : conjure_enum<component>::names)
+      std::cout << a << '\n';
    std::cout << static_cast<int>(conjure_enum<component>::string_to_enum("component::path").value()) << '\n';
    std::cout << conjure_enum<component>::get_enum_min_value() << '/' << conjure_enum<component>::get_enum_max_value() << '\n';
    return 0;
@@ -1471,6 +1473,16 @@ $ ./statictest
 7 component::path
 8 component::query
 9 component::fragment
+component::scheme
+component::authority
+component::userinfo
+component::user
+component::password
+component::host
+component::port
+component::path
+component::query
+component::fragment
 7
 0/9
 $
@@ -1572,7 +1584,8 @@ ClangBuildAnalyzerLoc=~/prog/ClangBuildAnalyzer/build ArtifactLoc=build_clang ex
 The results will be printed to the screen. For example:
 <details><summary><i>output</i></summary>
 <p>
-<pre>Processing all files and saving to 'cbenchmark.dat'...
+```CSV
+Processing all files and saving to 'cbenchmark.dat'...
   done in 0.0s. Run 'ClangBuildAnalyzer --analyze cbenchmark.dat' to analyze it.
 Analyzing build trace from 'cbenchmark.dat'...
 **** Time summary:
@@ -1662,7 +1675,9 @@ Compilation (2 times):
 173 ms: /usr/include/c++/14/system_error (included 1 times, avg 173 ms), included via:
   1x: <direct include>
 
-  done in 0.0s.</pre></p></details>
+  done in 0.0s.
+```
+</pre></p></details>
 
 ---
 # 8. Compiler support

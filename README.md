@@ -71,7 +71,7 @@ For the latest cutting edge changes, see the [dev branch](https://github.com/fix
 ## b) Embracing C++20
 
 `conjure_enum`[^1] takes full advantage of recently added C++20 features. We've leveraged the convenience of [`std::source_location`](https://en.cppreference.com/w/cpp/utility/source_location) and
-unlocked the potential of `constexpr` algorithms (`__cpp_lib_constexpr_algorithms`) and [concepts](https://en.cppreference.com/w/cpp/language/constraints).
+unlocked the potential of [`constexpr` algorithms](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2017/p0202r3.html) and [concepts](https://en.cppreference.com/w/cpp/language/constraints).
 
 ## c) Key Benefits
 

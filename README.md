@@ -1453,8 +1453,6 @@ int main(void)
 {
    for(const auto& [a, b] : conjure_enum<component>::entries)
       std::cout << conjure_enum<component>::enum_to_int(a) << ' ' << b << '\n';
-   for(const auto& a : conjure_enum<component>::names)
-      std::cout << a << '\n';
    std::cout << static_cast<int>(conjure_enum<component>::string_to_enum("component::path").value()) << '\n';
    std::cout << conjure_enum<component>::get_enum_min_value() << '/' << conjure_enum<component>::get_enum_max_value() << '\n';
    return 0;
@@ -1473,16 +1471,6 @@ $ ./statictest
 7 component::path
 8 component::query
 9 component::fragment
-component::scheme
-component::authority
-component::userinfo
-component::user
-component::password
-component::host
-component::port
-component::path
-component::query
-component::fragment
 7
 0/9
 $
@@ -1581,7 +1569,102 @@ would run the script from the `conjure_enum` directory as follows:
 ```bash
 ClangBuildAnalyzerLoc=~/prog/ClangBuildAnalyzer/build ArtifactLoc=build_clang examples/cbenchmark.sh
 ```
-The results will be printed to the screen.
+The results will be printed to the screen. For example:
+<details><summary><i>shell output</i></summary>
+<p>
+<pre>
+Processing all files and saving to 'cbenchmark.dat'...
+  done in 0.0s. Run 'ClangBuildAnalyzer --analyze cbenchmark.dat' to analyze it.
+Analyzing build trace from 'cbenchmark.dat'...
+**** Time summary:
+Compilation (2 times):
+  Parsing (frontend):            0.7 s
+  Codegen & opts (backend):      0.0 s
+
+**** Files that took longest to parse (compiler frontend):
+   662 ms: build_clang/CMakeFiles/cbenchmark.dir/examples/cbenchmark.cpp.o
+
+**** Files that took longest to codegen (compiler backend):
+    18 ms: build_clang/CMakeFiles/cbenchmark.dir/examples/cbenchmark.cpp.o
+
+**** Templates that took longest to instantiate:
+   290 ms: FIX8::conjure_enum<std::errc> (1 times, avg 290 ms)
+   140 ms: FIX8::conjure_enum<std::errc>::_entries<0UL, 1UL, 2UL, 3UL, 4UL, 5UL... (1 times, avg 140 ms)
+    82 ms: FIX8::conjure_enum<std::errc>::_values<0UL, 1UL, 2UL, 3UL, 4UL, 5UL,... (1 times, avg 82 ms)
+     8 ms: FIX8::conjure_enum<std::errc>::_sorted_entries (1 times, avg 8 ms)
+     7 ms: std::reverse_iterator<std::_Bit_iterator> (1 times, avg 7 ms)
+     6 ms: std::sort<std::tuple<std::errc, std::basic_string_view<char>> *, boo... (1 times, avg 6 ms)
+     6 ms: std::__sort<std::tuple<std::errc, std::basic_string_view<char>> *, _... (1 times, avg 6 ms)
+     6 ms: std::reverse_iterator<std::_Bit_const_iterator> (1 times, avg 6 ms)
+     5 ms: std::unordered_map<int, int> (1 times, avg 5 ms)
+     5 ms: std::__introsort_loop<std::tuple<std::errc, std::basic_string_view<c... (1 times, avg 5 ms)
+     3 ms: std::array<std::tuple<std::errc, std::basic_string_view<char>>, 47> (1 times, avg 3 ms)
+     3 ms: std::_Hashtable<int, std::pair<const int, int>, std::allocator<std::... (1 times, avg 3 ms)
+     3 ms: FIX8::conjure_enum<std::errc>::enum_to_string (1 times, avg 3 ms)
+     3 ms: std::tuple<std::basic_string_view<char>, char, std::basic_string_vie... (1 times, avg 3 ms)
+     2 ms: std::__unguarded_partition_pivot<std::tuple<std::errc, std::basic_st... (1 times, avg 2 ms)
+     2 ms: std::tuple<std::errc, std::basic_string_view<char>> (1 times, avg 2 ms)
+     2 ms: std::tuple<std::errc, std::basic_string_view<char>>::tuple<const std... (1 times, avg 2 ms)
+     2 ms: FIX8::conjure_enum<std::errc>::_enum_name<std::errc::inappropriate_i... (1 times, avg 2 ms)
+     2 ms: std::__move_median_to_first<std::tuple<std::errc, std::basic_string_... (1 times, avg 2 ms)
+     2 ms: std::iter_swap<std::tuple<std::errc, std::basic_string_view<char>> *... (1 times, avg 2 ms)
+     2 ms: std::__partial_sort<std::tuple<std::errc, std::basic_string_view<cha... (1 times, avg 2 ms)
+     2 ms: FIX8::conjure_enum<std::errc>::_enum_name<std::errc::too_many_files_... (1 times, avg 2 ms)
+     2 ms: std::__heap_select<std::tuple<std::errc, std::basic_string_view<char... (1 times, avg 2 ms)
+     2 ms: std::tuple<std::basic_string_view<char>, char, std::basic_string_vie... (1 times, avg 2 ms)
+     2 ms: FIX8::conjure_enum<std::errc>::_enum_name<std::errc::no_such_file_or... (1 times, avg 2 ms)
+     2 ms: FIX8::conjure_enum<std::errc>::_enum_name<std::errc::operation_not_p... (1 times, avg 2 ms)
+     2 ms: FIX8::conjure_enum<std::errc>::_enum_name<std::errc::no_message_avai... (1 times, avg 2 ms)
+     2 ms: FIX8::conjure_enum<std::errc>::_enum_name<std::errc::operation_would... (1 times, avg 2 ms)
+     2 ms: FIX8::conjure_enum<std::errc>::_enum_name<std::errc::no_space_on_dev... (1 times, avg 2 ms)
+     2 ms: std::__make_heap<std::tuple<std::errc, std::basic_string_view<char>>... (1 times, avg 2 ms)
+
+**** Template sets that took longest to instantiate:
+   290 ms: FIX8::conjure_enum<$> (1 times, avg 290 ms)
+   140 ms: FIX8::conjure_enum<$>::_entries<$> (1 times, avg 140 ms)
+    82 ms: FIX8::conjure_enum<$>::_values<$> (1 times, avg 82 ms)
+    78 ms: FIX8::conjure_enum<$>::_enum_name<$> (47 times, avg 1 ms)
+    55 ms: FIX8::conjure_enum<$>::_is_valid<$> (72 times, avg 0 ms)
+    38 ms: FIX8::conjure_enum<$>::_get_name<$> (47 times, avg 0 ms)
+    15 ms: std::tuple<$>::tuple<$> (20 times, avg 0 ms)
+    13 ms: std::reverse_iterator<$> (2 times, avg 6 ms)
+     8 ms: FIX8::conjure_enum<$>::_sorted_entries (1 times, avg 8 ms)
+     7 ms: std::basic_string<$> (5 times, avg 1 ms)
+     6 ms: std::sort<$> (1 times, avg 6 ms)
+     6 ms: std::__sort<$> (1 times, avg 6 ms)
+     5 ms: std::tuple<$> (2 times, avg 2 ms)
+     5 ms: std::_Hashtable<$> (2 times, avg 2 ms)
+     5 ms: std::unordered_map<$> (1 times, avg 5 ms)
+     5 ms: std::__introsort_loop<$> (1 times, avg 5 ms)
+     4 ms: std::array<$> (2 times, avg 2 ms)
+     4 ms: std::basic_string<$>::_M_construct<$> (4 times, avg 1 ms)
+     3 ms: FIX8::conjure_enum<$>::enum_to_string (1 times, avg 3 ms)
+     3 ms: std::__and_<$> (4 times, avg 0 ms)
+     2 ms: std::__unguarded_partition_pivot<$> (1 times, avg 2 ms)
+     2 ms: std::__move_median_to_first<$> (1 times, avg 2 ms)
+     2 ms: std::iter_swap<$> (1 times, avg 2 ms)
+     2 ms: std::__partial_sort<$> (1 times, avg 2 ms)
+     2 ms: std::copy<$> (3 times, avg 0 ms)
+     2 ms: std::__heap_select<$> (1 times, avg 2 ms)
+     2 ms: std::_Tuple_impl<$> (2 times, avg 1 ms)
+     2 ms: std::__make_heap<$> (1 times, avg 2 ms)
+     1 ms: std::optional<$> (1 times, avg 1 ms)
+     1 ms: std::to_array<$> (1 times, avg 1 ms)
+
+**** Functions that took longest to compile:
+     2 ms: test_conjure_enum(std::errc) (/home/davidd/prog/conjure_enum_tclass/examples/cbenchmark.cpp)
+
+**** Function sets that took longest to compile / optimize:
+
+**** Expensive headers:
+181 ms: /home/davidd/prog/conjure_enum_tclass/include/fix8/conjure_enum.hpp (included 1 times, avg 181 ms), included via:
+  1x: <direct include>
+
+173 ms: /usr/include/c++/14/system_error (included 1 times, avg 173 ms), included via:
+  1x: <direct include>
+
+  done in 0.0s.
+</pre></p></details>
 
 ---
 # 8. Compiler support

@@ -761,7 +761,7 @@ _output_
 8 numbers::eight
 9 numbers::nine
 ```
-## x) `iterator_adaptor`
+## x) `iterator_adaptor` ![](assets/notminimalred.svg)
 ```c++
 template<valid_enum T>
 struct iterator_adaptor;
@@ -801,7 +801,7 @@ _output_
 0 numbers::zero
 9 numbers::nine
 ```
-## z) `ostream_enum_operator`
+## z) `ostream_enum_operator` ![](assets/notminimalred.svg)
 ```c++
 template<typename CharT, typename Traits=std::char_traits<CharT>, valid_enum T>
 constexpr std::basic_ostream<CharT, Traits>& operator<<(std::basic_ostream<CharT, Traits>& os, T value);

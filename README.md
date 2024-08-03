@@ -239,7 +239,7 @@ _output_
 ```CSV
 10
 ```
-## g) `names`
+## g) `names` ![](assets/notminimalred.svg)
 ```c++
 static constexpr std::array<std::string_view, std::size_t> names;
 ```
@@ -443,7 +443,7 @@ true
 false
 true
 ```
-## o) `for_each`, `for_each_n`
+## o) `for_each`, `for_each_n` ![](assets/notminimalred.svg)
 ```c++
 template<typename Fn, typename... Args>
 requires std::invocable<Fn&&, T, Args...>
@@ -547,7 +547,7 @@ _output_
 ```CSV
 160
 ```
-## p) `dispatch`
+## p) `dispatch` ![](assets/notminimalred.svg)
 ```c++
 template<typename Fn>
 static constexpr bool tuple_comp(const std::tuple<T, Fn>& pl, const std::tuple<T, Fn>& pr);
@@ -734,7 +734,7 @@ true
 false
 false
 ```
-## w) `iterators`
+## w) `iterators` ![](assets/notminimalred.svg)
 ```c++
 static constexpr auto cbegin();
 static constexpr auto cend();
@@ -784,7 +784,7 @@ _output_
 8
 9
 ```
-## y) `front, back`
+## y) `front, back` ![](assets/notminimalred.svg)
 ```c++
 static constexpr auto front();
 static constexpr auto back();
@@ -1423,10 +1423,14 @@ Static structures and API calls that will be excluded are:
 scoped_entries
 unscoped_entries
 rev_scoped_entries
+names
 unscoped_names
 remove_scope
 add_scope
 unscoped_string_to_enum
+for_each,for_each_n
+dispatch
+iterators
 enum_to_string //noscope option not available
 ```
 These are marked ![](assets/notminimalred.svg) in the API documentation above.
@@ -1453,8 +1457,6 @@ int main(void)
 {
    for(const auto& [a, b] : conjure_enum<component>::entries)
       std::cout << conjure_enum<component>::enum_to_int(a) << ' ' << b << '\n';
-   for(const auto& a : conjure_enum<component>::names)
-      std::cout << a << '\n';
    std::cout << static_cast<int>(conjure_enum<component>::string_to_enum("component::path").value()) << '\n';
    std::cout << conjure_enum<component>::get_enum_min_value() << '/' << conjure_enum<component>::get_enum_max_value() << '\n';
    return 0;

@@ -1161,6 +1161,13 @@ not found: 5
 # 5. API and Examples using `conjure_type`
 `conjure_type` is a general purpose class allowing you to extract a string representation of any typename.
 The string will be stored statically by the compiler, so you can use the statically generated value `name` to obtain your type.
+> [!IMPORTANT]
+> You must include
+```C++
+#include <fix8/conjure_enum.hpp>
+#include <fix8/conjure_type.hpp>
+```
+
 ```c++
 template<typename T>
 class conjure_type;

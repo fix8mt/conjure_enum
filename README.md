@@ -1168,12 +1168,13 @@ The string will be stored statically by the compiler, so you can use the statica
 > #include <fix8/conjure_type.hpp>
 > ```
 
+## `name`
+This static member is generated for your type. It is a `fixed_string` but has a built-in `std::string_view` operator.
 ```c++
 template<typename T>
 class conjure_type;
 static constexpr fixed_string name;
 ```
-This static member is generated for your type. It is a `fixed_string` but has a built-in `std::string_view` operator.
 
 ```c++
 class foo;

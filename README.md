@@ -1163,10 +1163,10 @@ not found: 5
 The string will be stored statically by the compiler, so you can use the statically generated value `name` to obtain your type.
 > [!IMPORTANT]
 > You must include
-```C++
-#include <fix8/conjure_enum.hpp>
-#include <fix8/conjure_type.hpp>
-```
+> ```C++
+> #include <fix8/conjure_enum.hpp>
+> #include <fix8/conjure_type.hpp>
+> ```
 
 ```c++
 template<typename T>

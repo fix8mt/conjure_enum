@@ -44,8 +44,6 @@ int main(void)
 {
 	for(const auto& [a, b] : conjure_enum<component>::entries)
 		std::cout << conjure_enum<component>::enum_to_int(a) << ' ' << b << '\n';
-	for(const auto& a : conjure_enum<component>::names)
-		std::cout << a << '\n';
 	std::cout << static_cast<int>(conjure_enum<component>::string_to_enum("component::path").value()) << '\n';
 	std::cout << conjure_enum<component>::get_enum_min_value() << '/' << conjure_enum<component>::get_enum_max_value() << '\n';
 	return 0;

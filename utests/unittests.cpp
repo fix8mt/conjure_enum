@@ -34,6 +34,8 @@
 #include <iostream>
 #include <sstream>
 #include <fix8/conjure_enum.hpp>
+#include <fix8/conjure_enum_bitset.hpp>
+#include <fix8/conjure_type.hpp>
 
 //-----------------------------------------------------------------------------------------
 using namespace FIX8;

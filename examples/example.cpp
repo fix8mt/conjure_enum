@@ -40,6 +40,8 @@
 #endif
 
 #include <fix8/conjure_enum.hpp>
+#include <fix8/conjure_enum_bitset.hpp>
+#include <fix8/conjure_type.hpp>
 
 //-----------------------------------------------------------------------------------------
 using namespace std::literals::string_view_literals;

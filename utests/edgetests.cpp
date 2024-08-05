@@ -31,6 +31,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include <string_view>
 #include <fix8/conjure_enum.hpp>
+#include <fix8/conjure_type.hpp>
 
 //-----------------------------------------------------------------------------------------
 class foobat{};

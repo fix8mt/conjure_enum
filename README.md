@@ -864,7 +864,7 @@ for the bit positions (and names).
 > [!WARNING]
 > Your enum _must_ be continuous. The last value must be less than the count of enumerations.
 > We decided on this restriction for both simplicity and practicality - bitsets only really make sense when represented in this manner.
-> [!INFO]
+> [!IMPORTANT]
 > You must include
 ```C++
 #include <fix8/conjure_enum.hpp>

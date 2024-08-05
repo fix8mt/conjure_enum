@@ -1168,7 +1168,7 @@ The string will be stored statically by the compiler, so you can use the statica
 > #include <fix8/conjure_type.hpp>
 > ```
 
-## `name`
+## a) `name`
 This static member is generated for your type. It is a `fixed_string` but has a built-in `std::string_view` operator.
 ```c++
 template<typename T>
@@ -1226,6 +1226,12 @@ std::cout << conjure_type<decltype(fstrv)>::name << '\n';
 _output_
 ```CSV
 std::basic_string_view<char>
+```
+
+## b) `as_string_view`
+Return the name as a `std::string_view`.
+```c++
+static constexpr std::string_view as_string_view();
 ```
 
 ---

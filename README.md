@@ -867,10 +867,10 @@ for the bit positions (and names).
 
 > [!IMPORTANT]
 > You must include
-```C++
-#include <fix8/conjure_enum.hpp>
-#include <fix8/conjure_enum_bitset.hpp>
-```
+> ```C++
+> #include <fix8/conjure_enum.hpp>
+> #include <fix8/conjure_enum_bitset.hpp>
+> ```
 
 ## a) Creating an `enum_bitset`
 ```c++

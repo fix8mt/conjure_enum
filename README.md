@@ -1234,6 +1234,23 @@ Return the name as a `std::string_view`.
 static constexpr std::string_view as_string_view();
 ```
 
+## c) `tpeek`
+```c++
+static consteval const char *tpeek();
+```
+
+These functions return `std::source_location::current().function_name()` as `const char*` strings for type.
+The actual output is implementation dependent. See [Results of `source_location`](reference/source_location.md) for implementation specific `std::source_location` results.
+
+The following code:
+```c++
+std::cout << conjure_type<test>::tpeek() << '\n';
+```
+Generates this output with gcc:
+```CSV
+static consteval const char* FIX8::conjure_type<T>::tpeek() [with T = test]
+```
+
 ---
 # 6. Building
 This implementation is header only. Apart from standard C++20 includes there are no external dependencies needed in your application.

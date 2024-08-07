@@ -57,6 +57,8 @@
 > [!TIP]
 > Use the built-in [table of contents](https://github.blog/changelog/2021-04-13-table-of-contents-support-in-markdown-files/) to navigate this guide.
 > Even better in [full read view](./README.md) of this page.
+>
+> For the latest cutting edge changes, see the [dev branch](https://github.com/fix8mt/conjure_enum/tree/dev).
 
 ---
 # 2. Introduction
@@ -66,14 +68,12 @@ Based on the awesome work in [`magic_enum`](https://github.com/Neargye/magic_enu
 this library offers a streamlined and powerful way to add reflection capabilities to your C++ enums and other types. We've optimized the core functionality,
 focusing on the main features developers usually want. We've also added general purpose typename reflection for any type.
 
-For the latest cutting edge changes, see the [dev branch](https://github.com/fix8mt/conjure_enum/tree/dev).
-
 ## b) Embracing C++20
 
 `conjure_enum`[^1] takes full advantage of recently added C++20 features. We've leveraged the convenience of [`std::source_location`](https://en.cppreference.com/w/cpp/utility/source_location) and
 unlocked the potential of [`constexpr` algorithms](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2017/p0202r3.html) and [concepts](https://en.cppreference.com/w/cpp/language/constraints).
 
-## c) Key Benefits
+## c) Highlights
 
 - ***Single Header-Only***: No external dependencies, simplifying integration into your project
 - ***Modern C++20***: Entirely `constexpr` for compile-time safety, efficiency and performance; no macros

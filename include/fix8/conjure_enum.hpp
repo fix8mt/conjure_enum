@@ -105,7 +105,7 @@ protected:
 //-----------------------------------------------------------------------------------------
 // compiler specifics
 //-----------------------------------------------------------------------------------------
-class cs : public static_only
+class cs final : public static_only
 {
 	static constexpr auto _specifics
 	{
@@ -157,7 +157,7 @@ concept valid_enum = requires(T)
 // You can specialise this class to define a custom range for your enum
 //-----------------------------------------------------------------------------------------
 template<valid_enum T>
-struct enum_range : public static_only
+struct enum_range final : public static_only
 {
 	static constexpr int min{FIX8_CONJURE_ENUM_MIN_VALUE}, max{FIX8_CONJURE_ENUM_MAX_VALUE};
 };

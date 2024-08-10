@@ -103,48 +103,26 @@ protected:
 //-----------------------------------------------------------------------------------------
 // compiler specifics
 //-----------------------------------------------------------------------------------------
+	using namespace std::literals::string_view_literals;
 class cs : public static_only
 {
-	/*
 	static constexpr auto _specifics
 	{
 		std::to_array<std::tuple<std::string_view, char, std::string_view, char>>
 		({
 #if defined __clang__
-			{ "e = ", ']', "(anonymous namespace)", '(' }, { "T = ", ']', "(anonymous namespace)", '(' },
+			{ "e = "sv, ']', "(anonymous namespace)"sv, '(' }, { "T = "sv, ']', "(anonymous namespace)"sv, '(' },
 #elif defined __GNUC__
-			{ "e = ", ';', "<unnamed>", '<' }, { "T = ", ']', "{anonymous}", '{' },
+			{ "e = "sv, ';', "<unnamed>"sv, '<' }, { "T = "sv, ']', "{anonymous}"sv, '{' },
 #elif defined _MSC_VER
-			{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "::tpeek", '<', "enum `anonymous namespace'::", '\0' },
-			{ "", '\0', "`anonymous namespace'::", '\0' }, { "", '\0', "enum ", '\0' }, { "", '\0', "class ", '\0' },
-			{ "", '\0', "struct ", '\0' },
+			{ "epeek<"sv, '>', "`anonymous-namespace'"sv, '`' }, { "::tpeek"sv, '<', "enum `anonymous namespace'::"sv, '\0' },
+			{ ""sv, '\0', "`anonymous namespace'::"sv, '\0' }, { ""sv, '\0', "enum "sv, '\0' }, { ""sv, '\0', "class "sv, '\0' },
+			{ ""sv, '\0', "struct "sv, '\0' },
 #else
 # error "conjure_enum not supported by your compiler"
 #endif
 		})
 	};
-	*/
-
-#if defined __clang__
-	static constexpr std::array<std::tuple<std::string_view, char, std::string_view, char>, 2> _specifics
-	{
-		{{ "e = ", ']', "(anonymous namespace)", '(' }, { "T = ", ']', "(anonymous namespace)", '(' }},
-	};
-#elif defined __GNUC__
-	static constexpr std::array<std::tuple<std::string_view, char, std::string_view, char>, 2> _specifics
-	{
-		{{ "e = ", ';', "<unnamed>", '<' }, { "T = ", ']', "{anonymous}", '{' }},
-	};
-#elif defined _MSC_VER
-	static constexpr std::array<std::tuple<std::string_view, char, std::string_view, char>, 6> _specifics
-	{
-		{{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "::tpeek", '<', "enum `anonymous namespace'::", '\0' },
-		{ "", '\0', "`anonymous namespace'::", '\0' }, { "", '\0', "enum ", '\0' }, { "", '\0', "class ", '\0' },
-		{ "", '\0', "struct ", '\0' }},
-	};
-#else
-# error "conjure_enum not supported by your compiler"
-#endif
 
 public:
 	enum class stype { enum_t, type_t, extype_t0, extype_t1, extype_t2, extype_t3 };

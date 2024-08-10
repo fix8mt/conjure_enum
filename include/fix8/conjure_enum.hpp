@@ -181,6 +181,11 @@ public:
 	using enum_tuple = std::tuple<T, std::string_view>;
 	using scoped_tuple = std::tuple<std::string_view, std::string_view>;
 
+	static constexpr const char *tpeek() noexcept { return std::source_location::current().function_name(); }
+
+	template<T e>
+	static constexpr const char *epeek() noexcept { return std::source_location::current().function_name(); }
+
 private:
 	template<T e>
 	static constexpr auto _enum_name() noexcept
@@ -204,6 +209,9 @@ private:
 		std::sort(tmp.begin(), tmp.end(), _tuple_comp_rev);
 		return tmp;
 	}
+
+	template<T e>
+	static constexpr std::string_view _epeek_v { epeek<e>() };
 
 	template<T e>
 	static constexpr bool _is_valid() noexcept
@@ -282,16 +290,6 @@ private:
 	{
 		return std::get<std::string_view>(pl) < std::get<std::string_view>(pr);
 	}
-
-public:
-	static consteval const char *tpeek() noexcept { return std::source_location::current().function_name(); }
-
-	template<T e>
-	static consteval const char *epeek() noexcept { return std::source_location::current().function_name(); }
-
-private:
-	template<T e>
-	static constexpr std::string_view _epeek_v { epeek<e>() };
 
 public:
 	struct is_scoped : std::bool_constant<requires

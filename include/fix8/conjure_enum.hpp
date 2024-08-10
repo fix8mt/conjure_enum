@@ -212,22 +212,22 @@ private:
 		if constexpr (constexpr auto ep { from.rfind(cs::get_spec<sval::start,stype::enum_t>()) }; ep == std::string_view::npos)
 			return false;
 #if defined __clang__
-#if not defined FIX8_CONJURE_ENUM_MINIMAL
 		else if constexpr (from[ep + cs::get_spec<sval::start,stype::enum_t>().size()] == '(')
 		{
 			if constexpr (from[ep + cs::get_spec<sval::start,stype::enum_t>().size() + 1] == '(')
 				return false;
+#if not defined FIX8_CONJURE_ENUM_MINIMAL
 			if constexpr (constexpr auto lstr { from.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()) };
 				lstr.find(cs::get_spec<sval::anon_str,stype::enum_t>()) != std::string_view::npos)	// is anon
+#endif
 					return true;
 		}
-#endif
 		else if constexpr (from.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()).find_first_of(cs::get_spec<sval::end,stype::enum_t>()) != std::string_view::npos)
 			return true;
 		return false;
 #else
 		else if constexpr (from[ep + cs::get_spec<sval::start,stype::enum_t>().size()] != '('
-			&& from.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()).find_first_of(cs::get_spec<sval::end,stype::enum_t>()) != std::string_view::npos)
+			&& from.find_first_of(cs::get_spec<sval::end,stype::enum_t>(), ep + cs::get_spec<sval::start,stype::enum_t>().size()) != std::string_view::npos)
 				return true;
 		else
 			return false;
@@ -344,13 +344,11 @@ public:
 	// contains
 	static constexpr bool contains(T value) noexcept
 	{
-		const auto result { std::equal_range(values.cbegin(), values.cend(), value, _value_comp) };
-		return result.first != result.second;
+		return std::binary_search(values.cbegin(), values.cend(), value, _value_comp);
    }
 	static constexpr bool contains(std::string_view str) noexcept
 	{
-		const auto result { std::equal_range(sorted_entries.cbegin(), sorted_entries.cend(), enum_tuple(T{}, str), _tuple_comp_rev) };
-		return result.first != result.second;
+		return std::binary_search(sorted_entries.cbegin(), sorted_entries.cend(), enum_tuple(T{}, str), _tuple_comp_rev);
 	}
 	template<T e>
 	static constexpr bool contains() noexcept { return contains(e); }

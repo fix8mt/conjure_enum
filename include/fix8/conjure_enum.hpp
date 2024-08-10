@@ -56,6 +56,8 @@
 //-----------------------------------------------------------------------------------------
 namespace FIX8 {
 
+using namespace std::literals::string_view_literals;
+
 //-----------------------------------------------------------------------------------------
 // global default enum range
 //-----------------------------------------------------------------------------------------
@@ -103,7 +105,6 @@ protected:
 //-----------------------------------------------------------------------------------------
 // compiler specifics
 //-----------------------------------------------------------------------------------------
-	using namespace std::literals::string_view_literals;
 class cs : public static_only
 {
 	static constexpr auto _specifics
@@ -172,7 +173,7 @@ struct enum_range : public static_only
 
 //-----------------------------------------------------------------------------------------
 template<valid_enum T>
-class conjure_enum : public static_only
+class conjure_enum final : public static_only
 {
 	static constexpr int enum_min_value{enum_range<T>::min}, enum_max_value{enum_range<T>::max};
 	static_assert(enum_max_value > enum_min_value,

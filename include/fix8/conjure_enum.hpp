@@ -181,10 +181,10 @@ public:
 	using enum_tuple = std::tuple<T, std::string_view>;
 	using scoped_tuple = std::tuple<std::string_view, std::string_view>;
 
-	static constexpr const char *tpeek() noexcept { return std::source_location::current().function_name(); }
+	static consteval const char *tpeek() noexcept { return std::source_location::current().function_name(); }
 
 	template<T e>
-	static constexpr const char *epeek() noexcept { return std::source_location::current().function_name(); }
+	static consteval const char *epeek() noexcept { return std::source_location::current().function_name(); }
 
 private:
 	template<T e>

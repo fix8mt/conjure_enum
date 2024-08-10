@@ -676,7 +676,7 @@ _output_
 true
 false
 ```
-## s) `type_name`
+## s) `type_name` ![](assets/notminimalred.svg)
 ```c++
 static constexpr std::string_view type_name();
 ```
@@ -1467,6 +1467,7 @@ remove_scope
 add_scope
 unscoped_string_to_enum
 for_each,for_each_n
+type_name
 dispatch
 iterators
 enum_to_string //noscope option not available
@@ -1602,7 +1603,7 @@ $
 
 It can be observed that there is only _one_ copy of the scoped enum value string in the executable.
 
-## f) Clang compile profiling
+## f) Compilation profiling (Clang)
 You can profile the compile time for Clang (other compilers TBA). Firstly install [ClangBuildAnalyzer](https://github.com/aras-p/ClangBuildAnalyzer).
 Then configure `conjure_enum` with:
 ```CMake

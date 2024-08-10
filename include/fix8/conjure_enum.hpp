@@ -216,23 +216,22 @@ private:
 	template<T e>
 	static constexpr bool _is_valid() noexcept
 	{
-		constexpr std::string_view from{_epeek_v<e>};
-		if constexpr (constexpr auto ep { from.rfind(cs::get_spec<sval::start,stype::enum_t>()) }; ep == std::string_view::npos)
+		if constexpr (constexpr auto ep { _epeek_v<e>.rfind(cs::get_spec<sval::start,stype::enum_t>()) }; ep == std::string_view::npos)
 			return false;
 #if defined __clang__
-		else if constexpr (from[ep + cs::get_spec<sval::start,stype::enum_t>().size()] == '(')
+		else if constexpr (_epeek_v<e>[ep + cs::get_spec<sval::start,stype::enum_t>().size()] == '(')
 		{
-			if constexpr (from[ep + cs::get_spec<sval::start,stype::enum_t>().size() + 1] == '(')
+			if constexpr (_epeek_v<e>[ep + cs::get_spec<sval::start,stype::enum_t>().size() + 1] == '(')
 				return false;
-			if constexpr (from.find(cs::get_spec<sval::anon_str,stype::enum_t>(), ep + cs::get_spec<sval::start,stype::enum_t>().size()) != std::string_view::npos)	// is anon
+			if constexpr (_epeek_v<e>.find(cs::get_spec<sval::anon_str,stype::enum_t>(), ep + cs::get_spec<sval::start,stype::enum_t>().size()) != std::string_view::npos)	// is anon
 				return true;
 		}
-		else if constexpr (from.find_first_of(cs::get_spec<sval::end,stype::enum_t>(), ep + cs::get_spec<sval::start,stype::enum_t>().size()) != std::string_view::npos)
+		else if constexpr (_epeek_v<e>.find_first_of(cs::get_spec<sval::end,stype::enum_t>(), ep + cs::get_spec<sval::start,stype::enum_t>().size()) != std::string_view::npos)
 			return true;
 		return false;
 #else
-		else if constexpr (from[ep + cs::get_spec<sval::start,stype::enum_t>().size()] != '('
-			&& from.find_first_of(cs::get_spec<sval::end,stype::enum_t>(), ep + cs::get_spec<sval::start,stype::enum_t>().size()) != std::string_view::npos)
+		else if constexpr (_epeek_v<e>[ep + cs::get_spec<sval::start,stype::enum_t>().size()] != '('
+			&& _epeek_v<e>.find_first_of(cs::get_spec<sval::end,stype::enum_t>(), ep + cs::get_spec<sval::start,stype::enum_t>().size()) != std::string_view::npos)
 				return true;
 		else
 			return false;
@@ -255,22 +254,21 @@ private:
 	template<T e>
 	static constexpr std::string_view _get_name() noexcept
 	{
-		constexpr std::string_view from{_epeek_v<e>};
-		constexpr auto ep { from.rfind(cs::get_spec<sval::start,stype::enum_t>()) };
+		constexpr auto ep { _epeek_v<e>.rfind(cs::get_spec<sval::start,stype::enum_t>()) };
 		if constexpr (ep == std::string_view::npos)
 			return {};
-		if constexpr (from[ep + cs::get_spec<sval::start,stype::enum_t>().size()] == cs::get_spec<sval::anon_start,stype::enum_t>())
+		if constexpr (_epeek_v<e>[ep + cs::get_spec<sval::start,stype::enum_t>().size()] == cs::get_spec<sval::anon_start,stype::enum_t>())
 		{
 #if defined __clang__
-			if constexpr (from[ep + cs::get_spec<sval::start,stype::enum_t>().size() + 1] == cs::get_spec<sval::anon_start,stype::enum_t>())
+			if constexpr (_epeek_v<e>[ep + cs::get_spec<sval::start,stype::enum_t>().size() + 1] == cs::get_spec<sval::anon_start,stype::enum_t>())
 				return {};
 #endif
-			if (constexpr auto lstr { from.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()) };
+			if (constexpr auto lstr { _epeek_v<e>.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()) };
 				lstr.find(cs::get_spec<sval::anon_str,stype::enum_t>()) != std::string_view::npos)	// is anon
 					if constexpr (constexpr auto lc { lstr.find_first_of(cs::get_spec<sval::end,stype::enum_t>()) }; lc != std::string_view::npos)
 						return lstr.substr(cs::get_spec<sval::anon_str,stype::enum_t>().size() + 2, lc - (cs::get_spec<sval::anon_str,stype::enum_t>().size() + 2)); // eat "::"
 		}
-		constexpr std::string_view result { from.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()) };
+		constexpr std::string_view result { _epeek_v<e>.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()) };
 		if constexpr (constexpr auto lc { result.find_first_of(cs::get_spec<sval::end,stype::enum_t>()) }; lc != std::string_view::npos)
 			return result.substr(0, lc);
 		else

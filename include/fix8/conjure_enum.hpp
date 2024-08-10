@@ -212,6 +212,7 @@ private:
 		if constexpr (constexpr auto ep { from.rfind(cs::get_spec<sval::start,stype::enum_t>()) }; ep == std::string_view::npos)
 			return false;
 #if defined __clang__
+#if not defined FIX8_CONJURE_ENUM_MINIMAL
 		else if constexpr (from[ep + cs::get_spec<sval::start,stype::enum_t>().size()] == '(')
 		{
 			if constexpr (from[ep + cs::get_spec<sval::start,stype::enum_t>().size() + 1] == '(')
@@ -220,6 +221,7 @@ private:
 				lstr.find(cs::get_spec<sval::anon_str,stype::enum_t>()) != std::string_view::npos)	// is anon
 					return true;
 		}
+#endif
 		else if constexpr (from.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()).find_first_of(cs::get_spec<sval::end,stype::enum_t>()) != std::string_view::npos)
 			return true;
 		return false;
@@ -252,6 +254,7 @@ private:
 		constexpr auto ep { from.rfind(cs::get_spec<sval::start,stype::enum_t>()) };
 		if constexpr (ep == std::string_view::npos)
 			return {};
+#if not defined FIX8_CONJURE_ENUM_MINIMAL
 		if constexpr (from[ep + cs::get_spec<sval::start,stype::enum_t>().size()] == cs::get_spec<sval::anon_start,stype::enum_t>())
 		{
 #if defined __clang__
@@ -263,6 +266,7 @@ private:
 					if constexpr (constexpr auto lc { lstr.find_first_of(cs::get_spec<sval::end,stype::enum_t>()) }; lc != std::string_view::npos)
 						return lstr.substr(cs::get_spec<sval::anon_str,stype::enum_t>().size() + 2, lc - (cs::get_spec<sval::anon_str,stype::enum_t>().size() + 2)); // eat "::"
 		}
+#endif
 		constexpr std::string_view result { from.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()) };
 		if constexpr (constexpr auto lc { result.find_first_of(cs::get_spec<sval::end,stype::enum_t>()) }; lc != std::string_view::npos)
 			return result.substr(0, lc);
@@ -289,33 +293,6 @@ public:
 
 	template<T e>
 	static consteval const char *epeek() noexcept { return std::source_location::current().function_name(); }
-
-	static constexpr std::string_view type_name() noexcept
-	{
-		constexpr std::string_view from{tpeek()};
-#if defined _MSC_VER
-		constexpr auto ep { from.rfind(cs::get_spec<sval::start,stype::type_t>()) };
-		if constexpr (ep == std::string_view::npos)
-			return {};
-		if constexpr (constexpr auto lc { from.find_first_of(cs::get_spec<sval::end,stype::type_t>()) }; lc != std::string_view::npos)
-		{
-			constexpr auto e1 { from.substr(lc + 1, ep - lc - 2) };
-			CHKMSSTR(e1,type_t);
-			CHKMSSTR(e1,extype_t1);
-		}
-		else
-			return {};
-#else
-		if constexpr (constexpr auto ep { from.rfind(cs::get_spec<sval::start,stype::type_t>()) }; ep != std::string_view::npos)
-		{
-			constexpr auto result { from.substr(ep + cs::get_spec<sval::start,stype::type_t>().size()) };
-			if constexpr (constexpr auto lc { result.find_first_of(cs::get_spec<sval::end,stype::type_t>()) }; lc != std::string_view::npos)
-				return result.substr(0, lc);
-		}
-		else
-			return {};
-#endif
-	}
 
 	struct is_scoped : std::bool_constant<requires
 	{

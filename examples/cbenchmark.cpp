@@ -28,6 +28,10 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //----------------------------------------------------------------------------------------
+// CLI msvc build benchmark from your build dir
+// call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
+// cl /nologo /MD /std:c++latest /Bt+ /I ..\include  ..\examples\cbenchmark.cpp|find "c1xx.dll"
+//----------------------------------------------------------------------------------------
 #include <system_error>
 #define FIX8_CONJURE_ENUM_MINIMAL
 #include <fix8/conjure_enum.hpp>

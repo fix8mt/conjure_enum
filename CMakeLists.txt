@@ -33,28 +33,28 @@ project (conjure_enum
    LANGUAGES CXX
 	HOMEPAGE_URL https://github.com/fix8mt/conjure_enum
    DESCRIPTION "Lightweight C++20 enum and typename reflection"
-   VERSION 1.0.0)
+   VERSION 1.0.2)
 
 # to disable strip:
 # cmake -DBUILD_STRIP_EXE=false ..
 option(BUILD_STRIP_EXE "enable stripping of non-unittest executables" true)
-message("-- Build strip exes: ${BUILD_STRIP_EXE}")
+message("-- Build: strip exes ${BUILD_STRIP_EXE}")
 
 # to disable warnings:
 # cmake -DBUILD_ALL_WARNINGS=false ..
 option(BUILD_ALL_WARNINGS "enable building with all warnings" true)
-message("-- Build with all warnings : ${BUILD_ALL_WARNINGS}")
+message("-- Build: with all warnings ${BUILD_ALL_WARNINGS}")
 
 # to disable building unit tests:
 # cmake -DBUILD_UNITTESTS=false ..
 option(BUILD_UNITTESTS "enable building unit tests" true)
-message("-- Build unit tests: ${BUILD_UNITTESTS}")
+message("-- Build: unit tests ${BUILD_UNITTESTS}")
 
 # to enable clang build profiler:
 # cmake -DBUILD_CLANG_PROFILER=true ..
 # see examples/cbenchmark.sh
 option(BUILD_CLANG_PROFILER "enable clang build profiler" false)
-message("-- Build clang profiler: ${BUILD_CLANG_PROFILER}")
+message("-- Build: clang profiler ${BUILD_CLANG_PROFILER}")
 if(BUILD_CLANG_PROFILER)
 	if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 		add_compile_options(-ftime-trace)

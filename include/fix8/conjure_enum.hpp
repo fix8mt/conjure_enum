@@ -189,16 +189,6 @@ public:
 	static consteval const char *epeek() noexcept { return std::source_location::current().function_name(); }
 
 private:
-	template<T e>
-	static constexpr auto _enum_name() noexcept
-	{
-		constexpr auto result { _get_name<e>() };
-		return fixed_string<result.size()>(result);
-	}
-
-	template<T e>
-	static constexpr auto _enum_name_v { _enum_name<e>() };
-
 	template<std::size_t... I>
 	static constexpr auto _entries(std::index_sequence<I...>) noexcept
 	{
@@ -275,12 +265,18 @@ private:
 					if constexpr (constexpr auto lc { lstr.find_first_of(cs::get_spec<sval::end,stype::enum_t>()) }; lc != std::string_view::npos)
 						return lstr.substr(cs::get_spec<sval::anon_str,stype::enum_t>().size() + 2, lc - (cs::get_spec<sval::anon_str,stype::enum_t>().size() + 2)); // eat "::"
 		}
-		//constexpr std::string_view result { _epeek_v<e>.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()) };
-		if constexpr (constexpr auto lc { _epeek_v<e>.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()).find_first_of(cs::get_spec<sval::end,stype::enum_t>()) }; lc != std::string_view::npos)
-			return _epeek_v<e>.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()).substr(0, lc);
+		constexpr std::string_view result { _epeek_v<e>.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()) };
+		if constexpr (constexpr auto lc { result.find_first_of(cs::get_spec<sval::end,stype::enum_t>()) }; lc != std::string_view::npos)
+			return result.substr(0, lc);
 		else
 			return {};
 	}
+
+	template<T e>
+	static constexpr auto _get_name_v { _get_name<e>() };
+
+	template<T e>
+	static constexpr auto _enum_name_v { fixed_string<_get_name_v<e>.size()>(_get_name_v<e>) };
 
 	/// comparators
 	static constexpr bool _value_comp(const T& pl, const T& pr) noexcept
@@ -358,7 +354,7 @@ public:
 
 	// string <==> enum
 	template<T e>
-	static constexpr std::string_view enum_to_string() noexcept { return _get_name<e>(); }
+	static constexpr std::string_view enum_to_string() noexcept { return _get_name_v<e>; }
 
 	static constexpr std::string_view enum_to_string(T value, [[maybe_unused]] bool noscope=false) noexcept
 	{

@@ -243,6 +243,7 @@ private:
 	template<std::size_t... I>
 	static constexpr auto _values(std::index_sequence<I...>) noexcept
 	{
+#if not defined FIX8_CONJURE_ENUM_BYPASS
 		constexpr std::array<bool, sizeof...(I)> valid { _is_valid<static_cast<T>(enum_min_value + I)>()... };
 		constexpr auto valid_cnt { std::count_if(valid.cbegin(), valid.cend(), [](bool val) noexcept { return val; }) };
 		static_assert(valid_cnt > 0, "conjure_enum requires non-empty enum");
@@ -250,6 +251,9 @@ private:
 		for(std::size_t idx{}, nn{}; nn < valid_cnt; ++idx)
 			if (valid[idx])
 				vals[nn++] = static_cast<T>(enum_min_value + idx);
+#else
+		std::array<T, sizeof...(I)> vals{static_cast<T>(enum_min_value + I)... };
+#endif
 		return vals;
 	}
 

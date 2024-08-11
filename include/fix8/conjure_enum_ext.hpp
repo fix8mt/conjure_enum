@@ -107,9 +107,6 @@ public:
 		return _process_scope(scoped_entries, what);
 	}
 
-	template<T e>
-	static constexpr bool is_valid() noexcept { return _is_valid<e>(); }
-
 	// iterators
 	static constexpr auto cbegin() noexcept { return entries.cbegin(); }
 	static constexpr auto cend() noexcept { return entries.cend(); }

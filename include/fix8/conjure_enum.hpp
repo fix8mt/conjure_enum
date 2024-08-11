@@ -302,6 +302,9 @@ public:
 		requires !std::convertible_to<T, std::underlying_type_t<T>>;
 	}>{};
 
+	template<T e>
+	static constexpr bool is_valid() noexcept { return _is_valid<e>(); }
+
 	static constexpr auto count() noexcept { return values.size(); }
 
 	// scope ops

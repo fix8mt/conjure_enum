@@ -84,10 +84,9 @@ private:
 	static constexpr std::string_view _process_scope([[maybe_unused]] const auto& entr, std::string_view what) noexcept
 	{
 		if constexpr (is_scoped())
-			if (const auto result { std::equal_range(entr.cbegin(),
-				entr.cend(), scoped_tuple(what, std::string_view()), _scoped_comp) };
-					result.first != result.second)
-						return std::get<1>(*result.first);
+			if (const auto result { std::equal_range(entr.cbegin(), entr.cend(), scoped_tuple(what, std::string_view()), _scoped_comp) };
+				result.first != result.second)
+					return std::get<1>(*result.first);
 		return what;
 	}
 

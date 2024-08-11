@@ -275,9 +275,9 @@ private:
 					if constexpr (constexpr auto lc { lstr.find_first_of(cs::get_spec<sval::end,stype::enum_t>()) }; lc != std::string_view::npos)
 						return lstr.substr(cs::get_spec<sval::anon_str,stype::enum_t>().size() + 2, lc - (cs::get_spec<sval::anon_str,stype::enum_t>().size() + 2)); // eat "::"
 		}
-		constexpr std::string_view result { _epeek_v<e>.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()) };
-		if constexpr (constexpr auto lc { result.find_first_of(cs::get_spec<sval::end,stype::enum_t>()) }; lc != std::string_view::npos)
-			return result.substr(0, lc);
+		//constexpr std::string_view result { _epeek_v<e>.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()) };
+		if constexpr (constexpr auto lc { _epeek_v<e>.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()).find_first_of(cs::get_spec<sval::end,stype::enum_t>()) }; lc != std::string_view::npos)
+			return _epeek_v<e>.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()).substr(0, lc);
 		else
 			return {};
 	}

@@ -34,7 +34,7 @@
 //----------------------------------------------------------------------------------------
 #include <system_error>
 #define FIX8_CONJURE_ENUM_MINIMAL
-#define FIX8_CONJURE_ENUM_BYPASS
+#define FIX8_CONJURE_ENUM_IS_CONTINUOUS
 #include <fix8/conjure_enum.hpp>
 
 //-----------------------------------------------------------------------------------------

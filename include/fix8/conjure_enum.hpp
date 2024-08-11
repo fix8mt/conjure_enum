@@ -251,11 +251,11 @@ private:
 		for(std::size_t idx{}, nn{}; nn < valid_cnt; ++idx)
 			if (valid[idx])
 				vals[nn++] = static_cast<T>(enum_min_value + idx);
+		return vals;
 #else
 		static_assert(sizeof...(I) > 0, "conjure_enum requires non-empty enum");
-		std::array<T, sizeof...(I)> vals{static_cast<T>(enum_min_value + I)... };
+		return std::array<T, sizeof...(I)>{static_cast<T>(enum_min_value + I)... };
 #endif
-		return vals;
 	}
 
 	template<T e>

@@ -189,19 +189,6 @@ public:
 	static consteval const char *epeek() noexcept { return std::source_location::current().function_name(); }
 
 private:
-	template<std::size_t... I>
-	static constexpr auto _entries(std::index_sequence<I...>) noexcept
-	{
-		return std::array<enum_tuple, sizeof...(I)>{{{ values[I], _enum_name_v<values[I]>}...}};
-	}
-
-	static constexpr auto _sorted_entries() noexcept
-	{
-		auto tmp { entries };
-		std::sort(tmp.begin(), tmp.end(), _tuple_comp_rev);
-		return tmp;
-	}
-
 	template<T e>
 	static constexpr std::string_view _epeek_v { epeek<e>() };
 
@@ -278,6 +265,19 @@ private:
 	template<T e>
 	static constexpr auto _enum_name_v { fixed_string<_get_name_v<e>.size()>(_get_name_v<e>) };
 
+	template<std::size_t... I>
+	static constexpr auto _entries(std::index_sequence<I...>) noexcept
+	{
+		return std::array<enum_tuple, sizeof...(I)>{{{ values[I], _enum_name_v<values[I]>}...}};
+	}
+
+	static constexpr auto _sorted_entries() noexcept
+	{
+		auto tmp { entries };
+		std::sort(tmp.begin(), tmp.end(), _tuple_comp_rev);
+		return tmp;
+	}
+
 	/// comparators
 	static constexpr bool _value_comp(const T& pl, const T& pr) noexcept
 	{
@@ -299,7 +299,7 @@ public:
 	}>{};
 
 	template<T e>
-	static constexpr bool is_valid() noexcept { return _is_valid<e>(); }
+	static constexpr bool is_valid() noexcept { return contains<e>(); }
 
 	static constexpr auto count() noexcept { return values.size(); }
 

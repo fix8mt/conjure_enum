@@ -74,7 +74,7 @@ class fixed_string final
 {
 	std::array<char, N + 1> _buff;
 	template<char... C>
-	constexpr fixed_string(std::string_view sv, std::integer_sequence<char, C...>) noexcept : _buff{sv[C]..., 0} {}
+	constexpr fixed_string(const char *pp, std::integer_sequence<char, C...>) noexcept : _buff{*(pp + C)..., 0} {}
 
 public:
 	explicit constexpr fixed_string(std::string_view sv) noexcept : fixed_string{sv.data(), std::make_integer_sequence<char, N>{}} {}

@@ -1474,12 +1474,12 @@ enum_to_string //noscope option not available
 ```
 These are marked ![](assets/notminimalred.svg) in the API documentation above.
 
-## c) Continous enum optimization
+## c) Continuous enum optimization
 ```c++
 #define FIX8_CONJURE_ENUM_IS_CONTINUOUS
 ```
 If your enum(s) are continuous (no gaps) you can enable this compiler optimization
-by defining `FIX8_CONJURE_ENUM_IS_CONTINUOUS` _before_ you include `conjure_enum.hpp`
+by defining `FIX8_CONJURE_ENUM_IS_CONTINUOUS` _before_ you include `conjure_enum.hpp`.
 Our testing shows a reduction in overall compile times. All enums using `conjure_enum.hpp` in the current compilation unit must be continuous.
 
 ## d) Class `conjure_enum` is not constructible

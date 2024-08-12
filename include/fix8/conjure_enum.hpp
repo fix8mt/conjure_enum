@@ -72,12 +72,12 @@ using namespace std::literals::string_view_literals;
 template<std::size_t N>
 class fixed_string final
 {
-	std::array<char, N + 1> _buff;
+	const std::array<char, N + 1> _buff;
 	template<char... C>
-	constexpr fixed_string(const char *pp, std::integer_sequence<char, C...>) noexcept : _buff{*(pp + C)..., 0} {}
+	constexpr fixed_string(std::string_view sv, std::integer_sequence<char, C...>) noexcept : _buff{sv[C]..., 0} {}
 
 public:
-	explicit constexpr fixed_string(std::string_view sv) noexcept : fixed_string{sv.data(), std::make_integer_sequence<char, N>{}} {}
+	explicit constexpr fixed_string(std::string_view sv) noexcept : fixed_string{sv, std::make_integer_sequence<char, N>{}} {}
 	constexpr fixed_string() = delete;
 	constexpr std::string_view get() const noexcept { return { _buff.data(), N }; }
 	constexpr operator std::string_view() const noexcept { return get(); }

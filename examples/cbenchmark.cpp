@@ -33,9 +33,7 @@
 // cl /nologo /MD /std:c++latest /Bt+ /I ..\include  ..\examples\cbenchmark.cpp|find "c1xx.dll"
 //----------------------------------------------------------------------------------------
 #include <system_error>
-#define FIX8_CONJURE_ENUM_MINIMAL
-#define FIX8_CONJURE_ENUM_IS_CONTINUOUS
-#define FIX8_CONJURE_ENUM_NO_ANON
+#define FIX8_CONJURE_ENUM_ALL_OPTIMIZATIONS
 #include <fix8/conjure_enum.hpp>
 
 //-----------------------------------------------------------------------------------------

@@ -47,6 +47,17 @@
 #include <tuple>
 #include <concepts>
 #include <optional>
+#if defined FIX8_CONJURE_ENUM_ALL_OPTIMIZATIONS
+# if not defined FIX8_CONJURE_ENUM_IS_CONTINUOUS
+#  define FIX8_CONJURE_ENUM_IS_CONTINUOUS
+# endif
+# if not defined FIX8_CONJURE_ENUM_NO_ANON
+#  define FIX8_CONJURE_ENUM_NO_ANON
+# endif
+# if not defined FIX8_CONJURE_ENUM_MINIMAL
+#  define FIX8_CONJURE_ENUM_MINIMAL
+# endif
+#endif
 #if not defined FIX8_CONJURE_ENUM_MINIMAL
 # include <functional>
 #endif

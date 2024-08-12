@@ -41,12 +41,6 @@
 #endif
 
 //----------------------------------------------------------------------------------------
-#include <source_location>
-#include <algorithm>
-#include <string_view>
-#include <tuple>
-#include <concepts>
-#include <optional>
 #if defined FIX8_CONJURE_ENUM_ALL_OPTIMIZATIONS
 # if not defined FIX8_CONJURE_ENUM_IS_CONTINUOUS
 #  define FIX8_CONJURE_ENUM_IS_CONTINUOUS
@@ -58,11 +52,18 @@
 #  define FIX8_CONJURE_ENUM_MINIMAL
 # endif
 #endif
+
+//-----------------------------------------------------------------------------------------
+#include <source_location>
+#include <algorithm>
+#include <string_view>
+#include <tuple>
+#include <concepts>
+#include <optional>
+#include <array>
 #if not defined FIX8_CONJURE_ENUM_MINIMAL
 # include <functional>
 #endif
-//#include <cstddef>
-#include <array>
 
 //-----------------------------------------------------------------------------------------
 namespace FIX8 {
@@ -213,8 +214,10 @@ private:
 		{
 			if constexpr (_epeek_v<e>[ep + cs::get_spec<sval::start,stype::enum_t>().size() + 1] == '(')
 				return false;
+#if not defined FIX8_CONJURE_ENUM_NO_ANON
 			if constexpr (_epeek_v<e>.find(cs::get_spec<sval::anon_str,stype::enum_t>(), ep + cs::get_spec<sval::start,stype::enum_t>().size()) != std::string_view::npos)	// is anon
 				return true;
+#endif
 		}
 		else if constexpr (_epeek_v<e>.find_first_of(cs::get_spec<sval::end,stype::enum_t>(), ep + cs::get_spec<sval::start,stype::enum_t>().size()) != std::string_view::npos)
 			return true;
@@ -294,15 +297,19 @@ private:
 	/// comparators
 	static constexpr bool _value_comp(const T& pl, const T& pr) noexcept
 	{
-		return static_cast<int>(pl) < static_cast<int>(pr);
+		return pl < pr;
 	}
 	static constexpr bool _tuple_comp(const enum_tuple& pl, const enum_tuple& pr) noexcept
 	{
-		return static_cast<int>(std::get<T>(pl)) < static_cast<int>(std::get<T>(pr));
+		const auto& [l1,l2] { pl };
+		const auto& [r1,r2] { pr };
+		return l1 < r1;
 	}
 	static constexpr bool _tuple_comp_rev(const enum_tuple& pl, const enum_tuple& pr) noexcept
 	{
-		return std::get<std::string_view>(pl) < std::get<std::string_view>(pr);
+		const auto& [l1,l2] { pl };
+		const auto& [r1,r2] { pr };
+		return l2 < r2;
 	}
 
 public:

@@ -374,22 +374,21 @@ public:
 
 	static constexpr std::string_view enum_to_string(T value, [[maybe_unused]] bool noscope=false) noexcept
 	{
-		if (const auto result { std::equal_range(entries.cbegin(), entries.cend(), enum_tuple(value, std::string_view()), _tuple_comp) };
-			result.first != result.second)
+		if (const auto [begin,end] { std::equal_range(entries.cbegin(), entries.cend(), enum_tuple(value, std::string_view()), _tuple_comp) };
+			begin != end)
 		{
 #if not defined FIX8_CONJURE_ENUM_MINIMAL
 			if (noscope)
-				return remove_scope(std::get<std::string_view>(*result.first));
+				return remove_scope(std::get<std::string_view>(*begin));
 #endif
-			return std::get<std::string_view>(*result.first);
+			return std::get<std::string_view>(*begin);
 		}
 		return {};
 	}
 	static constexpr std::optional<T> string_to_enum(std::string_view str) noexcept
 	{
-		if (const auto result { std::equal_range(sorted_entries.cbegin(), sorted_entries.cend(), enum_tuple(T{}, str), _tuple_comp_rev) };
-			result.first != result.second)
-				return std::get<T>(*result.first);
+		if (const auto [begin,end] { std::equal_range(sorted_entries.cbegin(), sorted_entries.cend(), enum_tuple(T{}, str), _tuple_comp_rev) }; begin != end)
+			return std::get<T>(*begin);
 		return {};
 	}
 

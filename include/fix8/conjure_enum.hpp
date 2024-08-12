@@ -297,19 +297,15 @@ private:
 	/// comparators
 	static constexpr bool _value_comp(const T& pl, const T& pr) noexcept
 	{
-		return pl < pr;
+		return static_cast<int>(pl) < static_cast<int>(pr);
 	}
 	static constexpr bool _tuple_comp(const enum_tuple& pl, const enum_tuple& pr) noexcept
 	{
-		const auto& [l1,l2] { pl };
-		const auto& [r1,r2] { pr };
-		return l1 < r1;
+		return static_cast<int>(std::get<T>(pl)) < static_cast<int>(std::get<T>(pr));
 	}
 	static constexpr bool _tuple_comp_rev(const enum_tuple& pl, const enum_tuple& pr) noexcept
 	{
-		const auto& [l1,l2] { pl };
-		const auto& [r1,r2] { pr };
-		return l2 < r2;
+		return std::get<std::string_view>(pl) < std::get<std::string_view>(pr);
 	}
 
 public:

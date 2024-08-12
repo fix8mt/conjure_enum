@@ -241,6 +241,7 @@ private:
 		constexpr auto ep { _epeek_v<e>.rfind(cs::get_spec<sval::start,stype::enum_t>()) };
 		if constexpr (ep == std::string_view::npos)
 			return {};
+#if not defined FIX8_CONJURE_ENUM_NO_ANON
 		if constexpr (_epeek_v<e>[ep + cs::get_spec<sval::start,stype::enum_t>().size()] == cs::get_spec<sval::anon_start,stype::enum_t>())
 		{
 #if defined __clang__
@@ -252,6 +253,7 @@ private:
 					if constexpr (constexpr auto lc { lstr.find_first_of(cs::get_spec<sval::end,stype::enum_t>()) }; lc != std::string_view::npos)
 						return lstr.substr(cs::get_spec<sval::anon_str,stype::enum_t>().size() + 2, lc - (cs::get_spec<sval::anon_str,stype::enum_t>().size() + 2)); // eat "::"
 		}
+#endif
 		constexpr std::string_view result { _epeek_v<e>.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()) };
 		if constexpr (constexpr auto lc { result.find_first_of(cs::get_spec<sval::end,stype::enum_t>()) }; lc != std::string_view::npos)
 			return result.substr(0, lc);

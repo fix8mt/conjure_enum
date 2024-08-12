@@ -339,19 +339,17 @@ public:
 	}
 	static constexpr std::optional<T> int_to_enum(int value) noexcept
 	{
-		if (const auto result { std::equal_range(values.cbegin(), values.cend(), static_cast<T>(value), _value_comp) };
-			result.first != result.second)
-				return *result.first;
+		if (const auto [begin,end] { std::equal_range(values.cbegin(), values.cend(), static_cast<T>(value), _value_comp) };
+			begin != end)
+				return *begin;
 		return {};
 	}
 
 	// index
 	static constexpr std::optional<size_t> index(T value) noexcept
 	{
-		if (const auto result { std::equal_range(values.cbegin(), values.cend(), value, _value_comp) };
-			result.first != result.second)
-				return &*result.first - &*values.cbegin();
-		return {};
+		const auto [begin,end] { std::equal_range(entries.cbegin(), entries.cend(), enum_tuple(value, std::string_view()), _tuple_comp) };
+		return begin != end ? &*begin - &*entries.cbegin() : std::optional<size_t>{};
 	}
 	template<T e>
 	static constexpr std::optional<size_t> index() noexcept { return index(e); }
@@ -387,9 +385,8 @@ public:
 	}
 	static constexpr std::optional<T> string_to_enum(std::string_view str) noexcept
 	{
-		if (const auto [begin,end] { std::equal_range(sorted_entries.cbegin(), sorted_entries.cend(), enum_tuple(T{}, str), _tuple_comp_rev) }; begin != end)
-			return std::get<T>(*begin);
-		return {};
+		const auto [begin,end] { std::equal_range(sorted_entries.cbegin(), sorted_entries.cend(), enum_tuple(T{}, str), _tuple_comp_rev) };
+		return begin != end ? std::get<T>(*begin) : std::optional<T>{};
 	}
 
 	// public constexpr data structures

@@ -31,7 +31,7 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //----------------------------------------------------------------------------------------
-// Full build include fragment
+// Full build include fragment; do not include separately
 //----------------------------------------------------------------------------------------
 #ifndef FIX8_CONJURE_ENUM_EXT_HPP_
 #define FIX8_CONJURE_ENUM_EXT_HPP_
@@ -187,7 +187,7 @@ public:
 	template<typename Fn>
 	static constexpr bool tuple_comp(const std::tuple<T, Fn>& pl, const std::tuple<T, Fn>& pr) noexcept
 	{
-		return static_cast<int>(std::get<T>(pl)) < static_cast<int>(std::get<T>(pr));
+		return std::get<T>(pl) < std::get<T>(pr);
 	}
 
 	template<std::size_t I, typename R, typename Fn, typename... Args> // with not found value(nval) for return

@@ -1495,7 +1495,7 @@ Our testing shows a reduction in overall compile times. All enums using `conjure
 #define FIX8_CONJURE_ENUM_ALL_OPTIMIZATIONS
 ```
 You can enable all optimizations described above by defining `FIX8_CONJURE_ENUM_ALL_OPTIMIZATIONS` _before_ you include `conjure_enum.hpp`.
-This will is the equivalent of defining:
+This is the equivalent of defining:
 ```c++
 #define FIX8_CONJURE_ENUM_MINIMAL
 #define FIX8_CONJURE_ENUM_IS_CONTINUOUS

@@ -1482,15 +1482,35 @@ If your enum(s) are continuous (no gaps) you can enable this compiler optimizati
 by defining `FIX8_CONJURE_ENUM_IS_CONTINUOUS` _before_ you include `conjure_enum.hpp`.
 Our testing shows a reduction in overall compile times. All enums using `conjure_enum.hpp` in the current compilation unit must be continuous.
 
-## d) Class `conjure_enum` is not constructible
+## d) Anonymous enum optimization
+```c++
+#define FIX8_CONJURE_ENUM_NO_ANON
+```
+If your enum(s) are not within any anonymous namespaces (rarely used for this purpose), you can enable this compiler optimization
+by defining `FIX8_CONJURE_ENUM_NO_ANON` _before_ you include `conjure_enum.hpp`.
+Our testing shows a reduction in overall compile times. All enums using `conjure_enum.hpp` in the current compilation unit must be continuous.
+
+## e) Enable all optimizations
+```c++
+#define FIX8_CONJURE_ENUM_ALL_OPTIMIZATIONS
+```
+You can enable all optimizations described above by defining `FIX8_CONJURE_ENUM_ALL_OPTIMIZATIONS` _before_ you include `conjure_enum.hpp`.
+This will is the equivalent of defining:
+```c++
+#define FIX8_CONJURE_ENUM_MINIMAL
+#define FIX8_CONJURE_ENUM_IS_CONTINUOUS
+#define FIX8_CONJURE_ENUM_NO_ANON
+```
+
+## f) Class `conjure_enum` is not constructible
 All methods in this class are _static_. You cannot instantiate an object of this type. The same goes for `conjure_type`.
 
-## e) It's not _real_ reflection
+## g) It's not _real_ reflection
 This library provides a workaround (hack :smirk:) to current limitations of C++. There are proposals out there for future versions of the language that will provide proper reflection.
 See [Reflection TS](https://en.cppreference.com/w/cpp/experimental/reflect) and [Reflection for C++26](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2023/p2996r0.html)
 for examples of some of these.
 
-## f) Use of `std::string_view`
+## h) Use of `std::string_view`
 All of the generated static strings and generated static tables obtained by `std::source_location` use the library defined `fixed_string`. No string copying is done at runtime, resulting in
 a single static string in your application. All `conjure_enum` methods that return strings _only_ return `std::string_view`.
 To demonstrate this, lets look at the supplied test application `statictest`:
@@ -1611,7 +1631,7 @@ $
 
 It can be observed that there is only _one_ copy of the scoped enum value string in the executable.
 
-## g) Compilation profiling (Clang)
+## i) Compilation profiling (Clang)
 You can profile the compile time for Clang (other compilers TBA). Firstly install [ClangBuildAnalyzer](https://github.com/aras-p/ClangBuildAnalyzer).
 Then configure `conjure_enum` with:
 ```CMake

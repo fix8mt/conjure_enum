@@ -339,17 +339,19 @@ public:
 	}
 	static constexpr std::optional<T> int_to_enum(int value) noexcept
 	{
-		if (const auto [begin,end] { std::equal_range(values.cbegin(), values.cend(), static_cast<T>(value), _value_comp) };
-			begin != end)
-				return *begin;
+		if (const auto result { std::equal_range(values.cbegin(), values.cend(), static_cast<T>(value), _value_comp) };
+			result.first != result.second)
+				return *result.first;
 		return {};
 	}
 
 	// index
 	static constexpr std::optional<size_t> index(T value) noexcept
 	{
-		const auto [begin,end] { std::equal_range(entries.cbegin(), entries.cend(), enum_tuple(value, std::string_view()), _tuple_comp) };
-		return begin != end ? &*begin - &*entries.cbegin() : std::optional<size_t>{};
+		if (const auto result { std::equal_range(values.cbegin(), values.cend(), value, _value_comp) };
+			result.first != result.second)
+				return &*result.first - &*values.cbegin();
+		return {};
 	}
 	template<T e>
 	static constexpr std::optional<size_t> index() noexcept { return index(e); }
@@ -372,21 +374,23 @@ public:
 
 	static constexpr std::string_view enum_to_string(T value, [[maybe_unused]] bool noscope=false) noexcept
 	{
-		if (const auto [begin,end] { std::equal_range(entries.cbegin(), entries.cend(), enum_tuple(value, std::string_view()), _tuple_comp) };
-			begin != end)
+		if (const auto result { std::equal_range(entries.cbegin(), entries.cend(), enum_tuple(value, std::string_view()), _tuple_comp) };
+			result.first != result.second)
 		{
 #if not defined FIX8_CONJURE_ENUM_MINIMAL
 			if (noscope)
-				return remove_scope(std::get<std::string_view>(*begin));
+				return remove_scope(std::get<std::string_view>(*result.first));
 #endif
-			return std::get<std::string_view>(*begin);
+			return std::get<std::string_view>(*result.first);
 		}
 		return {};
 	}
 	static constexpr std::optional<T> string_to_enum(std::string_view str) noexcept
 	{
-		const auto [begin,end] { std::equal_range(sorted_entries.cbegin(), sorted_entries.cend(), enum_tuple(T{}, str), _tuple_comp_rev) };
-		return begin != end ? std::get<T>(*begin) : std::optional<T>{};
+		if (const auto result { std::equal_range(sorted_entries.cbegin(), sorted_entries.cend(), enum_tuple(T{}, str), _tuple_comp_rev) };
+			result.first != result.second)
+				return std::get<T>(*result.first);
+		return {};
 	}
 
 	// public constexpr data structures

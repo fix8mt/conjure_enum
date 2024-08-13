@@ -163,7 +163,7 @@ struct enum_range final : public static_only
 // Convenience macros for above
 //-----------------------------------------------------------------------------------------
 #define FIX8_CONJURE_ENUM_SET_RANGE_INTS(ec,minv,maxv) \
-	template<> struct FIX8::enum_range<ec> : public static_only { static constexpr int min{minv}, max{maxv}; };
+	template<> struct FIX8::enum_range<ec> : public FIX8::static_only { static constexpr int min{minv}, max{maxv}; };
 
 #define FIX8_CONJURE_ENUM_SET_RANGE(minv,maxv) \
 	FIX8_CONJURE_ENUM_SET_RANGE_INTS(decltype(minv),static_cast<int>(minv), static_cast<int>(maxv))
@@ -181,7 +181,7 @@ struct enum_flags final : public static_only
 // Convenience macro for above
 //-----------------------------------------------------------------------------------------
 #define FIX8_CONJURE_ENUM_SET_FLAGS(ec,iscont,noanon) \
-	template<> struct FIX8::enum_flags<ec> : public static_only { static constexpr int is_continuous{iscont}, no_anon{noanon}; };
+	template<> struct FIX8::enum_flags<ec> : public FIX8::static_only { static constexpr int is_continuous{iscont}, no_anon{noanon}; };
 
 //-----------------------------------------------------------------------------------------
 template<valid_enum T>

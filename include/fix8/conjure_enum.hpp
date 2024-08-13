@@ -55,8 +55,6 @@
 //-----------------------------------------------------------------------------------------
 namespace FIX8 {
 
-using namespace std::literals::string_view_literals;
-
 //-----------------------------------------------------------------------------------------
 // global default enum range
 //-----------------------------------------------------------------------------------------
@@ -111,13 +109,13 @@ class cs final : public static_only
 		std::to_array<std::tuple<std::string_view, char, std::string_view, char>>
 		({
 #if defined __clang__
-			{ "e = "sv, ']', "(anonymous namespace)"sv, '(' }, { "T = "sv, ']', "(anonymous namespace)"sv, '(' },
+			{ "e = ", ']', "(anonymous namespace)", '(' }, { "T = ", ']', "(anonymous namespace)", '(' },
 #elif defined __GNUC__
-			{ "e = "sv, ';', "<unnamed>"sv, '<' }, { "T = "sv, ']', "{anonymous}"sv, '{' },
+			{ "e = ", ';', "<unnamed>", '<' }, { "T = ", ']', "{anonymous}", '{' },
 #elif defined _MSC_VER
-			{ "epeek<"sv, '>', "`anonymous-namespace'"sv, '`' }, { "::tpeek"sv, '<', "enum `anonymous namespace'::"sv, '\0' },
-			{ ""sv, '\0', "`anonymous namespace'::"sv, '\0' }, { ""sv, '\0', "enum "sv, '\0' }, { ""sv, '\0', "class "sv, '\0' },
-			{ ""sv, '\0', "struct "sv, '\0' },
+			{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "::tpeek", '<', "enum `anonymous namespace'::", '\0' },
+			{ "", '\0', "`anonymous namespace'::", '\0' }, { "", '\0', "enum ", '\0' }, { "", '\0', "class ", '\0' },
+			{ "", '\0', "struct ", '\0' },
 #else
 # error "conjure_enum not supported by your compiler"
 #endif
@@ -180,7 +178,7 @@ struct enum_flags final : public static_only
 };
 
 //-----------------------------------------------------------------------------------------
-// Convenience macros for above
+// Convenience macro for above
 //-----------------------------------------------------------------------------------------
 #define FIX8_CONJURE_ENUM_SET_FLAGS(ec,iscont,noanon) \
 	template<> struct FIX8::enum_flags<ec> { static constexpr int is_continuous{iscont}, no_anon{noanon}; };

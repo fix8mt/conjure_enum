@@ -1482,12 +1482,13 @@ struct enum_flags final
    static constexpr bool is_continuous{}, no_anon{};
 };
 ```
+You can specialise this class to override the defaults and set your own flags on a per enum basis:
 ### i. Continuous enum optimization
-The `is_continuous` indicates that your enum(s) are continuous (no gaps). In out testing enable this compiler optimization
+The `is_continuous` flag indicates that your enum(s) are continuous (no gaps). In out testing enabling this compiler optimization
 shows a reduction in overall compile times.
 
 ### ii. Anonymous enum optimization
-The `no_anon` indicates that your enum(s) are not within any anonymous namespaces (rarely used for this purpose). In out testing enable this compiler optimization
+The `no_anon` indicates flag that your enum(s) are not within any anonymous namespaces (rarely used for this purpose). In out testing enabling this compiler optimization
 shows a reduction in overall compile times.
 
 ### iii. `FIX8_CONJURE_ENUM_SET_FLAGS`

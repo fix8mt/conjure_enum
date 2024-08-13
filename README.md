@@ -568,8 +568,8 @@ template<std::size_t I, typename Fn, typename C, typename... Args> // specialisa
 requires (std::invocable<Fn&&, C, T, Args...> && I > 0)
 static constexpr void dispatch(T ev, const std::array<std::tuple<T, Fn>, I>& disp, C *obj, Args&&... args);
 ```
-With a given enum, search and call user supplied invocable. Use this method where complex event handling is required, allowing you to easily declare predefined invocable actions
-for different enum values.
+With a given enum, search for and call user supplied invocable. You can use this method where complex event handling is required,
+allowing you to easily declare predefined invocable actions for different enum values.
 
 Where invocable returns a value, return this value or a user supplied "not found" value.
 Where invocable is void, call user supplied "not found" invocable.

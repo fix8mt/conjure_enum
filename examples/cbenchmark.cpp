@@ -38,7 +38,6 @@
 
 //-----------------------------------------------------------------------------------------
 FIX8_CONJURE_ENUM_SET_RANGE_INTS(std::errc, 0, 71)
-FIX8_CONJURE_ENUM_SET_FLAGS(std::errc,true,true)
 
 int test_conjure_enum(std::errc err)
 {

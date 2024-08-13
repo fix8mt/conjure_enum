@@ -1477,7 +1477,7 @@ These are marked ![](assets/notminimalred.svg) in the API documentation above.
 ## c) Using `enum_flags`
 ```c++
 template<valid_enum T>
-struct enum_flags final
+struct enum_flags
 {
    static constexpr bool is_continuous{}, no_anon{};
 };

@@ -84,9 +84,9 @@ private:
 	static constexpr std::string_view _process_scope([[maybe_unused]] const auto& entr, std::string_view what) noexcept
 	{
 		if constexpr (is_scoped())
-			if (const auto result { std::equal_range(entr.cbegin(), entr.cend(), scoped_tuple(what, std::string_view()), _scoped_comp) };
-				result.first != result.second)
-					return std::get<1>(*result.first);
+			if (const auto [begin,end] { std::equal_range(entr.cbegin(), entr.cend(), scoped_tuple(what, std::string_view()), _scoped_comp) };
+				begin != end)
+					return std::get<1>(*begin);
 		return what;
 	}
 
@@ -115,10 +115,8 @@ public:
 	static constexpr auto back() noexcept { return *std::prev(cend()); }
 	static constexpr std::optional<T> unscoped_string_to_enum(std::string_view str) noexcept
 	{
-		if (const auto result { std::equal_range(unscoped_entries.cbegin(), unscoped_entries.cend(), enum_tuple(T{}, str), _tuple_comp_rev) };
-			result.first != result.second)
-				return std::get<T>(*result.first);
-		return {};
+		const auto [begin,end] { std::equal_range(unscoped_entries.cbegin(), unscoped_entries.cend(), enum_tuple(T{}, str), _tuple_comp_rev) };
+		return begin != end ? std::get<T>(*begin) : std::optional<T>{};
 	}
 
 	static constexpr std::string_view type_name() noexcept
@@ -194,24 +192,24 @@ public:
 	requires std::invocable<Fn&&, T, Args...>
 	[[maybe_unused]] static constexpr R dispatch(T ev, R nval, const std::array<std::tuple<T, Fn>, I>& disp, Args&&... args) noexcept
 	{
-		const auto result { std::equal_range(disp.cbegin(), disp.cend(), std::make_tuple(ev, Fn()), tuple_comp<Fn>) };
-		return result.first != result.second ? std::invoke(std::get<Fn>(*result.first), ev, std::forward<Args>(args)...) : nval;
+		const auto [begin,end] { std::equal_range(disp.cbegin(), disp.cend(), std::make_tuple(ev, Fn()), tuple_comp<Fn>) };
+		return begin != end ? std::invoke(std::get<Fn>(*begin), ev, std::forward<Args>(args)...) : nval;
 	}
 
 	template<std::size_t I, typename R, typename Fn, typename C, typename... Args> // specialisation for member function with not found value(nval) for return
 	requires std::invocable<Fn&&, C, T, Args...>
 	[[maybe_unused]] static constexpr R dispatch(T ev, R nval, const std::array<std::tuple<T, Fn>, I>& disp, C *obj, Args&&... args) noexcept
 	{
-		const auto result { std::equal_range(disp.cbegin(), disp.cend(), std::make_tuple(ev, Fn()), tuple_comp<Fn>) };
-		return result.first != result.second ? std::invoke(std::get<Fn>(*result.first), obj, ev, std::forward<Args>(args)...) : nval;
+		const auto [begin,end] { std::equal_range(disp.cbegin(), disp.cend(), std::make_tuple(ev, Fn()), tuple_comp<Fn>) };
+		return begin != end ? std::invoke(std::get<Fn>(*begin), obj, ev, std::forward<Args>(args)...) : nval;
 	}
 
 	template<std::size_t I, typename Fn, typename... Args> // void func with not found call to last element
 	requires (std::invocable<Fn&&, T, Args...> && I > 0)
 	static constexpr void dispatch(T ev, const std::array<std::tuple<T, Fn>, I>& disp, Args&&... args) noexcept
 	{
-		const auto result { std::equal_range(disp.cbegin(), std::prev(disp.cend()), std::make_tuple(ev, Fn()), tuple_comp<Fn>) };
-		return result.first != result.second ? std::invoke(std::get<Fn>(*result.first), ev, std::forward<Args>(args)...)
+		const auto [begin,end] { std::equal_range(disp.cbegin(), std::prev(disp.cend()), std::make_tuple(ev, Fn()), tuple_comp<Fn>) };
+		return begin != end ? std::invoke(std::get<Fn>(*begin), ev, std::forward<Args>(args)...)
 														 : std::invoke(std::get<Fn>(*std::prev(disp.cend())), ev, std::forward<Args>(args)...);
 	}
 
@@ -219,8 +217,8 @@ public:
 	requires (std::invocable<Fn&&, C, T, Args...> && I > 0)
 	static constexpr void dispatch(T ev, const std::array<std::tuple<T, Fn>, I>& disp, C *obj, Args&&... args) noexcept
 	{
-		const auto result { std::equal_range(disp.cbegin(), std::prev(disp.cend()), std::make_tuple(ev, Fn()), tuple_comp<Fn>) };
-		return result.first != result.second ? std::invoke(std::get<Fn>(*result.first), obj, ev, std::forward<Args>(args)...)
+		const auto [begin,end] { std::equal_range(disp.cbegin(), std::prev(disp.cend()), std::make_tuple(ev, Fn()), tuple_comp<Fn>) };
+		return begin != end ? std::invoke(std::get<Fn>(*begin), obj, ev, std::forward<Args>(args)...)
 														 : std::invoke(std::get<Fn>(*std::prev(disp.cend())), obj, ev, std::forward<Args>(args)...);
 	}
 

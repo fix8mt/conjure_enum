@@ -33,12 +33,11 @@
 // cl /nologo /MD /std:c++latest /Bt+ /I ..\include  ..\examples\cbenchmark.cpp|find "c1xx.dll"
 //----------------------------------------------------------------------------------------
 #include <system_error>
-#define FIX8_CONJURE_ENUM_MINIMAL
+#define FIX8_CONJURE_ENUM_ALL_OPTIMIZATIONS
 #include <fix8/conjure_enum.hpp>
 
 //-----------------------------------------------------------------------------------------
 FIX8_CONJURE_ENUM_SET_RANGE_INTS(std::errc, 0, 71)
-FIX8_CONJURE_ENUM_SET_FLAGS(std::errc,true,true)
 
 int test_conjure_enum(std::errc err)
 {

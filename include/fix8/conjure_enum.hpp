@@ -41,6 +41,19 @@
 #endif
 
 //----------------------------------------------------------------------------------------
+#if defined FIX8_CONJURE_ENUM_ALL_OPTIMIZATIONS
+# if not defined FIX8_CONJURE_ENUM_IS_CONTINUOUS
+#  define FIX8_CONJURE_ENUM_IS_CONTINUOUS
+# endif
+# if not defined FIX8_CONJURE_ENUM_NO_ANON
+#  define FIX8_CONJURE_ENUM_NO_ANON
+# endif
+# if not defined FIX8_CONJURE_ENUM_MINIMAL
+#  define FIX8_CONJURE_ENUM_MINIMAL
+# endif
+#endif
+
+//-----------------------------------------------------------------------------------------
 #include <source_location>
 #include <algorithm>
 #include <string_view>
@@ -54,6 +67,8 @@
 
 //-----------------------------------------------------------------------------------------
 namespace FIX8 {
+
+using namespace std::literals::string_view_literals;
 
 //-----------------------------------------------------------------------------------------
 // global default enum range
@@ -109,13 +124,13 @@ class cs final : public static_only
 		std::to_array<std::tuple<std::string_view, char, std::string_view, char>>
 		({
 #if defined __clang__
-			{ "e = ", ']', "(anonymous namespace)", '(' }, { "T = ", ']', "(anonymous namespace)", '(' },
+			{ "e = "sv, ']', "(anonymous namespace)"sv, '(' }, { "T = "sv, ']', "(anonymous namespace)"sv, '(' },
 #elif defined __GNUC__
-			{ "e = ", ';', "<unnamed>", '<' }, { "T = ", ']', "{anonymous}", '{' },
+			{ "e = "sv, ';', "<unnamed>"sv, '<' }, { "T = "sv, ']', "{anonymous}"sv, '{' },
 #elif defined _MSC_VER
-			{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "::tpeek", '<', "enum `anonymous namespace'::", '\0' },
-			{ "", '\0', "`anonymous namespace'::", '\0' }, { "", '\0', "enum ", '\0' }, { "", '\0', "class ", '\0' },
-			{ "", '\0', "struct ", '\0' },
+			{ "epeek<"sv, '>', "`anonymous-namespace'"sv, '`' }, { "::tpeek"sv, '<', "enum `anonymous namespace'::"sv, '\0' },
+			{ ""sv, '\0', "`anonymous namespace'::"sv, '\0' }, { ""sv, '\0', "enum "sv, '\0' }, { ""sv, '\0', "class "sv, '\0' },
+			{ ""sv, '\0', "struct "sv, '\0' },
 #else
 # error "conjure_enum not supported by your compiler"
 #endif
@@ -137,7 +152,7 @@ using stype = cs::stype;
 using sval = cs::sval;
 
 #if defined _MSC_VER
-#define CHKMSSTR(e,x) \
+#define CHKMSSTR(e, x) \
 	if constexpr (constexpr auto ep##x { e.find(cs::get_spec<sval::anon_str,stype::x>()) }; ep##x != std::string_view::npos) \
 		return e.substr(ep##x + cs::get_spec<sval::anon_str,stype::x>().size(), e.size() - (ep##x + cs::get_spec<sval::anon_str,stype::x>().size()))
 #endif
@@ -163,27 +178,10 @@ struct enum_range final : public static_only
 // Convenience macros for above
 //-----------------------------------------------------------------------------------------
 #define FIX8_CONJURE_ENUM_SET_RANGE_INTS(ec,minv,maxv) \
-	template<> struct FIX8::enum_range<ec> final : public FIX8::static_only \
-		{ static constexpr int min{minv}, max{maxv}; };
+	template<> struct FIX8::enum_range<ec> { static constexpr int min{minv}, max{maxv}; };
 
 #define FIX8_CONJURE_ENUM_SET_RANGE(minv,maxv) \
-	FIX8_CONJURE_ENUM_SET_RANGE_INTS(decltype(minv), static_cast<int>(minv), static_cast<int>(maxv))
-
-//-----------------------------------------------------------------------------------------
-// You can specialise this class to define custom flags for your enum
-//-----------------------------------------------------------------------------------------
-template<valid_enum T>
-struct enum_flags final : public static_only
-{
-	static constexpr bool is_continuous{}, no_anon{};
-};
-
-//-----------------------------------------------------------------------------------------
-// Convenience macro for above
-//-----------------------------------------------------------------------------------------
-#define FIX8_CONJURE_ENUM_SET_FLAGS(ec,iscont,noanon) \
-	template<> struct FIX8::enum_flags<ec> final : public FIX8::static_only \
-		{ static constexpr int is_continuous{iscont}, no_anon{noanon}; };
+	FIX8_CONJURE_ENUM_SET_RANGE_INTS(decltype(minv),static_cast<int>(minv), static_cast<int>(maxv))
 
 //-----------------------------------------------------------------------------------------
 template<valid_enum T>
@@ -216,9 +214,10 @@ private:
 		{
 			if constexpr (_epeek_v<e>[ep + cs::get_spec<sval::start,stype::enum_t>().size() + 1] == '(')
 				return false;
-			if constexpr (!enum_flags<T>::no_anon)
-				if constexpr (_epeek_v<e>.find(cs::get_spec<sval::anon_str,stype::enum_t>(), ep + cs::get_spec<sval::start,stype::enum_t>().size()) != std::string_view::npos)	// is anon
-					return true;
+#if not defined FIX8_CONJURE_ENUM_NO_ANON
+			if constexpr (_epeek_v<e>.find(cs::get_spec<sval::anon_str,stype::enum_t>(), ep + cs::get_spec<sval::start,stype::enum_t>().size()) != std::string_view::npos)	// is anon
+				return true;
+#endif
 		}
 		else if constexpr (_epeek_v<e>.find_first_of(cs::get_spec<sval::end,stype::enum_t>(), ep + cs::get_spec<sval::start,stype::enum_t>().size()) != std::string_view::npos)
 			return true;
@@ -235,22 +234,19 @@ private:
 	template<std::size_t... I>
 	static constexpr auto _values(std::index_sequence<I...>) noexcept
 	{
-		if constexpr (enum_flags<T>::is_continuous)
-		{
-			static_assert(sizeof...(I) > 0, "conjure_enum requires non-empty enum");
-			return std::array<T, sizeof...(I)>{static_cast<T>(enum_min_value + I)... };
-		}
-		else
-		{
-			constexpr std::array<bool, sizeof...(I)> valid { _is_valid<static_cast<T>(enum_min_value + I)>()... };
-			constexpr auto valid_cnt { std::count_if(valid.cbegin(), valid.cend(), [](bool val) noexcept { return val; }) };
-			static_assert(valid_cnt > 0, "conjure_enum requires non-empty enum");
-			std::array<T, valid_cnt> vals{};
-			for(std::size_t idx{}, nn{}; nn < valid_cnt; ++idx)
-				if (valid[idx])
-					vals[nn++] = static_cast<T>(enum_min_value + idx);
-			return vals;
-		}
+#if defined FIX8_CONJURE_ENUM_IS_CONTINUOUS
+		static_assert(sizeof...(I) > 0, "conjure_enum requires non-empty enum");
+		return std::array<T, sizeof...(I)>{static_cast<T>(enum_min_value + I)... };
+#else
+		constexpr std::array<bool, sizeof...(I)> valid { _is_valid<static_cast<T>(enum_min_value + I)>()... };
+		constexpr auto valid_cnt { std::count_if(valid.cbegin(), valid.cend(), [](bool val) noexcept { return val; }) };
+		static_assert(valid_cnt > 0, "conjure_enum requires non-empty enum");
+		std::array<T, valid_cnt> vals{};
+		for(std::size_t idx{}, nn{}; nn < valid_cnt; ++idx)
+			if (valid[idx])
+				vals[nn++] = static_cast<T>(enum_min_value + idx);
+		return vals;
+#endif
 	}
 
 	template<T e>
@@ -259,20 +255,19 @@ private:
 		constexpr auto ep { _epeek_v<e>.rfind(cs::get_spec<sval::start,stype::enum_t>()) };
 		if constexpr (ep == std::string_view::npos)
 			return {};
-		if constexpr (!enum_flags<T>::no_anon)
+#if not defined FIX8_CONJURE_ENUM_NO_ANON
+		if constexpr (_epeek_v<e>[ep + cs::get_spec<sval::start,stype::enum_t>().size()] == cs::get_spec<sval::anon_start,stype::enum_t>())
 		{
-			if constexpr (_epeek_v<e>[ep + cs::get_spec<sval::start,stype::enum_t>().size()] == cs::get_spec<sval::anon_start,stype::enum_t>())
-			{
 #if defined __clang__
-				if constexpr (_epeek_v<e>[ep + cs::get_spec<sval::start,stype::enum_t>().size() + 1] == cs::get_spec<sval::anon_start,stype::enum_t>())
-					return {};
+			if constexpr (_epeek_v<e>[ep + cs::get_spec<sval::start,stype::enum_t>().size() + 1] == cs::get_spec<sval::anon_start,stype::enum_t>())
+				return {};
 #endif
-				if (constexpr auto lstr { _epeek_v<e>.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()) };
-					lstr.find(cs::get_spec<sval::anon_str,stype::enum_t>()) != std::string_view::npos)	// is anon
-						if constexpr (constexpr auto lc { lstr.find_first_of(cs::get_spec<sval::end,stype::enum_t>()) }; lc != std::string_view::npos)
-							return lstr.substr(cs::get_spec<sval::anon_str,stype::enum_t>().size() + 2, lc - (cs::get_spec<sval::anon_str,stype::enum_t>().size() + 2)); // eat "::"
-			}
+			if (constexpr auto lstr { _epeek_v<e>.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()) };
+				lstr.find(cs::get_spec<sval::anon_str,stype::enum_t>()) != std::string_view::npos)	// is anon
+					if constexpr (constexpr auto lc { lstr.find_first_of(cs::get_spec<sval::end,stype::enum_t>()) }; lc != std::string_view::npos)
+						return lstr.substr(cs::get_spec<sval::anon_str,stype::enum_t>().size() + 2, lc - (cs::get_spec<sval::anon_str,stype::enum_t>().size() + 2)); // eat "::"
 		}
+#endif
 		constexpr std::string_view result { _epeek_v<e>.substr(ep + cs::get_spec<sval::start,stype::enum_t>().size()) };
 		if constexpr (constexpr auto lc { result.find_first_of(cs::get_spec<sval::end,stype::enum_t>()) }; lc != std::string_view::npos)
 			return result.substr(0, lc);

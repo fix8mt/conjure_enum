@@ -82,19 +82,17 @@ using namespace std::literals::string_view_literals;
 
 //-----------------------------------------------------------------------------------------
 template<std::size_t N>
-class fixed_string final
+class fixed_string final : public std::array<char, N + 1>
 {
-	const std::array<char, N + 1> _buff;
 	template<std::size_t... C>
-	constexpr fixed_string(std::string_view sv, std::index_sequence<C...>) noexcept : _buff{sv[C]..., 0} {}
+	constexpr fixed_string(std::string_view sv, std::index_sequence<C...>) noexcept : std::array<char, N + 1>{sv[C]..., 0} {}
 
 public:
 	explicit constexpr fixed_string(std::string_view sv) noexcept : fixed_string{sv, std::make_index_sequence<N>{}} {}
 	constexpr fixed_string() = delete;
-	constexpr std::string_view get() const noexcept { return { _buff.data(), N }; }
+	constexpr std::string_view get() const noexcept { return { this->data(), N }; }
+	constexpr const char *c_str() const noexcept { return this->data(); }
 	constexpr operator std::string_view() const noexcept { return get(); }
-	constexpr char operator[](size_t idx) const noexcept { return _buff[idx]; }
-	constexpr std::size_t size() const noexcept { return _buff.size(); }
 	friend std::ostream& operator<<(std::ostream& os, const fixed_string& what) noexcept { return os << what.get(); }
 };
 

@@ -63,6 +63,9 @@ TEST_CASE("fixed_string")
 	REQUIRE(f1.get().size() == t1.size()); // fixed_string as string_view
 	REQUIRE(static_cast<std::string_view>(f1) == t1); // fixed_string as string_view
 	REQUIRE(static_cast<std::string_view>(f1).size() == t1.size()); // fixed_string as string_view
+	std::ostringstream ostr;
+	ostr << f1.c_str();
+	REQUIRE(ostr.str() == "The rain in Spain");
 }
 
 //-----------------------------------------------------------------------------------------

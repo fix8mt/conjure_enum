@@ -137,7 +137,7 @@ using stype = cs::stype;
 using sval = cs::sval;
 
 #if defined _MSC_VER
-#define CHKMSSTR(e, x) \
+#define CHKMSSTR(e,x) \
 	if constexpr (constexpr auto ep##x { e.find(cs::get_spec<sval::anon_str,stype::x>()) }; ep##x != std::string_view::npos) \
 		return e.substr(ep##x + cs::get_spec<sval::anon_str,stype::x>().size(), e.size() - (ep##x + cs::get_spec<sval::anon_str,stype::x>().size()))
 #endif
@@ -163,10 +163,11 @@ struct enum_range final : public static_only
 // Convenience macros for above
 //-----------------------------------------------------------------------------------------
 #define FIX8_CONJURE_ENUM_SET_RANGE_INTS(ec,minv,maxv) \
-	template<> struct FIX8::enum_range<ec> : public FIX8::static_only { static constexpr int min{minv}, max{maxv}; };
+	template<> struct FIX8::enum_range<ec> final : public FIX8::static_only \
+		{ static constexpr int min{minv}, max{maxv}; };
 
 #define FIX8_CONJURE_ENUM_SET_RANGE(minv,maxv) \
-	FIX8_CONJURE_ENUM_SET_RANGE_INTS(decltype(minv),static_cast<int>(minv), static_cast<int>(maxv))
+	FIX8_CONJURE_ENUM_SET_RANGE_INTS(decltype(minv), static_cast<int>(minv), static_cast<int>(maxv))
 
 //-----------------------------------------------------------------------------------------
 // You can specialise this class to define custom flags for your enum
@@ -181,7 +182,8 @@ struct enum_flags final : public static_only
 // Convenience macro for above
 //-----------------------------------------------------------------------------------------
 #define FIX8_CONJURE_ENUM_SET_FLAGS(ec,iscont,noanon) \
-	template<> struct FIX8::enum_flags<ec> : public FIX8::static_only { static constexpr int is_continuous{iscont}, no_anon{noanon}; };
+	template<> struct FIX8::enum_flags<ec> final : public FIX8::static_only \
+		{ static constexpr int is_continuous{iscont}, no_anon{noanon}; };
 
 //-----------------------------------------------------------------------------------------
 template<valid_enum T>

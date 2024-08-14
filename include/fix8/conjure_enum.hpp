@@ -85,11 +85,11 @@ template<std::size_t N>
 class fixed_string final
 {
 	const std::array<char, N + 1> _buff;
-	template<char... C>
-	constexpr fixed_string(std::string_view sv, std::integer_sequence<char, C...>) noexcept : _buff{sv[C]..., 0} {}
+	template<std::size_t... C>
+	constexpr fixed_string(std::string_view sv, std::index_sequence<C...>) noexcept : _buff{sv[C]..., 0} {}
 
 public:
-	explicit constexpr fixed_string(std::string_view sv) noexcept : fixed_string{sv, std::make_integer_sequence<char, N>{}} {}
+	explicit constexpr fixed_string(std::string_view sv) noexcept : fixed_string{sv, std::make_index_sequence<N>{}} {}
 	constexpr fixed_string() = delete;
 	constexpr std::string_view get() const noexcept { return { _buff.data(), N }; }
 	constexpr operator std::string_view() const noexcept { return get(); }

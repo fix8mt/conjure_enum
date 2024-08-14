@@ -281,6 +281,19 @@ private:
 	template<T e>
 	static constexpr auto _enum_name_v { fixed_string<_get_name_v<e>.size()>(_get_name_v<e>) };
 
+	template<std::size_t... I>
+	static constexpr auto _entries(std::index_sequence<I...>) noexcept
+	{
+		return std::array<enum_tuple, sizeof...(I)>{{{ values[I], _enum_name_v<values[I]>}...}};
+	}
+
+	static constexpr auto _sorted_entries() noexcept
+	{
+		auto tmp { entries };
+		std::sort(tmp.begin(), tmp.end(), _tuple_comp_rev);
+		return tmp;
+	}
+
 	/// comparators
 	static constexpr bool _value_comp(const T& pl, const T& pr) noexcept
 	{
@@ -378,15 +391,8 @@ public:
 
 	// public constexpr data structures
 	static constexpr auto values { _values(std::make_index_sequence<enum_max_value - enum_min_value + 1>()) };
-	static constexpr auto entries { []<std::size_t... I>(std::index_sequence<I...>) noexcept
-		{ return std::array<enum_tuple, sizeof...(I)>{{{ values[I], _enum_name_v<values[I]>}...}};}(std::make_index_sequence<values.size()>()) };
-	static constexpr auto sorted_entries { []() noexcept
-	{
-		auto tmp { entries };
-		std::sort(tmp.begin(), tmp.end(), _tuple_comp_rev);
-		return tmp;
-	}()};
-
+	static constexpr auto entries { _entries(std::make_index_sequence<values.size()>()) };
+	static constexpr auto sorted_entries { _sorted_entries() };
 
 	// misc
 	static constexpr int get_enum_min_value() noexcept { return enum_min_value; }

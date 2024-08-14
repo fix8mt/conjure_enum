@@ -568,8 +568,8 @@ template<std::size_t I, typename Fn, typename C, typename... Args> // specialisa
 requires (std::invocable<Fn&&, C, T, Args...> && I > 0)
 static constexpr void dispatch(T ev, const std::array<std::tuple<T, Fn>, I>& disp, C *obj, Args&&... args);
 ```
-With a given enum, search for and call user supplied invocable. You can use this method where complex event handling is required,
-allowing you to easily declare predefined invocable actions for different enum values.
+With a given enum, search and call user supplied invocable. Use this method where complex event handling is required, allowing you to easily declare predefined invocable actions
+for different enum values.
 
 Where invocable returns a value, return this value or a user supplied "not found" value.
 Where invocable is void, call user supplied "not found" invocable.
@@ -1474,40 +1474,43 @@ enum_to_string //noscope option not available
 ```
 These are marked ![](assets/notminimalred.svg) in the API documentation above.
 
-## c) Using `enum_flags`
+## c) Continuous enum optimization
 ```c++
-template<valid_enum T>
-struct enum_flags
-{
-   static constexpr bool is_continuous{}, no_anon{};
-};
+#define FIX8_CONJURE_ENUM_IS_CONTINUOUS
 ```
-You can specialise this class to override the defaults and set your own flags on a per enum basis:
-### i. Continuous enum optimization
-The `is_continuous` flag indicates that your enum(s) are continuous (no gaps). In our testing enabling this compiler optimization
-shows a reduction in overall compile times.
+If your enum(s) are continuous (no gaps) you can enable this compiler optimization
+by defining `FIX8_CONJURE_ENUM_IS_CONTINUOUS` _before_ you include `conjure_enum.hpp`.
+Our testing shows a reduction in overall compile times. All enums using `conjure_enum.hpp` in the current compilation unit must be continuous.
 
-### ii. Anonymous enum optimization
-The `no_anon` indicates flag that your enum(s) are not within any anonymous namespaces (rarely used for this purpose). In our testing enabling this compiler optimization
-shows a reduction in overall compile times.
-
-### iii. `FIX8_CONJURE_ENUM_SET_FLAGS`
-For convenience, this macro is provided to make it easier to set custom flags. This macro takes an enum typename followed by two `bool` values indicating
-the values of `is_continuous` and `no_anon`.
-
+## d) Anonymous enum optimization
 ```c++
-FIX8_CONJURE_ENUM_SET_FLAGS(range_test, true, true)
+#define FIX8_CONJURE_ENUM_NO_ANON
+```
+If your enum(s) are not within any anonymous namespaces (rarely used for this purpose), you can enable this compiler optimization
+by defining `FIX8_CONJURE_ENUM_NO_ANON` _before_ you include `conjure_enum.hpp`.
+Our testing shows a reduction in overall compile times. All enums using `conjure_enum.hpp` in the current compilation unit must be continuous.
+
+## e) Enable all optimizations
+```c++
+#define FIX8_CONJURE_ENUM_ALL_OPTIMIZATIONS
+```
+You can enable all optimizations described above by defining `FIX8_CONJURE_ENUM_ALL_OPTIMIZATIONS` _before_ you include `conjure_enum.hpp`.
+This is the equivalent of defining:
+```c++
+#define FIX8_CONJURE_ENUM_MINIMAL
+#define FIX8_CONJURE_ENUM_IS_CONTINUOUS
+#define FIX8_CONJURE_ENUM_NO_ANON
 ```
 
-## d) Class `conjure_enum` is not constructible
+## f) Class `conjure_enum` is not constructible
 All methods in this class are _static_. You cannot instantiate an object of this type. The same goes for `conjure_type`.
 
-## e) It's not _real_ reflection
+## g) It's not _real_ reflection
 This library provides a workaround (hack :smirk:) to current limitations of C++. There are proposals out there for future versions of the language that will provide proper reflection.
 See [Reflection TS](https://en.cppreference.com/w/cpp/experimental/reflect) and [Reflection for C++26](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2023/p2996r0.html)
 for examples of some of these.
 
-## f) Use of `std::string_view`
+## h) Use of `std::string_view`
 All of the generated static strings and generated static tables obtained by `std::source_location` use the library defined `fixed_string`. No string copying is done at runtime, resulting in
 a single static string in your application. All `conjure_enum` methods that return strings _only_ return `std::string_view`.
 To demonstrate this, lets look at the supplied test application `statictest`:
@@ -1628,7 +1631,7 @@ $
 
 It can be observed that there is only _one_ copy of the scoped enum value string in the executable.
 
-## g) Compilation profiling (Clang)
+## i) Compilation profiling (Clang)
 You can profile the compile time for Clang (other compilers TBA). Firstly install [ClangBuildAnalyzer](https://github.com/aras-p/ClangBuildAnalyzer).
 Then configure `conjure_enum` with:
 ```CMake
@@ -1753,7 +1756,7 @@ Compilation (2 times):
 | :--- | :--- | :--- | ---: |
 | [gcc](https://gcc.gnu.org/projects/cxx-status.html) | `11`, `12`, `13`, `14`| `std::format` not complete in `11`, `12` | `<= 10` |
 | [clang](https://clang.llvm.org/cxx_status.html) | `15`, `16`, `17`, `18`| Catch2 needs `cxx_std_20` in `15` | `<= 14` |
-| [msvc](https://learn.microsoft.com/en-us/cpp/overview/visual-cpp-language-conformance) | `16`, `17` | Visual Studio 2019,2022, latest `17.11.0`| `<= 16.9`|
+| [msvc](https://learn.microsoft.com/en-us/cpp/overview/visual-cpp-language-conformance) | `16`, `17` | Visual Studio 2019,2022, latest `17.10.5`| `<= 16.9`|
 | [xcode](https://developer.apple.com/support/xcode/) | `15` | Apple LLVM 15.0.0, some issues with `constexpr`, workarounds| `<= 14`|
 
 # 9. Compiler issues

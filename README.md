@@ -425,23 +425,27 @@ _output_
 4
 100 <-- invalid, error value
 ```
-## n) `contains`
+## n) `contains`, `is_valid`
 ```c++
 static constexpr bool contains(T value);
 static constexpr bool contains(std::string_view str);
 template<T e>
 static constexpr bool contains();
+template<T e>
+static constexpr bool is_valid();
 ```
 Returns `true` if the enum contains the given value or string.
 ```c++
 std::cout << std::format("{}\n", conjure_enum<component>::contains(component::path));
 std::cout << std::format("{}\n", conjure_enum<component1>::contains("nothing"));
 std::cout << std::format("{}\n", conjure_enum<component>::contains<component::path>());
+std::cout << std::format("{}\n", conjure_enum<component>::is_valid<component::path>());
 ```
 _output_
 ```CSV
 true
 false
+true
 true
 ```
 ## o) `for_each`, `for_each_n` ![](assets/notminimalred.svg)
@@ -662,15 +666,14 @@ _output_
 true
 false
 ```
-## r) `is_valid`
+## r) `is_continuous`
 ```c++
-template<T e>
-static constexpr bool is_valid();
+static constexpr bool is_continuous();
 ```
-Returns `true` if enum value is valid.
+Returns `true` if enum range is continuous (no gaps).
 ```c++
-std::cout << std::format("{}\n", conjure_enum<component>::is_valid<component::password>());
-std::cout << std::format("{}\n", conjure_enum<component1>::is_valid<static_cast<component>(16)>());
+std::cout << std::format("{}\n", conjure_enum<numbers>::is_continuous());
+std::cout << std::format("{}\n", conjure_enum<component>::is_continuous());
 ```
 _output_
 ```CSV
@@ -858,6 +861,20 @@ _output_
 ```CSV
 -128/127
 ```
+
+## C) `in_range`
+```c++
+static constexpr bool in_range(T value);
+```
+Returns `true` if the given value is within the minimum and maximum defined values for this enum type.
+```c++
+std::cout << std::format("{}\n", conjure_enum<component>::in_range(static_cast<component>(100)));
+```
+_output_
+```CSV
+false
+```
+
 ---
 # 4. API and Examples using `enum_bitset`
 `enum_bitset` is a convenient way of creating bitsets based on `std::bitset`. It uses your enum (scoped or unscoped)

@@ -48,12 +48,13 @@
 |2|[`conjure_enum` API and Examples](#3-api-and-examples-using-conjure_enum)| General examples|
 |3|[`enum_bitset` API and Examples](#4-api-and-examples-using-enum_bitset)| Enhanced enum aware `std::bitset`|
 |4|[`conjure_type` API and Examples](#5-api-and-examples-using-conjure_type)| Any type string extractor|
-|5|[Building](#6-building)| How to build or include|
-|6|[vcpkg](https://vcpkg.io/en/package/conjure-enum)| For vcpkg package|
-|7|[Notes](#8-notes)| Notes on the implementation, limits, etc|
-|8|[Compilers](#9-compiler-support)| Supported compilers|
-|9|[Compiler issues](#10-compiler-issues)| Workarounds for various compiler issues|
-|10|[Results of `std::source_location`](reference/source_location.md)| For implementation specific `std::source_location` results|
+|5|[`fixed_string` API](#6-api-for-fixed-string)| Fixed string|
+|6|[Building](#7-building)| How to build or include|
+|7|[vcpkg](https://vcpkg.io/en/package/conjure-enum)| For vcpkg package|
+|8|[Notes](#8-notes)| Notes on the implementation, limits, etc|
+|9|[Compilers](#9-compiler-support)| Supported compilers|
+|10|[Compiler issues](#10-compiler-issues)| Workarounds for various compiler issues|
+|11|[Results of `std::source_location`](reference/source_location.md)| For implementation specific `std::source_location` results|
 > [!TIP]
 > Use the built-in [table of contents](https://github.blog/changelog/2021-04-13-table-of-contents-support-in-markdown-files/) to navigate this guide.
 > Even better in [full read view](./README.md) of this page.

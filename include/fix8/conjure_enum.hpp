@@ -85,8 +85,8 @@ template<std::size_t N>
 class fixed_string final
 {
 	const std::array<char, N + 1> _buff;
-	template<std::size_t... C>
-	constexpr fixed_string(std::string_view sv, std::index_sequence<C...>) noexcept : _buff{sv[C]..., 0} {}
+	template<std::size_t... I>
+	constexpr fixed_string(std::string_view sv, std::index_sequence<I...>) noexcept : _buff{sv[I]..., 0} {}
 
 public:
 	explicit constexpr fixed_string(std::string_view sv) noexcept : fixed_string{sv, std::make_index_sequence<N>{}} {}
@@ -125,13 +125,13 @@ class cs final : public static_only
 		std::to_array<std::tuple<std::string_view, char, std::string_view, char>>
 		({
 #if defined __clang__
-			{ "e = "sv, ']', "(anonymous namespace)"sv, '(' }, { "T = "sv, ']', "(anonymous namespace)"sv, '(' },
+			{ "e = ", ']', "(anonymous namespace)", '(' }, { "T = ", ']', "(anonymous namespace)", '(' },
 #elif defined __GNUC__
-			{ "e = "sv, ';', "<unnamed>"sv, '<' }, { "T = "sv, ']', "{anonymous}"sv, '{' },
+			{ "e = ", ';', "<unnamed>", '<' }, { "T = ", ']', "{anonymous}", '{' },
 #elif defined _MSC_VER
-			{ "epeek<"sv, '>', "`anonymous-namespace'"sv, '`' }, { "::tpeek"sv, '<', "enum `anonymous namespace'::"sv, '\0' },
-			{ ""sv, '\0', "`anonymous namespace'::"sv, '\0' }, { ""sv, '\0', "enum "sv, '\0' }, { ""sv, '\0', "class "sv, '\0' },
-			{ ""sv, '\0', "struct "sv, '\0' },
+			{ "epeek<", '>', "`anonymous-namespace'", '`' }, { "::tpeek", '<', "enum `anonymous namespace'::", '\0' },
+			{ "", '\0', "`anonymous namespace'::", '\0' }, { "", '\0', "enum ", '\0' }, { "", '\0', "class ", '\0' },
+			{ "", '\0', "struct ", '\0' },
 #else
 # error "conjure_enum not supported by your compiler"
 #endif
@@ -179,7 +179,7 @@ struct enum_range final : public static_only
 // Convenience macros for above
 //-----------------------------------------------------------------------------------------
 #define FIX8_CONJURE_ENUM_SET_RANGE_INTS(ec,minv,maxv) \
-	template<> struct FIX8::enum_range<ec> { static constexpr int min{minv}, max{maxv}; };
+	template<> struct FIX8::enum_range<ec> final { static constexpr int min{minv}, max{maxv}; };
 
 #define FIX8_CONJURE_ENUM_SET_RANGE(minv,maxv) \
 	FIX8_CONJURE_ENUM_SET_RANGE_INTS(decltype(minv),static_cast<int>(minv), static_cast<int>(maxv))
@@ -319,6 +319,7 @@ public:
 	static constexpr bool is_valid() noexcept { return contains<e>(); }
 
 	static constexpr auto count() noexcept { return values.size(); }
+	static constexpr bool is_continuous() noexcept { return (enum_max_value - enum_min_value + 1) == count(); }
 
 	// scope ops
 	static constexpr bool has_scope(std::string_view what) noexcept
@@ -340,6 +341,8 @@ public:
 	}
 	static constexpr std::optional<T> int_to_enum(int value) noexcept
 	{
+		if constexpr (is_continuous())
+			return in_range(static_cast<T>(value)) ? static_cast<T>(value) : std::optional<T>{};
 		if (const auto [begin,end] { std::equal_range(values.cbegin(), values.cend(), static_cast<T>(value), _value_comp) };
 			begin != end)
 				return *begin;
@@ -349,6 +352,8 @@ public:
 	// index
 	static constexpr std::optional<size_t> index(T value) noexcept
 	{
+		if constexpr (is_continuous())
+			return in_range(value) ? to_underlying(value) - to_underlying(min_v) : std::optional<size_t>{};
 		const auto [begin,end] { std::equal_range(entries.cbegin(), entries.cend(), enum_tuple(value, std::string_view()), _tuple_comp) };
 		return begin != end ? &*begin - &*entries.cbegin() : std::optional<size_t>{};
 	}
@@ -358,6 +363,8 @@ public:
 	// contains
 	static constexpr bool contains(T value) noexcept
 	{
+		if constexpr (is_continuous())
+			return in_range(value);
 		return std::binary_search(values.cbegin(), values.cend(), value, _value_comp);
    }
 	static constexpr bool contains(std::string_view str) noexcept
@@ -371,9 +378,22 @@ public:
 	template<T e>
 	static constexpr std::string_view enum_to_string() noexcept { return _get_name_v<e>; }
 
+	static constexpr bool in_range(T value) noexcept { return min_v <= value && value <= max_v; }
 	static constexpr std::string_view enum_to_string(T value, [[maybe_unused]] bool noscope=false) noexcept
 	{
-		if (const auto [begin,end] { std::equal_range(entries.cbegin(), entries.cend(), enum_tuple(value, std::string_view()), _tuple_comp) };
+		if constexpr (is_continuous())
+		{
+			if (in_range(value))
+			{
+#if not defined FIX8_CONJURE_ENUM_MINIMAL
+				if (noscope)
+					return remove_scope(std::get<std::string_view>(entries[enum_to_underlying(value)]));
+				else
+#endif
+				return std::get<std::string_view>(entries[enum_to_underlying(value)]);
+			}
+		}
+		else if (const auto [begin,end] { std::equal_range(entries.cbegin(), entries.cend(), enum_tuple(value, std::string_view()), _tuple_comp) };
 			begin != end)
 		{
 #if not defined FIX8_CONJURE_ENUM_MINIMAL
@@ -398,6 +418,8 @@ public:
 	// misc
 	static constexpr int get_enum_min_value() noexcept { return enum_min_value; }
 	static constexpr int get_enum_max_value() noexcept { return enum_max_value; }
+	static constexpr auto min_v { values.front() };
+	static constexpr auto max_v { values.back() };
 
 #if not defined FIX8_CONJURE_ENUM_MINIMAL
 #include <fix8/conjure_enum_ext.hpp>

@@ -57,7 +57,7 @@ enum class range_test2 { first, second, third, fourth, fifth, sixth, seventh, ei
 TEST_CASE("fixed_string")
 {
 	static constexpr std::string_view t1{"The rain in Spain"};
-	fixed_string<t1.size()> f1{t1};
+	constexpr fixed_string<t1.size()> f1{t1};
 	REQUIRE(f1.size() == t1.size() + 1); // fixed_string makes string ASCIIZ
 	REQUIRE(f1[t1.size()] == 0); // test ASCIIZ
 	REQUIRE(f1.get().size() == t1.size()); // fixed_string as string_view

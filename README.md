@@ -50,9 +50,9 @@
 |4|[`conjure_type` API and Examples](#5-api-and-examples-using-conjure_type)| Any type string extractor|
 |5|[Building](#6-building)| How to build or include|
 |6|[vcpkg](https://vcpkg.io/en/package/conjure-enum)| For vcpkg package|
-|7|[Notes](#7-notes)| Notes on the implementation, limits, etc|
-|8|[Compilers](#8-compiler-support)| Supported compilers|
-|9|[Compiler issues](#9-compiler-issues)| Workarounds for various compiler issues|
+|7|[Notes](#8-notes)| Notes on the implementation, limits, etc|
+|8|[Compilers](#9-compiler-support)| Supported compilers|
+|9|[Compiler issues](#10-compiler-issues)| Workarounds for various compiler issues|
 |10|[Results of `std::source_location`](reference/source_location.md)| For implementation specific `std::source_location` results|
 > [!TIP]
 > Use the built-in [table of contents](https://github.blog/changelog/2021-04-13-table-of-contents-support-in-markdown-files/) to navigate this guide.
@@ -1252,7 +1252,59 @@ static consteval const char* FIX8::conjure_type<T>::tpeek() [with T = test]
 ```
 
 ---
-# 6. Building
+# 6. API for `fixed_string`
+`fixed_string` is a specialisation of `std::array` that provides statics storage for an ASCII zero (asciiz) string. The purpose of this class is to allow the
+creation of `constexpr` strings with specfic storage, adding a trailing `0`. It is used by `conjure_enum` to store all strings. API is described below. Other uses of this class are possible.
+
+## a) Creating a `fixed_string`
+```c++
+template<std::size_t N>
+class fixed_string;
+constexpr fixed_string(std::string_view sv);
+```
+Constructs a `fixed_string` from a `std::string_view`. Note the size must be passed as a template paramater.
+```c++
+std::string_view sv{"The rain in Spain"};
+fixed_string<sv.size()> fs{sv};
+```
+
+## b) `get`
+```c++
+constexpr std::string_view get() const;
+```
+Returns the strings as a `std::string_view`;
+
+## c) `c_str`
+```c++
+constexpr const char *c_str() const;
+```
+Returns the strings as a null terminated `const char *`.
+
+## d) `c_str`
+```c++
+constexpr operator std::string_view() const;
+```
+Provides a `std::string_view` cast.
+
+## e) `c_str`
+```c++
+constexpr char operator[](size_t idx) const;
+```
+
+## f) `size`
+```c++
+constexpr std::size_t size() const;
+```
+Returns the size of the `fixed_string` including the null terminator.
+
+## g) `std::ostream& operator<<`
+```c++
+std::ostream& operator<<(std::ostream& os, const fixed_string& what)
+```
+Provides an `ostream` insertor.
+
+---
+# 7. Building
 This implementation is header only. Apart from standard C++20 includes there are no external dependencies needed in your application.
 [Catch2](https://github.com/catchorg/Catch2.git) is used for the built-in unit tests.
 
@@ -1387,7 +1439,7 @@ Contributions are welcome. Make your changes in [your fork on the dev branch](ht
 master will not be considered.
 
 ---
-# 7. Notes
+# 8. Notes
 ## a) enum limits
 ### i. `FIX8_CONJURE_ENUM_MIN_VALUE`, `FIX8_CONJURE_ENUM_MAX_VALUE`
 These are set by default unless you override them by defining them in your application. They are the global range default for enums using `conjure_enum`.
@@ -1751,7 +1803,7 @@ Compilation (2 times):
 </p></details>
 
 ---
-# 8. Compiler support
+# 9. Compiler support
 | Compiler | Version(s) | Notes | Unsupported |
 | :--- | :--- | :--- | ---: |
 | [gcc](https://gcc.gnu.org/projects/cxx-status.html) | `11`, `12`, `13`, `14`| `std::format` not complete in `11`, `12` | `<= 10` |
@@ -1759,7 +1811,7 @@ Compilation (2 times):
 | [msvc](https://learn.microsoft.com/en-us/cpp/overview/visual-cpp-language-conformance) | `16`, `17` | Visual Studio 2019,2022, latest `17.10.5`| `<= 16.9`|
 | [xcode](https://developer.apple.com/support/xcode/) | `15` | Apple LLVM 15.0.0, some issues with `constexpr`, workarounds| `<= 14`|
 
-# 9. Compiler issues
+# 10. Compiler issues
 | Compiler | Version(s) | Issues | Workaround |
 | :--- | :--- | :--- | ---: |
 | clang | `16`, `17`, `18`| Compiler reports integers outside valid range [x,y]| specify underlying type when declaring enum eg. `enum class foo : int` |

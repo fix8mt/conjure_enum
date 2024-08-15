@@ -48,7 +48,7 @@
 |2|[`conjure_enum` API and Examples](#3-api-and-examples-using-conjure_enum)| General examples|
 |3|[`enum_bitset` API and Examples](#4-api-and-examples-using-enum_bitset)| Enhanced enum aware `std::bitset`|
 |4|[`conjure_type` API and Examples](#5-api-and-examples-using-conjure_type)| Any type string extractor|
-|5|[`fixed_string` API](#6-api-for-fixed-string)| Fixed string|
+|5|[`fixed_string` API](#6-api-for-fixed_string)| Statically stored fixed string|
 |6|[Building](#7-building)| How to build or include|
 |7|[vcpkg](https://vcpkg.io/en/package/conjure-enum)| For vcpkg package|
 |8|[Notes](#8-notes)| Notes on the implementation, limits, etc|

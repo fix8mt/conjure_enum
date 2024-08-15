@@ -1272,24 +1272,25 @@ fixed_string<sv.size()> fs{sv};
 ```c++
 constexpr std::string_view get() const;
 ```
-Returns the strings as a `std::string_view`;
+Returns the string as a `std::string_view`.
 
 ## c) `c_str`
 ```c++
 constexpr const char *c_str() const;
 ```
-Returns the strings as a null terminated `const char *`.
+Returns the string as a null terminated `const char *`.
 
-## d) `c_str`
+## d) `operator std::string_view`
 ```c++
 constexpr operator std::string_view() const;
 ```
-Provides a `std::string_view` cast.
+Provides a `std::string_view` cast. Returns the string as a `std::string_view`.
 
-## e) `c_str`
+## e) `operator[]`
 ```c++
 constexpr char operator[](size_t idx) const;
 ```
+Returns the character at the specifdined index. It is not range checked.
 
 ## f) `size`
 ```c++

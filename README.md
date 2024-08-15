@@ -1263,10 +1263,10 @@ template<std::size_t N>
 class fixed_string;
 constexpr fixed_string(std::string_view sv);
 ```
-Constructs a `fixed_string` from a `std::string_view`. The source string is _copied_ and a null character is added to the end. Note the size of the _source_ string must be passed as a template paramater.
+Constructs a `fixed_string` from a `std::string_view`. The source string is _copied_ and a null character is added to the end. Note the size of the _source_ string must be passed as a template parameter.
 ```c++
 std::string_view sv{"The rain in Spain"};
-fixed_string<sv.size()> fs{sv};
+constexpr fixed_string<sv.size()> fs{sv};
 ```
 
 ## b) `get`

@@ -73,8 +73,8 @@ TEST_CASE("default range")
 {
 	REQUIRE(conjure_enum<component>::get_enum_min_value() == FIX8_CONJURE_ENUM_MIN_VALUE);
 	REQUIRE(conjure_enum<component>::get_enum_max_value() == FIX8_CONJURE_ENUM_MAX_VALUE);
-	REQUIRE(conjure_enum<component>::get_enum_min_actual_value() == 0);
-	REQUIRE(conjure_enum<component>::get_enum_max_actual_value() == 14);
+	REQUIRE(conjure_enum<component>::get_actual_enum_min_value() == 0);
+	REQUIRE(conjure_enum<component>::get_actual_enum_max_value() == 14);
 }
 
 //-----------------------------------------------------------------------------------------
@@ -90,8 +90,8 @@ TEST_CASE("custom range")
 {
 	REQUIRE(conjure_enum<range_test>::get_enum_min_value() == 0);
 	REQUIRE(conjure_enum<range_test>::get_enum_max_value() == 7);
-	REQUIRE(conjure_enum<range_test>::get_enum_min_value() == conjure_enum<range_test>::get_enum_min_actual_value());
-	REQUIRE(conjure_enum<range_test>::get_enum_max_value() == conjure_enum<range_test>::get_enum_max_actual_value());
+	REQUIRE(conjure_enum<range_test>::get_enum_min_value() == conjure_enum<range_test>::get_actual_enum_min_value());
+	REQUIRE(conjure_enum<range_test>::get_enum_max_value() == conjure_enum<range_test>::get_actual_enum_max_value());
 	REQUIRE(conjure_enum<range_test1>::get_enum_min_value() == 0);
 	REQUIRE(conjure_enum<range_test1>::get_enum_max_value() == 7);
 	REQUIRE(conjure_enum<range_test2>::get_enum_min_value() == 0);

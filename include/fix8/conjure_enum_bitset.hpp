@@ -48,12 +48,14 @@ namespace FIX8 {
 template<typename T>
 concept valid_bitset_enum = valid_enum<T> and requires(T)
 {
-	requires static_cast<std::size_t>(conjure_enum<T>::values.back()) < conjure_enum<T>::count();
+	requires conjure_enum<T>::is_continuous();
+	requires conjure_enum<T>::get_actual_enum_min_value() == 0;
+	requires conjure_enum<T>::get_actual_enum_max_value() < conjure_enum<T>::count();
 };
 
 //-----------------------------------------------------------------------------------------
 // bitset based on supplied enum
-// Note: your enum sequence must be continuous with the last enum value < count of enumerations
+// Note: your enum sequence must be 0 based, continuous and the last enum value < count of enumerations
 //-----------------------------------------------------------------------------------------
 template<valid_bitset_enum T>
 class enum_bitset

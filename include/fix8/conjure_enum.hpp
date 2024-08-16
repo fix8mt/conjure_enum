@@ -414,8 +414,8 @@ public:
 	static constexpr int get_enum_max_value() noexcept { return enum_max_value; }
 	static constexpr auto min_v { values.front() };
 	static constexpr auto max_v { values.back() };
-	static constexpr int get_enum_min_actual_value() noexcept { return static_cast<int>(min_v); }
-	static constexpr int get_enum_max_actual_value() noexcept { return static_cast<int>(max_v); }
+	static constexpr int get_actual_enum_min_value() noexcept { return static_cast<int>(min_v); }
+	static constexpr int get_actual_enum_max_value() noexcept { return static_cast<int>(max_v); }
 
 #if not defined FIX8_CONJURE_ENUM_MINIMAL
 #include <fix8/conjure_enum_ext.hpp>

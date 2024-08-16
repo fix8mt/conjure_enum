@@ -847,19 +847,19 @@ static consteval const char* FIX8::conjure_enum<T>::tpeek() [with T = component]
 static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::path; T = component]
 ```
 
-## B) `get_enum_min_value`, `get_enum_max_value`, `get_enum_min_actual_value` and `get_enum_max_actual_value`
+## B) `get_enum_min_value`, `get_enum_max_value`, `get_actual_enum_min_value` and `get_actual_enum_max_value`
 ```c++
 static constexpr int get_enum_min_value();
 static constexpr int get_enum_max_value();
-static constexpr int get_enum_min_actual_value();
-static constexpr int get_enum_max_actual_value();
+static constexpr int get_actual_enum_min_value();
+static constexpr int get_actual_enum_max_value();
 ```
 The first two functions return the min and max enum range for the specified enum. If you have specialised `enum_range` then these values
 will be reported (see below).
 The second two functions return the actual min and max enum values as ints for the specified enum.
 ```c++
 std::cout << conjure_enum<component>::get_enum_min_value() << '/' << conjure_enum<component>::get_enum_min_value() << '\n';
-std::cout << conjure_enum<component>::get_enum_min_actual_value() << '/' << conjure_enum<component>::get_enum_min_actual_value() << '\n';
+std::cout << conjure_enum<component>::get_actual_enum_min_value() << '/' << conjure_enum<component>::get_actual_enum_min_value() << '\n';
 ```
 _output_
 ```CSV
@@ -885,7 +885,7 @@ false
 `enum_bitset` is a convenient way of creating bitsets based on `std::bitset`. It uses your enum (scoped or unscoped)
 for the bit positions (and names).
 > [!WARNING]
-> Your enum _must_ be continuous. The last value must be less than the count of enumerations.
+> Your enum sequence _must_ be 0 based, continuous and the last value must be less than the count of enumerations.
 > We decided on this restriction for both simplicity and practicality - bitsets only really make sense when represented in this manner.
 
 > [!IMPORTANT]

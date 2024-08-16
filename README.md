@@ -1835,9 +1835,9 @@ Compilation (2 times):
 We have benchmarked `conjure_enum` and `magic_enum`. The results are shown below. For `magic_enum` we created a separate repo (see [here](https://github.com/fix8mt/magic_enum_benchmark).
 We ran each benchmark 3 times, and averaged the results.
 | Compiler | `conjure_enum` | `magic_enum` | Notes |
-| :--- | :--- | :--- |
-| MSVC | 0.441 | 0.385 | using cl from command prompt
-| clang | 0.4 | 0.4 | using ClangBuildAnalyzer
+| :--- | :--- | :--- |:--- |
+| MSVC | 0.441 | 0.385 | using cl from command prompt|
+| clang | 0.4 | 0.4 | using ClangBuildAnalyzer|
 
 Notes
 - MSVC: Windows 11 ThinkCentre 16x 13th Gen Intel i7-13700, 32Gb; MSVC 2022 / 17.11.0.

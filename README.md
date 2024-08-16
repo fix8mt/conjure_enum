@@ -52,9 +52,10 @@
 |6|[Building](#7-building)| How to build or include|
 |7|[vcpkg](https://vcpkg.io/en/package/conjure-enum)| For vcpkg package|
 |8|[Notes](#8-notes)| Notes on the implementation, limits, etc|
-|9|[Compilers](#9-compiler-support)| Supported compilers|
-|10|[Compiler issues](#10-compiler-issues)| Workarounds for various compiler issues|
-|11|[Results of `std::source_location`](reference/source_location.md)| For implementation specific `std::source_location` results|
+|9|[Benchmarks](#9-benchmarks)| Benchmarking |
+|10|[Compilers](#10-compiler-support)| Supported compilers|
+|11|[Compiler issues](#11-compiler-issues)| Workarounds for various compiler issues|
+|12|[Results of `std::source_location`](reference/source_location.md)| For implementation specific `std::source_location` results|
 > [!TIP]
 > Use the built-in [table of contents](https://github.blog/changelog/2021-04-13-table-of-contents-support-in-markdown-files/) to navigate this guide.
 > Even better in [full read view](./README.md) of this page.
@@ -86,7 +87,7 @@ unlocked the potential of [`constexpr` algorithms](https://www.open-std.org/jtc1
 - ***Easy to Use***: Class-based approach with intuitive syntax
 - ***Convenient***: `enum_bitset` provides an enhanced enum aware `std::bitset` (see 3 above)
 - ***Useful***: `conjure_type` gives you the type string of _any type!_ (see 4 above)
-- ***Wide Compiler Compatibility***: Support for: (see 7 above)
+- ***Wide Compiler Compatibility***: Support for: (see 10 above)
   - GCC
   - Clang
   - MSVC
@@ -99,7 +100,7 @@ unlocked the potential of [`constexpr` algorithms](https://www.open-std.org/jtc1
   - `for_each_n`
   - `dispatch`
   - iterators and more!
-- ***Transparency***: Compiler implementation variability fully documented, verifiable and reportable (see 9 above)
+- ***Transparency***: Compiler implementation variability fully documented, verifiable and reportable (see 12 above)
 
 ---
 # 3. API and Examples using `conjure_enum`
@@ -1830,7 +1831,22 @@ Compilation (2 times):
 </p></details>
 
 ---
-# 9. Compiler support
+# 9. Benchmarks
+We have benchmarked `conjure_enum` and `magic_enum`. The results are shown below. For `magic_enum` we created a separate repo (see [here](https://github.com/fix8mt/magic_enum_benchmark).
+We ran each benchmark 3 times, and averaged the results.
+| Compiler | `conjure_enum` | `magic_enum` | Notes |
+| :--- | :--- | :--- |
+| MSVC | 0.441 | 0.385 | using cl from command prompt
+| clang | 0.4 | 0.4 | using ClangBuildAnalyzer
+
+Notes
+- MSVC: Windows 11 ThinkCentre 16x 13th Gen Intel i7-13700, 32Gb; MSVC 2022 / 17.11.0.
+- Clang: Ubuntu 24.04 12th Gen Intel i9-12900T, 32Gb; Clang 18.1.3
+- `magic_enum`: single header only
+- `conjure_enum`: minimal build
+
+---
+# 10. Compiler support
 | Compiler | Version(s) | Notes | Unsupported |
 | :--- | :--- | :--- | ---: |
 | [gcc](https://gcc.gnu.org/projects/cxx-status.html) | `11`, `12`, `13`, `14`| `std::format` not complete in `11`, `12` | `<= 10` |
@@ -1838,7 +1854,7 @@ Compilation (2 times):
 | [msvc](https://learn.microsoft.com/en-us/cpp/overview/visual-cpp-language-conformance) | `16`, `17` | Visual Studio 2019,2022, latest `17.11.0`| `<= 16.9`|
 | [xcode](https://developer.apple.com/support/xcode/) | `15` | Apple LLVM 15.0.0, some issues with `constexpr`, workarounds| `<= 14`|
 
-# 10. Compiler issues
+# 11. Compiler issues
 | Compiler | Version(s) | Issues | Workaround |
 | :--- | :--- | :--- | ---: |
 | clang | `16`, `17`, `18`| Compiler reports integers outside valid range [x,y]| specify underlying type when declaring enum eg. `enum class foo : int` |

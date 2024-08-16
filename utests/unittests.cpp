@@ -73,6 +73,8 @@ TEST_CASE("default range")
 {
 	REQUIRE(conjure_enum<component>::get_enum_min_value() == FIX8_CONJURE_ENUM_MIN_VALUE);
 	REQUIRE(conjure_enum<component>::get_enum_max_value() == FIX8_CONJURE_ENUM_MAX_VALUE);
+	REQUIRE(conjure_enum<component>::get_enum_min_actual_value() == 0);
+	REQUIRE(conjure_enum<component>::get_enum_max_actual_value() == 14);
 }
 
 //-----------------------------------------------------------------------------------------
@@ -88,6 +90,8 @@ TEST_CASE("custom range")
 {
 	REQUIRE(conjure_enum<range_test>::get_enum_min_value() == 0);
 	REQUIRE(conjure_enum<range_test>::get_enum_max_value() == 7);
+	REQUIRE(conjure_enum<range_test>::get_enum_min_value() == conjure_enum<range_test>::get_enum_min_actual_value());
+	REQUIRE(conjure_enum<range_test>::get_enum_max_value() == conjure_enum<range_test>::get_enum_max_actual_value());
 	REQUIRE(conjure_enum<range_test1>::get_enum_min_value() == 0);
 	REQUIRE(conjure_enum<range_test1>::get_enum_max_value() == 7);
 	REQUIRE(conjure_enum<range_test2>::get_enum_min_value() == 0);
@@ -111,10 +115,27 @@ TEST_CASE("is_scoped")
 }
 
 //-----------------------------------------------------------------------------------------
+TEST_CASE("is_continuous")
+{
+	REQUIRE(!conjure_enum<component>::is_continuous());
+	REQUIRE(conjure_enum<numbers>::is_continuous());
+}
+
+//-----------------------------------------------------------------------------------------
 TEST_CASE("count")
 {
 	REQUIRE(conjure_enum<component>::count() == 10);
 	REQUIRE(conjure_enum<component1>::count() == 10);
+	REQUIRE(conjure_enum<numbers>::count() == 10);
+}
+
+//-----------------------------------------------------------------------------------------
+TEST_CASE("in_range")
+{
+	REQUIRE(conjure_enum<component>::in_range(component::password));
+	REQUIRE(!conjure_enum<component>::in_range(static_cast<component>(100)));
+	REQUIRE(conjure_enum<numbers>::in_range(numbers::five));
+	REQUIRE(!conjure_enum<numbers>::in_range(static_cast<numbers>(100)));
 }
 
 //-----------------------------------------------------------------------------------------
@@ -220,6 +241,8 @@ TEST_CASE("contains")
 	REQUIRE(conjure_enum<component>::contains<component::path>());
 	REQUIRE(conjure_enum<component>::contains<component::test>()); // alias
 	REQUIRE(conjure_enum<component1>::contains<path>());
+	REQUIRE(conjure_enum<numbers>::contains(numbers::five));
+	REQUIRE(!conjure_enum<numbers>::contains(static_cast<numbers>(100)));
 }
 
 //-----------------------------------------------------------------------------------------
@@ -301,6 +324,8 @@ TEST_CASE("int_to_enum")
 	REQUIRE(conjure_enum<component1>::int_to_enum(4).value() == password);
 	REQUIRE(conjure_enum<component>::int_to_enum(11).value_or(static_cast<component>(100)) == static_cast<component>(100));
 	REQUIRE(conjure_enum<component1>::int_to_enum(11).value_or(static_cast<component1>(100)) == static_cast<component1>(100));
+	REQUIRE(conjure_enum<numbers>::int_to_enum(4).value() == numbers::four);
+	REQUIRE(conjure_enum<numbers>::int_to_enum(11).value_or(static_cast<numbers>(100)) == static_cast<numbers>(100));
 }
 
 //-----------------------------------------------------------------------------------------
@@ -323,6 +348,8 @@ TEST_CASE("index")
 	REQUIRE(conjure_enum<component>::index<component::password>().value() == 4);
 	REQUIRE(conjure_enum<component>::index<component::query>().value() == 8);
 	REQUIRE(conjure_enum<component>::index<component(100)>().value_or(100) == 100);
+	REQUIRE(conjure_enum<numbers>::index<numbers::five>().value() == 5);
+	REQUIRE(conjure_enum<numbers>::index<numbers(100)>().value_or(100) == 100);
 }
 
 //-----------------------------------------------------------------------------------------

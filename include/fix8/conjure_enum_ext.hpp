@@ -223,11 +223,11 @@ public:
 	}
 
 	// public constexpr data structures
-	static constexpr auto names { _names(std::make_index_sequence<values.size()>()) };
-	static constexpr auto scoped_entries { _scoped_entries(std::make_index_sequence<values.size()>()) };
-	static constexpr auto unscoped_entries { _unscoped_entries(std::make_index_sequence<values.size()>()) };
-	static constexpr auto rev_scoped_entries { _rev_scoped_entries(std::make_index_sequence<values.size()>()) };
-	static constexpr auto unscoped_names { _unscoped_names(std::make_index_sequence<values.size()>()) };
+	static constexpr auto names { _names(std::make_index_sequence<count()>()) };
+	static constexpr auto scoped_entries { _scoped_entries(std::make_index_sequence<count()>()) };
+	static constexpr auto unscoped_entries { _unscoped_entries(std::make_index_sequence<count()>()) };
+	static constexpr auto rev_scoped_entries { _rev_scoped_entries(std::make_index_sequence<count()>()) };
+	static constexpr auto unscoped_names { _unscoped_names(std::make_index_sequence<count()>()) };
 };
 
 //-----------------------------------------------------------------------------------------

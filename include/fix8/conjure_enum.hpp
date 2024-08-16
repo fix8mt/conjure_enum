@@ -315,11 +315,9 @@ public:
 		requires !std::convertible_to<T, std::underlying_type_t<T>>;
 	}>{};
 
-	template<T e>
-	static constexpr bool is_valid() noexcept { return contains<e>(); }
-
 	static constexpr auto count() noexcept { return values.size(); }
-	static constexpr bool is_continuous() noexcept { return (enum_max_value - enum_min_value + 1) == count(); }
+	static constexpr bool is_continuous() noexcept { return (static_cast<size_t>(max_v) - static_cast<size_t>(min_v) + 1) == count(); }
+	static constexpr bool in_range(T value) noexcept { return std::clamp(value, min_v, max_v) == value; }
 
 	// scope ops
 	static constexpr bool has_scope(std::string_view what) noexcept
@@ -353,7 +351,7 @@ public:
 	static constexpr std::optional<size_t> index(T value) noexcept
 	{
 		if constexpr (is_continuous())
-			return in_range(value) ? to_underlying(value) - to_underlying(min_v) : std::optional<size_t>{};
+			return in_range(value) ? enum_to_underlying(value) - enum_to_underlying(min_v) : std::optional<size_t>{};
 		const auto [begin,end] { std::equal_range(entries.cbegin(), entries.cend(), enum_tuple(value, std::string_view()), _tuple_comp) };
 		return begin != end ? &*begin - &*entries.cbegin() : std::optional<size_t>{};
 	}
@@ -361,6 +359,9 @@ public:
 	static constexpr std::optional<size_t> index() noexcept { return index(e); }
 
 	// contains
+	template<T e>
+	static constexpr bool is_valid() noexcept { return contains<e>(); }
+
 	static constexpr bool contains(T value) noexcept
 	{
 		if constexpr (is_continuous())
@@ -378,7 +379,6 @@ public:
 	template<T e>
 	static constexpr std::string_view enum_to_string() noexcept { return _get_name_v<e>; }
 
-	static constexpr bool in_range(T value) noexcept { return min_v <= value && value <= max_v; }
 	static constexpr std::string_view enum_to_string(T value, [[maybe_unused]] bool noscope=false) noexcept
 	{
 		if constexpr (is_continuous())
@@ -388,7 +388,6 @@ public:
 #if not defined FIX8_CONJURE_ENUM_MINIMAL
 				if (noscope)
 					return remove_scope(std::get<std::string_view>(entries[enum_to_underlying(value)]));
-				else
 #endif
 				return std::get<std::string_view>(entries[enum_to_underlying(value)]);
 			}
@@ -412,7 +411,7 @@ public:
 
 	// public constexpr data structures
 	static constexpr auto values { _values(std::make_index_sequence<enum_max_value - enum_min_value + 1>()) };
-	static constexpr auto entries { _entries(std::make_index_sequence<values.size()>()) };
+	static constexpr auto entries { _entries(std::make_index_sequence<count()>()) };
 	static constexpr auto sorted_entries { _sorted_entries() };
 
 	// misc
@@ -420,6 +419,8 @@ public:
 	static constexpr int get_enum_max_value() noexcept { return enum_max_value; }
 	static constexpr auto min_v { values.front() };
 	static constexpr auto max_v { values.back() };
+	static constexpr int get_enum_min_actual_value() noexcept { return static_cast<int>(min_v); }
+	static constexpr int get_enum_max_actual_value() noexcept { return static_cast<int>(max_v); }
 
 #if not defined FIX8_CONJURE_ENUM_MINIMAL
 #include <fix8/conjure_enum_ext.hpp>

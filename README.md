@@ -885,7 +885,9 @@ false
 `enum_bitset` is a convenient way of creating bitsets based on `std::bitset`. It uses your enum (scoped or unscoped)
 for the bit positions (and names).
 > [!WARNING]
-> Your enum sequence _must_ be 0 based, continuous and the last value must be less than the count of enumerations.
+> - Your enum sequence _must_ be 0 based
+> - Continuous
+> - The last value must be less than the count of enumerations
 > We decided on this restriction for both simplicity and practicality - bitsets only really make sense when represented in this manner.
 
 > [!IMPORTANT]

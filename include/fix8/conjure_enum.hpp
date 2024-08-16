@@ -339,12 +339,7 @@ public:
 	}
 	static constexpr std::optional<T> int_to_enum(int value) noexcept
 	{
-		if constexpr (is_continuous())
-			return in_range(static_cast<T>(value)) ? static_cast<T>(value) : std::optional<T>{};
-		if (const auto [begin,end] { std::equal_range(values.cbegin(), values.cend(), static_cast<T>(value), _value_comp) };
-			begin != end)
-				return *begin;
-		return {};
+		return contains(static_cast<T>(value)) ? static_cast<T>(value) : std::optional<T>{};
 	}
 
 	// index

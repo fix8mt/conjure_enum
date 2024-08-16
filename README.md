@@ -1832,19 +1832,25 @@ Compilation (2 times):
 
 ---
 # 9. Benchmarks
-We have benchmarked `conjure_enum` and `magic_enum`. The results are shown below. For `magic_enum` we created a separate repo (see [here](https://github.com/fix8mt/magic_enum_benchmark)).
-We ran each benchmark 3 times, and averaged the results.
+We have benchmarked compilation times for `conjure_enum` and `magic_enum`.
+For `magic_enum` we created a separate repo (see [here](https://github.com/fix8mt/magic_enum_benchmark)).
+
 | Compiler | `conjure_enum` (secs) | `magic_enum` (secs)| Notes |
 | :--- | :--- | :--- |:--- |
 | MSVC | 0.441 | 0.385 | using cl from command prompt|
 | clang | 0.4 | 0.4 | using ClangBuildAnalyzer|
 
-Notes
+## Notes
+- Benchmark run 10 times, best result shown
 - Both benchmarks are using [cbenchmark.sh](examples/cbenchmark.sh) and [cbenchmark.cpp](examples/cbenchmark.cpp)
 - MSVC: Windows 11 ThinkCentre 16x 13th Gen Intel i7-13700, 32Gb; MSVC 2022 / 17.11.0.
 - Clang: Ubuntu 24.04 12th Gen Intel i9-12900T, 32Gb; Clang 18.1.3
 - `magic_enum`: single header only
 - `conjure_enum`: minimal build
+
+## Discussion
+For MSVC, `magic_enum` compilation times a slighly better than `conjure_enum` (around %10). For clang the results are identical.
+From a compilation performance perspective, `conjure_enum` at least matches the performance of `magic_enum`.
 
 ---
 # 10. Compiler support

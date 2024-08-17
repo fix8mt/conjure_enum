@@ -195,23 +195,26 @@ _output_
 12
 100 <-- invalid, error value
 ```
-## d) `int_to_enum`
+## d) `int_to_enum`, `enum_cast`
 ```c++
 static constexpr std::optional<T> int_to_enum(int value);
+static constexpr T enum_cast(int value);
 ```
 Returns a `std::optional<T>`. Empty if value was not valid. Use `std::optional<T>::value_or()` to set an error value
-and avoid throwing an exception.
+and avoid throwing an exception. `enum_cast` will cast to the enum type regardless of whether the value is a valid enum.
 ```c++
 int value { static_cast<int>(conjure_enum<component>::int_to_enum(12).value()) };
 int noscope_value { static_cast<int>(conjure_enum<component1>::int_to_enum(12).value()) };
 int bad_value { static_cast<int>(conjure_enum<component>::int_to_enum(100).value_or(component(100))) };
 std::cout << value << '\n' << noscope_value << '\n' << bad_value << '\n';
+std::cout << static_cast<int>(conjure_enum<component>::enum_cast(150)) << '\n';
 ```
 _output_
 ```CSV
 12
 12
 100 <-- invalid, error value
+150 <-- invalid, but still casted
 ```
 ## e) `enum_to_int`, `enum_to_underlying`
 ```c++

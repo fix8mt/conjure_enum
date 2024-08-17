@@ -1839,9 +1839,9 @@ For `magic_enum` we created a separate repo (see [here](https://github.com/fix8m
 | Compiler | `conjure_enum` (secs) | `magic_enum` (secs)| Notes |
 | :--- | :--- | :--- |:--- |
 | MSVC | 0.441 | 0.385 | using cl from command prompt|
-| | `cl /nologo /MD /std:c++latest /Bt+ /I ..\include  ..\examples\cbenchmark.cpp|find "c1xx.dll"` | `cl /nologo /MD /std:c++latest /Bt+ -I build\_deps\magic_enum-src\include cbenchmark.cpp|find "c1xx.dll"`|
+| | `cl /nologo /MD /std:c++latest /Bt+ /I ..\include  ..\examples\cbenchmark.cpp|find "c1xx.dll"` | `cl /nologo /MD /std:c++latest /Bt+ -I build\_deps\magic_enum-src\include cbenchmark.cpp|find "c1xx.dll"`||
 | clang | 0.4 | 0.4 | using ClangBuildAnalyzer|
-||`ClangBuildAnalyzerLoc=~/prog/ClangBuildAnalyzer/build ArtifactLoc=build_clang examples/cbenchmark.sh`|`ClangBuildAnalyzerLoc=~/prog/ClangBuildAnalyzer/build ArtifactLoc=build_clang ./cbenchmark.sh`|
+||`ClangBuildAnalyzerLoc=~/prog/ClangBuildAnalyzer/build ArtifactLoc=build_clang examples/cbenchmark.sh`|`ClangBuildAnalyzerLoc=~/prog/ClangBuildAnalyzer/build ArtifactLoc=build_clang ./cbenchmark.sh`||
 
 ## Notes
 - Benchmark run 10 times, best result shown

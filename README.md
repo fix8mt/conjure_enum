@@ -114,6 +114,8 @@ enum class numbers { zero, one, two, three, four, five, six, seven, eight, nine 
 ## a) `enum_to_string`
 ```c++
 static constexpr std::string_view enum_to_string(T value, bool noscope=false);
+template<T e>
+static constexpr std::string_view enum_to_string();
 ```
 Returns a `std::string_view` or empty if not found. Optionally passing `true` will remove scope in result if present.
 `noscope` option ![](assets/notminimalred.svg).
@@ -123,6 +125,7 @@ auto name_trim { conjure_enum<component>::enum_to_string(component::path, true) 
 auto alias_name { conjure_enum<component>::enum_to_string(component::test) }; // alias
 auto noscope_name { conjure_enum<component1>::enum_to_string(path) };
 std::cout << name << '\n' << name_trim << '\n' << alias_name << '\n' << noscope_name << '\n';
+std::cout << conjure_enum<numbers>::enum_to_string<numbers::two>() << '\n';
 ```
 _output_
 ```CSV
@@ -130,6 +133,7 @@ component::path
 path
 component::path
 path
+numbers::two
 ```
 ### Aliases
 Because all methods in `conjure_enum` are defined _within_ a `class` instead of individual template functions in a `namespace`, you can reduce your

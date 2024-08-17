@@ -254,6 +254,8 @@ TEST_CASE("enum_to_string")
 	REQUIRE(conjure_enum<component>::enum_to_string(static_cast<component>(100)).empty());
 	REQUIRE(conjure_enum<component>::enum_to_string<component::fragment>() == "component::fragment");
 	REQUIRE(conjure_enum<component1>::enum_to_string<component1::fragment>() == "fragment");
+	using enum numbers;
+	REQUIRE(conjure_enum<numbers>::enum_to_string<two>() == "numbers::two");
 }
 
 //-----------------------------------------------------------------------------------------

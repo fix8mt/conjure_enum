@@ -896,6 +896,7 @@ for the bit positions (and names).
 > - Your enum sequence _must_ be 0 based
 > - Continuous
 > - The last value must be less than the count of enumerations
+> - This implementation is limited to 64 bits
 >
 > We decided on this restriction for both simplicity and practicality - bitsets only really make sense when represented in this manner.
 

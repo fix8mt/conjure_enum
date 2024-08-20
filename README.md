@@ -70,12 +70,10 @@ Based on the awesome work in [`magic_enum`](https://github.com/Neargye/magic_enu
 this library offers a streamlined and powerful way to add reflection capabilities to your C++ enums and other types. We've optimized the core functionality,
 focusing on the main features developers usually want. We've also added general purpose typename reflection for any type.
 
-## b) Embracing C++20
-
 `conjure_enum`[^1] takes full advantage of recently added C++20 features. We've leveraged the convenience of [`std::source_location`](https://en.cppreference.com/w/cpp/utility/source_location) and
 unlocked the potential of [`constexpr` algorithms](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2017/p0202r3.html) and [concepts](https://en.cppreference.com/w/cpp/language/constraints).
 
-## c) Highlights
+## b) Highlights
 
 - ***Single Header-Only***: No external dependencies, simplifying integration into your project
 - ***Modern C++20***: Entirely `constexpr` for compile-time safety, efficiency and performance; no macros
@@ -92,7 +90,7 @@ unlocked the potential of [`constexpr` algorithms](https://www.open-std.org/jtc1
   - Clang
   - MSVC
   - XCode/Apple Clang
-- ***Confidence in Quality***: Includes comprehensive unit test suite for reliable functionality and profiling
+- ***Confidence***: Includes comprehensive unit test suite for reliable functionality and profiling
 - ***Expanded***: Enhanced API:
   - `add_scope`
   - `remove_scope`

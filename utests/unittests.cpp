@@ -328,6 +328,7 @@ TEST_CASE("int_to_enum")
 	REQUIRE(conjure_enum<component1>::int_to_enum(11).value_or(static_cast<component1>(100)) == static_cast<component1>(100));
 	REQUIRE(conjure_enum<numbers>::int_to_enum(4).value() == numbers::four);
 	REQUIRE(conjure_enum<numbers>::int_to_enum(11).value_or(static_cast<numbers>(100)) == static_cast<numbers>(100));
+	REQUIRE(conjure_enum<numbers>::enum_cast(150) == static_cast<numbers>(150));
 }
 
 //-----------------------------------------------------------------------------------------

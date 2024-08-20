@@ -339,7 +339,11 @@ public:
 	}
 	static constexpr std::optional<T> int_to_enum(int value) noexcept
 	{
-		return contains(static_cast<T>(value)) ? static_cast<T>(value) : std::optional<T>{};
+		return contains(enum_cast(value)) ? enum_cast(value) : std::optional<T>{};
+	}
+	static constexpr T enum_cast(int value) noexcept
+	{
+		return static_cast<T>(value);
 	}
 
 	// index

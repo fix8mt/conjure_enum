@@ -51,6 +51,7 @@ concept valid_bitset_enum = valid_enum<T> and requires(T)
 	requires conjure_enum<T>::is_continuous();
 	requires conjure_enum<T>::get_actual_enum_min_value() == 0;
 	requires conjure_enum<T>::get_actual_enum_max_value() < conjure_enum<T>::count();
+	requires std::bit_ceil(static_cast<unsigned>(conjure_enum<T>::get_actual_enum_max_value())) >= conjure_enum<T>::count();
 };
 
 //-----------------------------------------------------------------------------------------

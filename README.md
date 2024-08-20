@@ -1817,7 +1817,7 @@ Compilation (2 times):
      0 ms: __gnu_cxx::__to_xstring<$> (1 times, avg 0 ms)
 
 **** Functions that took longest to compile:
-     0 ms: test_conjure_enum(std::errc) (/home/davidd/prog/conjure_enum_tclass/examples/cbenchmark.cpp)
+     0 3s: test_conjure_enum(std::errc) (/home/davidd/prog/conjure_enum_tclass/examples/cbenchmark.cpp)
 
 **** Function sets that took longest to compile / optimize:
 
@@ -1840,9 +1840,9 @@ For `magic_enum` we created a separate repo (see [here](https://github.com/fix8m
 
 | Compiler | `conjure_enum` (secs) | `magic_enum` (secs)| Notes |
 | :--- | :--- | :--- |:--- |
-| MSVC | 0.441 | 0.385 | using cl from command prompt|
+| MSVC | 0.376 | 0.343 | using cl from command prompt|
 |_command_ | `cl /nologo /MD /std:c++latest /Bt+ /I ..\include  ..\examples\cbenchmark.cpp\|find "c1xx.dll"` | `cl /nologo /MD /std:c++latest /Bt+ -I build\_deps\magic_enum-src\include cbenchmark.cpp\|find "c1xx.dll"`||
-| clang | 0.4 | 0.4 | using ClangBuildAnalyzer|
+| clang | 0.3 | 0.3 | using ClangBuildAnalyzer|
 |_command_|`make`; `ClangBuildAnalyzerLoc=~/prog/ClangBuildAnalyzer/build ArtifactLoc=build_clang examples/cbenchmark.sh`|`make`; `ClangBuildAnalyzerLoc=~/prog/ClangBuildAnalyzer/build ArtifactLoc=build_clang ./cbenchmark.sh`||
 
 ## Notes
@@ -1854,7 +1854,7 @@ For `magic_enum` we created a separate repo (see [here](https://github.com/fix8m
 - `conjure_enum`: minimal build
 
 ## Discussion
-For MSVC, `magic_enum` compilation times a slighly better than `conjure_enum` (around %10). For clang the results are identical.
+For MSVC, `magic_enum` compilation times a slighly better than `conjure_enum` (around %9). For clang the results are identical.
 From a compilation performance perspective, `conjure_enum` roughly matches the performance of `magic_enum`.
 
 ---
@@ -1863,7 +1863,7 @@ From a compilation performance perspective, `conjure_enum` roughly matches the p
 | :--- | :--- | :--- | ---: |
 | [gcc](https://gcc.gnu.org/projects/cxx-status.html) | `11`, `12`, `13`, `14`| `std::format` not complete in `11`, `12` | `<= 10` |
 | [clang](https://clang.llvm.org/cxx_status.html) | `15`, `16`, `17`, `18`| Catch2 needs `cxx_std_20` in `15` | `<= 14` |
-| [msvc](https://learn.microsoft.com/en-us/cpp/overview/visual-cpp-language-conformance) | `16`, `17` | Visual Studio 2019,2022, latest `17.11.0`| `<= 16.9`|
+| [msvc](https://learn.microsoft.com/en-us/cpp/overview/visual-cpp-language-conformance) | `16`, `17` | Visual Studio 2019,2022, latest `17.11.1`| `<= 16.9`|
 | [xcode](https://developer.apple.com/support/xcode/) | `15` | Apple LLVM 15.0.0, some issues with `constexpr`, workarounds| `<= 14`|
 
 # 11. Compiler issues

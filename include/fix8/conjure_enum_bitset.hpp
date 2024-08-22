@@ -61,8 +61,41 @@ concept valid_bitset_enum = valid_enum<T> and requires(T)
 template<valid_bitset_enum T>
 class enum_bitset
 {
-	using U = std::underlying_type_t<T>;
 	static constexpr auto countof { conjure_enum<T>::count() };
+	using U = std::conditional_t<countof <= 8,  std::uint_least8_t,
+				 std::conditional_t<countof <= 16, std::uint_least16_t,
+				 std::conditional_t<countof <= 32, std::uint_least32_t,
+				 std::conditional_t<countof <= 64, std::uint_least64_t, void>>>>;
+	static_assert(std::integral<U>, "requested bitset overflow");
+
+	template <typename R>
+	class _reference
+	{
+		R& _owner;
+		std::size_t _idx;
+		constexpr _reference(R& obj, std::size_t idx) noexcept : _owner(obj), _idx(idx) {}
+		friend class enum_bitset;
+
+	public:
+		constexpr _reference& operator=(bool val) noexcept
+		{
+			if (val)
+				_owner.set(_idx);
+			else
+				_owner.reset(_idx);
+			return *this;
+		}
+
+		constexpr _reference& operator=(const _reference& val) noexcept
+		{
+			if (this == &val)
+				return *this;
+			*this = static_cast<bool>(val);
+			return *this;
+		}
+
+		constexpr operator bool() const noexcept { return _owner.test(_idx); }
+	};
 
 	template<T val>
 	static constexpr U to_underlying() noexcept { return static_cast<U>(val); } // C++23: upgrade to std::to_underlying
@@ -71,14 +104,20 @@ class enum_bitset
 	U _present{};
 
 public:
+	using enum_bitset_underlying_type = U;
+	using reference = _reference<enum_bitset>;
+	using const_reference = _reference<const enum_bitset>;
+
 	explicit constexpr enum_bitset(U bits) noexcept : _present(bits) {}
 	constexpr enum_bitset(std::string_view from, bool anyscope=false, char sep='|', bool ignore_errors=true)
 		: _present(factory(from, anyscope, sep, ignore_errors)) {}
 
 	template<valid_bitset_enum... E>
+	requires (sizeof...(E) > 1)
 	constexpr enum_bitset(E... comp) noexcept : _present((0u | ... | (1 << to_underlying(comp)))) {}
 
 	template<std::integral... I>
+	requires (sizeof...(I) > 1)
 	constexpr enum_bitset(I... comp) noexcept : _present((0u | ... | (1 << comp))) {}
 
 	constexpr enum_bitset() = default;
@@ -91,8 +130,10 @@ public:
 	constexpr U to_ulong() const noexcept { return _present; }
 	constexpr unsigned long long to_ullong() const noexcept { return _present; }
 
-	constexpr bool operator[](std::size_t pos) const noexcept { return test(pos); }
-	constexpr bool operator[](T what) const noexcept { return test(what); }
+	constexpr auto operator[](std::size_t pos) noexcept { return reference(*this, pos); }
+	constexpr auto operator[](std::size_t pos) const noexcept { return const_reference(*this, pos); }
+	constexpr auto operator[](T what) noexcept { return reference(*this, to_underlying(what)); }
+	constexpr auto operator[](T what) const noexcept { return const_reference(*this, to_underlying(what)); }
 
 	/// set
 	constexpr void set(U pos, bool value=true) noexcept { value ? _present |= 1 << pos : _present &= ~(1 << pos); }
@@ -206,9 +247,9 @@ public:
 	constexpr enum_bitset operator&(T other) const noexcept { return enum_bitset(_present & 1 << to_underlying(other)); }
 	constexpr enum_bitset operator|(T other) const noexcept { return enum_bitset(_present | 1 << to_underlying(other)); }
 	constexpr enum_bitset operator^(T other) const noexcept { return enum_bitset(_present ^ 1 << to_underlying(other)); }
-	constexpr enum_bitset operator&(U other) const noexcept { return enum_bitset(_present & other); }
-	constexpr enum_bitset operator|(U other) const noexcept { return enum_bitset(_present | other); }
-	constexpr enum_bitset operator^(U other) const noexcept { return enum_bitset(_present ^ other); }
+	//constexpr enum_bitset operator&(U other) const noexcept { return enum_bitset(_present & other); }
+	//constexpr enum_bitset operator|(U other) const noexcept { return enum_bitset(_present | other); }
+	//constexpr enum_bitset operator^(U other) const noexcept { return enum_bitset(_present ^ other); }
 	constexpr enum_bitset operator~() const noexcept { return enum_bitset(~_present & all_bits); }
 
 	/// for_each, for_each_n

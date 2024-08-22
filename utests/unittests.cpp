@@ -656,6 +656,11 @@ TEST_CASE("enum_bitset ops")
 	REQUIRE((ed ^ numbers::one).to_ulong()  == 0b010);
 	ed ^= numbers::one;
 	REQUIRE(ed.to_ulong() == 0b010);
+
+	ed.reset();
+	ed[2] = true;
+	REQUIRE(ed.test(numbers::two));
+	REQUIRE(ed[2] == true);
 }
 
 //-----------------------------------------------------------------------------------------

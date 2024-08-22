@@ -1023,7 +1023,7 @@ All of the standard accessors and mutators are supported.
 | `to_ullong` | convert to `unsigned long long` |
 | `count` | count of bits on |
 | `size` | number of bits in bitset |
-| `operator[]` | test bit at position |
+| `operator[]` | set or test bit at position |
 | `any` | return `true` if any bit is on |
 | `all` | return `true` if all bits are on |
 | `none` | return `true` if no bits are on |

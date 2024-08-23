@@ -890,13 +890,13 @@ false
 # 4. API and Examples using `enum_bitset`
 `enum_bitset` is a convenient way of creating bitsets based on `std::bitset`. It uses your enum (scoped or unscoped)
 for the bit positions (and names).
-> [!WARNING]
+> [!NOTE]
 > - Your enum sequence _must_ be 0 based
 > - Continuous
 > - The last value must be less than the count of enumerations
 > - This implementation is limited to 64 bits
 >
-> We decided on this restriction for both simplicity and practicality - bitsets only really make sense when represented in this manner.
+> We decided on these restrictions for both simplicity and practicality - bitsets only really make sense when represented in this manner.
 
 > [!IMPORTANT]
 > You must include

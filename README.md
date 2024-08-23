@@ -109,6 +109,17 @@ enum component1 { scheme, authority, userinfo, user, password, host, port, path=
 enum class numbers { zero, one, two, three, four, five, six, seven, eight, nine };
 ```
 
+> [!IMPORTANT]
+> Your type _must_ be an enum, satisfying
+> ```C++
+>template<typename T>
+>concept valid_enum = requires(T)
+>{
+>   requires std::same_as<T, std::decay_t<T>>;
+>   requires std::is_enum_v<T>;
+>};
+> ```
+
 ## a) `enum_to_string`
 ```c++
 static constexpr std::string_view enum_to_string(T value, bool noscope=false);

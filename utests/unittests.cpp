@@ -661,6 +661,10 @@ TEST_CASE("enum_bitset ops")
 	ed[2] = true;
 	REQUIRE(ed.test(numbers::two));
 	REQUIRE(ed[2] == true);
+	ed.reset();
+	ed[numbers::two] = true;
+	REQUIRE(ed.test(numbers::two));
+	REQUIRE(ed[2] == true);
 }
 
 //-----------------------------------------------------------------------------------------

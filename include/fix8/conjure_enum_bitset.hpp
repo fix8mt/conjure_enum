@@ -204,28 +204,28 @@ public:
 	constexpr bool any_of() const noexcept { return (... || test<comp>()); }
 
 	template<std::integral... I>
-	constexpr bool any_of(I...comp) const noexcept { return (... || test(comp)); }
+	constexpr bool any_of(I...comp) const noexcept { return (... || test(U(comp))); }
 
 	template<valid_bitset_enum... E>
-	constexpr bool any_of(E...comp) const noexcept { return (... || test(comp)); }
+	constexpr bool any_of(E...comp) const noexcept { return (... || test(U(comp))); }
 
 	template<T... comp>
 	constexpr bool all_of() const noexcept { return (... && test<comp>()); }
 
 	template<std::integral... I>
-	constexpr bool all_of(I...comp) const noexcept { return (... && test(comp)); }
+	constexpr bool all_of(I...comp) const noexcept { return (... && test(U(comp))); }
 
 	template<valid_bitset_enum... E>
-	constexpr bool all_of(E...comp) const noexcept { return (... && test(comp)); }
+	constexpr bool all_of(E...comp) const noexcept { return (... && test(U(comp))); }
 
 	template<T... comp>
 	constexpr bool none_of() const noexcept { return (... && !test<comp>()); }
 
 	template<std::integral... I>
-	constexpr bool none_of(I...comp) const noexcept { return (... && !test(comp)); }
+	constexpr bool none_of(I...comp) const noexcept { return (... && !test(U(comp))); }
 
 	template<valid_bitset_enum... E>
-	constexpr bool none_of(E...comp) const noexcept { return (... && !test(comp)); }
+	constexpr bool none_of(E...comp) const noexcept { return (... && !test(U(comp))); }
 
 	constexpr bool any() const noexcept { return count(); }
 	constexpr bool all() const noexcept { return _present == all_bits; }

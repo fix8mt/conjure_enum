@@ -110,7 +110,7 @@ enum class numbers { zero, one, two, three, four, five, six, seven, eight, nine 
 ```
 
 > [!IMPORTANT]
-> Your type _must_ be an enum, satisfying
+> Your type _must_ be an enum, satisfying:
 > ```C++
 >template<typename T>
 >concept valid_enum = requires(T)
@@ -915,6 +915,19 @@ for the bit positions (and names).
 > #include <fix8/conjure_enum.hpp>
 > #include <fix8/conjure_enum_bitset.hpp>
 > ```
+
+> [!IMPORTANT]
+> Your enum _must_ satisfy the following:
+> ```C++
+>template<typename T>
+>concept valid_bitset_enum = valid_enum<T> and requires(T)
+>{
+>   requires conjure_enum<T>::is_continuous();
+>   requires conjure_enum<T>::get_actual_enum_min_value() == 0;
+>   requires conjure_enum<T>::get_actual_enum_max_value() < conjure_enum<T>::count();
+>   requires std::bit_ceil(static_cast<unsigned>(conjure_enum<T>::get_actual_enum_max_value())) >= conjure_enum<T>::count();
+>};
+```
 
 ## a) Creating an `enum_bitset`
 ```c++

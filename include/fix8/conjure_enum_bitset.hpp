@@ -72,7 +72,7 @@ class enum_bitset
 	class _reference
 	{
 		R& _owner;
-		std::size_t _idx;
+		U _idx;
 		constexpr _reference(R& obj, std::size_t idx) noexcept : _owner(obj), _idx(idx) {}
 		friend class enum_bitset;
 
@@ -94,7 +94,7 @@ class enum_bitset
 			return *this;
 		}
 
-		constexpr operator bool() const noexcept { return _owner.test(_idx); }
+		constexpr operator bool() const noexcept { return static_cast<bool>(_owner.test(_idx)); }
 	};
 
 	template<T val>

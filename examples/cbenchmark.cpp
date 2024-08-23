@@ -54,7 +54,7 @@ enum class numbers
 };
 FIX8_CONJURE_ENUM_SET_RANGE(numbers::zero, numbers::sixty_three);
 
-int test_conjure_enum(numbers num)
+auto test_conjure_enum(numbers num)
 {
 	return FIX8::conjure_enum<numbers>::enum_to_string(num).size();
 }

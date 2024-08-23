@@ -1023,7 +1023,7 @@ All of the standard accessors and mutators are supported.
 | `to_ullong` | convert to `unsigned long long` |
 | `count` | count of bits on |
 | `size` | number of bits in bitset |
-| `operator[]` | set or test bit at position |
+| `operator[]` | set or test bit at position or enum value |
 | `any` | return `true` if any bit is on |
 | `all` | return `true` if all bits are on |
 | `none` | return `true` if no bits are on |
@@ -1055,6 +1055,10 @@ std::cout << std::boolalpha << eb.all_of(numbers::zero,numbers::nine) << '\n';
 std::cout << eb << '\n';
 eb.reset(numbers::nine)
 std::cout << ec << '\n';
+eb.reset();
+eb[2] = true;
+eb[numbers::three] = true;
+std::cout << eb << '\n';
 ```
 _output_
 ```
@@ -1065,6 +1069,7 @@ true
 true
 1000000001
 0000000001
+0000001100
 ```
 ## d) Other functions
 ### i. `operator bool`

@@ -351,8 +351,11 @@ public:
 	{
 		if constexpr (is_continuous())
 			return in_range(value) ? enum_to_underlying(value) - enum_to_underlying(min_v) : std::optional<size_t>{};
-		const auto [begin,end] { std::equal_range(entries.cbegin(), entries.cend(), enum_tuple(value, std::string_view()), _tuple_comp) };
-		return begin != end ? &*begin - &*entries.cbegin() : std::optional<size_t>{};
+		else
+		{
+			const auto [begin,end] { std::equal_range(entries.cbegin(), entries.cend(), enum_tuple(value, std::string_view()), _tuple_comp) };
+			return begin != end ? &*begin - &*entries.cbegin() : std::optional<size_t>{};
+		}
 	}
 	template<T e>
 	static constexpr std::optional<size_t> index() noexcept { return index(e); }

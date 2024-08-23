@@ -130,8 +130,8 @@ public:
 	constexpr U to_ulong() const noexcept { return _present; }
 	constexpr unsigned long long to_ullong() const noexcept { return _present; }
 
-	constexpr auto operator[](std::size_t pos) noexcept { return reference(*this, pos); }
-	constexpr auto operator[](std::size_t pos) const noexcept { return const_reference(*this, pos); }
+	constexpr auto operator[](U pos) noexcept { return reference(*this, pos); }
+	constexpr auto operator[](U pos) const noexcept { return const_reference(*this, pos); }
 	constexpr auto operator[](T what) noexcept { return reference(*this, to_underlying(what)); }
 	constexpr auto operator[](T what) const noexcept { return const_reference(*this, to_underlying(what)); }
 

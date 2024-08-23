@@ -118,7 +118,7 @@ enum class numbers { zero, one, two, three, four, five, six, seven, eight, nine 
 >   requires std::same_as<T, std::decay_t<T>>;
 >   requires std::is_enum_v<T>;
 >};
-> ```
+```
 
 ## a) `enum_to_string`
 ```c++

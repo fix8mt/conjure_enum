@@ -365,7 +365,8 @@ public:
 	{
 		if constexpr (is_continuous())
 			return in_range(value);
-		return std::binary_search(values.cbegin(), values.cend(), value, _value_comp);
+		else
+			return std::binary_search(values.cbegin(), values.cend(), value, _value_comp);
    }
 	static constexpr bool contains(std::string_view str) noexcept
 	{

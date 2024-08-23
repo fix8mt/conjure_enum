@@ -73,7 +73,7 @@ class enum_bitset
 	{
 		R& _owner;
 		U _idx;
-		constexpr _reference(R& obj, std::size_t idx) noexcept : _owner(obj), _idx(idx) {}
+		constexpr _reference(R& obj, U idx) noexcept : _owner(obj), _idx(idx) {}
 		friend class enum_bitset;
 
 	public:

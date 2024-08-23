@@ -915,8 +915,6 @@ for the bit positions (and names).
 > #include <fix8/conjure_enum.hpp>
 > #include <fix8/conjure_enum_bitset.hpp>
 > ```
-
-> [!IMPORTANT]
 > Your enum _must_ satisfy the following:
 > ```C++
 >template<typename T>

@@ -118,7 +118,7 @@ enum class numbers { zero, one, two, three, four, five, six, seven, eight, nine 
 >   requires std::same_as<T, std::decay_t<T>>;
 >   requires std::is_enum_v<T>;
 >};
-```
+>```
 
 ## a) `enum_to_string`
 ```c++
@@ -927,7 +927,7 @@ for the bit positions (and names).
 >   requires conjure_enum<T>::get_actual_enum_max_value() < conjure_enum<T>::count();
 >   requires std::bit_ceil(static_cast<unsigned>(conjure_enum<T>::get_actual_enum_max_value())) >= conjure_enum<T>::count();
 >};
-```
+>```
 
 ## a) Creating an `enum_bitset`
 ```c++

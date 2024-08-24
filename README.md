@@ -61,6 +61,7 @@
 > Even better in [full read view](./README.md) of this page.
 >
 > For the latest cutting edge changes, see the [dev branch](https://github.com/fix8mt/conjure_enum/tree/dev).
+> You can view the changes [here](https://github.com/fix8mt/conjure_enum/compare/master..dev).
 
 ---
 # 2. Introduction

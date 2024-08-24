@@ -38,7 +38,9 @@
 
 //----------------------------------------------------------------------------------------
 #include <bitset>
-#include <exception>
+#include <cstdint>
+#include <functional>
+#include <stdexcept>
 #include <bit>
 
 //-----------------------------------------------------------------------------------------
@@ -51,7 +53,6 @@ concept valid_bitset_enum = valid_enum<T> and requires(T)
 	requires conjure_enum<T>::is_continuous();
 	requires conjure_enum<T>::get_actual_enum_min_value() == 0;
 	requires conjure_enum<T>::get_actual_enum_max_value() < conjure_enum<T>::count();
-	requires std::bit_ceil(static_cast<unsigned>(conjure_enum<T>::get_actual_enum_max_value())) >= conjure_enum<T>::count();
 };
 
 //-----------------------------------------------------------------------------------------
@@ -79,22 +80,18 @@ class enum_bitset
 	public:
 		constexpr _reference& operator=(bool val) noexcept
 		{
-			if (val)
-				_owner.set(_idx);
-			else
-				_owner.reset(_idx);
+			val ? _owner.set(_idx) : _owner.reset(_idx);
 			return *this;
 		}
 
 		constexpr _reference& operator=(const _reference& val) noexcept
 		{
-			if (this == &val)
-				return *this;
-			*this = static_cast<bool>(val);
+			if (this != &val)
+				*this = static_cast<bool>(val);
 			return *this;
 		}
 
-		constexpr operator bool() const noexcept { return static_cast<bool>(_owner.test(_idx)); }
+		constexpr operator bool() const noexcept { return _owner.test(_idx); }
 	};
 
 	template<T val>
@@ -127,13 +124,14 @@ public:
 		{ return std::popcount(static_cast<std::make_unsigned_t<U>>(_present)); } // C++23: upgrade to std::bitset when count is constexpr
 	constexpr std::size_t not_count() const noexcept { return countof - count(); }
 	constexpr std::size_t size() const noexcept { return countof; }
-	constexpr U to_ulong() const noexcept { return _present; }
+	constexpr unsigned long to_ulong() const noexcept { return _present; }
 	constexpr unsigned long long to_ullong() const noexcept { return _present; }
 
+	// subscript
 	constexpr auto operator[](U pos) noexcept { return reference(*this, pos); }
 	constexpr auto operator[](U pos) const noexcept { return const_reference(*this, pos); }
-	constexpr auto operator[](T what) noexcept { return reference(*this, to_underlying(what)); }
-	constexpr auto operator[](T what) const noexcept { return const_reference(*this, to_underlying(what)); }
+	constexpr auto operator[](T what) noexcept { return (*this)[to_underlying(what)]; }
+	constexpr auto operator[](T what) const noexcept { return (*this)[to_underlying(what)]; }
 
 	/// set
 	constexpr void set(U pos, bool value=true) noexcept { value ? _present |= 1 << pos : _present &= ~(1 << pos); }
@@ -247,9 +245,6 @@ public:
 	constexpr enum_bitset operator&(T other) const noexcept { return enum_bitset(_present & 1 << to_underlying(other)); }
 	constexpr enum_bitset operator|(T other) const noexcept { return enum_bitset(_present | 1 << to_underlying(other)); }
 	constexpr enum_bitset operator^(T other) const noexcept { return enum_bitset(_present ^ 1 << to_underlying(other)); }
-	//constexpr enum_bitset operator&(U other) const noexcept { return enum_bitset(_present & other); }
-	//constexpr enum_bitset operator|(U other) const noexcept { return enum_bitset(_present | other); }
-	//constexpr enum_bitset operator^(U other) const noexcept { return enum_bitset(_present ^ other); }
 	constexpr enum_bitset operator~() const noexcept { return enum_bitset(~_present & all_bits); }
 
 	/// for_each, for_each_n

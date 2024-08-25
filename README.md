@@ -1547,7 +1547,7 @@ struct FIX8::enum_range<range_test>
 static_assert(conjure_enum<range_test>::get_enum_min_value() == 0);
 static_assert(conjure_enum<range_test>::get_enum_max_value() == 7);
 ```
-#### `FIX8_CONJURE_ENUM_SET_RANGE_INTS`, `FIX8_CONJURE_ENUM_SET_RANGE`
+#### ii.1 `FIX8_CONJURE_ENUM_SET_RANGE_INTS`, `FIX8_CONJURE_ENUM_SET_RANGE`
 For convenience, two macros are provided to make it easier to set custom ranges.
 ```c++
 #define FIX8_CONJURE_ENUM_SET_RANGE_INTS(ec,min_int,max_int)...

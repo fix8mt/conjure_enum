@@ -1547,7 +1547,7 @@ struct FIX8::enum_range<range_test>
 static_assert(conjure_enum<range_test>::get_enum_min_value() == 0);
 static_assert(conjure_enum<range_test>::get_enum_max_value() == 7);
 ```
-### iii. `FIX8_CONJURE_ENUM_SET_RANGE_INTS`, `FIX8_CONJURE_ENUM_SET_RANGE`
+#### `FIX8_CONJURE_ENUM_SET_RANGE_INTS`, `FIX8_CONJURE_ENUM_SET_RANGE`
 For convenience, two macros are provided to make it easier to set custom ranges.
 ```c++
 #define FIX8_CONJURE_ENUM_SET_RANGE_INTS(ec,min_int,max_int)...
@@ -1562,13 +1562,13 @@ FIX8_CONJURE_ENUM_SET_RANGE_INTS(numbers, 0, 7)
 FIX8_CONJURE_ENUM_SET_RANGE(numbers::first, numbers::eighth)
 ```
 
-### iv. using `T::ce_first` and `T::ce_last`
+### iii. using `T::ce_first` and `T::ce_last`
 Another approach to setting a custom range for an enum is to alias the first and last enum values in your enum definition
 using `ce_first` and `ce_last`. `conjure_enum` will use these values to set the enum range.
 You can set either, both or neither. A range value not set will default to the `FIX8_CONJURE_ENUM_MIN_VALUE` or `FIX8_CONJURE_ENUM_MAX_VALUE`.
 
 > [!WARNING]
-> For unscoped enums, there can only be one enum type with `T::ce_first` and `T::ce_last` defined in any translation unit (ODR), due to the open scoping of unscoped
+> With _unscoped_ enums, there can only be one enum type with `T::ce_first` and `T::ce_last` defined in any translation unit (ODR), due to the open scoping of unscoped
 > enums. It is therefore recommended to only use this feature with scoped enums.
 
 For example:

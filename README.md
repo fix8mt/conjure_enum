@@ -1562,6 +1562,20 @@ FIX8_CONJURE_ENUM_SET_RANGE_INTS(numbers, 0, 7)
 FIX8_CONJURE_ENUM_SET_RANGE(numbers::first, numbers::eighth)
 ```
 
+### iv. using `T::ce_first` and `T::ce_last`
+Another approach to setting a custom range for an enum is to alias the first and last enum values in your enum definition
+using `ce_first` and `ce_last`. For example:
+```c++
+enum class foo { one, two, three, four, five, size, seven, eight, ce_first=one, ce_last=eight };
+std::cout << conjure_enum<foo>::get_enum_min_value() << '/' << conjure_enum<foo>::get_enum_max_value() << '\n';
+std::cout << conjure_enum<foo>::get_actual_enum_min_value() << '/' << conjure_enum<foo>::get_actual_enum_max_value() << '\n';
+```
+_output_
+```CSV
+0/7
+0/7
+```
+
 ## b) Choosing the minimal build
 ```c++
 #define FIX8_CONJURE_ENUM_MINIMAL

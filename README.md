@@ -1548,7 +1548,7 @@ static_assert(conjure_enum<range_test>::get_enum_min_value() == 0);
 static_assert(conjure_enum<range_test>::get_enum_max_value() == 7);
 ```
 #### ii.a `FIX8_CONJURE_ENUM_SET_RANGE_INTS`, `FIX8_CONJURE_ENUM_SET_RANGE`
-For convenience, two macros are provided to make it easier to set custom ranges.
+For convenience, two macros are provided to make it easier to set custom ranges using `enum_range`.
 ```c++
 #define FIX8_CONJURE_ENUM_SET_RANGE_INTS(ec,min_int,max_int)...
 #define FIX8_CONJURE_ENUM_SET_RANGE(min_enum,max_enum)...
@@ -1590,9 +1590,9 @@ _output_
 
 ### iv. Which enum limit approach to use
 Compilation times increase with the number of enums that use `conjure_enum` in any compilation unit.
-1. For a simple project with few enums, there is probably no need to set any limits.
-1. Where the enum is defined elsewhere (say if you are using `std::errc`) then use `enum_range` or one of the convenience macros
-1. Where the enum is unscoped then use `enum_range` or one of the convenience macros
+1. For a simple project with few enums, there is probably no need to set any limits;
+1. Where the enum is defined elsewhere (say if you are using `std::errc`) then use `enum_range` or one of the convenience macros;
+1. Where the enum is unscoped then use `enum_range` or one of the convenience macros;
 1. Where you have defined the enum yourself and it is a scoped enum, use `T::ce_first` and `T::ce_last`, or 2.
 
 ## b) Choosing the minimal build

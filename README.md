@@ -1569,11 +1569,15 @@ You can set either, both or neither. A range value not set will default to the `
 
 > [!WARNING]
 > For unscoped enums, there can only be one enum type with `T::ce_first` and `T::ce_last` defined in any translation unit (ODR), due to the open scoping of unscoped
-> enums. It is therefore recommended to only use this feature with scoped enumns.
+> enums. It is therefore recommended to only use this feature with scoped enums.
 
 For example:
 ```c++
-enum class range_test { first, second, third, fourth, fifth, sixth, seventh, eighth, ce_first=first, ce_last=eighth };
+enum class range_test
+{
+	first, second, third, fourth, fifth, sixth, seventh, eighth,
+	ce_first=first, ce_last=eighth
+};
 using rt = conjure_enum<range_test>;
 std::cout << rt::get_enum_min_value() << '/' << rt::get_enum_max_value() << '\n';
 std::cout << rt::get_actual_enum_min_value() << '/' << rt::get_actual_enum_max_value() << '\n';

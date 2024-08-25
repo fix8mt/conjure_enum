@@ -1567,8 +1567,9 @@ Another approach to setting a custom range for an enum is to alias the first and
 using `ce_first` and `ce_last`. For example:
 ```c++
 enum class foo { one, two, three, four, five, size, seven, eight, ce_first=one, ce_last=eight };
-std::cout << conjure_enum<foo>::get_enum_min_value() << '/' << conjure_enum<foo>::get_enum_max_value() << '\n';
-std::cout << conjure_enum<foo>::get_actual_enum_min_value() << '/' << conjure_enum<foo>::get_actual_enum_max_value() << '\n';
+using fn = conjure_enum<foo>;
+std::cout << fn::get_enum_min_value() << '/' << fn::get_enum_max_value() << '\n';
+std::cout << fn::get_actual_enum_min_value() << '/' << fn::get_actual_enum_max_value() << '\n';
 ```
 _output_
 ```CSV

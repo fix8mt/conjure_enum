@@ -82,7 +82,7 @@ unlocked the potential of [`constexpr` algorithms](https://www.open-std.org/jtc1
   - scoped and unscoped enums
   - enums with **aliases** and **gaps**
   - anonymous and named namespaced enums and types
-  - custom [enum ranges](#ii.-using-enum_range)
+  - custom [enum ranges](#ii-using-enum_range)
 - ***Easy to Use***: Class-based approach with intuitive syntax
 - ***Convenient***: `enum_bitset` provides an enhanced enum aware `std::bitset` (see 3 above)
 - ***Useful***: `conjure_type` gives you the type string of _any type!_ (see 4 above)

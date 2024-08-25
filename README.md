@@ -1567,7 +1567,7 @@ Another approach to setting a custom range for an enum is to alias the first and
 using `ce_first` and `ce_last`. `conjure_enum` will use these values to set the enum range.
 You can set either, both or neither. A range value not set will default to the `FIX8_CONJURE_ENUM_MIN_VALUE` or `FIX8_CONJURE_ENUM_MAX_VALUE`.
 
-> [!WARN]
+> [!WARNING]
 > For unscoped enums, there can only be one enum type with `T::ce_first` and `T::ce_last` defined, due to the open scoping of unscoped
 > enums. It is therefore recommended to only use this feature with scoped enumns.
 

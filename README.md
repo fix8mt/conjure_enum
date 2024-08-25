@@ -1575,8 +1575,8 @@ For example:
 ```c++
 enum class range_test
 {
-	first, second, third, fourth, fifth, sixth, seventh, eighth,
-	ce_first=first, ce_last=eighth
+   first, second, third, fourth, fifth, sixth, seventh, eighth,
+   ce_first=first, ce_last=eighth
 };
 using rt = conjure_enum<range_test>;
 std::cout << rt::get_enum_min_value() << '/' << rt::get_enum_max_value() << '\n';

@@ -1002,6 +1002,17 @@ _output_
 ```CSV
 exception: twenty
 ```
+You can also create an `enum_bitset` from a `std::bitset` of the same number of bits.
+```c++
+std::bitset<10> bs{1 << 1 | 1 << 3 | 1 << 6};
+enum_bitset<numbers> ed(bs);
+std::cout << ed << '\n';
+```
+_output_
+```CSV
+0001001010
+```
+
 ## b) Standard bit operators
 All of the standard operators are supported. Assignment operators return a `enum_bitset&`, non-assignment operators return a `enum_bitset`.
 
@@ -1109,7 +1120,23 @@ _output_
 0001001111
 ```
 
-### ii. `std::ostream& operator<<`, `to_string`
+### ii. `operator std::bitset<N>()`
+```c++
+constexpr operator std::bitset<N>() const;
+```
+Cast an `enum_bitset` to a `std::bitset` with the same number of bits.
+
+```c++
+enum_bitset<numbers> ec(numbers::one,numbers::three,numbers::six);
+std::bitset<10> bs{ec};
+std::cout << bs << '\n';
+```
+_output_
+```CSV
+0001001010
+```
+
+### iii. `std::ostream& operator<<`, `to_string`
 ```c++
 friend constexpr std::ostream& operator<<(std::ostream& os, const enum_bitset& what);
 constexpr std::string to_string(char zero='0', char one='1') const;
@@ -1127,7 +1154,7 @@ _output_
 0001001010
 ---+--+-+-
 ```
-### iii. `for_each`, `for_each_n`
+### iv. `for_each`, `for_each_n`
 ```c++
 template<typename Fn, typename... Args>
 requires std::invocable<Fn&&, T, Args...>
@@ -1187,7 +1214,7 @@ numbers::two
 numbers::five
 ```
 
-### iv. Using `conjure_enum::dispatch` with `enum_bitset`
+### v. Using `conjure_enum::dispatch` with `enum_bitset`
 Using an `enum_bitset` wth `conjure_enum::dispatch` can be a convenient way of iterating through a set of bits to call specific functions using `for_each`. The following demonstrates this:
 ```c++
 const auto dd3
@@ -1216,6 +1243,25 @@ _output_
 3103
 not found: 5
 ```
+
+### vi. `get_underlying`
+```c++
+constexpr U get_underlying() const;
+```
+Returns the underlying integral bitset object.
+
+### vii. `get_underlying_bit_size`
+```c++
+constexpr int get_underlying_bit_size() const
+```
+Returns the number of bits that the underlying integral contains. Will always be a power of 2. The number of bits may be larger
+than the count of bits.
+
+### viii. `get_unused_bit_mask`
+```c++
+constexpr U get_unused_bit_mask() const;
+```
+Returns a bit mask that would mask off the unused bits of the underlying integral.
 
 ---
 # 5. API and Examples using `conjure_type`

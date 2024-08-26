@@ -1137,23 +1137,30 @@ _output_
 0001001010
 ```
 
-### iii. `std::ostream& operator<<`, `to_string`
+### iii. `std::ostream& operator<<`, `to_string`, `to_hex_string`
 ```c++
 friend constexpr std::ostream& operator<<(std::ostream& os, const enum_bitset& what);
 constexpr std::string to_string(char zero='0', char one='1') const;
+
+template<bool showbase=true, bool uppercase=false>
+constexpr std::string to_hex_string() const;
 ```
 Inserts default string representation into `std::ostream`.<br>
 Returns a `std::string` representation of the bitset. Optionally specify which characters to use for `0` and `1`.
+Returns a `std::string` representation of the bitset in hex format. Optionally specify `showbase` which will prefix
+the string with `0x` or `0X`; optionally specify `uppercase` which will set the case of the hex digits.
 
 ```c++
 enum_bitset<numbers> ec(numbers::one,numbers::three,numbers::six);
 std::cout << ec << '\n';
 std::cout << ec.to_string('-', '+') << '\n';
+std::cout << ec.to_hex_string<true, true>() << '\n';
 ```
 _output_
 ```CSV
 0001001010
 ---+--+-+-
+0X4A
 ```
 ### iv. `for_each`, `for_each_n`
 ```c++

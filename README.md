@@ -933,6 +933,7 @@ constexpr enum_bitset() = default;
 constexpr enum_bitset(U bits);
 constexpr enum_bitset(std::string_view from, bool anyscope=false,
    char sep='|', bool ignore_errors=true);
+constexpr enum_bitset(std::bitset<N> from);
 
 template<valid_bitset_enum... E>
 constexpr enum_bitset(E... comp);
@@ -1248,20 +1249,20 @@ not found: 5
 ```c++
 constexpr U get_underlying() const;
 ```
-Returns the underlying integral bitset object.
+Returns the underlying integral value.
 
 ### vii. `get_underlying_bit_size`
 ```c++
 constexpr int get_underlying_bit_size() const
 ```
-Returns the number of bits that the underlying integral contains. Will always be a power of 2. The number of bits may be larger
+Returns the number of bits that the underlying integral contains. Will always be a power of 2 and an integral type. The number of bits may be larger
 than the count of bits.
 
 ### viii. `get_unused_bit_mask`
 ```c++
 constexpr U get_unused_bit_mask() const;
 ```
-Returns a bit mask that would mask off the unused bits of the underlying integral.
+Returns a bit mask that would mask off the _used_ bits of the underlying integral.
 
 ---
 # 5. API and Examples using `conjure_type`

@@ -1265,10 +1265,12 @@ constexpr int get_underlying_bit_size() const
 Returns the number of bits that the underlying integral contains. Will always be a power of 2 and an integral type. The number of bits may be larger
 than the count of bits.
 
-### viii. `get_unused_bit_mask`
+### viii. `get_bit_mask`,`get_unused_bit_mask`
 ```c++
+constexpr U get_bit_mask() const;
 constexpr U get_unused_bit_mask() const;
 ```
+Returns a bit mask that would mask off the _unused_ bits of the underlying integral.
 Returns a bit mask that would mask off the _used_ bits of the underlying integral.
 
 ---

@@ -140,14 +140,10 @@ public:
 			throw std::overflow_error("overflow");
 		return _present;
 	}
-	constexpr unsigned long long to_ullong() const
-	{
-		if constexpr (countof > 64)
-			throw std::overflow_error("overflow");
-		return _present;
-	}
+	constexpr unsigned long long to_ullong() const noexcept { return _present; }
 	constexpr U get_underlying() const noexcept { return _present; }
 	constexpr int get_underlying_bit_size() const noexcept { return 8 * sizeof(U); }
+	constexpr U get_bit_mask() const noexcept { return all_bits; }
 	constexpr U get_unused_bit_mask() const noexcept { return ((1 << get_underlying_bit_size()) - 1) ^ all_bits; }
 
 	// subscript

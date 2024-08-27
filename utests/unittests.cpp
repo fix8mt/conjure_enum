@@ -665,6 +665,7 @@ TEST_CASE("enum_bitset")
 	REQUIRE(enum_bitset<range_test>().get_underlying_bit_size() == 8);
 	REQUIRE(ec.get_underlying_bit_size() == 16);
 	REQUIRE(ec.get_unused_bit_mask() == 0b111111 << 10);
+	REQUIRE(ec.get_bit_mask() == 0b1111111111);
 }
 
 //-----------------------------------------------------------------------------------------

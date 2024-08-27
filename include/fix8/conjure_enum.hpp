@@ -168,11 +168,21 @@ concept valid_enum = requires(T)
 
 //-----------------------------------------------------------------------------------------
 // You can specialise this class to define a custom range for your enum
+// Alternatively, alias T::ce_first as the first and T::ce_last as the last enum in
+// your enum declaration
 //-----------------------------------------------------------------------------------------
-template<valid_enum T>
-struct enum_range final : public static_only
+template<typename T>
+class enum_range final : public static_only
 {
-	static constexpr int min{FIX8_CONJURE_ENUM_MIN_VALUE}, max{FIX8_CONJURE_ENUM_MAX_VALUE};
+	static constexpr int get_first() noexcept requires std::is_enum_v<decltype(T::ce_first)>
+		{ return static_cast<int>(T::ce_first); }
+	static constexpr int get_last() noexcept requires std::is_enum_v<decltype(T::ce_last)>
+		{ return static_cast<int>(T::ce_last); }
+	static constexpr int get_first() noexcept { return FIX8_CONJURE_ENUM_MIN_VALUE; }
+	static constexpr int get_last() noexcept { return FIX8_CONJURE_ENUM_MAX_VALUE; };
+
+public:
+	static constexpr int min{get_first()}, max{get_last()};
 };
 
 //-----------------------------------------------------------------------------------------

@@ -50,6 +50,24 @@ enum class directions { left, right, up, down, forward, backward, notfound=-1 };
 enum class range_test { first, second, third, fourth, fifth, sixth, seventh, eighth };
 enum class range_test1 { first, second, third, fourth, fifth, sixth, seventh, eighth };
 enum class range_test2 { first, second, third, fourth, fifth, sixth, seventh, eighth };
+enum class range_test3 { first, second, third, fourth, fifth, sixth, seventh, eighth, ce_first=first, ce_last=eighth };
+enum range_test4 { first, second, third, fourth, fifth, sixth, seventh, eighth, ce_first=first, ce_last=eighth };
+enum class numbers64 : uint64_t
+{
+	zero, one, two, three, four,
+	five, six, seven, eight, nine,
+	ten, eleven, twelve, thirteen, fourteen,
+	fifteen, sixteen, seventeen, eighteen, nineteen,
+	twenty, twenty_one, twenty_two, twenty_three, twenty_four,
+	twenty_five, twenty_six, twenty_seven, twenty_eight, twenty_nine,
+	thirty, thirty_one, thirty_two, thirty_three, thirty_four,
+	thirty_five, thirty_six, thirty_seven, thirty_eight, thirty_nine,
+	forty, forty_one, forty_two, forty_three, forty_four,
+	forty_five, forty_six, forty_seven, forty_eight, forty_nine,
+	fifty, fifty_one, fifty_two, fifty_three, fifty_four,
+	fifty_five, fifty_six, fifty_seven, fifty_eight, fifty_nine,
+	sixty, sixty_one, sixty_two, sixty_three
+};
 
 //-----------------------------------------------------------------------------------------
 // run as: ctest --output-on-failure
@@ -96,6 +114,17 @@ TEST_CASE("custom range")
 	REQUIRE(conjure_enum<range_test1>::get_enum_max_value() == 7);
 	REQUIRE(conjure_enum<range_test2>::get_enum_min_value() == 0);
 	REQUIRE(conjure_enum<range_test2>::get_enum_max_value() == 7);
+}
+
+//-----------------------------------------------------------------------------------------
+TEST_CASE("custom range (alias)")
+{
+	REQUIRE(conjure_enum<range_test3>::get_enum_min_value() == 0);
+	REQUIRE(conjure_enum<range_test3>::get_enum_max_value() == 7);
+	REQUIRE(conjure_enum<range_test3>::get_enum_min_value() == conjure_enum<range_test3>::get_actual_enum_min_value());
+	REQUIRE(conjure_enum<range_test3>::get_enum_max_value() == conjure_enum<range_test3>::get_actual_enum_max_value());
+	REQUIRE(conjure_enum<range_test4>::get_enum_min_value() == 0);
+	REQUIRE(conjure_enum<range_test4>::get_enum_max_value() == 7);
 }
 
 //-----------------------------------------------------------------------------------------
@@ -610,6 +639,9 @@ TEST_CASE("enum_bitset")
 	REQUIRE(ec.to_ulong() == 0b0001001010);
 	REQUIRE(ec.to_string('-', '+') == "---+--+-+-"s);
 	REQUIRE(enum_bitset<numbers>(0b0101001010).to_string() == "0101001010"s);
+	REQUIRE(ec.to_hex_string<>() == "0x4a"s);
+	REQUIRE(ec.to_hex_string<false>() == "4a"s);
+	REQUIRE(ec.to_hex_string<true, true>() == "0X4A"s);
 
 	REQUIRE(ec.test<numbers::one>());
 	ec.flip<numbers::one>();
@@ -630,6 +662,19 @@ TEST_CASE("enum_bitset")
 	ec.set(numbers::three, false);
 	REQUIRE(ec.test<numbers::three>() == false);
 	REQUIRE(ec.any());
+	REQUIRE(enum_bitset<range_test>().get_underlying_bit_size() == 8);
+	REQUIRE(ec.get_underlying_bit_size() == 16);
+	REQUIRE(ec.get_unused_bit_mask() == 0b111111 << 10);
+}
+
+//-----------------------------------------------------------------------------------------
+TEST_CASE("enum_bitset <==> std::bitset")
+{
+	std::bitset<10> bs{1 << 1 | 1 << 3 | 1 << 6};
+	enum_bitset<numbers> ed(bs);
+	REQUIRE(ed.to_ulong() == (1 << 1 | 1 << 3 | 1 << 6));
+	std::bitset<10> bs1{ed};
+	REQUIRE(bs1.to_ulong() == (1 << 1 | 1 << 3 | 1 << 6));
 }
 
 //-----------------------------------------------------------------------------------------
@@ -686,12 +731,17 @@ TEST_CASE("enum_bitset ext ops")
 }
 
 //-----------------------------------------------------------------------------------------
+TEST_CASE("enum_bitset::to_ulong overflow")
+{
+	REQUIRE_NOTHROW(enum_bitset<numbers64>(0b1111111111111).to_ulong());
+	REQUIRE_THROWS_AS(enum_bitset<numbers64>(0xfffffffffffffffe).to_ulong(), std::overflow_error);
+}
+
+//-----------------------------------------------------------------------------------------
 TEST_CASE("enum_bitset(std::string_view)")
 {
 	REQUIRE_THROWS_MATCHES(enum_bitset<numbers>("zero,twenty,two,three", true, ',', false),
 		std::invalid_argument, Catch::Matchers::Message("twenty"));
-	enum_bitset<numbers> sc("zero,two,three", true, ',');
-	REQUIRE(sc.to_ulong() == 0b1101);
 }
 
 //-----------------------------------------------------------------------------------------

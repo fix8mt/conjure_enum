@@ -41,6 +41,11 @@
 #include <cstdint>
 #include <functional>
 #include <stdexcept>
+#if __has_include(<format>)
+# include <format>
+#else
+#include <sstream>
+#endif
 #include <bit>
 
 //-----------------------------------------------------------------------------------------
@@ -100,12 +105,17 @@ class enum_bitset
 	static constexpr U all_bits { (1 << countof) - 1 };
 	U _present{};
 
+#if __has_include(<format>)
+	static constexpr std::array _hexfmtarr { "{:#x}", "{:#X}", "{:x}", "{:#X}" };
+#endif
+
 public:
 	using enum_bitset_underlying_type = U;
 	using reference = _reference<enum_bitset>;
 	using const_reference = _reference<const enum_bitset>;
 
 	explicit constexpr enum_bitset(U bits) noexcept : _present(bits) {}
+	explicit constexpr enum_bitset(std::bitset<countof> from) : _present(from.to_ullong()) {}
 	constexpr enum_bitset(std::string_view from, bool anyscope=false, char sep='|', bool ignore_errors=true)
 		: _present(factory(from, anyscope, sep, ignore_errors)) {}
 
@@ -124,8 +134,21 @@ public:
 		{ return std::popcount(static_cast<std::make_unsigned_t<U>>(_present)); } // C++23: upgrade to std::bitset when count is constexpr
 	constexpr std::size_t not_count() const noexcept { return countof - count(); }
 	constexpr std::size_t size() const noexcept { return countof; }
-	constexpr unsigned long to_ulong() const noexcept { return _present; }
-	constexpr unsigned long long to_ullong() const noexcept { return _present; }
+	constexpr unsigned long to_ulong() const
+	{
+		if (std::bit_width<U>(_present) > 32)
+			throw std::overflow_error("overflow");
+		return _present;
+	}
+	constexpr unsigned long long to_ullong() const
+	{
+		if constexpr (countof > 64)
+			throw std::overflow_error("overflow");
+		return _present;
+	}
+	constexpr U get_underlying() const noexcept { return _present; }
+	constexpr int get_underlying_bit_size() const noexcept { return 8 * sizeof(U); }
+	constexpr U get_unused_bit_mask() const noexcept { return ((1 << get_underlying_bit_size()) - 1) ^ all_bits; }
 
 	// subscript
 	constexpr auto operator[](U pos) noexcept { return reference(*this, pos); }
@@ -247,6 +270,8 @@ public:
 	constexpr enum_bitset operator^(T other) const noexcept { return enum_bitset(_present ^ 1 << to_underlying(other)); }
 	constexpr enum_bitset operator~() const noexcept { return enum_bitset(~_present & all_bits); }
 
+	constexpr operator auto() const noexcept { return std::bitset<countof>(_present); }
+
 	/// for_each, for_each_n
 	template<typename Fn, typename... Args>
 	requires std::invocable<Fn&&, T, Args...>
@@ -319,6 +344,25 @@ public:
 	{
 		return std::bitset<countof>(_present).to_string(zero, one);
 	}
+
+	template<bool showbase=true, bool uppercase=false>
+#if __has_include(<format>)
+	constexpr std::string to_hex_string() const noexcept
+	{
+		return std::format(_hexfmtarr[(showbase ? 0 : 2) + (uppercase ? 1 : 0)], _present);
+	}
+#else
+	std::string to_hex_string() const noexcept
+	{
+		std::ostringstream ostr;
+		if (showbase)
+			ostr << std::showbase;
+		if (uppercase)
+			ostr << std::uppercase;
+		ostr << std::hex << _present;
+		return ostr.str();
+	}
+#endif
 
 	friend constexpr std::ostream& operator<<(std::ostream& os, const enum_bitset& what) noexcept
 	{

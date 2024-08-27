@@ -1270,7 +1270,7 @@ than the count of bits.
 constexpr U get_bit_mask() const;
 constexpr U get_unused_bit_mask() const;
 ```
-Returns a bit mask that would mask off the _unused_ bits of the underlying integral.
+Returns a bit mask that would mask off the _unused_ bits of the underlying integral.<br>
 Returns a bit mask that would mask off the _used_ bits of the underlying integral.
 
 ---
@@ -1558,8 +1558,14 @@ master will not be considered.
 ---
 # 8. Notes
 ## a) enum limits
+Compilation times increase with the number of enums that use `conjure_enum` in any compilation unit.
+1. For a simple project with few enums, there is probably no need to set any limits;
+1. Where the enum is defined elsewhere (say if you are using `std::errc`) then use `enum_range` or one of the convenience macros;
+1. Where the enum is unscoped then use `enum_range` or one of the convenience macros;
+1. Where you have defined the enum yourself and it is a scoped enum, use `T::ce_first` and `T::ce_last`, or 2.
+
 ### i. `FIX8_CONJURE_ENUM_MIN_VALUE`, `FIX8_CONJURE_ENUM_MAX_VALUE`
-These are set by default unless you override them by defining them in your application. They are the global range default for enums using `conjure_enum`.
+These are set by default unless you override them by defining them in your application. They are the global range default for all enums using `conjure_enum`.
 > [!IMPORTANT]
 > If you want to define these values they must appear _before_ you include `conjure_enum.hpp`.
 
@@ -1643,13 +1649,6 @@ _output_
 0/7
 0/7
 ```
-
-### iv. Which enum limit approach to use
-Compilation times increase with the number of enums that use `conjure_enum` in any compilation unit.
-1. For a simple project with few enums, there is probably no need to set any limits;
-1. Where the enum is defined elsewhere (say if you are using `std::errc`) then use `enum_range` or one of the convenience macros;
-1. Where the enum is unscoped then use `enum_range` or one of the convenience macros;
-1. Where you have defined the enum yourself and it is a scoped enum, use `T::ce_first` and `T::ce_last`, or 2.
 
 ## b) Choosing the minimal build
 ```c++

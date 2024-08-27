@@ -1588,6 +1588,7 @@ These definitions set the minimum and maximum enum values that are supported. Yo
 > If you wish to set ranges on a per enum basis, use `enum_range` (see below).
 
 ### ii. using `enum_range`
+You can specialise this class to override the defaults and set your own range on a per enum basis.
 ```c++
 template<valid_enum T>
 struct enum_range
@@ -1598,7 +1599,6 @@ struct enum_range
 The `min` and `max` values are used to set the range of enum values for enums in `conjure_enum`. As shown above, the default values will be
 `FIX8_CONJURE_ENUM_MIN_VALUE` and `FIX8_CONJURE_ENUM_MAX_VALUE`.
 
-You can specialise this class to override the defaults and set your own range on a per enum basis:
 ```c++
 enum class range_test { first, second, third, fourth, fifth, sixth, seventh, eighth };
 template<>

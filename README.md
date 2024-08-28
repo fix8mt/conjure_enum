@@ -907,7 +907,7 @@ for the bit positions (and names).
 > - Continuous
 > - The last value must be less than the count of enumerations
 >
-> We decided on these restrictions for both simplicity and practicality - bitsets only really make sense when represented in this manner.
+> We decided on these restrictions for both simplicity and practicality - bitsets only really make sense when represented in this manner; also...
 >
 > - This implementation is limited to 64 bits
 
@@ -1145,6 +1145,7 @@ constexpr std::string to_string(char zero='0', char one='1') const;
 
 template<bool showbase=true, bool uppercase=false>
 constexpr std::string to_hex_string() const;
+
 constexpr std::string to_hex_string() const;
 ```
 Inserts default string representation into `std::ostream`.<br>
@@ -1156,12 +1157,14 @@ the string with `0x` or `0X`; optionally specify `uppercase` which will set the 
 enum_bitset<numbers> ec(numbers::one,numbers::three,numbers::six);
 std::cout << ec << '\n';
 std::cout << ec.to_string('-', '+') << '\n';
+std::cout << ec.to_hex_string() << '\n';
 std::cout << ec.to_hex_string<true, true>() << '\n';
 ```
 _output_
 ```CSV
 0001001010
 ---+--+-+-
+0x4a
 0X4A
 ```
 ### iv. `for_each`, `for_each_n`

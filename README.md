@@ -1432,7 +1432,7 @@ This implementation is header only. Apart from standard C++20 includes there are
 ### i. Build platform
 #### \*nix based environments
 To clone and default build the test app, unit tests and the benchmark:
-```Shell
+```bash
 git clone https://github.com/fix8mt/conjure_enum.git
 cd conjure_enum
 mkdir build
@@ -1450,27 +1450,27 @@ The package is also available on [vckpg](https://vcpkg.io/en/package/conjure-enu
 
 ### ii. Default compiler warnings
 By default all warnings are enabled. To prevent this, pass the following to cmake:
-```Shell
+```bash
 cmake -DBUILD_ALL_WARNINGS=false ..
 ```
 ### iii. Default unit tests
 By default the unit tests are built (which will download Catch2). To prevent this, pass the following to cmake:
-```Shell
+```bash
 cmake -DBUILD_UNITTESTS=false ..
 ```
 ### iv. Default executable stripping
 To disable stripping of the executables:
-```Shell
+```bash
 cmake -DBUILD_STRIP_EXE=false ..
 ```
 ### v. Clang compilation profiling
 To enable clang compilation profiling:
-```Shell
+```bash
 cmake -DBUILD_CLANG_PROFILER=true ..
 ```
 ## b) Using in your application with cmake
 In `CMakeLists.txt` set your include path to:
-```Shell
+```bash
 include_directories([conjure_enum directory]/include)
 # e.g.
 set(cjedir /home/dd/prog/conjure_enum)
@@ -1488,7 +1488,7 @@ using namespace FIX8;
 ## c) Integrating `conjure_enum` in your project with cmake FetchContent
 You can use cmake [FetchContent](https://cmake.org/cmake/help/latest/module/FetchContent.html) to integrate `conjure_enum` with your project.
 If your project was called `myproj` with the sourcefile `myproj.cpp` then...
-```cmake
+```CMake
 project(myproj)
 add_executable (myproj myproj.cpp)
 set_target_properties(myproj PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED true)

@@ -1433,13 +1433,13 @@ This implementation is header only. Apart from standard C++20 includes there are
 #### \*nix based environments
 To clone and default build the test app, unit tests and the benchmark:
 ```bash
-git clone https://github.com/fix8mt/conjure_enum.git
-cd conjure_enum
-mkdir build
-cd build
-cmake ..
-make -j4
-ctest (or make test)
+$ git clone https://github.com/fix8mt/conjure_enum.git
+$ cd conjure_enum
+$ mkdir build
+$ cd build
+$ cmake ..
+$ make -j4
+$ ctest (or make test)
 ```
 #### Windows environments
 Create a new console project. Add the repo `https://github.com/fix8mt/conjure_enum.git` and clone the source.
@@ -1451,22 +1451,22 @@ The package is also available on [vckpg](https://vcpkg.io/en/package/conjure-enu
 ### ii. Default compiler warnings
 By default all warnings are enabled. To prevent this, pass the following to cmake:
 ```bash
-cmake -DBUILD_ALL_WARNINGS=false ..
+$ cmake -DBUILD_ALL_WARNINGS=false ..
 ```
 ### iii. Default unit tests
 By default the unit tests are built (which will download Catch2). To prevent this, pass the following to cmake:
 ```bash
-cmake -DBUILD_UNITTESTS=false ..
+$ cmake -DBUILD_UNITTESTS=false ..
 ```
 ### iv. Default executable stripping
 To disable stripping of the executables:
 ```bash
-cmake -DBUILD_STRIP_EXE=false ..
+$ cmake -DBUILD_STRIP_EXE=false ..
 ```
 ### v. Clang compilation profiling
 To enable clang compilation profiling:
 ```bash
-cmake -DBUILD_CLANG_PROFILER=true ..
+$ cmake -DBUILD_CLANG_PROFILER=true ..
 ```
 ## b) Using in your application with cmake
 In `CMakeLists.txt` set your include path to:

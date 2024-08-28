@@ -82,9 +82,9 @@ unlocked the potential of [`constexpr` algorithms](https://www.open-std.org/jtc1
   - anonymous and named namespaced enums and types
   - custom [enum ranges](#ii-using-enum_range)
 - ***Easy to Use***: Class-based approach with intuitive syntax
-- ***Convenient***: `enum_bitset` provides an enhanced enum aware `std::bitset` (see 3 above)
-- ***Useful***: `conjure_type` gives you the type string of _any type!_ (see 4 above)
-- ***Wide Compiler Compatibility***: Support for: (see 10 above)
+- ***Convenient***: `enum_bitset` provides an enhanced enum aware `std::bitset` (see 2 above)
+- ***Useful***: `conjure_type` gives you the type string of _any type!_ (see 3 above)
+- ***Wide Compiler Compatibility***: Support for: (see 9 above)
   - GCC
   - Clang
   - MSVC
@@ -97,7 +97,7 @@ unlocked the potential of [`constexpr` algorithms](https://www.open-std.org/jtc1
   - `for_each_n`
   - `dispatch`
   - iterators and more!
-- ***Transparency***: Compiler implementation variability fully documented, verifiable and reportable (see 12 above)
+- ***Transparency***: Compiler implementation variability fully documented, verifiable and reportable (see 11 above)
 
 ---
 # 3. `conjure_enum`
@@ -1440,18 +1440,6 @@ cmake ..
 make -j4
 ctest (or make test)
 ```
-By default all warnings are enabled. To prevent this, pass the following to cmake:
-```cmake
-cmake -DBUILD_ALL_WARNINGS=false ..
-```
-By default the unit tests are built (which will download Catch2). To prevent this, pass the following to cmake:
-```cmake
-cmake -DBUILD_UNITTESTS=false ..
-```
-To disable stripping of the executables:
-```cmake
-cmake -DBUILD_STRIP_EXE=false ..
-```
 ### Windows environments
 Create a new console project. Add the repo `https://github.com/fix8mt/conjure_enum.git` and clone the source.
 Make sure you set the C++ language to C++20 in the project preferences. The project should build and run the unit tests
@@ -1459,6 +1447,21 @@ by default.
 
 The package is also available on [vckpg](https://vcpkg.io/en/package/conjure-enum).
 
+### Default compiler warnings
+By default all warnings are enabled. To prevent this, pass the following to cmake:
+```cmake
+cmake -DBUILD_ALL_WARNINGS=false ..
+```
+### Default unit tests
+By default the unit tests are built (which will download Catch2). To prevent this, pass the following to cmake:
+```cmake
+cmake -DBUILD_UNITTESTS=false ..
+```
+### Default executable stripping
+To disable stripping of the executables:
+```cmake
+cmake -DBUILD_STRIP_EXE=false ..
+```
 ## b) Using in your application with cmake
 In `CMakeLists.txt` set your include path to:
 ```cmake

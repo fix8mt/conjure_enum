@@ -639,7 +639,7 @@ TEST_CASE("enum_bitset")
 	REQUIRE(ec.to_ulong() == 0b0001001010);
 	REQUIRE(ec.to_string('-', '+') == "---+--+-+-"s);
 	REQUIRE(enum_bitset<numbers>(0b0101001010).to_string() == "0101001010"s);
-	REQUIRE(ec.to_hex_string<>() == "0x4a"s);
+	REQUIRE(ec.to_hex_string() == "0x4a"s);
 	REQUIRE(ec.to_hex_string<false>() == "4a"s);
 	REQUIRE(ec.to_hex_string<true, true>() == "0X4A"s);
 

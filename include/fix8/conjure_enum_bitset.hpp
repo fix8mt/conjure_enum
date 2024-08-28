@@ -8,10 +8,6 @@
 // see https://github.com/fix8mt/conjure_enum
 //
 // Lightweight header-only C++20 enum and typename reflection
-//
-//   Parts based on magic_enum <https://github.com/Neargye/magic_enum>
-//   Copyright (c) 2019 - 2024 Daniil Goncharov <neargye@gmail.com>.
-//
 // Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -359,6 +355,7 @@ public:
 		return ostr.str();
 	}
 #endif
+	constexpr std::string to_hex_string() const noexcept { return to_hex_string<>(); }
 
 	friend constexpr std::ostream& operator<<(std::ostream& os, const enum_bitset& what) noexcept
 	{

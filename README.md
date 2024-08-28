@@ -1429,7 +1429,7 @@ This implementation is header only. Apart from standard C++20 includes there are
 [Catch2](https://github.com/catchorg/Catch2.git) is used for the built-in unit tests.
 
 ## a) Obtaining the source, building the unittests and examples
-### \*nix based environments
+### i. \*nix based environments
 To clone and default build the test app, unit tests and the benchmark:
 ```bash
 git clone https://github.com/fix8mt/conjure_enum.git
@@ -1440,24 +1440,24 @@ cmake ..
 make -j4
 ctest (or make test)
 ```
-### Windows environments
+### ii. Windows environments
 Create a new console project. Add the repo `https://github.com/fix8mt/conjure_enum.git` and clone the source.
 Make sure you set the C++ language to C++20 in the project preferences. The project should build and run the unit tests
 by default.
 
 The package is also available on [vckpg](https://vcpkg.io/en/package/conjure-enum).
 
-### Default compiler warnings
+### iii. Default compiler warnings
 By default all warnings are enabled. To prevent this, pass the following to cmake:
 ```cmake
 cmake -DBUILD_ALL_WARNINGS=false ..
 ```
-### Default unit tests
+### iv. Default unit tests
 By default the unit tests are built (which will download Catch2). To prevent this, pass the following to cmake:
 ```cmake
 cmake -DBUILD_UNITTESTS=false ..
 ```
-### Default executable stripping
+### v. Default executable stripping
 To disable stripping of the executables:
 ```cmake
 cmake -DBUILD_STRIP_EXE=false ..

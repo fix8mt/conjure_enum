@@ -37,14 +37,16 @@
 //-----------------------------------------------------------------------------------------
 class foobat{};
 
+#define ENUMS One, Two, Three, Four, Five, Six, Seven, Eight, Nine
+
 namespace
 {
-	enum class NineEnums : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
-	enum NineEnums1 : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
+	enum class NineEnums : int { ENUMS };
+	enum NineEnums1 : int { ENUMS };
 	namespace TEST1
 	{
-		enum class NineEnums : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
-		enum NineEnums1 : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
+		enum class NineEnums : int { ENUMS };
+		enum NineEnums1 : int { ENUMS };
 		class foo{};
 	}
 	class foo{};
@@ -52,12 +54,12 @@ namespace
 
 namespace TEST
 {
-	enum class NineEnums : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
-	enum NineEnums1 : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
+	enum class NineEnums : int { ENUMS };
+	enum NineEnums1 : int { ENUMS };
 	namespace TEST1
 	{
-		enum class NineEnums : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
-		enum NineEnums1 : int { One, Two, Three, Four, Five, Six, Seven, Eight, Nine };
+		enum class NineEnums : int { ENUMS };
+		enum NineEnums1 : int { ENUMS };
 		class foo{};
 	}
 	class foo{};

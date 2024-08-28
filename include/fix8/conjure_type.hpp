@@ -8,6 +8,7 @@
 // see https://github.com/fix8mt/conjure_enum
 //
 // Lightweight header-only C++20 enum and typename reflection
+//
 // Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy

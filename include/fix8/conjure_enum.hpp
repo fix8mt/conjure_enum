@@ -68,8 +68,6 @@
 //-----------------------------------------------------------------------------------------
 namespace FIX8 {
 
-using namespace std::literals::string_view_literals;
-
 //-----------------------------------------------------------------------------------------
 // global default enum range
 //-----------------------------------------------------------------------------------------
@@ -196,11 +194,11 @@ public:
 
 //-----------------------------------------------------------------------------------------
 template<valid_enum T>
-class conjure_enum final : public static_only
+class conjure_enum : public static_only
 {
 	static constexpr int enum_min_value{enum_range<T>::min}, enum_max_value{enum_range<T>::max};
 	static_assert(enum_max_value > enum_min_value,
-		"FIX8_CONJURE_ENUM_MAX_VALUE (or enum_range<T>::max) must be greater than FIX8_CONJURE_ENUM_MIN_VALUE (or enum_range<T>::min) ");
+		"FIX8_CONJURE_ENUM_MAX_VALUE, enum_range<T>::max or T::ce_first must be greater than FIX8_CONJURE_ENUM_MIN_VALUE, enum_range<T>::min or T::ce_last) ");
 
 public:
 	using enum_tuple = std::tuple<T, std::string_view>;

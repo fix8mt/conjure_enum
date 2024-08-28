@@ -669,8 +669,8 @@ _output_
 ```
 ## q) `is_scoped`
 ```c++
-struct is_scoped : std::integral_constant<bool, requires
-   { requires !std::is_convertible_v<T, std::underlying_type_t<T>>; }>{};
+struct is_scoped : std::bool_constant<requires
+   { requires !std::convertible_to<T, std::underlying_type_t<T>>; }>{};
 ```
 Returns `true` if the specified enum type is scoped.
 ```c++
@@ -907,7 +907,7 @@ for the bit positions (and names).
 >
 > We decided on these restrictions for both simplicity and practicality - bitsets only really make sense when represented in this manner; also...
 >
-> - This implementation is limited to 64 bits
+> - This implementation is limited to 64 bits (arbitrary length impl. soon).
 
 > [!IMPORTANT]
 > You must include

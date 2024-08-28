@@ -44,18 +44,17 @@
 # 1. Quick links
 ||**Link**|**Description**|
 --|--|--
-|1|[Implementation](include/fix8/conjure_enum.hpp)| For header implementation|
-|2|[`conjure_enum`](#3-conjure_enum)| API and examples|
-|3|[`enum_bitset`](#4-enum_bitset)| Enhanced enum aware `std::bitset`|
-|4|[`conjure_type`](#5-conjure_type)| Any type string extractor|
-|5|[`fixed_string`](#6-fixed_string)| Statically stored null terminated fixed string|
-|6|[Building](#7-building)| How to build or include|
-|7|[vcpkg](https://vcpkg.io/en/package/conjure-enum)| For vcpkg package|
-|8|[Notes](#8-notes)| Notes on the implementation, limits, etc|
-|9|[Benchmarks](#9-benchmarks)| Benchmarking |
-|10|[Compilers](#10-compiler-support)| Supported compilers|
-|11|[Compiler issues](#11-compiler-issues)| Workarounds for various compiler issues|
-|12|[Results of `std::source_location`](reference/source_location.md)| For implementation specific `std::source_location` results|
+|1|[`conjure_enum`](#3-conjure_enum)| API and examples|
+|2|[`enum_bitset`](#4-enum_bitset)| Enhanced enum aware `std::bitset`|
+|3|[`conjure_type`](#5-conjure_type)| Any type string extractor|
+|4|[`fixed_string`](#6-fixed_string)| Statically stored null terminated fixed string|
+|5|[Building](#7-building)| How to build or include|
+|6|[vcpkg](https://vcpkg.io/en/package/conjure-enum)| For vcpkg package|
+|7|[Notes](#8-notes)| Notes on the implementation, limits, etc|
+|8|[Benchmarks](#9-benchmarks)| Benchmarking |
+|9|[Compilers](#10-compiler-support)| Supported compilers|
+|10|[Compiler issues](#11-compiler-issues)| Workarounds for various compiler issues|
+|11|[Results of `std::source_location`](reference/source_location.md)| For implementation specific `std::source_location` results|
 > [!TIP]
 > Use the built-in [table of contents](https://github.blog/changelog/2021-04-13-table-of-contents-support-in-markdown-files/) to navigate this guide.
 > Even better in [full read view](./README.md) of this page.

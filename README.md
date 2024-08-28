@@ -45,10 +45,10 @@
 ||**Link**|**Description**|
 --|--|--
 |1|[Implementation](include/fix8/conjure_enum.hpp)| For header implementation|
-|2|[`conjure_enum` API and Examples](#3-api-and-examples-using-conjure_enum)| General examples|
-|3|[`enum_bitset` API and Examples](#4-api-and-examples-using-enum_bitset)| Enhanced enum aware `std::bitset`|
-|4|[`conjure_type` API and Examples](#5-api-and-examples-using-conjure_type)| Any type string extractor|
-|5|[`fixed_string` API](#6-api-for-fixed_string)| Statically stored fixed string|
+|2|[`conjure_enum`](#3-conjure_enum)| General examples|
+|3|[`enum_bitset`](#4-using-enum_bitset)| Enhanced enum aware `std::bitset`|
+|4|[`conjure_type`](#5-conjure_type)| Any type string extractor|
+|5|[`fixed_string`](#6-fixed_string)| Statically stored fixed string|
 |6|[Building](#7-building)| How to build or include|
 |7|[vcpkg](https://vcpkg.io/en/package/conjure-enum)| For vcpkg package|
 |8|[Notes](#8-notes)| Notes on the implementation, limits, etc|
@@ -61,7 +61,7 @@
 > Even better in [full read view](./README.md) of this page.
 >
 > For the latest cutting edge changes, see the [dev branch](https://github.com/fix8mt/conjure_enum/tree/dev).
-> You can view the changes [here](https://github.com/fix8mt/conjure_enum/compare/master..dev).
+> You can view the changes (if any) [here](https://github.com/fix8mt/conjure_enum/compare/master..dev).
 
 ---
 # 2. Introduction
@@ -102,7 +102,7 @@ unlocked the potential of [`constexpr` algorithms](https://www.open-std.org/jtc1
 - ***Transparency***: Compiler implementation variability fully documented, verifiable and reportable (see 12 above)
 
 ---
-# 3. API and Examples using `conjure_enum`
+# 3. `conjure_enum`
 All examples refer to the following enums:
 ```c++
 enum class component { scheme, authority, userinfo, user, password, host, port, path=12, test=path, query, fragment };
@@ -899,7 +899,7 @@ false
 ```
 
 ---
-# 4. API and Examples using `enum_bitset`
+# 4. `enum_bitset`
 `enum_bitset` is a convenient way of creating bitsets based on `std::bitset`. It uses your enum (scoped or unscoped)
 for the bit positions (and names).
 > [!NOTE]
@@ -1275,7 +1275,7 @@ Returns a bit mask that would mask off the _unused_ bits of the underlying integ
 Returns a bit mask that would mask off the _used_ bits of the underlying integral.
 
 ---
-# 5. API and Examples using `conjure_type`
+# 5. `conjure_type`
 `conjure_type` is a general purpose class allowing you to extract a string representation of any typename.
 The string will be stored statically by the compiler, so you can use the statically generated value `name` to obtain your type.
 > [!IMPORTANT]
@@ -1369,7 +1369,7 @@ static consteval const char* FIX8::conjure_type<T>::tpeek() [with T = test]
 ```
 
 ---
-# 6. API for `fixed_string`
+# 6. `fixed_string`
 `fixed_string` is a specialisation of `std::array` that provides statics storage for an ASCII zero (asciiz) string. The purpose of this class is to allow the
 creation of `constexpr` strings with specfic storage, adding a trailing `0`. It is used by `conjure_enum` to store all strings. API is described below. Other uses of this class are possible.
 

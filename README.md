@@ -44,7 +44,6 @@
 # 1. Quick links
 |1|[`conjure_enum`](#3-conjure_enum)| API and examples|
 |:--|:--|:--|
-|1|[`conjure_enum`](#3-conjure_enum)| API and examples|
 |2|[`enum_bitset`](#4-enum_bitset)| Enhanced enum aware `std::bitset`|
 |3|[`conjure_type`](#5-conjure_type)| Any type string extractor|
 |4|[`fixed_string`](#6-fixed_string)| Statically stored null terminated fixed string|

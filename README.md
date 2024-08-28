@@ -1144,6 +1144,7 @@ constexpr std::string to_string(char zero='0', char one='1') const;
 
 template<bool showbase=true, bool uppercase=false>
 constexpr std::string to_hex_string() const;
+constexpr std::string to_hex_string() const;
 ```
 Inserts default string representation into `std::ostream`.<br>
 Returns a `std::string` representation of the bitset. Optionally specify which characters to use for `0` and `1`.<br>

@@ -1470,7 +1470,7 @@ cmake -DBUILD_CLANG_PROFILER=true ..
 ```
 ## b) Using in your application with cmake
 In `CMakeLists.txt` set your include path to:
-```bash
+```CMake
 include_directories([conjure_enum directory]/include)
 # e.g.
 set(cjedir /home/dd/prog/conjure_enum)

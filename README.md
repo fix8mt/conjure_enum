@@ -1462,6 +1462,11 @@ To disable stripping of the executables:
 ```cmake
 cmake -DBUILD_STRIP_EXE=false ..
 ```
+### vi. Default executable stripping
+To enable clang compilation profiling:
+```CMake
+cmake -DBUILD_CLANG_PROFILER=true ..
+```
 ## b) Using in your application with cmake
 In `CMakeLists.txt` set your include path to:
 ```cmake

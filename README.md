@@ -42,6 +42,7 @@
 <a href="https://opensource.org/license/mit"><img src="assets/badgemitlic.svg"></a>
 
 # 1. Quick links
+||||
 --|--|--
 |1|[`conjure_enum`](#3-conjure_enum)| API and examples|
 |2|[`enum_bitset`](#4-enum_bitset)| Enhanced enum aware `std::bitset`|

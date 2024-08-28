@@ -1373,7 +1373,7 @@ static consteval const char* FIX8::conjure_type<T>::tpeek() [with T = test]
 ---
 # 6. `fixed_string`
 `fixed_string` is a specialisation of `std::array` that provides statics storage for an ASCII zero (asciiz) string. The purpose of this class is to allow the
-creation of `constexpr` strings with specfic storage, adding a trailing `0`. It is used by `conjure_enum` to store all strings. API is described below. Other uses of this class are possible.
+creation of `constexpr` strings with specfic storage, adding a trailing `0`. It is used by `conjure_enum` to store all strings. API is described below.
 
 ## a) Creating a `fixed_string`
 ```c++

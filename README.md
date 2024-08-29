@@ -1072,6 +1072,7 @@ Additional methods
 | `all_of` | test for all specified bits, templated, function, types and underlyings |
 | `none_of` | test for all specified bits set to off, templated, function, types and underlyings |
 | `not_count` | complement of count, count of off bits |
+| `has_single_bit` | if bitset is an integral power of two; otherwise false|
 
 Take a look at the [implementation](include/fix8/conjure_enum.hpp) for more detail on the various API functions available.
 You can also review the unit test cases for examples of use.

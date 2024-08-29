@@ -1068,6 +1068,10 @@ Additional methods
 | `reset` | reset all specified bits, templated |
 | `rotl` | rotate underlying left specified times|
 | `rotr` | rotate underlying right specified times|
+| `countl_zero` | counts number of consecutive underlying `0` bits, starting from the most significant bit |
+| `countl_one` | counts number of consecutive underlying `1` bits, starting from the most significant bit |
+| `countr_zero` | counts number of consecutive underlying `0` bits, starting from the least significant bit |
+| `countr_one` | counts number of consecutive underlying `1` bits, starting from the least significant bit |
 | `any_of` | test for one or more bits, templated, function, types and underlyings |
 | `all_of` | test for all specified bits, templated, function, types and underlyings |
 | `none_of` | test for all specified bits set to off, templated, function, types and underlyings |

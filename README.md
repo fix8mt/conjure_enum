@@ -1066,6 +1066,8 @@ Additional methods
 | :--- | :--- |
 | `set` | set all specified bits, templated |
 | `reset` | reset all specified bits, templated |
+| `rotl` | rotate underlying left specified times|
+| `rotr` | rotate underlying right specified times|
 | `any_of` | test for one or more bits, templated, function, types and underlyings |
 | `all_of` | test for all specified bits, templated, function, types and underlyings |
 | `none_of` | test for all specified bits set to off, templated, function, types and underlyings |
@@ -1092,6 +1094,7 @@ eb.reset();
 eb[2] = true;
 eb[numbers::three] = true;
 std::cout << eb << '\n';
+std::cout << eb.rotr(1) << '\n';
 ```
 _output_
 ```
@@ -1103,6 +1106,7 @@ true
 1000000001
 0000000001
 0000001100
+0000011000
 ```
 ## d) Other functions
 ### i. `operator bool`

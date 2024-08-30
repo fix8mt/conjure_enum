@@ -1288,7 +1288,7 @@ constexpr U get_unused_bit_mask() const;
 Returns a bit mask that would mask off the _unused_ bits of the underlying integral.<br>
 Returns a bit mask that would mask off the _used_ bits of the underlying integral.
 
-### ix. `std::hash<FIX8::enum_bitset<T>`
+### ix. `std::hash<enum_bitset<T>>`
 ```c++
 template<typename T>
 struct std::hash<FIX8::enum_bitset<T>>;

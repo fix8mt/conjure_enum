@@ -1079,7 +1079,7 @@ Additional methods
 | `has_single_bit` | return true if bitset is an integral power of two|
 
 > [!NOTE]
-> rot[lr] and count[lr] operate on the _used_ bits of the underlying type.
+> `rotl`, `rotl`, `countl*` and `countr*` operate on the _used_ bits of the underlying type.
 
 Take a look at the [implementation](include/fix8/conjure_enum.hpp) for more detail on the various API functions available.
 You can also review the unit test cases for examples of use.

@@ -1288,6 +1288,13 @@ constexpr U get_unused_bit_mask() const;
 Returns a bit mask that would mask off the _unused_ bits of the underlying integral.<br>
 Returns a bit mask that would mask off the _used_ bits of the underlying integral.
 
+### ix. `std::hash<FIX8::enum_bitset<T>`
+```c++
+template<typename T>
+struct std::hash<FIX8::enum_bitset<T>>;
+```
+Provides a specialization of `std::hash` for `enum_bitset<T>`.
+
 ---
 # 5. `conjure_type`
 `conjure_type` is a general purpose class allowing you to extract a string representation of any typename.

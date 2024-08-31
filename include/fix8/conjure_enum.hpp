@@ -141,10 +141,7 @@ public:
 	enum class sval { start, end, anon_str, anon_start };
 
 	template<sval N, stype V> // can't have constexpr decompositions! (but why not?)
-	static constexpr auto get_spec() noexcept
-	{
-		return std::get<static_cast<int>(N)>(_specifics[static_cast<int>(V)]);
-	}
+	static constexpr auto get_spec() noexcept { return std::get<static_cast<int>(N)>(_specifics[static_cast<int>(V)]); }
 	static constexpr auto size() noexcept { return sizeof(_specifics); }
 };
 using stype = cs::stype;

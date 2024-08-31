@@ -228,5 +228,7 @@ int main(void)
 	std::cout << '"' << component::host << '"' << '\n';
 	std::cout << '"' << component1::host << '"' << '\n';
 	std::cout << '"' << static_cast<component>(100) << '"' << '\n';
+
+	std::cout << std::hash<enum_bitset<numbers>>{}(er) << '\n';
 	return 0;
 }

@@ -71,6 +71,9 @@ class enum_bitset
 				 std::conditional_t<countof <= 64, std::uint_least64_t, void>>>>;
 	static_assert(std::integral<U>, "requested bitset overflow");
 
+	static constexpr U all_bits { (1 << countof) - 1 };
+	static constexpr U unused_bits { sizeof(U) * 8 - countof };
+
 	template <typename R>
 	class _reference
 	{
@@ -99,12 +102,13 @@ class enum_bitset
 	template<T val>
 	static constexpr U to_underlying() noexcept { return static_cast<U>(val); } // C++23: upgrade to std::to_underlying
 	static constexpr U to_underlying(T val) noexcept { return static_cast<U>(val); }
-	static constexpr U all_bits { (1 << countof) - 1 };
 	U _present{};
 
 #if __has_include(<format>)
 	static constexpr std::array _hexfmtarr { "{:#x}", "{:#X}", "{:x}", "{:#X}" };
 #endif
+
+	static constexpr int correct_count(int val) noexcept { return val ? val - unused_bits : 0; }
 
 public:
 	using enum_bitset_underlying_type = U;
@@ -130,6 +134,10 @@ public:
 	constexpr std::size_t count() const noexcept
 		{ return std::popcount(static_cast<std::make_unsigned_t<U>>(_present)); } // C++23: upgrade to std::bitset when count is constexpr
 	constexpr std::size_t not_count() const noexcept { return countof - count(); }
+	constexpr int countl_zero() const noexcept { return correct_count(std::countl_zero(_present)); }
+	constexpr int countl_one() const noexcept { return correct_count(std::countl_one(_present)); }
+	constexpr int countr_zero() const noexcept { return std::countr_zero(_present); }
+	constexpr int countr_one() const noexcept { return std::countr_one(_present); }
 	constexpr std::size_t size() const noexcept { return countof; }
 	constexpr unsigned long to_ulong() const
 	{
@@ -180,6 +188,10 @@ public:
 	constexpr void flip() noexcept { _present = ~_present & all_bits; }
 	constexpr void flip(U pos) noexcept { _present ^= 1 << pos; }
 	constexpr void flip(T what) noexcept { flip(to_underlying(what)); }
+
+	/// rotate
+	constexpr enum_bitset& rotl(int cnt) noexcept { set(_present << cnt | _present >> (countof * 8 - cnt)); return *this; }
+	constexpr enum_bitset& rotr(int cnt) noexcept { set(_present >> cnt | _present << (countof * 8 - cnt)); return *this; }
 
 	/// reset
 	template<T what>
@@ -244,9 +256,9 @@ public:
 	constexpr bool any() const noexcept { return count(); }
 	constexpr bool all() const noexcept { return _present == all_bits; }
 	constexpr bool none() const noexcept { return !*this; }
+	constexpr bool has_single_bit() const noexcept { return std::has_single_bit(_present); }
 
 	/// operators
-	constexpr operator bool() const noexcept { return count(); }
 	constexpr enum_bitset& operator<<=(std::size_t pos) noexcept { _present <<= pos; return *this; }
 	constexpr enum_bitset& operator>>=(std::size_t pos) noexcept { _present >>= pos; return *this; }
 	constexpr enum_bitset& operator&=(T other) noexcept { _present &= 1 << to_underlying(other); return *this; }
@@ -264,6 +276,7 @@ public:
 	constexpr enum_bitset operator~() const noexcept { return enum_bitset(~_present & all_bits); }
 
 	constexpr operator auto() const noexcept { return std::bitset<countof>(_present); }
+	constexpr operator bool() const noexcept { return count(); }
 
 	/// for_each, for_each_n
 	template<typename Fn, typename... Args>
@@ -376,6 +389,16 @@ constexpr enum_bitset<T> operator^(const enum_bitset<T>& lh, const enum_bitset<T
 
 //-----------------------------------------------------------------------------------------
 } // FIX8
+
+/// std::hash specialization for enum_bitset.
+template<typename T>
+struct std::hash<FIX8::enum_bitset<T>>
+{
+	size_t operator()(const FIX8::enum_bitset<T>& bs) const noexcept
+	{
+		return std::hash<typename FIX8::enum_bitset<T>::enum_bitset_underlying_type>()(bs.get_underlying());
+	}
+};
 
 #endif // FIX8_CONJURE_ENUM_BITSET_HPP_
 

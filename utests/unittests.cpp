@@ -666,6 +666,13 @@ TEST_CASE("enum_bitset")
 	REQUIRE(ec.get_underlying_bit_size() == 16);
 	REQUIRE(ec.get_unused_bit_mask() == 0b111111 << 10);
 	REQUIRE(ec.get_bit_mask() == 0b1111111111);
+
+	ec.reset();
+	ec.set<numbers::one,numbers::two,numbers::three>();
+	REQUIRE(ec.countl_one() == 0);
+	REQUIRE(ec.countr_zero() == 1);
+	REQUIRE(ec.countr_one() == 0);
+	REQUIRE(ec.countl_zero() == 6);
 }
 
 //-----------------------------------------------------------------------------------------
@@ -711,6 +718,23 @@ TEST_CASE("enum_bitset ops")
 	ed[numbers::two] = true;
 	REQUIRE(ed.test(numbers::two));
 	REQUIRE(ed[2] == true);
+
+	ed.reset();
+	ed.set<numbers::one,numbers::three,numbers::six>();
+	REQUIRE(ed.rotl(1) == enum_bitset<numbers>(numbers::two,numbers::four,numbers::seven));
+	REQUIRE(ed.rotr(1) == enum_bitset<numbers>(numbers::one,numbers::three,numbers::six));
+	REQUIRE(ed.rotr(1) == enum_bitset<numbers>(numbers::nine,numbers::two,numbers::five));
+	REQUIRE(ed.rotl(4) == enum_bitset<numbers>(numbers::eight,numbers::one,numbers::four));
+
+	ed.reset();
+	ed.set<numbers::two>();
+	REQUIRE(ed.has_single_bit());
+	ed.set<numbers::one,numbers::three>();
+	REQUIRE(!ed.has_single_bit());
+
+	REQUIRE(std::hash<enum_bitset<numbers>>{}(ed) == 14);
+
+	REQUIRE(ed == enum_bitset<numbers>(numbers::one,numbers::two,numbers::three));
 }
 
 //-----------------------------------------------------------------------------------------

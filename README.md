@@ -876,6 +876,7 @@ static constexpr int get_actual_enum_max_value();
 ```
 The first two functions return the min and max enum range for the specified enum. If you have specialised `enum_range` then these values
 will be reported (see below).
+
 The second two functions return the actual min and max enum values as ints for the specified enum.
 ```c++
 std::cout << conjure_enum<component>::get_enum_min_value() << '/' << conjure_enum<component>::get_enum_min_value() << '\n';
@@ -1450,6 +1451,9 @@ Provides an `ostream` insertor.
 # 7. Building
 This implementation is header only. Apart from standard C++20 includes there are no external dependencies needed in your application.
 [Catch2](https://github.com/catchorg/Catch2.git) is used for the built-in unit tests.
+> [!NOTE]
+> The unit test source files [unittests.cpp](utests/unittests.cpp) and [edgetests.cpp](utests/edgetests.cpp) contain additional examples for all
+> the APIs.
 
 ## a) Obtaining the source, building the unittests and examples
 ### i. Build platform
@@ -1651,6 +1655,7 @@ For convenience, two macros are provided to make it easier to set custom ranges 
 #define FIX8_CONJURE_ENUM_SET_RANGE(min_enum,max_enum)...
 ```
 The first macro takes an enum typename followed by a lower and upper int range value.
+
 The second macro takes a lower and upper enum value. For example:
 ```c++
 FIX8_CONJURE_ENUM_SET_RANGE_INTS(numbers, 0, 7)

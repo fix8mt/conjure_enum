@@ -589,17 +589,19 @@ template<std::size_t I, typename Fn, typename C, typename... Args> // specialisa
 requires (std::invocable<Fn&&, C, T, Args...> && I > 0)
 static constexpr void dispatch(T ev, const std::array<std::tuple<T, Fn>, I>& disp, C *obj, Args&&... args);
 ```
-With a given enum, search and call user supplied invocable. Use this method where complex event handling is required, allowing you to easily declare predefined invocable actions
+With a given enum, search and call user supplied invocable. A typical use case would be where you want to demux a complex event, allowing you to easily declare predefined invocable actions
 for different enum values.
 
-Where invocable returns a value, return this value or a user supplied "not found" value.
-Where invocable is void, call user supplied "not found" invocable.
+- Where invocable returns a value, return this value or a user supplied "not found" value.
+- Where invocable is void, call user supplied "not found" invocable.
+
 The first parameter of your invocable must accept an enum value (passed by `dispatch`).
 Optionally provide any additional parameters. Works with lambdas, member functions, functions etc.
 
 There are two versions of `dispatch` - the first takes an enum value, a 'not found' value, and a `std::array` of `std::tuple` of enum and invocable.
 The second version takes an enum value, and a `std::array` of `std::tuple` of enum and invocable. The last element of the array is called if the enum is not found.
 This version is intended for use with `void` return invocables.
+
 The second version of each of the above is intended to be used when using a member function - the _first_ parameter passed after your array must be the `this` pointer of the object.
 You can also use `std::bind` to bind the this pointer and any parameter placeholders when declaring your array.
 If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.

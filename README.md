@@ -1451,7 +1451,7 @@ Provides an `ostream` insertor.
 # 7. Building
 This implementation is header only. Apart from standard C++20 includes there are no external dependencies needed in your application.
 [Catch2](https://github.com/catchorg/Catch2.git) is used for the built-in unit tests.
-> [!NOTE]
+> [!TIP]
 > The unit test source files [unittests.cpp](utests/unittests.cpp) and [edgetests.cpp](utests/edgetests.cpp) contain additional examples for all
 > the APIs.
 

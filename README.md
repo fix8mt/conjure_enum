@@ -492,9 +492,9 @@ Works with lambdas, member functions, functions etc, compatible with `std::invok
 
 Returns
 ```c++
-std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...)
+std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...);
 // or
-std::bind(std::forward<Fn>(func), obj, std::placeholders::_1, std::forward<Args>(args)...)
+std::bind(std::forward<Fn>(func), obj, std::placeholders::_1, std::forward<Args>(args)...);
 ```
 which can be stored or immediately invoked.
 

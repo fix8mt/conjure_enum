@@ -596,7 +596,9 @@ for different enum values.
 - Where invocable is void, call user supplied "not found" invocable.
 
 The first parameter of your invocable must accept an enum value (passed by `dispatch`).
-Optionally provide any additional parameters. Works with lambdas, member functions, functions etc.
+Optionally provide any additional parameters.
+
+Works with lambdas, member functions, functions etc, compatible with `std::invoke`.
 
 There are two versions of `dispatch` - the first takes an enum value, a 'not found' value, and a `std::array` of `std::tuple` of enum and invocable.
 The second version takes an enum value, and a `std::array` of `std::tuple` of enum and invocable. The last element of the array is called if the enum is not found.

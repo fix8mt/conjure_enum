@@ -147,7 +147,7 @@ numbers::two
 Because all methods in `conjure_enum` are defined _within_ a `class` instead of individual template functions in a `namespace`, you can reduce your
 typing with standard aliases:
 ```c++
-using ec = conjure_enum<component>;
+using ec = FIX8::conjure_enum<component>;
 std::cout << std::format("\"{}\"\n", ec::enum_to_string(component::authority));
 std::cout << std::format("\"{}\"\n", ec::enum_to_string(static_cast<component>(100)));
 ```
@@ -483,13 +483,20 @@ requires std::invocable<Fn&&, C, T, Args...>
 [[maybe_unused]] static constexpr auto for_each_n(int n, Fn&& func, C *obj, Args&&... args);
 ```
 Call supplied invocable for _each_ enum value. Similar to `std::for_each` except the first parameter of your invocable must accept an enum value (passed by `for_each`).
-Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. You can limit the number of calls to your
-invocable by using the `for_each_n` version with the first parameter being the maximum number to call. The second version of `for_each` and `for_each_n` is intended to be used
+Optionally provide any additional parameters. You can limit the number of calls to your invocable by using the `for_each_n` version with the first parameter
+being the maximum number to call. The second version of `for_each` and `for_each_n` is intended to be used
 when using a member function - the _second_ parameter passed by your call must be the `this` pointer of the object.
 If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
 
-Returns `std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...)`
-or `std::bind(std::forward<Fn>(func), obj, std::placeholders::_1, std::forward<Args>(args)...)` which can be stored or immediately invoked.
+Works with lambdas, member functions, functions etc, compatible with `std::invoke`.
+
+Returns
+```c++
+std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...)
+// or
+std::bind(std::forward<Fn>(func), obj, std::placeholders::_1, std::forward<Args>(args)...)
+```
+which can be stored or immediately invoked.
 
 See `enum_bitset::for_each` to iterate through a bitset.
 ```c++

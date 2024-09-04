@@ -645,6 +645,23 @@ directions::right
 not found: directions::forward
 -1
 ```
+This example uses lambdas:
+```c++
+const auto dd1
+{
+   std::to_array<std::tuple<component, std::function<int(component, int)>>>
+   ({
+      { component::scheme, [](component ev, int a) { return a * 100 + conjure_enum<component>::enum_to_int(ev); } },
+      { component::port, [](component ev, int a) { return a * 200 + conjure_enum<component>::enum_to_int(ev); } },
+      { component::fragment, [](component ev, int a) { return a * 300 + conjure_enum<component>::enum_to_int(ev); } },
+   })
+};
+std::cout << conjure_enum<component>::dispatch(component::port, -1, dd1, 10) << '\n';
+```
+_output_
+```CSV
+2006
+```
 This example uses member functions:
 ```c++
 struct foo

@@ -847,9 +847,8 @@ static constexpr auto back();
 These methods return `*cbegin()` and `*std::prev(cend())` respectively all from `entries`
 defined above.
 ```c++
-using en = conjure_enum<numbers>;
-std::cout << static_cast<int>(std::get<0>(en::front())) << ' ' << std::get<1>(en::front()) << '\n';
-std::cout << static_cast<int>(std::get<0>(en::back())) << ' ' << std::get<1>(en::back()) << '\n';
+for (const auto& [ev,str] : {conjure_enum<numbers>::front(), conjure_enum<numbers>::back()})
+   std::cout << static_cast<int>(ev) << ' ' << str << '\n';
 ```
 _output_
 ```CSV

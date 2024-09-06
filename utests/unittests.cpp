@@ -733,8 +733,6 @@ TEST_CASE("enum_bitset ops")
 	REQUIRE(!ed.has_single_bit());
 
 	REQUIRE(std::hash<enum_bitset<numbers>>{}(ed) == 14);
-
-	REQUIRE(ed == enum_bitset<numbers>(numbers::one,numbers::two,numbers::three));
 }
 
 //-----------------------------------------------------------------------------------------

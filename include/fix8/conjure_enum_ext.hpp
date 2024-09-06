@@ -38,10 +38,22 @@
 
 //----------------------------------------------------------------------------------------
 private:
+	static constexpr bool _scoped_comp(const scoped_tuple& pl, const scoped_tuple& pr) noexcept
+	{
+		return std::get<0>(pl) < std::get<0>(pr);
+	}
+
 	template<std::size_t... I>
 	static constexpr auto _names(std::index_sequence<I...>) noexcept
 	{
 		return std::array<std::string_view, sizeof...(I)>{{{ _enum_name_v<values[I]>}...}};
+	}
+
+	static constexpr std::string_view _remove_scope(std::string_view what) noexcept
+	{
+		if (const auto lc { what.find_last_of(':') }; lc != std::string_view::npos)
+			return what.substr(lc + 1);
+		return what;
 	}
 
 	template<std::size_t... I>
@@ -50,13 +62,6 @@ private:
 		std::array<enum_tuple, sizeof...(I)> tmp{{{ values[I], _remove_scope(_enum_name_v<values[I]>)}...}};
 		std::sort(tmp.begin(), tmp.end(), _tuple_comp_rev);
 		return tmp;
-	}
-
-	static constexpr std::string_view _remove_scope(std::string_view what) noexcept
-	{
-		if (const auto lc { what.find_last_of(':') }; lc != std::string_view::npos)
-			return what.substr(lc + 1);
-		return what;
 	}
 
 	template<std::size_t... I>
@@ -88,11 +93,6 @@ private:
 				begin != end)
 					return std::get<1>(*begin);
 		return what;
-	}
-
-	static constexpr bool _scoped_comp(const scoped_tuple& pl, const scoped_tuple& pr) noexcept
-	{
-		return std::get<0>(pl) < std::get<0>(pr);
 	}
 
 public:
@@ -209,8 +209,7 @@ public:
 	static constexpr void dispatch(T ev, const std::array<std::tuple<T, Fn>, I>& disp, Args&&... args) noexcept
 	{
 		const auto [begin,end] { std::equal_range(disp.cbegin(), std::prev(disp.cend()), std::make_tuple(ev, Fn()), tuple_comp<Fn>) };
-		return begin != end ? std::invoke(std::get<Fn>(*begin), ev, std::forward<Args>(args)...)
-														 : std::invoke(std::get<Fn>(*std::prev(disp.cend())), ev, std::forward<Args>(args)...);
+		return std::invoke(std::get<Fn>(begin != end ? *begin : *std::prev(disp.cend())), ev, std::forward<Args>(args)...);
 	}
 
 	template<std::size_t I, typename Fn, typename C, typename... Args> // specialisation for void member function with not found call to last element
@@ -218,8 +217,7 @@ public:
 	static constexpr void dispatch(T ev, const std::array<std::tuple<T, Fn>, I>& disp, C *obj, Args&&... args) noexcept
 	{
 		const auto [begin,end] { std::equal_range(disp.cbegin(), std::prev(disp.cend()), std::make_tuple(ev, Fn()), tuple_comp<Fn>) };
-		return begin != end ? std::invoke(std::get<Fn>(*begin), obj, ev, std::forward<Args>(args)...)
-														 : std::invoke(std::get<Fn>(*std::prev(disp.cend())), obj, ev, std::forward<Args>(args)...);
+		return std::invoke(std::get<Fn>(begin != end ? *begin : *std::prev(disp.cend())), obj, ev, std::forward<Args>(args)...);
 	}
 
 	// public constexpr data structures

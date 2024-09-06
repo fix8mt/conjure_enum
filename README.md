@@ -1112,7 +1112,7 @@ Additional methods
 > [!NOTE]
 > `rotl`, `rotl`, `countl*` and `countr*` operate on the _used_ bits of the underlying type.
 
-Take a look at the [implementation](include/fix8/conjure_enum.hpp) for more detail on the various API functions available.
+Take a look at the [implementation](include/fix8/enum_bitset.hpp) for more detail on the various API functions available.
 You can also review the unit test cases for examples of use.
 
 All accessors and mutators work with enum values or integers as with operators. They also work with multiple values, either as template parameters or

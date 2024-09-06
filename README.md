@@ -623,7 +623,7 @@ If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
 > The `dispatch` method performs a binary search on the array. Complexity for a sorted array is at most&ensp; $2log_2(N)+O(1)$ &ensp;comparisons.
 > If the array is _not_ sorted, complexity is linear.
 
-The following example uses a `static constexpr` array of pointers to functions. For bevity the most point to the same function except the last which is
+The following example uses a `static constexpr` array of pointers to functions. For brevity they all point to the same function except the last which is
 a lambda.
 ```c++
 enum class directions { left, right, up, down, forward, backward, notfound=-1 };
@@ -641,12 +641,14 @@ static constexpr auto tarr
    })
 };
 conjure_enum<directions>::dispatch(directions::right, tarr);
+conjure_enum<directions>::dispatch(directions::down, tarr);
 conjure_enum<directions>::dispatch(directions::forward, tarr);
 std::cout << conjure_enum<directions>::enum_to_int(directions::notfound) << '\n';
 ```
 _output_
 ```CSV
 directions::right
+directions::down
 not found: directions::forward
 -1
 ```

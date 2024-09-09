@@ -68,6 +68,7 @@ enum class numbers64 : uint64_t
 	fifty_five, fifty_six, fifty_seven, fifty_eight, fifty_nine,
 	sixty, sixty_one, sixty_two, sixty_three
 };
+enum class reverse_range_test { first=7, second=6, third=5, fourth=4, fifth=3, sixth=2, seventh=1, eighth=0 };
 
 //-----------------------------------------------------------------------------------------
 // run as: ctest --output-on-failure
@@ -93,6 +94,10 @@ TEST_CASE("default range")
 	REQUIRE(conjure_enum<component>::get_enum_max_value() == FIX8_CONJURE_ENUM_MAX_VALUE);
 	REQUIRE(conjure_enum<component>::get_actual_enum_min_value() == 0);
 	REQUIRE(conjure_enum<component>::get_actual_enum_max_value() == 14);
+	REQUIRE(conjure_enum<reverse_range_test>::get_enum_min_value() == FIX8_CONJURE_ENUM_MIN_VALUE);
+	REQUIRE(conjure_enum<reverse_range_test>::get_enum_max_value() == FIX8_CONJURE_ENUM_MAX_VALUE);
+	REQUIRE(conjure_enum<reverse_range_test>::get_actual_enum_min_value() == 0);
+	REQUIRE(conjure_enum<reverse_range_test>::get_actual_enum_max_value() == 7);
 }
 
 //-----------------------------------------------------------------------------------------
@@ -148,6 +153,7 @@ TEST_CASE("is_continuous")
 {
 	REQUIRE(!conjure_enum<component>::is_continuous());
 	REQUIRE(conjure_enum<numbers>::is_continuous());
+	REQUIRE(conjure_enum<reverse_range_test>::is_continuous());
 }
 
 //-----------------------------------------------------------------------------------------
@@ -321,6 +327,10 @@ TEST_CASE("iterators")
 	REQUIRE(std::get<component1>(conjure_enum<component1>::front()) == scheme);
 	REQUIRE(std::get<component1>(conjure_enum<component1>::back()) == fragment);
 	REQUIRE(std::get<component1>(conjure_enum<component1>::back()) == std::get<component1>(*conjure_enum<component1>::crbegin()));
+	REQUIRE(std::get<reverse_range_test>(conjure_enum<reverse_range_test>::front()) == reverse_range_test::eighth);
+	REQUIRE(std::get<reverse_range_test>(conjure_enum<reverse_range_test>::back()) == reverse_range_test::first);
+	REQUIRE(std::get<reverse_range_test>(conjure_enum<reverse_range_test>::front()) == conjure_enum<reverse_range_test>::min_v);
+	REQUIRE(std::get<reverse_range_test>(conjure_enum<reverse_range_test>::back()) == conjure_enum<reverse_range_test>::max_v);
 }
 
 //-----------------------------------------------------------------------------------------

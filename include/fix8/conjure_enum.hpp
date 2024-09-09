@@ -195,7 +195,7 @@ class conjure_enum : public static_only
 {
 	static constexpr int enum_min_value{enum_range<T>::min}, enum_max_value{enum_range<T>::max};
 	static_assert(enum_max_value > enum_min_value,
-		"FIX8_CONJURE_ENUM_MAX_VALUE, enum_range<T>::max or T::ce_first must be greater than FIX8_CONJURE_ENUM_MIN_VALUE, enum_range<T>::min or T::ce_last) ");
+		"FIX8_CONJURE_ENUM_MAX_VALUE, enum_range<T>::max or T::ce_last must be greater than FIX8_CONJURE_ENUM_MIN_VALUE, enum_range<T>::min or T::ce_first) ");
 
 public:
 	using enum_tuple = std::tuple<T, std::string_view>;

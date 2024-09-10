@@ -42,21 +42,24 @@
 <a href="https://opensource.org/license/mit"><img src="assets/badgemitlic.svg"></a>
 
 # 1. Quick links
-||**Link**|**Description**|
---|--|--
-|1|[Implementation](include/fix8/conjure_enum.hpp)| For header implementation|
-|2|[`conjure_enum` API and Examples](#3-api-and-examples-using-conjure_enum)| General examples|
-|3|[`enum_bitset` API and Examples](#4-api-and-examples-using-enum_bitset)| enhanced enum aware `std::bitset`|
-|4|[`conjure_type` API and Examples](#5-api-and-examples-using-conjure_type)| any type string extractor|
-|5|[Building](#6-building)| How to build or include|
+|1|[`conjure_enum`](#3-conjure_enum)| API and examples|
+|:--|:--|:--|
+|2|[`enum_bitset`](#4-enum_bitset)| Enhanced enum aware `std::bitset`|
+|3|[`conjure_type`](#5-conjure_type)| Any type string extractor|
+|4|[`fixed_string`](#6-fixed_string)| Statically stored null terminated fixed string|
+|5|[Building](#7-building)| How to build or include|
 |6|[vcpkg](https://vcpkg.io/en/package/conjure-enum)| For vcpkg package|
-|7|[Notes](#7-notes)| Notes on the implementation, limits, etc|
-|8|[Compilers](#8-compiler-support)| Supported compilers|
-|9|[Compiler issues](#9-compiler-issues)| Workarounds for various compiler issues|
-|10|[Results of `std::source_location`](reference/source_location.md)| For implementation specific `std::source_location` results|
+|7|[Notes](#8-notes)| Notes on the implementation, limits, etc|
+|8|[Benchmarks](#9-benchmarks)| Benchmarking |
+|9|[Compilers](#10-compiler-support)| Supported compilers|
+|10|[Compiler issues](#11-compiler-issues)| Workarounds for various compiler issues|
+|11|[Results of `std::source_location`](reference/source_location.md)| For implementation specific `std::source_location` results|
 > [!TIP]
 > Use the built-in [table of contents](https://github.blog/changelog/2021-04-13-table-of-contents-support-in-markdown-files/) to navigate this guide.
 > Even better in [full read view](./README.md) of this page.
+>
+> For the latest cutting edge changes, see the [dev branch](https://github.com/fix8mt/conjure_enum/tree/dev).
+> You can view the changes (if any) [here](https://github.com/fix8mt/conjure_enum/compare/master..dev).
 
 ---
 # 2. Introduction
@@ -66,12 +69,10 @@ Based on the awesome work in [`magic_enum`](https://github.com/Neargye/magic_enu
 this library offers a streamlined and powerful way to add reflection capabilities to your C++ enums and other types. We've optimized the core functionality,
 focusing on the main features developers usually want. We've also added general purpose typename reflection for any type.
 
-## b) Embracing C++20
+`conjure_enum`[^1] takes full advantage of recently added C++20 features. We've leveraged the convenience of [`std::source_location`](https://en.cppreference.com/w/cpp/utility/source_location) and
+unlocked the potential of [`constexpr` algorithms](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2017/p0202r3.html) and [concepts](https://en.cppreference.com/w/cpp/language/constraints).
 
-`conjure_enum`[^1] takes full advantage of recently added C++20 features. We've leveraged the convenience of `std::source_location` and
-unlocked the potential of `constexpr` algorithms and concepts.
-
-## c) Key Benefits
+## b) Highlights
 
 - ***Single Header-Only***: No external dependencies, simplifying integration into your project
 - ***Modern C++20***: Entirely `constexpr` for compile-time safety, efficiency and performance; no macros
@@ -79,16 +80,16 @@ unlocked the potential of `constexpr` algorithms and concepts.
   - scoped and unscoped enums
   - enums with **aliases** and **gaps**
   - anonymous and named namespaced enums and types
-  - custom enum ranges
+  - custom [enum ranges](#ii-using-enum_range)
 - ***Easy to Use***: Class-based approach with intuitive syntax
-- ***Convenient***: `enum_bitset` provides an enhanced enum aware `std::bitset` (see 3 above)
-- ***Useful***: `conjure_type` gives you the type string of _any type!_ (see 4 above)
-- ***Wide Compiler Compatibility***: Support for: (see 7 above)
+- ***Convenient***: `enum_bitset` provides an enhanced enum aware `std::bitset` (see 2 above)
+- ***Useful***: `conjure_type` gives you the type string of _any type!_ (see 3 above)
+- ***Wide Compiler Compatibility***: Support for: (see 9 above)
   - GCC
   - Clang
   - MSVC
   - XCode/Apple Clang
-- ***Confidence in Quality***: Includes comprehensive unit test suite for reliable functionality and profiling
+- ***Confidence***: Includes comprehensive unit test suite for reliable functionality and profiling
 - ***Expanded***: Enhanced API:
   - `add_scope`
   - `remove_scope`
@@ -96,10 +97,10 @@ unlocked the potential of `constexpr` algorithms and concepts.
   - `for_each_n`
   - `dispatch`
   - iterators and more!
-- ***Transparency***: Compiler implementation variability fully documented, verifiable and reportable (see 9 above)
+- ***Transparency***: Compiler implementation variability fully documented, verifiable and reportable (see 11 above)
 
 ---
-# 3. API and Examples using `conjure_enum`
+# 3. `conjure_enum`
 All examples refer to the following enums:
 ```c++
 enum class component { scheme, authority, userinfo, user, password, host, port, path=12, test=path, query, fragment };
@@ -107,9 +108,22 @@ enum component1 { scheme, authority, userinfo, user, password, host, port, path=
 enum class numbers { zero, one, two, three, four, five, six, seven, eight, nine };
 ```
 
+> [!IMPORTANT]
+> Your type _must_ be an enum, satisfying:
+> ```C++
+>template<typename T>
+>concept valid_enum = requires(T)
+>{
+>   requires std::same_as<T, std::decay_t<T>>;
+>   requires std::is_enum_v<T>;
+>};
+>```
+
 ## a) `enum_to_string`
 ```c++
 static constexpr std::string_view enum_to_string(T value, bool noscope=false);
+template<T e>
+static constexpr std::string_view enum_to_string();
 ```
 Returns a `std::string_view` or empty if not found. Optionally passing `true` will remove scope in result if present.
 `noscope` option ![](assets/notminimalred.svg).
@@ -119,6 +133,7 @@ auto name_trim { conjure_enum<component>::enum_to_string(component::path, true) 
 auto alias_name { conjure_enum<component>::enum_to_string(component::test) }; // alias
 auto noscope_name { conjure_enum<component1>::enum_to_string(path) };
 std::cout << name << '\n' << name_trim << '\n' << alias_name << '\n' << noscope_name << '\n';
+std::cout << conjure_enum<numbers>::enum_to_string<numbers::two>() << '\n';
 ```
 _output_
 ```CSV
@@ -126,12 +141,13 @@ component::path
 path
 component::path
 path
+numbers::two
 ```
 ### Aliases
 Because all methods in `conjure_enum` are defined _within_ a `class` instead of individual template functions in a `namespace`, you can reduce your
 typing with standard aliases:
 ```c++
-using ec = conjure_enum<component>;
+using ec = FIX8::conjure_enum<component>;
 std::cout << std::format("\"{}\"\n", ec::enum_to_string(component::authority));
 std::cout << std::format("\"{}\"\n", ec::enum_to_string(static_cast<component>(100)));
 ```
@@ -187,23 +203,26 @@ _output_
 12
 100 <-- invalid, error value
 ```
-## d) `int_to_enum`
+## d) `int_to_enum`, `enum_cast`
 ```c++
 static constexpr std::optional<T> int_to_enum(int value);
+static constexpr T enum_cast(int value);
 ```
 Returns a `std::optional<T>`. Empty if value was not valid. Use `std::optional<T>::value_or()` to set an error value
-and avoid throwing an exception.
+and avoid throwing an exception. `enum_cast` will cast to the enum type regardless of whether the value is a valid enum.
 ```c++
 int value { static_cast<int>(conjure_enum<component>::int_to_enum(12).value()) };
 int noscope_value { static_cast<int>(conjure_enum<component1>::int_to_enum(12).value()) };
 int bad_value { static_cast<int>(conjure_enum<component>::int_to_enum(100).value_or(component(100))) };
 std::cout << value << '\n' << noscope_value << '\n' << bad_value << '\n';
+std::cout << static_cast<int>(conjure_enum<component>::enum_cast(150)) << '\n';
 ```
 _output_
 ```CSV
 12
 12
 100 <-- invalid, error value
+150 <-- invalid, but still casted
 ```
 ## e) `enum_to_int`, `enum_to_underlying`
 ```c++
@@ -237,7 +256,7 @@ _output_
 ```CSV
 10
 ```
-## g) `names`
+## g) `names` ![](assets/notminimalred.svg)
 ```c++
 static constexpr std::array<std::string_view, std::size_t> names;
 ```
@@ -400,22 +419,52 @@ userinfo  component::userinfo
 static constexpr std::array<std::tuple<std::string_view, std::string_view>, std::size_t> rev_scoped_entries;
 ```
 Same as `scoped_entries` except reversed, sorted by scoped name. Use to lookup unscoped name.
-## m) `contains`
+## m) `index`
+```c++
+static constexpr std::optional<size_t> index(T value);
+template<T e>
+static constexpr std::optional<size_t> index();
+```
+Returns the index (position in 0 based array of values) of the supplied enum value as an `std::optional<size_t>`.
+Empty if value was not valid. Use `std::optional<T>::value_or()` to set an error value
+and avoid throwing an exception.
+```c++
+std::cout << conjure_enum<component>::index(component::password).value() << '\n';
+std::cout << conjure_enum<component>::index(component(100)).value_or(100) << '\n';
+std::cout << conjure_enum<component>::index<component::password>().value() << '\n';
+std::cout << conjure_enum<component>::index<component(100)>().value_or(100) << '\n';
+```
+_output_
+```CSV
+4
+100 <-- invalid, error value
+4
+100 <-- invalid, error value
+```
+## n) `contains`, `is_valid`
 ```c++
 static constexpr bool contains(T value);
 static constexpr bool contains(std::string_view str);
+template<T e>
+static constexpr bool contains();
+template<T e>
+static constexpr bool is_valid();
 ```
 Returns `true` if the enum contains the given value or string.
 ```c++
 std::cout << std::format("{}\n", conjure_enum<component>::contains(component::path));
 std::cout << std::format("{}\n", conjure_enum<component1>::contains("nothing"));
+std::cout << std::format("{}\n", conjure_enum<component>::contains<component::path>());
+std::cout << std::format("{}\n", conjure_enum<component>::is_valid<component::path>());
 ```
 _output_
 ```CSV
 true
 false
+true
+true
 ```
-## n) `for_each`, `for_each_n`
+## o) `for_each`, `for_each_n` ![](assets/notminimalred.svg)
 ```c++
 template<typename Fn, typename... Args>
 requires std::invocable<Fn&&, T, Args...>
@@ -434,13 +483,20 @@ requires std::invocable<Fn&&, C, T, Args...>
 [[maybe_unused]] static constexpr auto for_each_n(int n, Fn&& func, C *obj, Args&&... args);
 ```
 Call supplied invocable for _each_ enum value. Similar to `std::for_each` except the first parameter of your invocable must accept an enum value (passed by `for_each`).
-Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. You can limit the number of calls to your
-invocable by using the `for_each_n` version with the first parameter being the maximum number to call. The second version of `for_each` and `for_each_n` is intended to be used
+Optionally provide any additional parameters. You can limit the number of calls to your invocable by using the `for_each_n` version with the first parameter
+being the maximum number to call. The second version of `for_each` and `for_each_n` is intended to be used
 when using a member function - the _second_ parameter passed by your call must be the `this` pointer of the object.
 If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
 
-Returns `std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...)`
-or `std::bind(std::forward<Fn>(func), obj, std::placeholders::_1, std::forward<Args>(args)...)` which can be stored or immediately invoked.
+Works with lambdas, member functions, functions etc, compatible with `std::invoke`.
+
+Returns
+```c++
+std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...);
+// or
+std::bind(std::forward<Fn>(func), obj, std::placeholders::_1, std::forward<Args>(args)...);
+```
+which can be stored or immediately invoked.
 
 See `enum_bitset::for_each` to iterate through a bitset.
 ```c++
@@ -519,7 +575,7 @@ _output_
 ```CSV
 160
 ```
-## o) `dispatch`
+## p) `dispatch` ![](assets/notminimalred.svg)
 ```c++
 template<typename Fn>
 static constexpr bool tuple_comp(const std::tuple<T, Fn>& pl, const std::tuple<T, Fn>& pr);
@@ -540,26 +596,35 @@ template<std::size_t I, typename Fn, typename C, typename... Args> // specialisa
 requires (std::invocable<Fn&&, C, T, Args...> && I > 0)
 static constexpr void dispatch(T ev, const std::array<std::tuple<T, Fn>, I>& disp, C *obj, Args&&... args);
 ```
-With a given enum, search and call user supplied invocable. Use this method where complex event handling is required, allowing you to easily declare predefined invocable actions
+With a given enum, search and call user supplied invocable. A typical use case would be where you want to demux a complex event, allowing you to easily declare predefined invocable actions
 for different enum values.
 
-Where invocable returns a value, return this value or a user supplied "not found" value.
-Where invocable is void, call user supplied "not found" invocable.
+- Where invocable returns a value, return this value or a user supplied "not found" value.
+- Where invocable is void, call user supplied "not found" invocable.
+
 The first parameter of your invocable must accept an enum value (passed by `dispatch`).
-Optionally provide any additional parameters. Works with lambdas, member functions, functions etc.
+Optionally provide any additional parameters.
+
+Works with lambdas, member functions, functions etc, compatible with `std::invoke`.
 
 There are two versions of `dispatch` - the first takes an enum value, a 'not found' value, and a `std::array` of `std::tuple` of enum and invocable.
 The second version takes an enum value, and a `std::array` of `std::tuple` of enum and invocable. The last element of the array is called if the enum is not found.
 This version is intended for use with `void` return invocables.
+
 The second version of each of the above is intended to be used when using a member function - the _first_ parameter passed after your array must be the `this` pointer of the object.
 You can also use `std::bind` to bind the this pointer and any parameter placeholders when declaring your array.
 If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
 
-If you wish to provide a `constexpr` array, you will need to use a simple function prototype, since `std::function` is not constexpr (see unit tests for examples).
+> [!TIP]
+> If you wish to provide a `constexpr` array, you will need to use a simple function prototype, since `std::function` is not constexpr (see unit tests for examples).
+
 > [!IMPORTANT]
 > Your `std::array` of `std::tuple` should be sorted by enum.
-> The `dispatch` method performs a binary search on the array. Complexity for a sorted array is at most $2log_2(N)+O(1)$ comparisons.
+> The `dispatch` method performs a binary search on the array. Complexity for a sorted array is at most&ensp; $2log_2(N)+O(1)$ &ensp;comparisons.
 > If the array is _not_ sorted, complexity is linear.
+
+The following example uses a `static constexpr` array of pointers to functions. For brevity they all point to the same function except the last which is
+a lambda.
 ```c++
 enum class directions { left, right, up, down, forward, backward, notfound=-1 };
 static constexpr auto prn([](directions ev) { std::cout << conjure_enum<directions>::enum_to_string(ev) << '\n'; });
@@ -576,14 +641,33 @@ static constexpr auto tarr
    })
 };
 conjure_enum<directions>::dispatch(directions::right, tarr);
+conjure_enum<directions>::dispatch(directions::down, tarr);
 conjure_enum<directions>::dispatch(directions::forward, tarr);
 std::cout << conjure_enum<directions>::enum_to_int(directions::notfound) << '\n';
 ```
 _output_
 ```CSV
 directions::right
+directions::down
 not found: directions::forward
 -1
+```
+This example uses lambdas:
+```c++
+const auto dd1
+{
+   std::to_array<std::tuple<component, std::function<int(component, int)>>>
+   ({
+      { component::scheme, [](component ev, int a) { return a * 100 + conjure_enum<component>::enum_to_int(ev); } },
+      { component::port, [](component ev, int a) { return a * 200 + conjure_enum<component>::enum_to_int(ev); } },
+      { component::fragment, [](component ev, int a) { return a * 300 + conjure_enum<component>::enum_to_int(ev); } },
+   })
+};
+std::cout << conjure_enum<component>::dispatch(component::port, -1, dd1, 10) << '\n';
+```
+_output_
+```CSV
+2006
 ```
 This example uses member functions:
 ```c++
@@ -618,10 +702,10 @@ _output_
 6000
 1015
 ```
-## p) `is_scoped`
+## q) `is_scoped`
 ```c++
-struct is_scoped : std::integral_constant<bool, requires
-   { requires !std::is_convertible_v<T, std::underlying_type_t<T>>; }>{};
+struct is_scoped : std::bool_constant<requires
+   { requires !std::convertible_to<T, std::underlying_type_t<T>>; }>{};
 ```
 Returns `true` if the specified enum type is scoped.
 ```c++
@@ -633,22 +717,21 @@ _output_
 true
 false
 ```
-## q) `is_valid`
+## r) `is_continuous`
 ```c++
-template<T e>
-static constexpr bool is_valid();
+static constexpr bool is_continuous();
 ```
-Returns `true` if enum value is valid.
+Returns `true` if enum range is continuous (no gaps).
 ```c++
-std::cout << std::format("{}\n", conjure_enum<component>::is_valid<component::password>());
-std::cout << std::format("{}\n", conjure_enum<component1>::is_valid<static_cast<component>(16)>());
+std::cout << std::format("{}\n", conjure_enum<numbers>::is_continuous());
+std::cout << std::format("{}\n", conjure_enum<component>::is_continuous());
 ```
 _output_
 ```CSV
 true
 false
 ```
-## r) `type_name`
+## s) `type_name` ![](assets/notminimalred.svg)
 ```c++
 static constexpr std::string_view type_name();
 ```
@@ -662,7 +745,7 @@ _output_
 component
 component1
 ```
-## s) `remove_scope` ![](assets/notminimalred.svg)
+## t) `remove_scope` ![](assets/notminimalred.svg)
 ```c++
 static constexpr std::string_view remove_scope(std::string_view what);
 ```
@@ -676,7 +759,7 @@ _output_
 path
 path
 ```
-## t) `add_scope` ![](assets/notminimalred.svg)
+## u) `add_scope` ![](assets/notminimalred.svg)
 ```c++
 static constexpr std::string_view add_scope(std::string_view what);
 ```
@@ -690,7 +773,7 @@ _output_
 component::path
 path
 ```
-## u) `has_scope` ![](assets/notminimalred.svg)
+## v) `has_scope` ![](assets/notminimalred.svg)
 ```c++
 static constexpr bool has_scope(std::string_view what);
 ```
@@ -706,7 +789,7 @@ true
 false
 false
 ```
-## v) `iterators`
+## w) `iterators` ![](assets/notminimalred.svg)
 ```c++
 static constexpr auto cbegin();
 static constexpr auto cend();
@@ -733,7 +816,7 @@ _output_
 8 numbers::eight
 9 numbers::nine
 ```
-## w) `iterator_adaptor`
+## x) `iterator_adaptor` ![](assets/notminimalred.svg)
 ```c++
 template<valid_enum T>
 struct iterator_adaptor;
@@ -756,7 +839,7 @@ _output_
 8
 9
 ```
-## x) `front, back`
+## y) `front, back` ![](assets/notminimalred.svg)
 ```c++
 static constexpr auto front();
 static constexpr auto back();
@@ -764,16 +847,15 @@ static constexpr auto back();
 These methods return `*cbegin()` and `*std::prev(cend())` respectively all from `entries`
 defined above.
 ```c++
-using en = conjure_enum<numbers>;
-std::cout << static_cast<int>(std::get<0>(en::front())) << ' ' << std::get<1>(en::front()) << '\n';
-std::cout << static_cast<int>(std::get<0>(en::back())) << ' ' << std::get<1>(en::back()) << '\n';
+for (const auto& [ev,str] : {conjure_enum<numbers>::front(), conjure_enum<numbers>::back()})
+   std::cout << static_cast<int>(ev) << ' ' << str << '\n';
 ```
 _output_
 ```CSV
 0 numbers::zero
 9 numbers::nine
 ```
-## y) `ostream_enum_operator`
+## z) `ostream_enum_operator` ![](assets/notminimalred.svg)
 ```c++
 template<typename CharT, typename Traits=std::char_traits<CharT>, valid_enum T>
 constexpr std::basic_ostream<CharT, Traits>& operator<<(std::basic_ostream<CharT, Traits>& os, T value);
@@ -795,7 +877,7 @@ _output_
 "host"
 "100"
 ```
-## z) `epeek, tpeek`
+## A) `epeek, tpeek`
 ```c++
 static consteval const char *tpeek();
 template<T e>
@@ -815,27 +897,69 @@ static consteval const char* FIX8::conjure_enum<T>::tpeek() [with T = component]
 static consteval const char* FIX8::conjure_enum<T>::epeek() [with T e = component::path; T = component]
 ```
 
-## aa) `get_enum_min_value` and `get_enum_max_value`
+## B) `get_enum_min_value`, `get_enum_max_value`, `get_actual_enum_min_value` and `get_actual_enum_max_value`
 ```c++
 static constexpr int get_enum_min_value();
 static constexpr int get_enum_max_value();
+static constexpr int get_actual_enum_min_value();
+static constexpr int get_actual_enum_max_value();
 ```
-These functions return the min and max enum range for the specified enum. If you have specialised `enum_range` then these values
+The first two functions return the min and max enum range for the specified enum. If you have specialised `enum_range` then these values
 will be reported (see below).
+
+The second two functions return the actual min and max enum values as ints for the specified enum.
 ```c++
 std::cout << conjure_enum<component>::get_enum_min_value() << '/' << conjure_enum<component>::get_enum_min_value() << '\n';
+std::cout << conjure_enum<component>::get_actual_enum_min_value() << '/' << conjure_enum<component>::get_actual_enum_min_value() << '\n';
 ```
 _output_
 ```CSV
 -128/127
+0/14
 ```
+
+## C) `in_range`
+```c++
+static constexpr bool in_range(T value);
+```
+Returns `true` if the given value is within the minimum and maximum defined values for this enum type.
+```c++
+std::cout << std::format("{}\n", conjure_enum<component>::in_range(static_cast<component>(100)));
+```
+_output_
+```CSV
+false
+```
+
 ---
-# 4. API and Examples using `enum_bitset`
+# 4. `enum_bitset`
 `enum_bitset` is a convenient way of creating bitsets based on `std::bitset`. It uses your enum (scoped or unscoped)
 for the bit positions (and names).
-> [!WARNING]
-> Your enum _must_ be continuous. The last value must be less than the count of enumerations.
-> We decided on this restriction for both simplicity and practicality - bitsets only really make sense when represented in this manner.
+> [!NOTE]
+> - Your enum sequence _must_ be 0 based
+> - Continuous
+> - The last value must be less than the count of enumerations
+>
+> We decided on these restrictions for both simplicity and practicality - bitsets only really make sense when represented in this manner; also...
+>
+> - This implementation is limited to 64 bits (arbitrary length impl. soon).
+
+> [!IMPORTANT]
+> You must include
+> ```C++
+> #include <fix8/conjure_enum.hpp>
+> #include <fix8/conjure_enum_bitset.hpp>
+> ```
+> Your enum _must_ satisfy the following:
+> ```C++
+>template<typename T>
+>concept valid_bitset_enum = valid_enum<T> and requires(T)
+>{
+>   requires conjure_enum<T>::is_continuous();
+>   requires conjure_enum<T>::get_actual_enum_min_value() == 0;
+>   requires conjure_enum<T>::get_actual_enum_max_value() < conjure_enum<T>::count();
+>};
+>```
 
 ## a) Creating an `enum_bitset`
 ```c++
@@ -843,6 +967,7 @@ constexpr enum_bitset() = default;
 constexpr enum_bitset(U bits);
 constexpr enum_bitset(std::string_view from, bool anyscope=false,
    char sep='|', bool ignore_errors=true);
+constexpr enum_bitset(std::bitset<N> from);
 
 template<valid_bitset_enum... E>
 constexpr enum_bitset(E... comp);
@@ -912,6 +1037,17 @@ _output_
 ```CSV
 exception: twenty
 ```
+You can also create an `enum_bitset` from a `std::bitset` of the same number of bits.
+```c++
+std::bitset<10> bs{1 << 1 | 1 << 3 | 1 << 6};
+enum_bitset<numbers> ed(bs);
+std::cout << ed << '\n';
+```
+_output_
+```CSV
+0001001010
+```
+
 ## b) Standard bit operators
 All of the standard operators are supported. Assignment operators return a `enum_bitset&`, non-assignment operators return a `enum_bitset`.
 
@@ -955,7 +1091,7 @@ All of the standard accessors and mutators are supported.
 | `to_ullong` | convert to `unsigned long long` |
 | `count` | count of bits on |
 | `size` | number of bits in bitset |
-| `operator[]` | test bit at position |
+| `operator[]` | set or test bit at position or enum value |
 | `any` | return `true` if any bit is on |
 | `all` | return `true` if all bits are on |
 | `none` | return `true` if no bits are on |
@@ -965,12 +1101,22 @@ Additional methods
 | :--- | :--- |
 | `set` | set all specified bits, templated |
 | `reset` | reset all specified bits, templated |
+| `rotl` | rotate left specified times|
+| `rotr` | rotate right specified times|
+| `countl_zero` | counts number of consecutive `0` bits, starting from the most significant bit |
+| `countl_one` | counts number of consecutive `1` bits, starting from the most significant bit |
+| `countr_zero` | counts number of consecutive `0` bits, starting from the least significant bit |
+| `countr_one` | counts number of consecutive `1` bits, starting from the least significant bit |
 | `any_of` | test for one or more bits, templated, function, types and underlyings |
 | `all_of` | test for all specified bits, templated, function, types and underlyings |
 | `none_of` | test for all specified bits set to off, templated, function, types and underlyings |
 | `not_count` | complement of count, count of off bits |
+| `has_single_bit` | return true if bitset is an integral power of two|
 
-Take a look at the [implementation](include/fix8/conjure_enum.hpp) for more detail on the various API functions available.
+> [!NOTE]
+> `rotl`, `rotl`, `countl*` and `countr*` operate on the _used_ bits of the underlying type.
+
+Take a look at the [implementation](include/fix8/conjure_enum_bitset.hpp) for more detail on the various API functions available.
 You can also review the unit test cases for examples of use.
 
 All accessors and mutators work with enum values or integers as with operators. They also work with multiple values, either as template parameters or
@@ -987,6 +1133,11 @@ std::cout << std::boolalpha << eb.all_of(numbers::zero,numbers::nine) << '\n';
 std::cout << eb << '\n';
 eb.reset(numbers::nine)
 std::cout << ec << '\n';
+eb.reset();
+eb[2] = true;
+eb[numbers::three] = true;
+std::cout << eb << '\n';
+std::cout << eb.rotr(1) << '\n';
 ```
 _output_
 ```
@@ -997,6 +1148,8 @@ true
 true
 1000000001
 0000000001
+0000001100
+0000011000
 ```
 ## d) Other functions
 ### i. `operator bool`
@@ -1014,25 +1167,52 @@ _output_
 0001001111
 ```
 
-### ii. `std::ostream& operator<<`, `to_string`
+### ii. `operator std::bitset<N>()`
+```c++
+constexpr operator std::bitset<N>() const;
+```
+Cast an `enum_bitset` to a `std::bitset` with the same number of bits.
+
+```c++
+enum_bitset<numbers> ec(numbers::one,numbers::three,numbers::six);
+std::bitset<10> bs{ec};
+std::cout << bs << '\n';
+```
+_output_
+```CSV
+0001001010
+```
+
+### iii. `std::ostream& operator<<`, `to_string`, `to_hex_string`
 ```c++
 friend constexpr std::ostream& operator<<(std::ostream& os, const enum_bitset& what);
 constexpr std::string to_string(char zero='0', char one='1') const;
+
+template<bool showbase=true, bool uppercase=false>
+constexpr std::string to_hex_string() const;
+
+constexpr std::string to_hex_string() const;
 ```
 Inserts default string representation into `std::ostream`.<br>
-Returns a `std::string` representation of the bitset. Optionally specify which characters to use for `0` and `1`.
+Returns a `std::string` representation of the bitset. Optionally specify which characters to use for `0` and `1`.<br>
+Returns a `std::string` representation of the bitset in hex format. Optionally specify `showbase` which will prefix
+the string with `0x` or `0X`; optionally specify `uppercase` which will set the case of the hex digits.
 
 ```c++
 enum_bitset<numbers> ec(numbers::one,numbers::three,numbers::six);
 std::cout << ec << '\n';
 std::cout << ec.to_string('-', '+') << '\n';
+std::cout << ec.to_hex_string() << '\n';
+std::cout << ec.to_hex_string<true, true>() << '\n';
 ```
 _output_
 ```CSV
 0001001010
 ---+--+-+-
+0x4a
+0X4A
 ```
-### iii. `for_each`, `for_each_n`
+### iv. `for_each`, `for_each_n`
 ```c++
 template<typename Fn, typename... Args>
 requires std::invocable<Fn&&, T, Args...>
@@ -1092,7 +1272,7 @@ numbers::two
 numbers::five
 ```
 
-### iv. Using `conjure_enum::dispatch` with `enum_bitset`
+### v. Using `conjure_enum::dispatch` with `enum_bitset`
 Using an `enum_bitset` wth `conjure_enum::dispatch` can be a convenient way of iterating through a set of bits to call specific functions using `for_each`. The following demonstrates this:
 ```c++
 const auto dd3
@@ -1122,16 +1302,52 @@ _output_
 not found: 5
 ```
 
+### vi. `get_underlying`
+```c++
+constexpr U get_underlying() const;
+```
+Returns the underlying integral value.
+
+### vii. `get_underlying_bit_size`
+```c++
+constexpr int get_underlying_bit_size() const
+```
+Returns the number of bits that the underlying integral contains. Will always be a power of 2 and an integral type. The number of bits may be larger
+than the count of bits.
+
+### viii. `get_bit_mask`,`get_unused_bit_mask`
+```c++
+constexpr U get_bit_mask() const;
+constexpr U get_unused_bit_mask() const;
+```
+Returns a bit mask that would mask off the _unused_ bits of the underlying integral.<br>
+Returns a bit mask that would mask off the _used_ bits of the underlying integral.
+
+### ix. `std::hash<enum_bitset<T>>`
+```c++
+template<typename T>
+struct std::hash<FIX8::enum_bitset<T>>;
+```
+Provides a specialization of `std::hash` for `enum_bitset<T>`.
+
 ---
-# 5. API and Examples using `conjure_type`
+# 5. `conjure_type`
 `conjure_type` is a general purpose class allowing you to extract a string representation of any typename.
 The string will be stored statically by the compiler, so you can use the statically generated value `name` to obtain your type.
+> [!IMPORTANT]
+> You must include
+> ```C++
+> #include <fix8/conjure_enum.hpp>
+> #include <fix8/conjure_type.hpp>
+> ```
+
+## a) `name`
+This static member is generated for your type. It is a `fixed_string` but has a built-in `std::string_view` operator.
 ```c++
 template<typename T>
 class conjure_type;
 static constexpr fixed_string name;
 ```
-This static member is generated for your type. It is a `fixed_string` but has a built-in `std::string_view` operator.
 
 ```c++
 class foo;
@@ -1185,45 +1401,133 @@ _output_
 std::basic_string_view<char>
 ```
 
+## b) `as_string_view`
+Return the name as a `std::string_view`.
+```c++
+static constexpr std::string_view as_string_view();
+```
+
+## c) `tpeek`
+```c++
+static consteval const char *tpeek();
+```
+
+These functions return `std::source_location::current().function_name()` as `const char*` strings for type.
+The actual output is implementation dependent. See [Results of `source_location`](reference/source_location.md) for implementation specific `std::source_location` results.
+
+The following code:
+```c++
+std::cout << conjure_type<test>::tpeek() << '\n';
+```
+Generates this output with gcc:
+```CSV
+static consteval const char* FIX8::conjure_type<T>::tpeek() [with T = test]
+```
+
 ---
-# 6. Building
+# 6. `fixed_string`
+`fixed_string` is a specialisation of `std::array` that provides statics storage for an ASCII zero (asciiz) string. The purpose of this class is to allow the
+creation of `constexpr` strings with specfic storage, adding a trailing `0`. It is used by `conjure_enum` to store all strings. API is described below.
+
+## a) Creating a `fixed_string`
+```c++
+template<std::size_t N>
+class fixed_string;
+constexpr fixed_string(std::string_view sv);
+```
+Constructs a `fixed_string` from a `std::string_view`. The source string is _copied_ and a null character is added to the end. Note the size of the _source_ string must be passed as a template parameter.
+```c++
+std::string_view sv{"The rain in Spain"};
+constexpr fixed_string<sv.size()> fs{sv};
+```
+
+## b) `get`
+```c++
+constexpr std::string_view get() const;
+```
+Returns the string as a `std::string_view`.
+
+## c) `c_str`
+```c++
+constexpr const char *c_str() const;
+```
+Returns the string as a null terminated `const char *`.
+
+## d) `operator std::string_view`
+```c++
+constexpr operator std::string_view() const;
+```
+Provides a `std::string_view` cast. Returns the string as a `std::string_view`.
+
+## e) `operator[]`
+```c++
+constexpr char operator[](size_t idx) const;
+```
+Returns the character at the specifdined index. It is not range checked.
+
+## f) `size`
+```c++
+constexpr std::size_t size() const;
+```
+Returns the size of the `fixed_string` including the null terminator.
+
+## g) `std::ostream& operator<<`
+```c++
+std::ostream& operator<<(std::ostream& os, const fixed_string& what)
+```
+Provides an `ostream` insertor.
+
+---
+# 7. Building
 This implementation is header only. Apart from standard C++20 includes there are no external dependencies needed in your application.
 [Catch2](https://github.com/catchorg/Catch2.git) is used for the built-in unit tests.
+> [!TIP]
+> The unit test source files [unittests.cpp](utests/unittests.cpp) and [edgetests.cpp](utests/edgetests.cpp) contain additional examples for all
+> the APIs.
 
 ## a) Obtaining the source, building the unittests and examples
-### \*nix based environments
+### i. Build platform
+#### \*nix based environments
 To clone and default build the test app, unit tests and the benchmark:
 ```bash
-git clone https://github.com/fix8mt/conjure_enum.git
-cd conjure_enum
-mkdir build
-cd build
-cmake ..
-make -j4
-ctest (or make test)
+$ git clone https://github.com/fix8mt/conjure_enum.git
+$ cd conjure_enum
+$ mkdir build
+$ cd build
+$ cmake ..
+$ make -j4
+$ ctest (or make test)
 ```
-By default all warnings are enabled. To prevent this, pass the following to cmake:
-```cmake
-cmake -DBUILD_ALL_WARNINGS=false ..
-```
-By default the unit tests are built (which will download Catch2). To prevent this, pass the following to cmake:
-```cmake
-cmake -DBUILD_UNITTESTS=false ..
-```
-To disable stripping of the executables:
-```cmake
-cmake -DBUILD_STRIP_EXE=false ..
-```
-### Windows environments
+#### Windows environments
 Create a new console project. Add the repo `https://github.com/fix8mt/conjure_enum.git` and clone the source.
 Make sure you set the C++ language to C++20 in the project preferences. The project should build and run the unit tests
 by default.
 
 The package is also available on [vckpg](https://vcpkg.io/en/package/conjure-enum).
 
+### ii. Default compiler warnings
+By default all warnings are enabled. To prevent this, pass the following to cmake:
+```bash
+$ cmake -DBUILD_ALL_WARNINGS=false ..
+```
+### iii. Default unit tests
+By default the unit tests are built (which will download Catch2). To prevent this, pass the following to cmake:
+```bash
+$ cmake -DBUILD_UNITTESTS=false ..
+```
+### iv. Default executable stripping
+To disable stripping of the executables:
+```bash
+$ cmake -DBUILD_STRIP_EXE=false ..
+```
+### v. Clang compilation profiling
+To enable clang compilation profiling:
+```bash
+$ cmake -DBUILD_CLANG_PROFILER=true ..
+```
 ## b) Using in your application with cmake
 In `CMakeLists.txt` set your include path to:
-```cmake
+```CMake
 include_directories([conjure_enum directory]/include)
 # e.g.
 set(cjedir /home/dd/prog/conjure_enum)
@@ -1241,7 +1545,7 @@ using namespace FIX8;
 ## c) Integrating `conjure_enum` in your project with cmake FetchContent
 You can use cmake [FetchContent](https://cmake.org/cmake/help/latest/module/FetchContent.html) to integrate `conjure_enum` with your project.
 If your project was called `myproj` with the sourcefile `myproj.cpp` then...
-```cmake
+```CMake
 project(myproj)
 add_executable (myproj myproj.cpp)
 set_target_properties(myproj PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED true)
@@ -1255,11 +1559,11 @@ target_include_directories(myproj PRIVATE ${conjure_enum_SOURCE_DIR}/include)
 ## d) Reporting issues
 Raise an [issue](https://github.com/fix8mt/conjure_enum/issues) on the github page.
 The executable `srcloctest` should be built when you build the package by default. This application
-does not use any of the `conjure_enum` library and is designed to report on how your compiler handles `std::source_location`.
+does not use any of the `conjure_enum` library and is designed to report how your compiler handles `std::source_location`.
 The actual output is implementation dependent. See [Results of `source_location`](reference/source_location.md) for implementation specific `std::source_location` results.
 You should attach the output of this application with your issue.
 > [!TIP]
-> Passing the switch `-m` causes `srcloctest` to generate github markdown which you can paste directly into the issue.
+> Use the `-m` switch with `srcloctest` to generate github markdown which you can paste directly into the issue.
 
 ```C++
 $ ./srcloctest
@@ -1321,10 +1625,16 @@ Contributions are welcome. Make your changes in [your fork on the dev branch](ht
 master will not be considered.
 
 ---
-# 7. Notes
+# 8. Notes
 ## a) enum limits
+Compilation times increase with the number of enums that use `conjure_enum` in any compilation unit.
+1. For a simple project with few enums, there is probably no need to set any limits;
+1. Where the enum is defined elsewhere (say if you are using `std::errc`) then use `enum_range` or one of the convenience macros;
+1. Where the enum is unscoped then use `enum_range` or one of the convenience macros;
+1. Where you have defined the enum yourself and it is a scoped enum, use `T::ce_first` and `T::ce_last`, or 2.
+
 ### i. `FIX8_CONJURE_ENUM_MIN_VALUE`, `FIX8_CONJURE_ENUM_MAX_VALUE`
-These are set by default unless you override them by defining them in your application. They are the global range default for enums using `conjure_enum`.
+These are set by default unless you override them by defining them in your application. They are the global range default for all enums using `conjure_enum`.
 > [!IMPORTANT]
 > If you want to define these values they must appear _before_ you include `conjure_enum.hpp`.
 
@@ -1347,6 +1657,7 @@ These definitions set the minimum and maximum enum values that are supported. Yo
 > If you wish to set ranges on a per enum basis, use `enum_range` (see below).
 
 ### ii. using `enum_range`
+You can specialise this class to override the defaults and set your own range on a per enum basis.
 ```c++
 template<valid_enum T>
 struct enum_range
@@ -1357,7 +1668,6 @@ struct enum_range
 The `min` and `max` values are used to set the range of enum values for enums in `conjure_enum`. As shown above, the default values will be
 `FIX8_CONJURE_ENUM_MIN_VALUE` and `FIX8_CONJURE_ENUM_MAX_VALUE`.
 
-You can specialise this class to override the defaults and set your own range on a per enum basis:
 ```c++
 enum class range_test { first, second, third, fourth, fifth, sixth, seventh, eighth };
 template<>
@@ -1368,19 +1678,46 @@ struct FIX8::enum_range<range_test>
 static_assert(conjure_enum<range_test>::get_enum_min_value() == 0);
 static_assert(conjure_enum<range_test>::get_enum_max_value() == 7);
 ```
-### iii. `FIX8_CONJURE_ENUM_SET_RANGE_INTS`, `FIX8_CONJURE_ENUM_SET_RANGE`
-For convenience, two macros are provided to make it easier to set custom ranges.
+#### ii.a `FIX8_CONJURE_ENUM_SET_RANGE_INTS`, `FIX8_CONJURE_ENUM_SET_RANGE`
+For convenience, two macros are provided to make it easier to set custom ranges using `enum_range`.
 ```c++
 #define FIX8_CONJURE_ENUM_SET_RANGE_INTS(ec,min_int,max_int)...
 #define FIX8_CONJURE_ENUM_SET_RANGE(min_enum,max_enum)...
 ```
 The first macro takes an enum typename followed by a lower and upper int range value.
+
 The second macro takes a lower and upper enum value. For example:
 ```c++
 FIX8_CONJURE_ENUM_SET_RANGE_INTS(numbers, 0, 7)
 ```
 ```c++
 FIX8_CONJURE_ENUM_SET_RANGE(numbers::first, numbers::eighth)
+```
+
+### iii. using `T::ce_first` and `T::ce_last`
+Another approach to setting a custom range for an enum is to alias the first and last enum values in your enum definition
+using `ce_first` and `ce_last`. `conjure_enum` will use these values to set the enum range.
+You can set either, both or neither. A range value not set will default to the `FIX8_CONJURE_ENUM_MIN_VALUE` or `FIX8_CONJURE_ENUM_MAX_VALUE`.
+
+> [!WARNING]
+> With _unscoped_ enums, there can only be one enum type with `ce_first` and `ce_last` defined in any translation unit (ODR).
+> It is therefore recommended to only use this feature with scoped enums.
+
+For example:
+```c++
+enum class range_test
+{
+   first, second, third, fourth, fifth, sixth, seventh, eighth,
+   ce_first=first, ce_last=eighth
+};
+using rt = conjure_enum<range_test>;
+std::cout << rt::get_enum_min_value() << '/' << rt::get_enum_max_value() << '\n';
+std::cout << rt::get_actual_enum_min_value() << '/' << rt::get_actual_enum_max_value() << '\n';
+```
+_output_
+```CSV
+0/7
+0/7
 ```
 
 ## b) Choosing the minimal build
@@ -1395,23 +1732,56 @@ Static structures and API calls that will be excluded are:
 scoped_entries
 unscoped_entries
 rev_scoped_entries
+names
 unscoped_names
 remove_scope
 add_scope
 unscoped_string_to_enum
+for_each,for_each_n
+type_name
+dispatch
+iterators
 enum_to_string //noscope option not available
 ```
 These are marked ![](assets/notminimalred.svg) in the API documentation above.
 
-## c) Class `conjure_enum` is not constructible
+## c) Continuous enum optimization
+```c++
+#define FIX8_CONJURE_ENUM_IS_CONTINUOUS
+```
+If your enum(s) are continuous (no gaps) you can enable this compiler optimization
+by defining `FIX8_CONJURE_ENUM_IS_CONTINUOUS` _before_ you include `conjure_enum.hpp`.
+Our testing shows a reduction in overall compile times. All enums using `conjure_enum.hpp` in the current compilation unit must be continuous.
+
+## d) Anonymous enum optimization
+```c++
+#define FIX8_CONJURE_ENUM_NO_ANON
+```
+If your enum(s) are not within any anonymous namespaces (rarely used for this purpose), you can enable this compiler optimization
+by defining `FIX8_CONJURE_ENUM_NO_ANON` _before_ you include `conjure_enum.hpp`.
+Our testing shows a reduction in overall compile times. All enums using `conjure_enum.hpp` in the current compilation unit must be continuous.
+
+## e) Enable all optimizations
+```c++
+#define FIX8_CONJURE_ENUM_ALL_OPTIMIZATIONS
+```
+You can enable all optimizations described above by defining `FIX8_CONJURE_ENUM_ALL_OPTIMIZATIONS` _before_ you include `conjure_enum.hpp`.
+This is the equivalent of defining:
+```c++
+#define FIX8_CONJURE_ENUM_MINIMAL
+#define FIX8_CONJURE_ENUM_IS_CONTINUOUS
+#define FIX8_CONJURE_ENUM_NO_ANON
+```
+
+## f) Class `conjure_enum` is not constructible
 All methods in this class are _static_. You cannot instantiate an object of this type. The same goes for `conjure_type`.
 
-## d) It's not _real_ reflection
+## g) It's not _real_ reflection
 This library provides a workaround (hack :smirk:) to current limitations of C++. There are proposals out there for future versions of the language that will provide proper reflection.
 See [Reflection TS](https://en.cppreference.com/w/cpp/experimental/reflect) and [Reflection for C++26](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2023/p2996r0.html)
 for examples of some of these.
 
-## e) Use of `std::string_view`
+## h) Use of `std::string_view`
 All of the generated static strings and generated static tables obtained by `std::source_location` use the library defined `fixed_string`. No string copying is done at runtime, resulting in
 a single static string in your application. All `conjure_enum` methods that return strings _only_ return `std::string_view`.
 To demonstrate this, lets look at the supplied test application `statictest`:
@@ -1425,8 +1795,6 @@ int main(void)
 {
    for(const auto& [a, b] : conjure_enum<component>::entries)
       std::cout << conjure_enum<component>::enum_to_int(a) << ' ' << b << '\n';
-   for(const auto& a : conjure_enum<component>::names)
-      std::cout << a << '\n';
    std::cout << static_cast<int>(conjure_enum<component>::string_to_enum("component::path").value()) << '\n';
    std::cout << conjure_enum<component>::get_enum_min_value() << '/' << conjure_enum<component>::get_enum_max_value() << '\n';
    return 0;
@@ -1534,35 +1902,156 @@ $
 
 It can be observed that there is only _one_ copy of the scoped enum value string in the executable.
 
-## f) Clang compile profiling
-You can profile the compile time for Clang (other compilers TBA). Firstly install [ClangBuildAnalyzer](https://github.com/aras-p/ClangBuildAnalyzer). Then configure with:
+## i) Compilation profiling (Clang)
+You can profile the compile time for Clang (other compilers TBA). Firstly install [ClangBuildAnalyzer](https://github.com/aras-p/ClangBuildAnalyzer).
+Then configure `conjure_enum` with:
 ```CMake
 cmake -DBUILD_CLANG_PROFILER=true ..
 ```
-You can follow the instructions given on the `ClangBuildAnalyzer` page to run, alternatively after you build the included program `cbenchmark.cpp`,
+You can follow the instructions given on the `ClangBuildAnalyzer` page to run. Alternatively after you build the included program `cbenchmark`,
 run the included script [cbenchmark.sh](examples/cbenchmark.sh). The script expects the following environment variables:
 
 | Variable | Description |
 | :--- | :--- |
 | `ClangBuildAnalyzerLoc` | directory where ClangBuildAnalyzer can be found|
-| `ArtifactLoc` | directory where conjure_enum is built|
+| `ArtifactLoc` | directory where `conjure_enum` is built|
 
-For example, if `ClangBuildAnalyzer` was built in `~/prog/ClangBuildAnalyzer/build` and your `conjure_enum` build was in `./build_clang`, then:
+For example, if `ClangBuildAnalyzer` was built in `~/prog/ClangBuildAnalyzer/build` and your `conjure_enum` build was in `./build_clang`, then you
+would run the script from the `conjure_enum` directory as follows:
 ```bash
 ClangBuildAnalyzerLoc=~/prog/ClangBuildAnalyzer/build ArtifactLoc=build_clang examples/cbenchmark.sh
 ```
-The results will be printed to the screen.
+The results will be printed to the screen. For example:
+<details><summary><i>output</i></summary>
+<p>
+
+```CSV
+Processing all files and saving to 'cbenchmark.dat'...
+  done in 0.0s. Run 'ClangBuildAnalyzer --analyze cbenchmark.dat' to analyze it.
+Analyzing build trace from 'cbenchmark.dat'...
+**** Time summary:
+Compilation (2 times):
+  Parsing (frontend):            0.4 s
+  Codegen & opts (backend):      0.0 s
+
+**** Files that took longest to parse (compiler frontend):
+   423 ms: build_clang/CMakeFiles/cbenchmark.dir/examples/cbenchmark.cpp.o
+
+**** Templates that took longest to instantiate:
+   187 ms: FIX8::conjure_enum<std::errc> (1 times, avg 187 ms)
+   119 ms: FIX8::conjure_enum<std::errc>::_entries<0UL, 1UL, 2UL, 3UL, 4UL, 5UL... (1 times, avg 119 ms)
+     8 ms: FIX8::conjure_enum<std::errc>::_sorted_entries (1 times, avg 8 ms)
+     6 ms: std::sort<std::tuple<std::errc, std::basic_string_view<char>> *, boo... (1 times, avg 6 ms)
+     6 ms: std::__sort<std::tuple<std::errc, std::basic_string_view<char>> *, _... (1 times, avg 6 ms)
+     5 ms: std::__introsort_loop<std::tuple<std::errc, std::basic_string_view<c... (1 times, avg 5 ms)
+     3 ms: std::array<std::tuple<std::errc, std::basic_string_view<char>>, 72> (1 times, avg 3 ms)
+     2 ms: std::tuple<std::basic_string_view<char>, char, std::basic_string_vie... (1 times, avg 2 ms)
+     2 ms: std::__unguarded_partition_pivot<std::tuple<std::errc, std::basic_st... (1 times, avg 2 ms)
+     2 ms: std::__move_median_to_first<std::tuple<std::errc, std::basic_string_... (1 times, avg 2 ms)
+     2 ms: std::iter_swap<std::tuple<std::errc, std::basic_string_view<char>> *... (1 times, avg 2 ms)
+     2 ms: std::__partial_sort<std::tuple<std::errc, std::basic_string_view<cha... (1 times, avg 2 ms)
+     2 ms: std::tuple<std::errc, std::basic_string_view<char>> (1 times, avg 2 ms)
+     2 ms: std::__heap_select<std::tuple<std::errc, std::basic_string_view<char... (1 times, avg 2 ms)
+     2 ms: std::__make_heap<std::tuple<std::errc, std::basic_string_view<char>>... (1 times, avg 2 ms)
+     1 ms: std::optional<unsigned long> (1 times, avg 1 ms)
+     1 ms: std::to_array<std::tuple<std::basic_string_view<char>, char, std::ba... (1 times, avg 1 ms)
+     1 ms: std::basic_string<char32_t> (1 times, avg 1 ms)
+     1 ms: std::basic_string<char8_t> (1 times, avg 1 ms)
+     1 ms: std::__adjust_heap<std::tuple<std::errc, std::basic_string_view<char... (1 times, avg 1 ms)
+     1 ms: std::basic_string<char16_t> (1 times, avg 1 ms)
+     1 ms: std::basic_string<wchar_t> (1 times, avg 1 ms)
+     1 ms: std::basic_string<char> (1 times, avg 1 ms)
+     1 ms: std::__and_<std::__is_swappable<std::errc>, std::__is_swappable<std:... (1 times, avg 1 ms)
+     1 ms: std::_Tuple_impl<0, std::basic_string_view<char>, char, std::basic_s... (1 times, avg 1 ms)
+     1 ms: std::__final_insertion_sort<std::tuple<std::errc, std::basic_string_... (1 times, avg 1 ms)
+     1 ms: std::basic_string<char32_t>::_M_construct<const char32_t *> (1 times, avg 1 ms)
+     1 ms: std::basic_string<char8_t>::_M_construct<const char8_t *> (1 times, avg 1 ms)
+     1 ms: std::basic_string<char16_t>::_M_construct<const char16_t *> (1 times, avg 1 ms)
+     1 ms: std::operator+<char, std::char_traits<char>, std::allocator<char>> (1 times, avg 1 ms)
+
+**** Template sets that took longest to instantiate:
+   187 ms: FIX8::conjure_enum<$> (1 times, avg 187 ms)
+   119 ms: FIX8::conjure_enum<$>::_entries<$> (1 times, avg 119 ms)
+    49 ms: FIX8::conjure_enum<$>::_get_name<$> (72 times, avg 0 ms)
+    12 ms: std::tuple<$>::tuple<$> (21 times, avg 0 ms)
+     8 ms: FIX8::conjure_enum<$>::_sorted_entries (1 times, avg 8 ms)
+     7 ms: std::basic_string<$> (5 times, avg 1 ms)
+     6 ms: std::sort<$> (1 times, avg 6 ms)
+     6 ms: std::__sort<$> (1 times, avg 6 ms)
+     5 ms: std::basic_string<$>::_M_construct<$> (5 times, avg 1 ms)
+     5 ms: std::tuple<$> (2 times, avg 2 ms)
+     5 ms: std::__introsort_loop<$> (1 times, avg 5 ms)
+     4 ms: std::array<$> (2 times, avg 2 ms)
+     2 ms: std::__unguarded_partition_pivot<$> (1 times, avg 2 ms)
+     2 ms: std::__and_<$> (3 times, avg 0 ms)
+     2 ms: std::__move_median_to_first<$> (1 times, avg 2 ms)
+     2 ms: std::iter_swap<$> (1 times, avg 2 ms)
+     2 ms: std::__partial_sort<$> (1 times, avg 2 ms)
+     2 ms: std::__heap_select<$> (1 times, avg 2 ms)
+     2 ms: std::__make_heap<$> (1 times, avg 2 ms)
+     1 ms: std::_Tuple_impl<$> (2 times, avg 0 ms)
+     1 ms: std::optional<$> (1 times, avg 1 ms)
+     1 ms: std::to_array<$> (1 times, avg 1 ms)
+     1 ms: std::__adjust_heap<$> (1 times, avg 1 ms)
+     1 ms: std::basic_string<$>::basic_string (2 times, avg 0 ms)
+     1 ms: std::__final_insertion_sort<$> (1 times, avg 1 ms)
+     1 ms: std::operator+<char, std::char_traits<char>, std::allocator<char>> (1 times, avg 1 ms)
+     1 ms: std::__insertion_sort<$> (1 times, avg 1 ms)
+     0 ms: FIX8::conjure_enum<$>::_tuple_comp_rev (1 times, avg 0 ms)
+     0 ms: std::tuple<std::errc, std::basic_string_view<char>>::operator= (1 times, avg 0 ms)
+     0 ms: __gnu_cxx::__to_xstring<$> (1 times, avg 0 ms)
+
+**** Functions that took longest to compile:
+     0 3s: test_conjure_enum(std::errc) (/home/davidd/prog/conjure_enum_tclass/examples/cbenchmark.cpp)
+
+**** Function sets that took longest to compile / optimize:
+
+**** Expensive headers:
+166 ms: /usr/include/c++/14/system_error (included 1 times, avg 166 ms), included via:
+  1x: <direct include>
+
+54 ms: /home/davidd/prog/conjure_enum_tclass/include/fix8/conjure_enum.hpp (included 1 times, avg 54 ms), included via:
+  1x: <direct include>
+
+  done in 0.0s.
+```
+
+</p></details>
 
 ---
-# 8. Compiler support
+# 9. Benchmarks
+We have benchmarked compilation times for `conjure_enum` and `magic_enum`.
+For `magic_enum` we created a separate repo (see [here](https://github.com/fix8mt/magic_enum_benchmark)).
+
+| Compiler | `conjure_enum` (secs) | `magic_enum` (secs)| Notes |
+| :--- | :--- | :--- |:--- |
+| **MSVC** | 0.376 | 0.343 | using cl from command prompt|
+|_command_ | `cl /nologo /MD /std:c++latest /Bt+ /I ..\include  ..\examples\cbenchmark.cpp\|find "c1xx.dll"` | `cl /nologo /MD /std:c++latest /Bt+ -I build\_deps\magic_enum-src\include cbenchmark.cpp\|find "c1xx.dll"`||
+| **clang** | 0.3 | 0.3 | using ClangBuildAnalyzer|
+|_command_|`make`; `ClangBuildAnalyzerLoc=~/prog/ClangBuildAnalyzer/build ArtifactLoc=build_clang examples/cbenchmark.sh`|`make`; `ClangBuildAnalyzerLoc=~/prog/ClangBuildAnalyzer/build ArtifactLoc=build_clang ./cbenchmark.sh`||
+
+## Notes
+- Benchmark run 10 times, best result shown
+- Both benchmarks are using [cbenchmark.sh](examples/cbenchmark.sh) and [cbenchmark.cpp](examples/cbenchmark.cpp)
+- MSVC: Windows 11 ThinkCentre 16x 13th Gen Intel i7-13700, 32Gb; MSVC 2022 / 17.11.0.
+- Clang: Ubuntu 24.04 12th Gen Intel i9-12900T, 32Gb; Clang 18.1.3
+- `magic_enum`: single header only
+- `conjure_enum`: minimal build
+
+## Discussion
+For MSVC, `magic_enum` compilation times a slighly better than `conjure_enum` (around %9). For clang the results are identical.
+From a compilation performance perspective, `conjure_enum` roughly matches the performance of `magic_enum`.
+
+---
+# 10. Compiler support
 | Compiler | Version(s) | Notes | Unsupported |
 | :--- | :--- | :--- | ---: |
 | [gcc](https://gcc.gnu.org/projects/cxx-status.html) | `11`, `12`, `13`, `14`| `std::format` not complete in `11`, `12` | `<= 10` |
 | [clang](https://clang.llvm.org/cxx_status.html) | `15`, `16`, `17`, `18`| Catch2 needs `cxx_std_20` in `15` | `<= 14` |
-| [msvc](https://learn.microsoft.com/en-us/cpp/overview/visual-cpp-language-conformance) | `16`, `17` | Visual Studio 2019,2022, latest `17.10.5`| `<= 16.9`|
-| [xcode](https://developer.apple.com/support/xcode/) | `15` | Apple LLVM 15.0.0, some issues with `constexpr`, workarounds| `<= 14`|
+| [msvc](https://learn.microsoft.com/en-us/cpp/overview/visual-cpp-language-conformance) | `16`, `17` | Visual Studio 2019,2022, latest `17.11.2`| `<= 16.9`|
+| [xcode](https://developer.apple.com/support/xcode/) | `15` | Apple Xcode Clang 15.0.0 (LLVM 16), some issues with `constexpr`, workarounds| `<= 14`|
 
-# 9. Compiler issues
+# 11. Compiler issues
 | Compiler | Version(s) | Issues | Workaround |
 | :--- | :--- | :--- | ---: |
 | clang | `16`, `17`, `18`| Compiler reports integers outside valid range [x,y]| specify underlying type when declaring enum eg. `enum class foo : int` |

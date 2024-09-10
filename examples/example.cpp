@@ -40,6 +40,8 @@
 #endif
 
 #include <fix8/conjure_enum.hpp>
+#include <fix8/conjure_enum_bitset.hpp>
+#include <fix8/conjure_type.hpp>
 
 //-----------------------------------------------------------------------------------------
 using namespace std::literals::string_view_literals;
@@ -51,6 +53,24 @@ enum class component : int { scheme, authority, userinfo, user, password, host, 
 enum component1 : int { scheme, authority, userinfo, user, password, host, port, path=12, query, fragment };
 enum class numbers : int { zero, one, two, three, four, five, six, seven, eight, nine };
 enum class numbers1 : int { zero1=4, one1=3, two1=2, three1, four1, five1, six1, seven1, eight1, nine1 };
+
+//-----------------------------------------------------------------------------------------
+struct foo1
+{
+	int process(component val, int aint) const
+	{
+		return aint * static_cast<int>(val);
+	}
+	static constexpr auto dd2a
+	{
+		std::to_array<std::tuple<component, int (foo1::*)(component, int) const>>
+		({
+			{ component::scheme, &foo1::process },
+			{ component::port, &foo1::process },
+			{ component::fragment, &foo1::process },
+		})
+	};
+};
 
 //-----------------------------------------------------------------------------------------
 template<typename T>
@@ -71,6 +91,7 @@ const std::string demangle() noexcept
 	return typeid(T).name();
 }
 
+//-----------------------------------------------------------------------------------------
 int main(void)
 {
 	conjure_enum<component>::for_each_n(3, [](component val, int other) { std::cout << static_cast<int>(val) << ' ' << other << '\n'; }, 200);
@@ -226,5 +247,15 @@ int main(void)
 	std::cout << '"' << component::host << '"' << '\n';
 	std::cout << '"' << component1::host << '"' << '\n';
 	std::cout << '"' << static_cast<component>(100) << '"' << '\n';
+
+	std::cout << std::hash<enum_bitset<numbers>>{}(er) << '\n';
+
+	foo1 bar1;
+	std::cout << conjure_enum<component>::dispatch(component::port, -1, foo1::dd2a, &bar1, 1000) << '\n';
+
+	using en = conjure_enum<numbers>;
+	for (const auto& [ev,str] : {en::front(), en::back()})
+		std::cout << static_cast<int>(ev) << ' ' << str << '\n';
+
 	return 0;
 }

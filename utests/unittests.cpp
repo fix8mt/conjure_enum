@@ -34,6 +34,8 @@
 #include <iostream>
 #include <sstream>
 #include <fix8/conjure_enum.hpp>
+#include <fix8/conjure_enum_bitset.hpp>
+#include <fix8/conjure_type.hpp>
 
 //-----------------------------------------------------------------------------------------
 using namespace FIX8;
@@ -48,6 +50,25 @@ enum class directions { left, right, up, down, forward, backward, notfound=-1 };
 enum class range_test { first, second, third, fourth, fifth, sixth, seventh, eighth };
 enum class range_test1 { first, second, third, fourth, fifth, sixth, seventh, eighth };
 enum class range_test2 { first, second, third, fourth, fifth, sixth, seventh, eighth };
+enum class range_test3 { first, second, third, fourth, fifth, sixth, seventh, eighth, ce_first=first, ce_last=eighth };
+enum range_test4 { first, second, third, fourth, fifth, sixth, seventh, eighth, ce_first=first, ce_last=eighth };
+enum class numbers64 : uint64_t
+{
+	zero, one, two, three, four,
+	five, six, seven, eight, nine,
+	ten, eleven, twelve, thirteen, fourteen,
+	fifteen, sixteen, seventeen, eighteen, nineteen,
+	twenty, twenty_one, twenty_two, twenty_three, twenty_four,
+	twenty_five, twenty_six, twenty_seven, twenty_eight, twenty_nine,
+	thirty, thirty_one, thirty_two, thirty_three, thirty_four,
+	thirty_five, thirty_six, thirty_seven, thirty_eight, thirty_nine,
+	forty, forty_one, forty_two, forty_three, forty_four,
+	forty_five, forty_six, forty_seven, forty_eight, forty_nine,
+	fifty, fifty_one, fifty_two, fifty_three, fifty_four,
+	fifty_five, fifty_six, fifty_seven, fifty_eight, fifty_nine,
+	sixty, sixty_one, sixty_two, sixty_three
+};
+enum class reverse_range_test { first=7, second=6, third=5, fourth=4, fifth=3, sixth=2, seventh=1, eighth=0 };
 
 //-----------------------------------------------------------------------------------------
 // run as: ctest --output-on-failure
@@ -55,12 +76,15 @@ enum class range_test2 { first, second, third, fourth, fifth, sixth, seventh, ei
 TEST_CASE("fixed_string")
 {
 	static constexpr std::string_view t1{"The rain in Spain"};
-	fixed_string<t1.size()> f1{t1};
+	constexpr fixed_string<t1.size()> f1{t1};
 	REQUIRE(f1.size() == t1.size() + 1); // fixed_string makes string ASCIIZ
 	REQUIRE(f1[t1.size()] == 0); // test ASCIIZ
 	REQUIRE(f1.get().size() == t1.size()); // fixed_string as string_view
 	REQUIRE(static_cast<std::string_view>(f1) == t1); // fixed_string as string_view
 	REQUIRE(static_cast<std::string_view>(f1).size() == t1.size()); // fixed_string as string_view
+	std::ostringstream ostr;
+	ostr << f1.c_str();
+	REQUIRE(ostr.str() == "The rain in Spain");
 }
 
 //-----------------------------------------------------------------------------------------
@@ -68,6 +92,12 @@ TEST_CASE("default range")
 {
 	REQUIRE(conjure_enum<component>::get_enum_min_value() == FIX8_CONJURE_ENUM_MIN_VALUE);
 	REQUIRE(conjure_enum<component>::get_enum_max_value() == FIX8_CONJURE_ENUM_MAX_VALUE);
+	REQUIRE(conjure_enum<component>::get_actual_enum_min_value() == 0);
+	REQUIRE(conjure_enum<component>::get_actual_enum_max_value() == 14);
+	REQUIRE(conjure_enum<reverse_range_test>::get_enum_min_value() == FIX8_CONJURE_ENUM_MIN_VALUE);
+	REQUIRE(conjure_enum<reverse_range_test>::get_enum_max_value() == FIX8_CONJURE_ENUM_MAX_VALUE);
+	REQUIRE(conjure_enum<reverse_range_test>::get_actual_enum_min_value() == 0);
+	REQUIRE(conjure_enum<reverse_range_test>::get_actual_enum_max_value() == 7);
 }
 
 //-----------------------------------------------------------------------------------------
@@ -83,10 +113,23 @@ TEST_CASE("custom range")
 {
 	REQUIRE(conjure_enum<range_test>::get_enum_min_value() == 0);
 	REQUIRE(conjure_enum<range_test>::get_enum_max_value() == 7);
+	REQUIRE(conjure_enum<range_test>::get_enum_min_value() == conjure_enum<range_test>::get_actual_enum_min_value());
+	REQUIRE(conjure_enum<range_test>::get_enum_max_value() == conjure_enum<range_test>::get_actual_enum_max_value());
 	REQUIRE(conjure_enum<range_test1>::get_enum_min_value() == 0);
 	REQUIRE(conjure_enum<range_test1>::get_enum_max_value() == 7);
 	REQUIRE(conjure_enum<range_test2>::get_enum_min_value() == 0);
 	REQUIRE(conjure_enum<range_test2>::get_enum_max_value() == 7);
+}
+
+//-----------------------------------------------------------------------------------------
+TEST_CASE("custom range (alias)")
+{
+	REQUIRE(conjure_enum<range_test3>::get_enum_min_value() == 0);
+	REQUIRE(conjure_enum<range_test3>::get_enum_max_value() == 7);
+	REQUIRE(conjure_enum<range_test3>::get_enum_min_value() == conjure_enum<range_test3>::get_actual_enum_min_value());
+	REQUIRE(conjure_enum<range_test3>::get_enum_max_value() == conjure_enum<range_test3>::get_actual_enum_max_value());
+	REQUIRE(conjure_enum<range_test4>::get_enum_min_value() == 0);
+	REQUIRE(conjure_enum<range_test4>::get_enum_max_value() == 7);
 }
 
 //-----------------------------------------------------------------------------------------
@@ -106,10 +149,28 @@ TEST_CASE("is_scoped")
 }
 
 //-----------------------------------------------------------------------------------------
+TEST_CASE("is_continuous")
+{
+	REQUIRE(!conjure_enum<component>::is_continuous());
+	REQUIRE(conjure_enum<numbers>::is_continuous());
+	REQUIRE(conjure_enum<reverse_range_test>::is_continuous());
+}
+
+//-----------------------------------------------------------------------------------------
 TEST_CASE("count")
 {
 	REQUIRE(conjure_enum<component>::count() == 10);
 	REQUIRE(conjure_enum<component1>::count() == 10);
+	REQUIRE(conjure_enum<numbers>::count() == 10);
+}
+
+//-----------------------------------------------------------------------------------------
+TEST_CASE("in_range")
+{
+	REQUIRE(conjure_enum<component>::in_range(component::password));
+	REQUIRE(!conjure_enum<component>::in_range(static_cast<component>(100)));
+	REQUIRE(conjure_enum<numbers>::in_range(numbers::five));
+	REQUIRE(!conjure_enum<numbers>::in_range(static_cast<numbers>(100)));
 }
 
 //-----------------------------------------------------------------------------------------
@@ -212,6 +273,11 @@ TEST_CASE("contains")
 	REQUIRE(!conjure_enum<component>::contains(static_cast<component>(100)));
 	REQUIRE(conjure_enum<component>::contains("component::path"sv));
 	REQUIRE(conjure_enum<component1>::contains("path"sv));
+	REQUIRE(conjure_enum<component>::contains<component::path>());
+	REQUIRE(conjure_enum<component>::contains<component::test>()); // alias
+	REQUIRE(conjure_enum<component1>::contains<path>());
+	REQUIRE(conjure_enum<numbers>::contains(numbers::five));
+	REQUIRE(!conjure_enum<numbers>::contains(static_cast<numbers>(100)));
 }
 
 //-----------------------------------------------------------------------------------------
@@ -223,6 +289,8 @@ TEST_CASE("enum_to_string")
 	REQUIRE(conjure_enum<component>::enum_to_string(static_cast<component>(100)).empty());
 	REQUIRE(conjure_enum<component>::enum_to_string<component::fragment>() == "component::fragment");
 	REQUIRE(conjure_enum<component1>::enum_to_string<component1::fragment>() == "fragment");
+	using enum numbers;
+	REQUIRE(conjure_enum<numbers>::enum_to_string<two>() == "numbers::two");
 }
 
 //-----------------------------------------------------------------------------------------
@@ -259,6 +327,10 @@ TEST_CASE("iterators")
 	REQUIRE(std::get<component1>(conjure_enum<component1>::front()) == scheme);
 	REQUIRE(std::get<component1>(conjure_enum<component1>::back()) == fragment);
 	REQUIRE(std::get<component1>(conjure_enum<component1>::back()) == std::get<component1>(*conjure_enum<component1>::crbegin()));
+	REQUIRE(std::get<reverse_range_test>(conjure_enum<reverse_range_test>::front()) == reverse_range_test::eighth);
+	REQUIRE(std::get<reverse_range_test>(conjure_enum<reverse_range_test>::back()) == reverse_range_test::first);
+	REQUIRE(std::get<reverse_range_test>(conjure_enum<reverse_range_test>::front()) == conjure_enum<reverse_range_test>::min_v);
+	REQUIRE(std::get<reverse_range_test>(conjure_enum<reverse_range_test>::back()) == conjure_enum<reverse_range_test>::max_v);
 }
 
 //-----------------------------------------------------------------------------------------
@@ -293,6 +365,9 @@ TEST_CASE("int_to_enum")
 	REQUIRE(conjure_enum<component1>::int_to_enum(4).value() == password);
 	REQUIRE(conjure_enum<component>::int_to_enum(11).value_or(static_cast<component>(100)) == static_cast<component>(100));
 	REQUIRE(conjure_enum<component1>::int_to_enum(11).value_or(static_cast<component1>(100)) == static_cast<component1>(100));
+	REQUIRE(conjure_enum<numbers>::int_to_enum(4).value() == numbers::four);
+	REQUIRE(conjure_enum<numbers>::int_to_enum(11).value_or(static_cast<numbers>(100)) == static_cast<numbers>(100));
+	REQUIRE(conjure_enum<numbers>::enum_cast(150) == static_cast<numbers>(150));
 }
 
 //-----------------------------------------------------------------------------------------
@@ -302,6 +377,21 @@ TEST_CASE("enum_to_int")
 	REQUIRE(conjure_enum<component1>::enum_to_int(password) == 4);
 	REQUIRE(conjure_enum<component>::enum_to_underlying(component::password) == 4);
 	REQUIRE(conjure_enum<component1>::enum_to_underlying(password) == 4);
+}
+
+//-----------------------------------------------------------------------------------------
+TEST_CASE("index")
+{
+	REQUIRE(conjure_enum<component>::index(component::scheme).value() == 0);
+	REQUIRE(conjure_enum<component>::index(component::password).value() == 4);
+	REQUIRE(conjure_enum<component>::index(component::query).value() == 8);
+	REQUIRE(conjure_enum<component>::index(component(100)).value_or(100) == 100);
+	REQUIRE(conjure_enum<component>::index<component::scheme>().value() == 0);
+	REQUIRE(conjure_enum<component>::index<component::password>().value() == 4);
+	REQUIRE(conjure_enum<component>::index<component::query>().value() == 8);
+	REQUIRE(conjure_enum<component>::index<component(100)>().value_or(100) == 100);
+	REQUIRE(conjure_enum<numbers>::index<numbers::five>().value() == 5);
+	REQUIRE(conjure_enum<numbers>::index<numbers(100)>().value_or(100) == 100);
 }
 
 //-----------------------------------------------------------------------------------------
@@ -559,6 +649,9 @@ TEST_CASE("enum_bitset")
 	REQUIRE(ec.to_ulong() == 0b0001001010);
 	REQUIRE(ec.to_string('-', '+') == "---+--+-+-"s);
 	REQUIRE(enum_bitset<numbers>(0b0101001010).to_string() == "0101001010"s);
+	REQUIRE(ec.to_hex_string() == "0x4a"s);
+	REQUIRE(ec.to_hex_string<false>() == "4a"s);
+	REQUIRE(ec.to_hex_string<true, true>() == "0X4A"s);
 
 	REQUIRE(ec.test<numbers::one>());
 	ec.flip<numbers::one>();
@@ -579,6 +672,27 @@ TEST_CASE("enum_bitset")
 	ec.set(numbers::three, false);
 	REQUIRE(ec.test<numbers::three>() == false);
 	REQUIRE(ec.any());
+	REQUIRE(enum_bitset<range_test>().get_underlying_bit_size() == 8);
+	REQUIRE(ec.get_underlying_bit_size() == 16);
+	REQUIRE(ec.get_unused_bit_mask() == 0b111111 << 10);
+	REQUIRE(ec.get_bit_mask() == 0b1111111111);
+
+	ec.reset();
+	ec.set<numbers::one,numbers::two,numbers::three>();
+	REQUIRE(ec.countl_one() == 0);
+	REQUIRE(ec.countr_zero() == 1);
+	REQUIRE(ec.countr_one() == 0);
+	REQUIRE(ec.countl_zero() == 6);
+}
+
+//-----------------------------------------------------------------------------------------
+TEST_CASE("enum_bitset <==> std::bitset")
+{
+	std::bitset<10> bs{1 << 1 | 1 << 3 | 1 << 6};
+	enum_bitset<numbers> ed(bs);
+	REQUIRE(ed.to_ulong() == (1 << 1 | 1 << 3 | 1 << 6));
+	std::bitset<10> bs1{ed};
+	REQUIRE(bs1.to_ulong() == (1 << 1 | 1 << 3 | 1 << 6));
 }
 
 //-----------------------------------------------------------------------------------------
@@ -605,6 +719,30 @@ TEST_CASE("enum_bitset ops")
 	REQUIRE((ed ^ numbers::one).to_ulong()  == 0b010);
 	ed ^= numbers::one;
 	REQUIRE(ed.to_ulong() == 0b010);
+
+	ed.reset();
+	ed[2] = true;
+	REQUIRE(ed.test(numbers::two));
+	REQUIRE(ed[2] == true);
+	ed.reset();
+	ed[numbers::two] = true;
+	REQUIRE(ed.test(numbers::two));
+	REQUIRE(ed[2] == true);
+
+	ed.reset();
+	ed.set<numbers::one,numbers::three,numbers::six>();
+	REQUIRE(ed.rotl(1) == enum_bitset<numbers>(numbers::two,numbers::four,numbers::seven));
+	REQUIRE(ed.rotr(1) == enum_bitset<numbers>(numbers::one,numbers::three,numbers::six));
+	REQUIRE(ed.rotr(1) == enum_bitset<numbers>(numbers::nine,numbers::two,numbers::five));
+	REQUIRE(ed.rotl(4) == enum_bitset<numbers>(numbers::eight,numbers::one,numbers::four));
+
+	ed.reset();
+	ed.set<numbers::two>();
+	REQUIRE(ed.has_single_bit());
+	ed.set<numbers::one,numbers::three>();
+	REQUIRE(!ed.has_single_bit());
+
+	REQUIRE(std::hash<enum_bitset<numbers>>{}(ed) == 14);
 }
 
 //-----------------------------------------------------------------------------------------
@@ -626,12 +764,17 @@ TEST_CASE("enum_bitset ext ops")
 }
 
 //-----------------------------------------------------------------------------------------
+TEST_CASE("enum_bitset::to_ulong overflow")
+{
+	REQUIRE_NOTHROW(enum_bitset<numbers64>(0b1111111111111).to_ulong());
+	REQUIRE_THROWS_AS(enum_bitset<numbers64>(0xfffffffffffffffe).to_ulong(), std::overflow_error);
+}
+
+//-----------------------------------------------------------------------------------------
 TEST_CASE("enum_bitset(std::string_view)")
 {
 	REQUIRE_THROWS_MATCHES(enum_bitset<numbers>("zero,twenty,two,three", true, ',', false),
 		std::invalid_argument, Catch::Matchers::Message("twenty"));
-	enum_bitset<numbers> sc("zero,two,three", true, ',');
-	REQUIRE(sc.to_ulong() == 0b1101);
 }
 
 //-----------------------------------------------------------------------------------------

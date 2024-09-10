@@ -28,16 +28,35 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //----------------------------------------------------------------------------------------
-#include <system_error>
-#define FIX8_CONJURE_ENUM_MINIMAL
+// CLI msvc build benchmark from your build dir
+// call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
+// cl /nologo /MD /std:c++latest /Bt+ /I ..\include  ..\examples\cbenchmark.cpp|find "c1xx.dll"
+//----------------------------------------------------------------------------------------
+#define FIX8_CONJURE_ENUM_ALL_OPTIMIZATIONS
 #include <fix8/conjure_enum.hpp>
 
 //-----------------------------------------------------------------------------------------
-FIX8_CONJURE_ENUM_SET_RANGE_INTS(std::errc, 0, 71)
-
-int test_conjure_enum(std::errc err)
+enum class numbers
 {
-	return FIX8::conjure_enum<std::errc>::enum_to_string(err).size();
+	zero, one, two, three, four,
+	five, six, seven, eight, nine,
+	ten, eleven, twelve, thirteen, fourteen,
+	fifteen, sixteen, seventeen, eighteen, nineteen,
+	twenty, twenty_one, twenty_two, twenty_three, twenty_four,
+	twenty_five, twenty_six, twenty_seven, twenty_eight, twenty_nine,
+	thirty, thirty_one, thirty_two, thirty_three, thirty_four,
+	thirty_five, thirty_six, thirty_seven, thirty_eight, thirty_nine,
+	forty, forty_one, forty_two, forty_three, forty_four,
+	forty_five, forty_six, forty_seven, forty_eight, forty_nine,
+	fifty, fifty_one, fifty_two, fifty_three, fifty_four,
+	fifty_five, fifty_six, fifty_seven, fifty_eight, fifty_nine,
+	sixty, sixty_one, sixty_two, sixty_three
+};
+FIX8_CONJURE_ENUM_SET_RANGE(numbers::zero, numbers::sixty_three);
+
+auto test_conjure_enum(numbers num)
+{
+	return FIX8::conjure_enum<numbers>::enum_to_string(num).size();
 }
 
 int main(void)

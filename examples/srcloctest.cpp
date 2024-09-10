@@ -152,9 +152,9 @@ int main(int argc, char **argv)
    };
 
 	bool mkd{}, cpl{true}, hlp{};
-	std::map<std::string_view, bool&> opts { {"-m",mkd},{"-c",cpl},{"-h",hlp} };
-	for (int ii{1}; ii < argc; ++ii)
-		if (auto result{opts.find(std::string_view(argv[ii]))}; result != opts.cend())
+	const std::map<std::string_view, bool&> opts { {"-m",mkd},{"-c",cpl},{"-h",hlp} };
+	for (const std::vector<std::string_view> args{argv + 1, argv + argc}; const auto pp : args)
+		if (auto result{opts.find(pp)}; result != opts.cend())
 			result->second ^= true;
 	if (hlp)
 	{

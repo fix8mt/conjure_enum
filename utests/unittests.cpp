@@ -691,7 +691,7 @@ TEST_CASE("enum_bitset <==> std::bitset")
 	std::bitset<10> bs{1 << 1 | 1 << 3 | 1 << 6};
 	enum_bitset<numbers> ed(bs);
 	REQUIRE(ed.to_ulong() == (1 << 1 | 1 << 3 | 1 << 6));
-	std::bitset<10> bs1{ed};
+	std::bitset<10> bs1{ed.to_ulong()};
 	REQUIRE(bs1.to_ulong() == (1 << 1 | 1 << 3 | 1 << 6));
 }
 

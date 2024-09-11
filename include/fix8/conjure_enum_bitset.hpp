@@ -147,9 +147,9 @@ public:
 	{
 		if (std::bit_width<U>(_present) > 32)
 			throw std::overflow_error("overflow");
-		return _present;
+		return static_cast<unsigned long>(_present);
 	}
-	constexpr unsigned long long to_ullong() const noexcept { return _present; }
+	constexpr unsigned long long to_ullong() const noexcept { return static_cast<unsigned long long>(_present); }
 	constexpr U get_underlying() const noexcept { return _present; }
 	constexpr int get_underlying_bit_size() const noexcept { return 8 * sizeof(U); }
 	constexpr U get_bit_mask() const noexcept { return all_bits; }

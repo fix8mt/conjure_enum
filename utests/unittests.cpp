@@ -52,7 +52,7 @@ enum class range_test1 { first, second, third, fourth, fifth, sixth, seventh, ei
 enum class range_test2 { first, second, third, fourth, fifth, sixth, seventh, eighth };
 enum class range_test3 { first, second, third, fourth, fifth, sixth, seventh, eighth, ce_first=first, ce_last=eighth };
 enum range_test4 { first, second, third, fourth, fifth, sixth, seventh, eighth, ce_first=first, ce_last=eighth };
-enum class numbers64 : uint64_t
+enum class numbers64
 {
 	zero, one, two, three, four,
 	five, six, seven, eight, nine,

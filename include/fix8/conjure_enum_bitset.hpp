@@ -120,7 +120,7 @@ public:
 	using const_reference = _reference<const enum_bitset>;
 
 	explicit constexpr enum_bitset(U bits) noexcept : _present(bits) {}
-	explicit constexpr enum_bitset(std::bitset<countof> from) : _present(from.to_ullong()) {}
+	explicit constexpr enum_bitset(std::bitset<countof> from) : _present(U(from.to_ullong())) {}
 	constexpr enum_bitset(std::string_view from, bool anyscope=false, char sep='|', bool ignore_errors=true)
 		: _present(factory(from, anyscope, sep, ignore_errors)) {}
 

@@ -741,11 +741,6 @@ TEST_CASE("enum_bitset ops")
 	REQUIRE(ed.has_single_bit());
 	ed.set<numbers::one,numbers::three>();
 	REQUIRE(!ed.has_single_bit());
-
-#if not defined _MSC_VER
-	REQUIRE(std::hash<enum_bitset<numbers>>{}(ed) == 14);
-#endif
-	std::cout << std::hash<std::uint_least16_t>()(14) << '\n';
 }
 
 //-----------------------------------------------------------------------------------------

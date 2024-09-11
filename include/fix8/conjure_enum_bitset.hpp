@@ -71,7 +71,7 @@ class enum_bitset
 				 std::conditional_t<countof <= 64, std::uint_least64_t, void>>>>;
 	static_assert(std::integral<U>, "requested bitset overflow");
 
-	static constexpr U all_bits { std::size_t(1 << countof) - 1 };
+	static constexpr U all_bits { countof == 64 ? ~0 : (1 << countof) - 1 };
 	static constexpr U unused_bits { sizeof(U) * 8 - countof };
 
 	template <typename R>

@@ -75,7 +75,7 @@ class enum_bitset
 	static constexpr std::size_t base_type_count = (countof > 0 ? (countof - 1) / bits_per_base + 1 : 0);
 	static constexpr std::size_t not_interested = base_type_count * bits_per_base - countof;
 	static constexpr U all_bits = (std::size_t{1} << (bits_per_base - not_interested)) - 1; */
-	static constexpr U all_bits { (std::size_t{1} << countof) - 1 };
+	static constexpr U all_bits { (std::size_t{1} << (countof & 63)) - 1 };
 	static constexpr U unused_bits { sizeof(U) * 8 - countof };
 
 	template <typename R>

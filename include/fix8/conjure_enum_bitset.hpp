@@ -71,7 +71,7 @@ class enum_bitset
 				 std::conditional_t<countof <= 64, std::uint_least64_t, void>>>>;
 	static_assert(std::integral<U>, "requested bitset overflow");
 
-	static constexpr U all_bits { (std::size_t{1} << (countof & 63)) - 1 };
+	static constexpr U all_bits { (std::size_t{1} << (countof & (sizeof(U) * 8 - 1))) - 1 };
 	static constexpr U unused_bits { sizeof(U) * 8 - countof };
 
 	template <typename R>
@@ -394,9 +394,9 @@ constexpr enum_bitset<T> operator^(const enum_bitset<T>& lh, const enum_bitset<T
 template<typename T>
 struct std::hash<FIX8::enum_bitset<T>>
 {
-	size_t operator()(const FIX8::enum_bitset<T>& bs) const noexcept
+	std::size_t operator()(const FIX8::enum_bitset<T>& bs) const noexcept
 	{
-		return std::hash<typename FIX8::enum_bitset<T>::enum_bitset_underlying_type>()(bs.get_underlying());
+		return std::hash<std::size_t>()(bs.get_underlying());
 	}
 };
 

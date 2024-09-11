@@ -600,7 +600,7 @@ With a given enum, search and call user supplied invocable. A typical use case w
 for different enum values.
 
 - Where invocable returns a value, return this value or a user supplied "not found" value.
-- Where invocable is void, call user supplied "not found" invocable.
+- Where invocable is void, call user supplied invocable or "not found" invocable (last in supplied array).
 
 The first parameter of your invocable must accept an enum value (passed by `dispatch`).
 Optionally provide any additional parameters.
@@ -2048,7 +2048,7 @@ From a compilation performance perspective, `conjure_enum` roughly matches the p
 | :--- | :--- | :--- | ---: |
 | [gcc](https://gcc.gnu.org/projects/cxx-status.html) | `11`, `12`, `13`, `14`| `std::format` not complete in `11`, `12` | `<= 10` |
 | [clang](https://clang.llvm.org/cxx_status.html) | `15`, `16`, `17`, `18`| Catch2 needs `cxx_std_20` in `15` | `<= 14` |
-| [msvc](https://learn.microsoft.com/en-us/cpp/overview/visual-cpp-language-conformance) | `16`, `17` | Visual Studio 2019,2022, latest `17.11.2`| `<= 16.9`|
+| [msvc](https://learn.microsoft.com/en-us/cpp/overview/visual-cpp-language-conformance) | `16`, `17` | Visual Studio 2019,2022, latest `17.11.3`| `<= 16.9`|
 | [xcode](https://developer.apple.com/support/xcode/) | `15` | Apple Xcode Clang 15.0.0 (LLVM 16), some issues with `constexpr`, workarounds| `<= 14`|
 
 # 11. Compiler issues

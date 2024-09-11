@@ -257,5 +257,12 @@ int main(void)
 	for (const auto& [ev,str] : {en::front(), en::back()})
 		std::cout << static_cast<int>(ev) << ' ' << str << '\n';
 
+	enum_bitset<numbers> ee;
+	ee.set();
+	std::cout << ee << '\n';
+	std::cout << ee.count() << '\n';
+	std::cout << ee.get_underlying_bit_size()  << '\n';
+	std::cout << ee.get_bit_mask() << '\n';
+	std::cout << ee.get_unused_bit_mask() << '\n';
 	return 0;
 }

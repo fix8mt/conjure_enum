@@ -52,7 +52,7 @@ enum class range_test1 { first, second, third, fourth, fifth, sixth, seventh, ei
 enum class range_test2 { first, second, third, fourth, fifth, sixth, seventh, eighth };
 enum class range_test3 { first, second, third, fourth, fifth, sixth, seventh, eighth, ce_first=first, ce_last=eighth };
 enum range_test4 { first, second, third, fourth, fifth, sixth, seventh, eighth, ce_first=first, ce_last=eighth };
-enum class numbers64 : uint64_t
+enum class numbers64
 {
 	zero, one, two, three, four,
 	five, six, seven, eight, nine,
@@ -691,7 +691,7 @@ TEST_CASE("enum_bitset <==> std::bitset")
 	std::bitset<10> bs{1 << 1 | 1 << 3 | 1 << 6};
 	enum_bitset<numbers> ed(bs);
 	REQUIRE(ed.to_ulong() == (1 << 1 | 1 << 3 | 1 << 6));
-	std::bitset<10> bs1{ed};
+	std::bitset<10> bs1{ed.to_ulong()};
 	REQUIRE(bs1.to_ulong() == (1 << 1 | 1 << 3 | 1 << 6));
 }
 
@@ -742,7 +742,7 @@ TEST_CASE("enum_bitset ops")
 	ed.set<numbers::one,numbers::three>();
 	REQUIRE(!ed.has_single_bit());
 
-	REQUIRE(std::hash<enum_bitset<numbers>>{}(ed) == 14);
+	REQUIRE(std::hash<enum_bitset<numbers>>{}(ed) == std::hash<std::size_t>()(14));
 }
 
 //-----------------------------------------------------------------------------------------

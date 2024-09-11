@@ -71,7 +71,7 @@ class enum_bitset
 				 std::conditional_t<countof <= 64, std::uint_least64_t, void>>>>;
 	static_assert(std::integral<U>, "requested bitset overflow");
 
-	static constexpr U all_bits { (1 << countof) - 1 };
+	static constexpr U all_bits { (std::size_t{1} << (countof & (sizeof(U) * 8 - 1))) - 1 };
 	static constexpr U unused_bits { sizeof(U) * 8 - countof };
 
 	template <typename R>
@@ -116,7 +116,7 @@ public:
 	using const_reference = _reference<const enum_bitset>;
 
 	explicit constexpr enum_bitset(U bits) noexcept : _present(bits) {}
-	explicit constexpr enum_bitset(std::bitset<countof> from) : _present(from.to_ullong()) {}
+	explicit constexpr enum_bitset(std::bitset<countof> from) : _present(U(from.to_ullong())) {}
 	constexpr enum_bitset(std::string_view from, bool anyscope=false, char sep='|', bool ignore_errors=true)
 		: _present(factory(from, anyscope, sep, ignore_errors)) {}
 
@@ -143,9 +143,9 @@ public:
 	{
 		if (std::bit_width<U>(_present) > 32)
 			throw std::overflow_error("overflow");
-		return _present;
+		return static_cast<unsigned long>(_present);
 	}
-	constexpr unsigned long long to_ullong() const noexcept { return _present; }
+	constexpr unsigned long long to_ullong() const noexcept { return static_cast<unsigned long long>(_present); }
 	constexpr U get_underlying() const noexcept { return _present; }
 	constexpr int get_underlying_bit_size() const noexcept { return 8 * sizeof(U); }
 	constexpr U get_bit_mask() const noexcept { return all_bits; }
@@ -394,9 +394,9 @@ constexpr enum_bitset<T> operator^(const enum_bitset<T>& lh, const enum_bitset<T
 template<typename T>
 struct std::hash<FIX8::enum_bitset<T>>
 {
-	size_t operator()(const FIX8::enum_bitset<T>& bs) const noexcept
+	std::size_t operator()(const FIX8::enum_bitset<T>& bs) const noexcept
 	{
-		return std::hash<typename FIX8::enum_bitset<T>::enum_bitset_underlying_type>()(bs.get_underlying());
+		return std::hash<std::size_t>()(bs.get_underlying());
 	}
 };
 

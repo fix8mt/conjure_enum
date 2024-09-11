@@ -742,7 +742,7 @@ TEST_CASE("enum_bitset ops")
 	ed.set<numbers::one,numbers::three>();
 	REQUIRE(!ed.has_single_bit());
 
-	REQUIRE(std::hash<enum_bitset<numbers>>{}(ed) == std::hash<enum_bitset<numbers>::enum_bitset_underlying_type>()(14));
+	REQUIRE(std::hash<enum_bitset<numbers>>{}(ed) == std::hash<std::size_t>()(14));
 }
 
 //-----------------------------------------------------------------------------------------

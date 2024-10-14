@@ -126,7 +126,7 @@ template<T e>
 static constexpr std::string_view enum_to_string();
 ```
 Returns a `std::string_view` or empty if not found. Optionally passing `true` will remove scope in result if present.
-`noscope` option ![](assets/notminimalred.svg).
+![](assets/notminimalred.svg).
 ```c++
 auto name { conjure_enum<component>::enum_to_string(component::path) };
 auto name_trim { conjure_enum<component>::enum_to_string(component::path, true) }; // optionally remove scope in result
@@ -1650,11 +1650,13 @@ The following are the default settings:
 These definitions set the minimum and maximum enum values that are supported. You can adjust them to suit your requirements but for most use cases the defaults are sufficient.
 > [!TIP]
 > You can reduce compile times in some circumstances by narrowing the range of `FIX8_CONJURE_ENUM_MIN_VALUE` and `FIX8_CONJURE_ENUM_MAX_VALUE`. For example
-> if your enums are only within the range of say `0-16` you can set `FIX8_CONJURE_ENUM_MIN_VALUE` and `FIX8_CONJURE_ENUM_MAX_VALUE` to `0` and `16` respectively. If the range is _too_ narrow
-> `conjure_enum` will **ignore enum values outside your range**.
+> if your enums are only within the range of say `0-16` you can set `FIX8_CONJURE_ENUM_MIN_VALUE` and `FIX8_CONJURE_ENUM_MAX_VALUE` to `0` and `16` respectively.
 
 > [!TIP]
 > If you wish to set ranges on a per enum basis, use `enum_range` (see below).
+
+> [!WARNING]
+> If the range is _too_ narrow `conjure_enum` will **ignore enum values outside your specified range**.
 
 ### ii. using `enum_range`
 You can specialise this class to override the defaults and set your own range on a per enum basis.

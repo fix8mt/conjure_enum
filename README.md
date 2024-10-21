@@ -596,8 +596,8 @@ template<std::size_t I, typename Fn, typename C, typename... Args> // specialisa
 requires (std::invocable<Fn&&, C, T, Args...> && I > 0)
 static constexpr void dispatch(T ev, const std::array<std::tuple<T, Fn>, I>& disp, C *obj, Args&&... args);
 ```
-With a given enum, search and call user supplied invocable. A typical use case would be where you want to demux a complex event, allowing you to easily declare predefined invocable actions
-for different enum values.
+With a given enum, search and call user supplied invocable. So for example, if you want to demux a complex event predicated on an enum, you can easily declare predefined invocable actions
+for different enum values and then use `dispatch` to test and execute those actions.
 
 - Where invocable returns a value, return this value or a user supplied "not found" value.
 - Where invocable is void, call user supplied invocable or "not found" invocable (last in supplied array).
@@ -2049,8 +2049,8 @@ From a compilation performance perspective, `conjure_enum` roughly matches the p
 | Compiler | Version(s) | Notes | Unsupported |
 | :--- | :--- | :--- | ---: |
 | [gcc](https://gcc.gnu.org/projects/cxx-status.html) | `11`, `12`, `13`, `14`| `std::format` not complete in `11`, `12` | `<= 10` |
-| [clang](https://clang.llvm.org/cxx_status.html) | `15`, `16`, `17`, `18`| Catch2 needs `cxx_std_20` in `15` | `<= 14` |
-| [msvc](https://learn.microsoft.com/en-us/cpp/overview/visual-cpp-language-conformance) | `16`, `17` | Visual Studio 2019,2022, latest `17.11.3`| `<= 16.9`|
+| [clang](https://clang.llvm.org/cxx_status.html) | `15`, `16`, `17`, `18`, `19`| Catch2 needs `cxx_std_20` in `15` | `<= 14` |
+| [msvc](https://learn.microsoft.com/en-us/cpp/overview/visual-cpp-language-conformance) | `16`, `17` | Visual Studio 2019,2022, latest `17.11.5`| `<= 16.9`|
 | [xcode](https://developer.apple.com/support/xcode/) | `15` | Apple Xcode Clang 15.0.0 (LLVM 16), some issues with `constexpr`, workarounds| `<= 14`|
 
 # 11. Compiler issues

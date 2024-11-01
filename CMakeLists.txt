@@ -88,6 +88,9 @@ foreach(x srcloctest example statictest cbenchmark)
 	endif()
 endforeach()
 
+add_library(conjure_enum INTERFACE)
+target_include_directories(conjure_enum INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
 if(BUILD_UNITTESTS)
 	include(FetchContent)
 	FetchContent_Declare(Catch2

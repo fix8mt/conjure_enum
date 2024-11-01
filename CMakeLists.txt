@@ -31,9 +31,9 @@
 cmake_minimum_required (VERSION 3.20)
 project (conjure_enum
    LANGUAGES CXX
-	HOMEPAGE_URL https://github.com/fix8mt/conjure_enum
+	HOMEPAGE_URL https://github.com/fix8mt/${PROJECT_NAME}
    DESCRIPTION "Lightweight C++20 enum and typename reflection"
-   VERSION 1.1.0)
+   VERSION 1.1.2)
 
 message("${CMAKE_PROJECT_NAME} version ${CMAKE_PROJECT_VERSION}")
 
@@ -88,8 +88,9 @@ foreach(x srcloctest example statictest cbenchmark)
 	endif()
 endforeach()
 
-add_library(conjure_enum INTERFACE)
-target_include_directories(conjure_enum INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+# make include visible to inheriting projects
+add_library(${PROJECT_NAME} INTERFACE)
+target_include_directories(${PROJECT_NAME} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 if(BUILD_UNITTESTS)
 	include(FetchContent)

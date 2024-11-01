@@ -1553,7 +1553,7 @@ message(STATUS "Downloading conjure_enum...")
 include(FetchContent)
 FetchContent_Declare(conjure_enum GIT_REPOSITORY https://github.com/fix8mt/conjure_enum.git)
 FetchContent_MakeAvailable(conjure_enum)
-target_include_directories(myproj PRIVATE ${conjure_enum_SOURCE_DIR}/include)
+target_link_libraries(myproj PRIVATE conjure_enum)
 ```
 
 ## d) Reporting issues

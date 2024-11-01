@@ -35,7 +35,7 @@ project (conjure_enum
    DESCRIPTION "Lightweight C++20 enum and typename reflection"
    VERSION 1.1.2)
 
-message("${CMAKE_PROJECT_NAME} version ${CMAKE_PROJECT_VERSION}")
+message("-- ${CMAKE_PROJECT_NAME} version ${CMAKE_PROJECT_VERSION}")
 
 # to disable strip:
 # cmake -DBUILD_STRIP_EXE=false ..

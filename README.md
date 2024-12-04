@@ -146,7 +146,7 @@ numbers::two
 
 > [!TIP]
 > For scoped enums, this method will return the fully qualified enum name (with the class prefix). If you want
-> just the unscoped lookup use `unscoped_string_to_enum`.
+> to retuen the unscoped enum specify `true`
 
 ### Aliases
 Because all methods in `conjure_enum` are defined _within_ a `class` instead of individual template functions in a `namespace`, you can reduce your

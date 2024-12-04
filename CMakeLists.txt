@@ -37,26 +37,26 @@ project (conjure_enum
 
 message("-- ${CMAKE_PROJECT_NAME} version ${CMAKE_PROJECT_VERSION}")
 
-# to disable strip:
-# cmake -DBUILD_STRIP_EXE=false ..
-option(BUILD_STRIP_EXE "enable stripping of non-unittest executables" true)
-message("-- Build: strip exes ${BUILD_STRIP_EXE}")
+# to disable/enable an option
+# cmake -DOPTION=<false/true> ..
+set(CUSTOM_OPTIONS
+	"BUILD_UNITTESTS|enable building unit tests|true"
+	"BUILD_STRIP_EXE|enable stripping of non-unittest executables|true"
+	"BUILD_ALL_WARNINGS|enable building with all warnings|true"
+	"BUILD_CLANG_PROFILER|enable clang build profiler|false"
+)
+foreach(x ${CUSTOM_OPTIONS})
+	string(REPLACE "|" ";" part ${x})
+	list(GET part 0 opt_name)
+	list(GET part 1 opt_description)
+	list(GET part 2 opt_default)
+	if(NOT DEFINED ${opt_name})
+		set(${opt_name} ${opt_default})
+	endif()
+	option(${opt_name} "${opt_description}" ${${opt_name}})
+	message("-- Build: ${opt_description}: ${${opt_name}}")
+endforeach()
 
-# to disable warnings:
-# cmake -DBUILD_ALL_WARNINGS=false ..
-option(BUILD_ALL_WARNINGS "enable building with all warnings" true)
-message("-- Build: with all warnings ${BUILD_ALL_WARNINGS}")
-
-# to disable building unit tests:
-# cmake -DBUILD_UNITTESTS=false ..
-option(BUILD_UNITTESTS "enable building unit tests" true)
-message("-- Build: unit tests ${BUILD_UNITTESTS}")
-
-# to enable clang build profiler:
-# cmake -DBUILD_CLANG_PROFILER=true ..
-# see examples/cbenchmark.sh
-option(BUILD_CLANG_PROFILER "enable clang build profiler" false)
-message("-- Build: clang profiler ${BUILD_CLANG_PROFILER}")
 if(BUILD_CLANG_PROFILER)
 	if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 		add_compile_options(-ftime-trace)
@@ -78,7 +78,7 @@ function(build loc x)
 			$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic>)
 	endif()
 	get_target_property(cppstd ${x} CXX_STANDARD)
-	message("-- adding ${x}.cpp CXX_STANDARD: C++${cppstd} (${CMAKE_CXX_COMPILER_ID})")
+	message("-- adding ${x}.cpp (C++${cppstd}) (${CMAKE_CXX_COMPILER_ID})")
 endfunction()
 
 foreach(x srcloctest example statictest cbenchmark)
@@ -94,10 +94,7 @@ target_include_directories(${PROJECT_NAME} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
 
 if(BUILD_UNITTESTS)
 	include(FetchContent)
-	FetchContent_Declare(Catch2
-		GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-		GIT_SHALLOW ON
-		GIT_TAG devel)
+	FetchContent_Declare(Catch2 GIT_REPOSITORY https://github.com/catchorg/Catch2.git GIT_SHALLOW ON GIT_TAG devel)
 	FetchContent_MakeAvailable(Catch2)
 	list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
 	target_compile_features(Catch2 PRIVATE cxx_std_20)

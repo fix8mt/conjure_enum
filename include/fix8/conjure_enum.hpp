@@ -63,6 +63,7 @@
 #include <array>
 #if not defined FIX8_CONJURE_ENUM_MINIMAL
 # include <functional>
+# include <ostream>
 #endif
 
 //-----------------------------------------------------------------------------------------

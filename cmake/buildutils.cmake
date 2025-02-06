@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------------------
 # SPDX-License-Identifier: MIT
-# SPDX-FileCopyrightText: Copyright (C) 2024 Fix8 Market Technologies Pty Ltd
+# SPDX-FileCopyrightText: Copyright (C) 2024-25 Fix8 Market Technologies Pty Ltd
 # SPDX-FileType: SOURCE
 #
 # cmake utils

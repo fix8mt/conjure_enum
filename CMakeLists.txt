@@ -48,6 +48,7 @@ function(build loc x)
 		add_dependencies(${x} srcloctest) # srcloctest should be built even if errors with conjure_enum
 	endif()
 	target_include_directories(${x} PRIVATE include)
+	target_compile_features(${x} PRIVATE cxx_std_20)
 	if(BUILD_ALL_WARNINGS)
 		target_compile_options(${x} PRIVATE
 			$<$<CXX_COMPILER_ID:MSVC>:/W4>
@@ -69,7 +70,6 @@ target_include_directories(${PROJECT_NAME} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
 if(BUILD_UNITTESTS)
 	fix8_fetch(Catch2 catchorg/Catch2 devel)
 	list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
-	target_compile_features(Catch2 PRIVATE cxx_std_20)
 	include(Catch)
 	enable_testing()
 	foreach(x unittests edgetests)

@@ -44,11 +44,10 @@ fix8_addoption("BUILD_CLANG_PROFILER|enable clang build profiler|false")
 
 function(build loc x)
 	add_executable(${x} ${loc}/${x}.cpp)
-	if(NOT ${x} STREQUAL srcloctest)
-		add_dependencies(${x} srcloctest) # srcloctest should be built even if errors with conjure_enum
-	endif()
 	target_include_directories(${x} PRIVATE include)
 	target_compile_features(${x} PRIVATE cxx_std_20)
+	get_target_property(cppstd ${x} CXX_STANDARD)
+	message("-- Adding src '${x}.cpp' CXX_STANDARD: C++${cppstd} (${CMAKE_CXX_COMPILER_ID})")
 	if(BUILD_ALL_WARNINGS)
 		target_compile_options(${x} PRIVATE
 			$<$<CXX_COMPILER_ID:MSVC>:/W4>
@@ -56,8 +55,10 @@ function(build loc x)
 	endif()
 endfunction()
 
-foreach(x srcloctest example statictest cbenchmark)
+build(examples srcloctest)
+foreach(x example statictest cbenchmark)
 	build(examples ${x})
+	add_dependencies(${x} srcloctest) # srcloctest should be built even if errors with conjure_enum
 	if(BUILD_STRIP_EXE)
 		add_custom_command(TARGET ${x} POST_BUILD COMMAND ${CMAKE_STRIP} ${x})
 	endif()

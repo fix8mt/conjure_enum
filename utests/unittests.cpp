@@ -799,7 +799,7 @@ TEST_CASE("enum_bitset ext ops")
 TEST_CASE("enum_bitset::to_ulong overflow")
 {
 	REQUIRE_NOTHROW(enum_bitset<numbers64>(0b1111111111111).to_ulong());
-	REQUIRE_THROWS_AS(enum_bitset<numbers64>(0xfffffffffffffffe).to_ulong(), std::overflow_error);
+	REQUIRE_THROWS_AS(enum_bitset<numbers64>(static_cast<double>(0xfffffffffffffffe)).to_ulong(), std::overflow_error);
 }
 
 //-----------------------------------------------------------------------------------------

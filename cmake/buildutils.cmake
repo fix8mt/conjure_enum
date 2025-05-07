@@ -4,9 +4,10 @@
 # SPDX-FileType: SOURCE
 #
 # cmake utils
-# Copyright (C) 2024 Fix8 Market Technologies Pty Ltd
 #   by David L. Dight
-# see https://github.com/fix8mt/uri
+# see https://github.com/fix8mt/conjure_enum
+#
+# Lightweight header-only C++20 enum and typename reflection
 #
 # Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 #
@@ -31,7 +32,7 @@
 # min cmake version 3.20 (Mar 24, 2021)
 # ----------------------------------------------------------------------------------------
 function(fix8_setbuildtype define_prefix default_type)
-	if(NOT "${CMAKE_BUILD_TYPE}" STREQUAL "")
+	if(NOT ${CMAKE_BUILD_TYPE} STREQUAL "")
 		if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
 			add_compile_definitions(${define_prefix}_DEBUG_BUILD)
 		elseif(${CMAKE_BUILD_TYPE} STREQUAL "RelWithDebInfo")
@@ -47,6 +48,20 @@ function(fix8_setbuildtype define_prefix default_type)
 	else()
 		set_property(CACHE CMAKE_BUILD_TYPE PROPERTY VALUE ${default_type})
 		fix8_setbuildtype(${define_prefix} ${default_type})
+	endif()
+endfunction()
+
+# ----------------------------------------------------------------------------------------
+function(build loc x)
+	add_executable(${x} ${loc}/${x}.cpp)
+	target_include_directories(${x} PRIVATE include)
+	target_compile_features(${x} PRIVATE cxx_std_20)
+	get_target_property(cppstd ${x} CXX_STANDARD)
+	message("-- Adding src '${x}.cpp' CXX_STANDARD: C++${cppstd} (${CMAKE_CXX_COMPILER_ID})")
+	if(BUILD_ALL_WARNINGS)
+		target_compile_options(${x} PRIVATE
+			$<$<CXX_COMPILER_ID:MSVC>:/W4>
+			$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic>)
 	endif()
 endfunction()
 

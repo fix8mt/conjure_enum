@@ -34,26 +34,13 @@ project (conjure_enum
    LANGUAGES CXX
 	HOMEPAGE_URL https://github.com/fix8mt/${PROJECT_NAME}
    DESCRIPTION "Lightweight C++20 enum and typename reflection"
-   VERSION 1.1.3)
+   VERSION 1.2.0)
 
-fix8_setbuildtype(FIX8 Release)
+fix8_setbuildtype(CONJURE_ENUM Release)
 fix8_addoption("BUILD_UNITTESTS|enable building unit tests|true")
 fix8_addoption("BUILD_STRIP_EXE|enable stripping of non-unittest executables|true")
 fix8_addoption("BUILD_ALL_WARNINGS|enable building with all warnings|true")
 fix8_addoption("BUILD_CLANG_PROFILER|enable clang build profiler|false")
-
-function(build loc x)
-	add_executable(${x} ${loc}/${x}.cpp)
-	target_include_directories(${x} PRIVATE include)
-	target_compile_features(${x} PRIVATE cxx_std_20)
-	get_target_property(cppstd ${x} CXX_STANDARD)
-	message("-- Adding src '${x}.cpp' CXX_STANDARD: C++${cppstd} (${CMAKE_CXX_COMPILER_ID})")
-	if(BUILD_ALL_WARNINGS)
-		target_compile_options(${x} PRIVATE
-			$<$<CXX_COMPILER_ID:MSVC>:/W4>
-			$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic>)
-	endif()
-endfunction()
 
 build(examples srcloctest)
 foreach(x example statictest cbenchmark)

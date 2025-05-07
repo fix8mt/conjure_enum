@@ -65,7 +65,7 @@
 # 2. Introduction
 ## a) Supercharge Your C++ Enums with This Lightweight Reflection Library!
 
-Based on the awesome work in [`magic_enum`](https://github.com/Neargye/magic_enum)[^2] and [`boost::describe`](https://github.com/boostorg/describe),
+Based on some of the awesome work in [`magic_enum`](https://github.com/Neargye/magic_enum)[^2] and [`boost::describe`](https://github.com/boostorg/describe),
 this library offers a streamlined and powerful way to add reflection capabilities to your C++ enums and other types. We've optimized the core functionality,
 focusing on the main features developers usually want. We've also added general purpose typename reflection for any type.
 
@@ -2055,7 +2055,7 @@ From a compilation performance perspective, `conjure_enum` roughly matches the p
 | :--- | :--- | :--- | ---: |
 | [gcc](https://gcc.gnu.org/projects/cxx-status.html) | `11`, `12`, `13`, `14`| `std::format` not complete in `11`, `12` | `<= 10` |
 | [clang](https://clang.llvm.org/cxx_status.html) | `15`, `16`, `17`, `18`, `19`| Catch2 needs `cxx_std_20` in `15` | `<= 14` |
-| [msvc](https://learn.microsoft.com/en-us/cpp/overview/visual-cpp-language-conformance) | `16`, `17` | Visual Studio 2019,2022, latest `17.11.5`| `<= 16.9`|
+| [msvc](https://learn.microsoft.com/en-us/cpp/overview/visual-cpp-language-conformance) | `16`, `17` | Visual Studio 2019,2022, latest `17.13.6`| `<= 16.9`|
 | [xcode](https://developer.apple.com/support/xcode/) | `15` | Apple Xcode Clang 15.0.0 (LLVM 16), some issues with `constexpr`, workarounds| `<= 14`|
 
 # 11. Compiler issues
@@ -2063,7 +2063,7 @@ From a compilation performance perspective, `conjure_enum` roughly matches the p
 | :--- | :--- | :--- | ---: |
 | clang | `16`, `17`, `18`| Compiler reports integers outside valid range [x,y]| specify underlying type when declaring enum eg. `enum class foo : int` |
 
-[^1]: &copy; 2024 Fix8 Market Technologies Pty Ltd, David L. Dight.
+[^1]: &copy; 2024-25 Fix8 Market Technologies Pty Ltd, David L. Dight.
   Logo by [Adrian An](mailto:adrian.an[at]mac.com).
 [^2]: &copy; 2019 - 2024 Daniil Goncharov
 

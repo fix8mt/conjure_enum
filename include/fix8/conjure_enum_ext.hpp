@@ -123,6 +123,10 @@ public:
 	{
 		constexpr std::string_view from{tpeek()};
 #if defined _MSC_VER
+#define CHKMSSTR(e, x) \
+	if constexpr (constexpr auto ep##x { e.find(cs::get_spec<sval::anon_str,stype::x>()) }; ep##x != std::string_view::npos) \
+		return e.substr(ep##x + cs::get_spec<sval::anon_str,stype::x>().size(), e.size() - (ep##x + cs::get_spec<sval::anon_str,stype::x>().size()))
+
 		constexpr auto ep { from.rfind(cs::get_spec<sval::start,stype::type_t>()) };
 		if constexpr (ep == std::string_view::npos)
 			return {};

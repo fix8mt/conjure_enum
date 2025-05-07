@@ -148,12 +148,6 @@ public:
 using stype = cs::stype;
 using sval = cs::sval;
 
-#if defined _MSC_VER
-#define CHKMSSTR(e, x) \
-	if constexpr (constexpr auto ep##x { e.find(cs::get_spec<sval::anon_str,stype::x>()) }; ep##x != std::string_view::npos) \
-		return e.substr(ep##x + cs::get_spec<sval::anon_str,stype::x>().size(), e.size() - (ep##x + cs::get_spec<sval::anon_str,stype::x>().size()))
-#endif
-
 //-----------------------------------------------------------------------------------------
 template<typename T>
 concept valid_enum = requires(T)

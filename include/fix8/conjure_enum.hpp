@@ -324,6 +324,7 @@ public:
 	static constexpr auto count() noexcept { return values.size(); }
 	static constexpr bool is_continuous() noexcept { return (static_cast<size_t>(max_v) - static_cast<size_t>(min_v) + 1) == count(); }
 	static constexpr bool in_range(T value) noexcept { return std::clamp(value, min_v, max_v) == value; }
+	static constexpr bool starts_from_zero() noexcept { return static_cast<size_t>(min_v) == 0; }
 
 	// scope ops
 	static constexpr bool has_scope(std::string_view what) noexcept
@@ -390,7 +391,7 @@ public:
 
 	static constexpr std::string_view enum_to_string(T value, [[maybe_unused]] bool noscope=false) noexcept
 	{
-		if constexpr (is_continuous())
+		if constexpr (is_continuous() and starts_from_zero())
 		{
 			if (in_range(value))
 			{

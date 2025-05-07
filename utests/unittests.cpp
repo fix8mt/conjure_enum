@@ -69,6 +69,10 @@ enum class numbers64
 	sixty, sixty_one, sixty_two, sixty_three
 };
 enum class reverse_range_test { first=7, second=6, third=5, fourth=4, fifth=3, sixth=2, seventh=1, eighth=0 };
+enum class neg_one_plus_continuous { neg_one=-1, zero=0, one=1, two=2, three=3 };
+enum class neg_one_plus_noncontinuous { neg_one=-1, zero=0, one=1, three=3 };
+enum class one_plus_continuous { one=1, two=2, three=3 };
+enum class one_plus_noncontinuous { one=1, three=3 };
 
 //-----------------------------------------------------------------------------------------
 // run as: ctest --output-on-failure
@@ -154,6 +158,10 @@ TEST_CASE("is_continuous")
 	REQUIRE(!conjure_enum<component>::is_continuous());
 	REQUIRE(conjure_enum<numbers>::is_continuous());
 	REQUIRE(conjure_enum<reverse_range_test>::is_continuous());
+	REQUIRE(conjure_enum<neg_one_plus_continuous>::is_continuous());
+	REQUIRE(!conjure_enum<neg_one_plus_noncontinuous>::is_continuous());
+	REQUIRE(conjure_enum<one_plus_continuous>::is_continuous());
+	REQUIRE(!conjure_enum<one_plus_noncontinuous>::is_continuous());
 }
 
 //-----------------------------------------------------------------------------------------
@@ -278,6 +286,10 @@ TEST_CASE("contains")
 	REQUIRE(conjure_enum<component1>::contains<path>());
 	REQUIRE(conjure_enum<numbers>::contains(numbers::five));
 	REQUIRE(!conjure_enum<numbers>::contains(static_cast<numbers>(100)));
+	REQUIRE(conjure_enum<one_plus_continuous>::contains(static_cast<one_plus_continuous>(2)));
+	REQUIRE(!conjure_enum<one_plus_noncontinuous>::contains(static_cast<one_plus_noncontinuous>(2)));
+	REQUIRE(conjure_enum<neg_one_plus_continuous>::contains(static_cast<neg_one_plus_continuous>(2)));
+	REQUIRE(!conjure_enum<neg_one_plus_noncontinuous>::contains(static_cast<neg_one_plus_noncontinuous>(2)));
 }
 
 //-----------------------------------------------------------------------------------------
@@ -291,6 +303,14 @@ TEST_CASE("enum_to_string")
 	REQUIRE(conjure_enum<component1>::enum_to_string<component1::fragment>() == "fragment");
 	using enum numbers;
 	REQUIRE(conjure_enum<numbers>::enum_to_string<two>() == "numbers::two");
+	REQUIRE(conjure_enum<neg_one_plus_continuous>::enum_to_string<neg_one_plus_continuous::neg_one>() == "neg_one_plus_continuous::neg_one");
+	REQUIRE(conjure_enum<neg_one_plus_noncontinuous>::enum_to_string<neg_one_plus_noncontinuous::neg_one>() == "neg_one_plus_noncontinuous::neg_one");
+	REQUIRE(conjure_enum<one_plus_continuous>::enum_to_string<one_plus_continuous::one>() == "one_plus_continuous::one");
+	REQUIRE(conjure_enum<one_plus_noncontinuous>::enum_to_string<one_plus_noncontinuous::one>() == "one_plus_noncontinuous::one");
+	REQUIRE(conjure_enum<neg_one_plus_continuous>::enum_to_string(neg_one_plus_continuous::neg_one) == "neg_one_plus_continuous::neg_one");
+	REQUIRE(conjure_enum<neg_one_plus_noncontinuous>::enum_to_string(neg_one_plus_noncontinuous::neg_one) == "neg_one_plus_noncontinuous::neg_one");
+	REQUIRE(conjure_enum<one_plus_continuous>::enum_to_string(one_plus_continuous::one) == "one_plus_continuous::one");
+	REQUIRE(conjure_enum<one_plus_noncontinuous>::enum_to_string(one_plus_noncontinuous::one) == "one_plus_noncontinuous::one");
 }
 
 //-----------------------------------------------------------------------------------------
@@ -392,6 +412,10 @@ TEST_CASE("index")
 	REQUIRE(conjure_enum<component>::index<component(100)>().value_or(100) == 100);
 	REQUIRE(conjure_enum<numbers>::index<numbers::five>().value() == 5);
 	REQUIRE(conjure_enum<numbers>::index<numbers(100)>().value_or(100) == 100);
+	REQUIRE(conjure_enum<neg_one_plus_continuous>::index<neg_one_plus_continuous::zero>().value() == 1);
+	REQUIRE(conjure_enum<neg_one_plus_noncontinuous>::index<neg_one_plus_noncontinuous::zero>().value() == 1);
+	REQUIRE(conjure_enum<one_plus_continuous>::index<one_plus_continuous::two>().value() == 1);
+	REQUIRE(conjure_enum<one_plus_noncontinuous>::index<one_plus_noncontinuous::three>().value() == 1);
 }
 
 //-----------------------------------------------------------------------------------------

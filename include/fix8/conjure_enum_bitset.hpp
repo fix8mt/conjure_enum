@@ -110,15 +110,24 @@ class enum_bitset
 
 	static constexpr int correct_count(int val) noexcept { return val ? val - unused_bits : 0; }
 
+	template<std::size_t... I>
+	constexpr enum_bitset(std::initializer_list<U> bits, std::index_sequence<I...>) noexcept
+		: _present {(I < bits.size() ? *(bits.begin() + I) : T{})...} {}
+
 public:
 	using enum_bitset_underlying_type = U;
 	using reference = _reference<enum_bitset>;
 	using const_reference = _reference<const enum_bitset>;
 
-	explicit constexpr enum_bitset(U bits) noexcept : _present(bits) {}
+	template<std::size_t N>
+	requires (N > 0)
+	constexpr enum_bitset(std::initializer_list<U> bits) noexcept : enum_bitset(bits, std::make_index_sequence<N>{}) {}
+
 	explicit constexpr enum_bitset(std::bitset<countof> from) : _present(U(from.to_ullong())) {}
 	constexpr enum_bitset(std::string_view from, bool anyscope=false, char sep='|', bool ignore_errors=true)
 		: _present(factory(from, anyscope, sep, ignore_errors)) {}
+
+	explicit constexpr enum_bitset(double bits) noexcept : _present(static_cast<U>(bits)) {}
 
 	template<valid_bitset_enum... E>
 	requires (sizeof...(E) > 1)

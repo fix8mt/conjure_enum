@@ -990,18 +990,18 @@ _output_
 ```CSV
 0000001111
 ```
-You can use the underlying type as well:
+You can use the underlying type in an initialiser_list as well:
 ```c++
-enum_bitset<numbers> b(0,1,2,3);
+enum_bitset<numbers> b({0,1,2,3});
 std::cout << b << '\n';
 ```
 _output_
 ```CSV
 0000001111
 ```
-You can use an `int` initialiser too:
+You can use a `double` initialiser too (interpreted as an underlying type):
 ```c++
-enum_bitset<numbers> b(15);
+enum_bitset<numbers> b(15.0);
 std::cout << b << '\n';
 ```
 _output_

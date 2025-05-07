@@ -683,6 +683,14 @@ TEST_CASE("enum_bitset")
 	REQUIRE(ec.countr_zero() == 1);
 	REQUIRE(ec.countr_one() == 0);
 	REQUIRE(ec.countl_zero() == 6);
+
+	enum_bitset<numbers> ed({1, 3, 6});
+	REQUIRE(ed.to_ulong() == (1 << 1 | 1 << 3 | 1 << 6));
+	REQUIRE(ed.to_string() == "0001001010"s);
+	REQUIRE(ed.to_ulong() == 0b0001001010);
+
+	enum_bitset<numbers> ee(74.);
+	REQUIRE(ee.to_ulong() == 0b0001001010);
 }
 
 //-----------------------------------------------------------------------------------------

@@ -28,22 +28,12 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //----------------------------------------------------------------------------------------
-#include <catch2/catch_all.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <string_view>
 #include <fix8/conjure_enum.hpp>
 #include <fix8/conjure_enum_bitset.hpp>
 #include <fix8/conjure_type.hpp>
 
-#if defined _MSC_VER
-namespace Catch
-{
-	template<>
-	struct StringMaker<std::string_view>
-	{
-		static std::string convert(std::string_view sv) { return std::string(sv); } // Convert to std::string explicitly
-	};
-}
-#endif
 //-----------------------------------------------------------------------------------------
 class foobat{};
 

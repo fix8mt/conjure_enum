@@ -37,6 +37,7 @@
 // Force MSVC to instantiate the template
 #if defined _MSC_VER
 extern template struct Catch::StringMaker<std::string_view>;
+template struct Catch::StringMaker<std::string_view>;
 #endif
 //-----------------------------------------------------------------------------------------
 class foobat{};

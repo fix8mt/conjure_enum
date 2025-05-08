@@ -34,11 +34,6 @@
 #include <fix8/conjure_enum_bitset.hpp>
 #include <fix8/conjure_type.hpp>
 
-// Force MSVC to instantiate the template
-#if defined _MSC_VER
-extern template struct Catch::StringMaker<std::string_view>;
-template struct Catch::StringMaker<std::string_view>;
-#endif
 //-----------------------------------------------------------------------------------------
 class foobat{};
 

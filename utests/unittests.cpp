@@ -28,7 +28,7 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //----------------------------------------------------------------------------------------
-#include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_all.hpp>
 #include <catch2/matchers/catch_matchers_exception.hpp>
 #include <string_view>
 #include <iostream>

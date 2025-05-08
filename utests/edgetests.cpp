@@ -28,7 +28,7 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //----------------------------------------------------------------------------------------
-#include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_all.hpp>
 #include <string_view>
 #include <fix8/conjure_enum.hpp>
 #include <fix8/conjure_enum_bitset.hpp>

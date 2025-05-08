@@ -36,7 +36,9 @@ project (conjure_enum
    DESCRIPTION "Lightweight C++20 enum and typename reflection"
    VERSION 1.2.0)
 
-fix8_setbuildtype(CONJURE_ENUM Release)
+if (NOT MSVC)
+	fix8_setbuildtype(CONJURE_ENUM Release)
+endif()
 fix8_addoption("BUILD_UNITTESTS|enable building unit tests|true")
 fix8_addoption("BUILD_STRIP_EXE|enable stripping of non-unittest executables|true")
 fix8_addoption("BUILD_ALL_WARNINGS|enable building with all warnings|true")
@@ -56,7 +58,7 @@ add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(${PROJECT_NAME} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 if(BUILD_UNITTESTS)
-	fix8_fetch(Catch2 catchorg/Catch2 v3.4.0)
+	fix8_fetch(Catch2 catchorg/Catch2 devel)
 	list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
 	include(Catch)
 	enable_testing()

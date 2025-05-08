@@ -59,7 +59,9 @@ target_include_directories(${PROJECT_NAME} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
 
 if(BUILD_UNITTESTS)
 	fix8_fetch(Catch2 catchorg/Catch2 devel)
-	target_compile_features(Catch2 PRIVATE cxx_std_17)
+	if (MSVC)
+		target_compile_features(Catch2 PRIVATE cxx_std_17)
+	endif()
 	list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
 	include(Catch)
 	enable_testing()

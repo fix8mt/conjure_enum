@@ -56,7 +56,7 @@ add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(${PROJECT_NAME} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 if(BUILD_UNITTESTS)
-	fix8_fetch(Catch2 catchorg/Catch2 devel)
+	fix8_fetch(Catch2 catchorg/Catch2 v3.4.0)
 	list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
 	include(Catch)
 	enable_testing()

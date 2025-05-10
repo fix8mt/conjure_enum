@@ -1510,22 +1510,34 @@ by default.
 
 The package is also available on [vckpg](https://vcpkg.io/en/package/conjure-enum).
 
-### ii. Default compiler warnings
+### ii. Installing
+To install the headers in your target environment, you can either specify the installation prefix when you first run cmake or set the
+environment variable `CMAKE_INSTALL_PREFIX`. Omitting the prefix will install to the default target directory for your platform.
+```bash
+$ cmake -DCMAKE_INSTALL_PREFIX=<target directory> ..
+```
+
+Alternatively you can install after building using cmake:
+```bash
+$ cmake --install . --prefix <target directory>
+```
+
+### iii. Default compiler warnings
 By default all warnings are enabled. To prevent this, pass the following to cmake:
 ```bash
 $ cmake -DBUILD_ALL_WARNINGS=false ..
 ```
-### iii. Default unit tests
+### iv. Default unit tests
 By default the unit tests are built (which will download Catch2). To prevent this, pass the following to cmake:
 ```bash
 $ cmake -DBUILD_UNITTESTS=false ..
 ```
-### iv. Default executable stripping
+### v. Default executable stripping
 To disable stripping of the executables:
 ```bash
 $ cmake -DBUILD_STRIP_EXE=false ..
 ```
-### v. Clang compilation profiling
+### vi. Clang compilation profiling
 To enable clang compilation profiling:
 ```bash
 $ cmake -DBUILD_CLANG_PROFILER=true ..
@@ -2054,7 +2066,7 @@ From a compilation performance perspective, `conjure_enum` roughly matches the p
 | Compiler | Version(s) | Notes | Unsupported |
 | :--- | :--- | :--- | ---: |
 | [gcc](https://gcc.gnu.org/projects/cxx-status.html) | `11`, `12`, `13`, `14`| `std::format` not complete in `11`, `12` | `<= 10` |
-| [clang](https://clang.llvm.org/cxx_status.html) | `15`, `16`, `17`, `18`, `19`| Catch2 needs `cxx_std_20` in `15` | `<= 14` |
+| [clang](https://clang.llvm.org/cxx_status.html) | `15`, `16`, `17`, `18`, `19`, `20`| Catch2 needs `cxx_std_20` in `15` | `<= 14` |
 | [msvc](https://learn.microsoft.com/en-us/cpp/overview/visual-cpp-language-conformance) | `16`, `17` | Visual Studio 2019,2022, latest `17.13.6`| `<= 16.9`|
 | [xcode](https://developer.apple.com/support/xcode/) | `15` | Apple Xcode Clang 15.0.0 (LLVM 16), some issues with `constexpr`, workarounds| `<= 14`|
 

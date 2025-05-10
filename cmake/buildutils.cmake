@@ -29,7 +29,6 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # ----------------------------------------------------------------------------------------
 # cmake build utils
-# min cmake version 3.20 (Mar 24, 2021)
 # ----------------------------------------------------------------------------------------
 function(fix8_setbuildtype define_prefix default_type)
 	if(NOT ${CMAKE_BUILD_TYPE} STREQUAL "")
@@ -52,10 +51,10 @@ function(fix8_setbuildtype define_prefix default_type)
 endfunction()
 
 # ----------------------------------------------------------------------------------------
-function(build loc x)
+function(fix8_build loc x std)
 	add_executable(${x} ${loc}/${x}.cpp)
 	target_include_directories(${x} PRIVATE include)
-	target_compile_features(${x} PRIVATE cxx_std_20)
+	target_compile_features(${x} PRIVATE cxx_std_${std})
 	get_target_property(cppstd ${x} CXX_STANDARD)
 	message("-- Adding src '${x}.cpp' CXX_STANDARD: C++${cppstd} (${CMAKE_CXX_COMPILER_ID})")
 	if(BUILD_ALL_WARNINGS)

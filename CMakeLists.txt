@@ -28,7 +28,8 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # ----------------------------------------------------------------------------------------
-cmake_minimum_required (VERSION 3.20)
+cmake_minimum_required (VERSION 3.21+)
+message(STATUS "CMake version ${CMAKE_VERSION}")
 include(cmake/buildutils.cmake)
 project (conjure_enum
    LANGUAGES CXX
@@ -36,7 +37,7 @@ project (conjure_enum
    DESCRIPTION "Lightweight C++20 enum and typename reflection"
    VERSION 1.2.0)
 
-if (NOT MSVC)
+if(NOT MSVC)
 	fix8_setbuildtype(CONJURE_ENUM Release)
 endif()
 fix8_addoption("BUILD_UNITTESTS|enable building unit tests|true")
@@ -44,9 +45,9 @@ fix8_addoption("BUILD_STRIP_EXE|enable stripping of non-unittest executables|tru
 fix8_addoption("BUILD_ALL_WARNINGS|enable building with all warnings|true")
 fix8_addoption("BUILD_CLANG_PROFILER|enable clang build profiler|false")
 
-build(examples srcloctest)
+fix8_build(examples srcloctest 20)
 foreach(x example statictest cbenchmark)
-	build(examples ${x})
+	fix8_build(examples ${x} 20)
 	add_dependencies(${x} srcloctest) # srcloctest should be built even if errors with conjure_enum
 	if(BUILD_STRIP_EXE)
 		add_custom_command(TARGET ${x} POST_BUILD COMMAND ${CMAKE_STRIP} ${x})
@@ -55,7 +56,12 @@ endforeach()
 
 # make include visible to inheriting projects
 add_library(${PROJECT_NAME} INTERFACE)
-target_include_directories(${PROJECT_NAME} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+file(GLOB HEADER_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/include/fix8/*.hpp")
+target_sources(${PROJECT_NAME} INTERFACE FILE_SET HEADERS FILES ${HEADER_FILES})
+install(TARGETS ${PROJECT_NAME} FILE_SET HEADERS DESTINATION .)
+target_include_directories(${PROJECT_NAME} INTERFACE
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+	$<INSTALL_INTERFACE:include>)
 
 if(BUILD_UNITTESTS)
 	fix8_fetch(Catch2 catchorg/Catch2 devel)
@@ -66,7 +72,7 @@ if(BUILD_UNITTESTS)
 	include(Catch)
 	enable_testing()
 	foreach(x unittests edgetests)
-		build(utests ${x})
+		fix8_build(utests ${x} 20)
 		target_link_libraries(${x} PRIVATE Catch2::Catch2WithMain)
 		catch_discover_tests(${x})
 	endforeach()

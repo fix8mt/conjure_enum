@@ -65,7 +65,7 @@ target_include_directories(${PROJECT_NAME} INTERFACE
 
 if(BUILD_UNITTESTS)
 	fix8_fetch(Catch2 catchorg/Catch2 devel)
-	if (MSVC)
+	if (MSVC OR APPLE)
 		target_compile_features(Catch2 PRIVATE cxx_std_17)
 	endif()
 	list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)

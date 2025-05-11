@@ -2068,7 +2068,7 @@ From a compilation performance perspective, `conjure_enum` roughly matches the p
 | [gcc](https://gcc.gnu.org/projects/cxx-status.html) | `11`, `12`, `13`, `14`| `std::format` not complete in `11`, `12` | `<= 10` |
 | [clang](https://clang.llvm.org/cxx_status.html) | `15`, `16`, `17`, `18`, `19`, `20`| Catch2 needs `cxx_std_20` in `15` | `<= 14` |
 | [msvc](https://learn.microsoft.com/en-us/cpp/overview/visual-cpp-language-conformance) | `16`, `17` | Visual Studio 2019,2022, latest `17.13.6`| `<= 16.9`|
-| [xcode](https://developer.apple.com/support/xcode/) | `15`, `16` | Apple Xcode Clang 15.0.0, 16.3.0 (LLVM 16, 17), some issues with `constexpr`, workarounds| `<= 14`|
+| [xcode](https://developer.apple.com/support/xcode/) | `15`, `16` | Apple Xcode Clang `15.0.0`, `16.3.0` (LLVM `16`, `17`), some issues with `constexpr`, workarounds| `<= 14`|
 
 # 11. Compiler issues
 | Compiler | Version(s) | Issues | Workaround |

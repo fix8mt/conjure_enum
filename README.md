@@ -999,9 +999,9 @@ _output_
 ```CSV
 0000001111
 ```
-You can use a `double` initialiser too (interpreted as an underlying type):
+You can use an `unsigned integer` initialiser too (interpreted as an underlying type):
 ```c++
-enum_bitset<numbers> b(15.0);
+enum_bitset<numbers> b(15);
 std::cout << b << '\n';
 ```
 _output_

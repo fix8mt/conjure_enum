@@ -264,5 +264,11 @@ int main(void)
 	std::cout << ee.get_underlying_bit_size()  << '\n';
 	std::cout << ee.get_bit_mask() << '\n';
 	std::cout << ee.get_unused_bit_mask() << '\n';
+
+	std::cout << enum_bitset<numbers>(3) << '\n';
+	std::cout << enum_bitset<numbers>({0,1}) << '\n';
+	std::cout << enum_bitset<numbers>(0,1,2,3) << '\n';
+	std::cout << enum_bitset<numbers>({0,1,2,3}) << '\n';
+	std::cout << enum_bitset<numbers>(42) << '\n';
 	return 0;
 }

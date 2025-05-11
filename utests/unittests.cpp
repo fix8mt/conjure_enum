@@ -36,7 +36,6 @@
 #include <fix8/conjure_enum.hpp>
 #include <fix8/conjure_enum_bitset.hpp>
 #include <fix8/conjure_type.hpp>
-// Force MSVC to instantiate the template
 
 //-----------------------------------------------------------------------------------------
 using namespace FIX8;
@@ -714,8 +713,10 @@ TEST_CASE("enum_bitset")
 	REQUIRE(ed.to_string() == "0001001010"s);
 	REQUIRE(ed.to_ulong() == 0b0001001010);
 
-	enum_bitset<numbers> ee(74.);
+	enum_bitset<numbers> ee(74);
 	REQUIRE(ee.to_ulong() == 0b0001001010);
+	enum_bitset<numbers> ef(1);
+	REQUIRE(ef.to_ulong() == 0b01);
 }
 
 //-----------------------------------------------------------------------------------------
@@ -800,7 +801,7 @@ TEST_CASE("enum_bitset ext ops")
 TEST_CASE("enum_bitset::to_ulong overflow")
 {
 	REQUIRE_NOTHROW(enum_bitset<numbers64>(0b1111111111111).to_ulong());
-	REQUIRE_THROWS_AS(enum_bitset<numbers64>(static_cast<double>(0xfffffffffffffffe)).to_ulong(), std::overflow_error);
+	REQUIRE_THROWS_AS(enum_bitset<numbers64>(0xfffffffffffffffe).to_ulong(), std::overflow_error);
 }
 
 //-----------------------------------------------------------------------------------------

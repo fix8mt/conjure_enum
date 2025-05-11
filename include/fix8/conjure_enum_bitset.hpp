@@ -112,7 +112,7 @@ class enum_bitset
 
 	template<std::size_t... I>
 	constexpr enum_bitset(std::initializer_list<U> bits, std::index_sequence<I...>) noexcept
-		: _present {(I < bits.size() ? *(bits.begin() + I) : T{})...} {}
+		: _present((0u | ... | (1 << *(bits.begin() + I)))) {}
 
 public:
 	using enum_bitset_underlying_type = U;
@@ -120,14 +120,19 @@ public:
 	using const_reference = _reference<const enum_bitset>;
 
 	template<std::size_t N>
-	requires (N > 0)
-	constexpr enum_bitset(std::initializer_list<U> bits) noexcept : enum_bitset(bits, std::make_index_sequence<N>{}) {}
+	requires (N > 0 and N < conjure_enum<T>::count())
+	explicit constexpr enum_bitset(std::initializer_list<U> bits) noexcept : enum_bitset(bits, std::make_index_sequence<N>{}) {}
 
-	explicit constexpr enum_bitset(std::bitset<countof> from) : _present(U(from.to_ullong())) {}
-	constexpr enum_bitset(std::string_view from, bool anyscope=false, char sep='|', bool ignore_errors=true)
+	template<typename V>
+	requires std::same_as<std::remove_cvref_t<V>, std::bitset<countof>>
+	explicit constexpr enum_bitset(V&& from) : _present(U(from.to_ullong())) {}
+
+	explicit constexpr enum_bitset(U bits) : _present(bits) {}
+
+	template<typename V>
+	requires std::convertible_to<V, std::string_view>
+	constexpr enum_bitset(V&& from, bool anyscope=false, char sep='|', bool ignore_errors=true)
 		: _present(factory(from, anyscope, sep, ignore_errors)) {}
-
-	explicit constexpr enum_bitset(double bits) noexcept : _present(static_cast<U>(bits)) {}
 
 	template<valid_bitset_enum... E>
 	requires (sizeof...(E) > 1)

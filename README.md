@@ -2074,6 +2074,7 @@ From a compilation performance perspective, `conjure_enum` roughly matches the p
 | Compiler | Version(s) | Issues | Workaround |
 | :--- | :--- | :--- | ---: |
 | clang | `16`, `17`, `18`| Compiler reports integers outside valid range [x,y]| specify underlying type when declaring enum eg. `enum class foo : int` |
+| gcc | `14`| Compiler reports warnings with catch2 with `CATCH2_INTERNAL_TEST_*` and partly outside array bounds warnings |
 
 [^1]: &copy; 2024-25 Fix8 Market Technologies Pty Ltd, David L. Dight.
   Logo by [Adrian An](mailto:adrian.an[at]mac.com).

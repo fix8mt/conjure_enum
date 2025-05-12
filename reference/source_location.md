@@ -202,6 +202,67 @@ static consteval const char* conjure_type<T>::tpeek() [with T = TEST::TEST1::Nin
 ```
 
 ---
+# Compiler: MSVC: 1943
+## 1. scoped enum
+```c++
+const char *__cdecl conjure_type<enum Namespace_Enum_Type>::tpeek(void) noexcept
+const char *__cdecl conjure_enum<enum Namespace_Enum_Type>::epeek<Namespace_Enum_Type::Value>(void) noexcept
+const char *__cdecl conjure_enum<enum Namespace_Enum_Type>::epeek<(enum Namespace_Enum_Type)0x64>(void) noexcept
+```
+## 2. unscoped enum
+```c++
+const char *__cdecl conjure_type<enum Namespace_Enum_Type1>::tpeek(void) noexcept
+const char *__cdecl conjure_enum<enum Namespace_Enum_Type1>::epeek<Value>(void) noexcept
+const char *__cdecl conjure_enum<enum Namespace_Enum_Type1>::epeek<(enum Namespace_Enum_Type1)0x64>(void) noexcept
+```
+## 3. scoped enum in anonymous namespace
+```c++
+const char *__cdecl conjure_type<enum `anonymous namespace'::Anon_Enum_Type>::tpeek(void) noexcept
+const char *__cdecl conjure_enum<enum `anonymous namespace'::Anon_Enum_Type>::epeek<`anonymous-namespace'::Anon_Enum_Type::Value>(void) noexcept
+const char *__cdecl conjure_enum<enum `anonymous namespace'::Anon_Enum_Type>::epeek<(enum `anonymous-namespace'::Anon_Enum_Type)0x64>(void) noexcept
+```
+## 4. unscoped enum in anonymous namespace
+```c++
+const char *__cdecl conjure_type<enum `anonymous namespace'::Anon_Enum_Type1>::tpeek(void) noexcept
+const char *__cdecl conjure_enum<enum `anonymous namespace'::Anon_Enum_Type1>::epeek<`anonymous-namespace'::Value>(void) noexcept
+const char *__cdecl conjure_enum<enum `anonymous namespace'::Anon_Enum_Type1>::epeek<(enum `anonymous-namespace'::Anon_Enum_Type1)0x64>(void) noexcept
+```
+## 5. scoped enum in namespace
+```c++
+const char *__cdecl conjure_type<enum Namespace::Namespace_Enum_Type>::tpeek(void) noexcept
+const char *__cdecl conjure_enum<enum Namespace::Namespace_Enum_Type>::epeek<Namespace::Namespace_Enum_Type::Value>(void) noexcept
+const char *__cdecl conjure_enum<enum Namespace::Namespace_Enum_Type>::epeek<(enum Namespace::Namespace_Enum_Type)0x64>(void) noexcept
+```
+## 6. unscoped enum in namespace
+```c++
+const char *__cdecl conjure_type<enum Namespace::Namespace_Enum_Type1>::tpeek(void) noexcept
+const char *__cdecl conjure_enum<enum Namespace::Namespace_Enum_Type1>::epeek<Namespace::Value>(void) noexcept
+const char *__cdecl conjure_enum<enum Namespace::Namespace_Enum_Type1>::epeek<(enum Namespace::Namespace_Enum_Type1)0x64>(void) noexcept
+```
+## 7. types in named and anonymous namespaces
+```c++
+const char *__cdecl conjure_type<struct Foo>::tpeek(void) noexcept
+const char *__cdecl conjure_type<class Namespace::Namespace_Foo>::tpeek(void) noexcept
+const char *__cdecl conjure_type<class `anonymous namespace'::Anon_Foo>::tpeek(void) noexcept
+```
+## 8. other types
+```c++
+const char *__cdecl conjure_type<int>::tpeek(void) noexcept
+const char *__cdecl conjure_type<class std::basic_string_view<char,struct std::char_traits<char> > >::tpeek(void) noexcept
+const char *__cdecl conjure_type<class std::vector<class std::tuple<int,char,class std::basic_string_view<char,struct std::char_traits<char> > >,class std::allocator<class std::tuple<int,char,class std::basic_string_view<char,struct std::char_traits<char> > > > > >::tpeek(void) noexcept
+```
+## 9. edge enum types
+```c++
+const char *__cdecl conjure_type<enum `anonymous namespace'::NineEnums>::tpeek(void) noexcept
+const char *__cdecl conjure_type<enum `anonymous namespace'::NineEnums1>::tpeek(void) noexcept
+const char *__cdecl conjure_type<enum TEST::NineEnums>::tpeek(void) noexcept
+const char *__cdecl conjure_type<enum TEST::NineEnums1>::tpeek(void) noexcept
+const char *__cdecl conjure_type<enum `anonymous namespace'::TEST1::NineEnums>::tpeek(void) noexcept
+const char *__cdecl conjure_type<enum `anonymous namespace'::TEST1::NineEnums1>::tpeek(void) noexcept
+const char *__cdecl conjure_type<enum TEST::TEST1::NineEnums>::tpeek(void) noexcept
+const char *__cdecl conjure_type<enum TEST::TEST1::NineEnums1>::tpeek(void) noexcept
+```
+---
 # Compiler: MSVC: 1940
 ## 1. scoped enum
 ```c++

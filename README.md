@@ -625,7 +625,7 @@ If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
 
 > [!IMPORTANT]
 > Your `std::array` of `std::tuple` should be sorted by enum.
-> The `dispatch` method performs a binary search on the array. Complexity for a sorted array is at most&ensp; $2log_2(N)+O(1)$ &ensp;comparisons.
+> The `dispatch` method performs a [binary search](https://en.cppreference.com/w/cpp/algorithm/binary_search) on the array. Complexity for a sorted array is at most&ensp; $2log_2(N)+O(1)$ &ensp;comparisons.
 > If the array is _not_ sorted, complexity is linear.
 
 The following example uses a `static constexpr` array of pointers to functions. For brevity they all point to the same function except the last which is

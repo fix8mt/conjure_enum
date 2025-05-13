@@ -154,8 +154,15 @@ int main(int argc, char **argv)
 	bool mkd{}, cpl{true}, hlp{}, cplonly{}, vers{};
 	const std::map<std::string_view, bool&> opts { {"-m",mkd},{"-c",cpl},{"-h",hlp},{"-C",cplonly},{"-v",vers}};
 	for (const std::vector<std::string_view> args{argv + 1, argv + argc}; const auto pp : args)
+	{
 		if (auto result{opts.find(pp)}; result != opts.cend())
 			result->second ^= true;
+		else
+		{
+			std::cerr << "Unknown option: " << pp << '\n';
+			return 1;
+		}
+	}
 	if (hlp)
 	{
 		std::cout <<

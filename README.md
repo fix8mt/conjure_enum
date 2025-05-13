@@ -477,7 +477,7 @@ requires std::invocable<Fn&&, T, Args...>
 
 template<typename Fn, typename C, typename... Args> // specialisation for member function with object
 requires std::invocable<Fn&&, C, T, Args...>
-[[maybe_unused]] static constexpr auto for_each(Fn&& func, C *obj, Args&&... args);
+[[maybe_unused]] static constexpr auto for_each(Fn&& func, C&& obj, Args&&... args);
 
 template<typename Fn, typename... Args>
 requires std::invocable<Fn&&, T, Args...>
@@ -485,7 +485,7 @@ requires std::invocable<Fn&&, T, Args...>
 
 template<typename Fn, typename C, typename... Args> // specialisation for member function with object
 requires std::invocable<Fn&&, C, T, Args...>
-[[maybe_unused]] static constexpr auto for_each_n(int n, Fn&& func, C *obj, Args&&... args);
+[[maybe_unused]] static constexpr auto for_each_n(int n, Fn&& func, C&& obj, Args&&... args);
 ```
 Call supplied invocable for _each_ enum value. Similar to `std::for_each` except the first parameter of your invocable must accept an enum value (passed by `for_each`).
 Optionally provide any additional parameters. You can limit the number of calls to your invocable by using the `for_each_n` version with the first parameter
@@ -591,7 +591,7 @@ requires std::invocable<Fn&&, T, Args...>
 
 template<std::size_t I, typename R, typename Fn, typename C, typename... Args> // specialisation for member function with not found value(nval) for return
 requires std::invocable<Fn&&, C, T, Args...>
-[[maybe_unused]] static constexpr R dispatch(T ev, R nval, const std::array<std::tuple<T, Fn>, I>& disp, C *obj, Args&&... args);
+[[maybe_unused]] static constexpr R dispatch(T ev, R nval, const std::array<std::tuple<T, Fn>, I>& disp, C&& obj, Args&&... args);
 
 template<std::size_t I, typename Fn, typename... Args> // void func with not found call to last element
 requires (std::invocable<Fn&&, T, Args...> && I > 0)
@@ -599,7 +599,7 @@ static constexpr void dispatch(T ev, const std::array<std::tuple<T, Fn>, I>& dis
 
 template<std::size_t I, typename Fn, typename C, typename... Args> // specialisation for void member function with not found call to last element
 requires (std::invocable<Fn&&, C, T, Args...> && I > 0)
-static constexpr void dispatch(T ev, const std::array<std::tuple<T, Fn>, I>& disp, C *obj, Args&&... args);
+static constexpr void dispatch(T ev, const std::array<std::tuple<T, Fn>, I>& disp, C&& obj, Args&&... args);
 ```
 With a given enum, search and call user supplied invocable. So for example, if you want to demux a complex event predicated on an enum, you can easily declare predefined invocable actions
 for different enum values and then use `dispatch` to test and execute those actions.
@@ -1225,7 +1225,7 @@ requires std::invocable<Fn&&, T, Args...>
 
 template<typename C, typename Fn, typename... Args> // specialisation for member function with object
 requires std::invocable<Fn&&, C, T, Args...>
-[[maybe_unused]] constexpr auto for_each(Fn&& func, C *obj, Args&&... args);
+[[maybe_unused]] constexpr auto for_each(Fn&& func, C&& obj, Args&&... args);
 
 template<typename Fn, typename... Args>
 requires std::invocable<Fn&&, T, Args...>
@@ -1233,7 +1233,7 @@ requires std::invocable<Fn&&, T, Args...>
 
 template<typename C, typename Fn, typename... Args> // specialisation for member function with object
 requires std::invocable<Fn&&, C, T, Args...>
-[[maybe_unused]] constexpr auto for_each_n(int n, Fn&& func, C *obj, Args&&... args);
+[[maybe_unused]] constexpr auto for_each_n(int n, Fn&& func, C&& obj, Args&&... args);
 ```
 Call supplied invocable for _every bit that is on_. Similar to `std::for_each` except first parameter of your invocable must accept an enum value (passed by `for_each`).
 Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. You can limit the number of calls to your
@@ -2074,7 +2074,7 @@ From a compilation performance perspective, `conjure_enum` roughly matches the p
 | Compiler | Version(s) | Issues | Workaround |
 | :--- | :--- | :--- | ---: |
 | clang | `16`, `17`, `18`| Compiler reports integers outside valid range [x,y]| specify underlying type when declaring enum eg. `enum class foo : int` |
-| gcc | `14`| Compiler reports warnings with catch2 with `CATCH2_INTERNAL_TEST_*` and partly outside array bounds warnings | can be ignored |
+| gcc | `12`, `13`, `14`| Compiler reports warnings with catch2 with `CATCH2_INTERNAL_TEST_*` "is partly outside array bounds of ‘CATCH2_INTERNAL_TEST" warnings | can be ignored |
 
 [^1]: &copy; 2024-25 Fix8 Market Technologies Pty Ltd, David L. Dight.
   Logo by [Adrian An](mailto:adrian.an[at]mac.com).

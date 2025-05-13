@@ -151,8 +151,8 @@ int main(int argc, char **argv)
 			conjure_type<TEST::TEST1::NineEnums1>::tpeek()
    };
 
-	bool mkd{}, cpl{true}, hlp{};
-	const std::map<std::string_view, bool&> opts { {"-m",mkd},{"-c",cpl},{"-h",hlp} };
+	bool mkd{}, cpl{true}, hlp{}, cplonly{}, vers{};
+	const std::map<std::string_view, bool&> opts { {"-m",mkd},{"-c",cpl},{"-h",hlp},{"-C",cplonly},{"-v",vers}};
 	for (const std::vector<std::string_view> args{argv + 1, argv + argc}; const auto pp : args)
 		if (auto result{opts.find(pp)}; result != opts.cend())
 			result->second ^= true;
@@ -167,21 +167,26 @@ conjure_enum - however there have been a couple of changes with earlier releases
 Since the output of std::source_location is entirely implementation dependent, future
 changes may occur.
 
-Usage: )" << argv[0] << " [-cmh]" << R"(
+See <https://github.com/fix8mt/conjure_enum>
+
+Usage: )" << argv[0] << " [-cCmvh]" << R"(
   -c show compiler (default true)
+  -C show compiler version only
   -m output using markdown
+  -v conjure_enum version
   -h help
 )";
+		return 0;
+	}
+	if (vers)
+	{
+		std::cout << "conjure_enum version " CONJURE_ENUM_VERSION "\n";
 		return 0;
 	}
 
 	if (cpl)
 	{
-#if defined _MSC_VER
-#define STRINGIZE(x) #x
-#define STRINGIZE_VALUE(x) STRINGIZE(x)
-#endif
-		if (mkd)
+		if (mkd && !cplonly)
 			std::cout << "---\n# ";
 		std::cout << "Compiler: "
 #if defined __clang__
@@ -189,6 +194,8 @@ Usage: )" << argv[0] << " [-cmh]" << R"(
 #elif defined __GNUC__
 			"GCC: " __VERSION__
 #elif defined _MSC_VER
+#define STRINGIZE(x) #x
+#define STRINGIZE_VALUE(x) STRINGIZE(x)
 			"MSVC: " STRINGIZE_VALUE(_MSC_VER)
 #else
 # error "Not Supported"
@@ -196,7 +203,7 @@ Usage: )" << argv[0] << " [-cmh]" << R"(
 			"\n";
 	}
 
-	for (const auto *pp : srclocstrs)
+	if (!cplonly) for (const auto *pp : srclocstrs)
 	{
 		if (mkd && std::isdigit(pp[0]))
 		{
@@ -208,9 +215,9 @@ Usage: )" << argv[0] << " [-cmh]" << R"(
 			std::cout << pp << '\n';
 		if (mkd && std::isdigit(pp[0]))
 			std::cout << "```c++\n";
+		if (mkd)
+			std::cout << "```\n";
 	}
-	if (mkd)
-		std::cout << "```\n";
 
 	return 0;
 }

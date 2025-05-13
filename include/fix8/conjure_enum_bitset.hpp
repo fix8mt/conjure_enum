@@ -302,7 +302,7 @@ public:
 
 	template<typename C, typename Fn, typename... Args> // specialisation for member function with object
 	requires std::invocable<Fn&&, C, T, Args...>
-	[[maybe_unused]] constexpr auto for_each(Fn&& func, C *obj, Args&&... args) noexcept
+	[[maybe_unused]] constexpr auto for_each(Fn&& func, C&& obj, Args&&... args) noexcept
 	{
 		return for_each(std::bind(std::forward<Fn>(func), obj, std::placeholders::_1, std::forward<Args>(args)...));
 	}
@@ -319,7 +319,7 @@ public:
 
 	template<typename C, typename Fn, typename... Args> // specialisation for member function with object
 	requires std::invocable<Fn&&, C, T, Args...>
-	[[maybe_unused]] constexpr auto for_each_n(int n, Fn&& func, C *obj, Args&&... args) noexcept
+	[[maybe_unused]] constexpr auto for_each_n(int n, Fn&& func, C&& obj, Args&&... args) noexcept
 	{
 		return for_each_n(n, std::bind(std::forward<Fn>(func), obj, std::placeholders::_1, std::forward<Args>(args)...));
 	}

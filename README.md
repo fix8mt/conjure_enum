@@ -490,7 +490,7 @@ requires std::invocable<Fn&&, C, T, Args...>
 Call supplied invocable for _each_ enum value. Similar to `std::for_each` except the first parameter of your invocable must accept an enum value (passed by `for_each`).
 Optionally provide any additional parameters. You can limit the number of calls to your invocable by using the `for_each_n` version with the first parameter
 being the maximum number to call. The second version of `for_each` and `for_each_n` is intended to be used
-when using a member function - the _second_ parameter passed by your call must be the `this` pointer of the object.
+when using a member function - the _second_ parameter passed by your call must be a pointer or reference to the object.
 If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
 
 Works with lambdas, member functions, functions etc, compatible with `std::invoke`.
@@ -616,7 +616,7 @@ There are two versions of `dispatch` - the first takes an enum value, a 'not fou
 The second version takes an enum value, and a `std::array` of `std::tuple` of enum and invocable. The last element of the array is called if the enum is not found.
 This version is intended for use with `void` return invocables.
 
-The second version of each of the above is intended to be used when using a member function - the _first_ parameter passed after your array must be the `this` pointer of the object.
+The second version of each of the above is intended to be used when using a member function - the _first_ parameter passed after your array must be a pointer or reference to the object.
 You can also use `std::bind` to bind the this pointer and any parameter placeholders when declaring your array.
 If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
 
@@ -1238,7 +1238,7 @@ requires std::invocable<Fn&&, C, T, Args...>
 Call supplied invocable for _every bit that is on_. Similar to `std::for_each` except first parameter of your invocable must accept an enum value (passed by `for_each`).
 Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. You can limit the number of calls to your
 invocable by using the `for_each_n` version with the first parameter being the maximum number to call. The second version of `for_each` and `for_each_n` is intended to be used
-when using a member function - the _second_ parameter passed by your call must be the `this` pointer of the object.
+when using a member function - the _second_ parameter passed by your call must be a pointer or reference to the object.
 If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
 
 Returns `std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...)` or

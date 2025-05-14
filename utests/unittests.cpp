@@ -477,7 +477,12 @@ TEST_CASE("for_each")
 	};
 	foo bar;
 	total = 0;
+	// test pointer to object
 	conjure_enum<component>::for_each(&foo::process, &bar, 10, std::ref(total));
+	REQUIRE(total == 160);
+	total = 0;
+	// test reference to object
+	conjure_enum<component>::for_each(&foo::process, bar, 10, std::ref(total));
 	REQUIRE(total == 160);
 }
 
@@ -894,6 +899,12 @@ TEST_CASE("enum_bitset using conjure_enum::dispatch")
 	{
 		ptr->total += conjure_enum<numbers>::dispatch(val, -1, arr, ptr, extr);
 	}, tarr, &bar, 1000);
+	REQUIRE(bar.total == 3998);
+	bar.total = 0;
+	enc.for_each([](numbers val, const auto& arr, foo& ptr, int extr)
+	{
+		ptr.total += conjure_enum<numbers>::dispatch(val, -1, arr, ptr, extr);
+	}, tarr, bar, 1000);
 	REQUIRE(bar.total == 3998);
 
 	const auto dd2

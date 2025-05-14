@@ -66,6 +66,7 @@ target_include_directories(${PROJECT_NAME} INTERFACE
 if(BUILD_UNITTESTS)
 	fix8_fetch(Catch2 catchorg/Catch2 devel)
 	target_compile_features(Catch2 PRIVATE cxx_std_17)
+	add_dependencies(Catch2 srcloctest) # srcloctest should be built before building Catch2
 	list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
 	include(Catch)
 	enable_testing()

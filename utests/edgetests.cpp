@@ -153,7 +153,17 @@ enum class numbers
    blah_340, blah_341, blah_342, blah_343, blah_344,
    blah_345, blah_346, blah_347, blah_348, blah_349,
    blah_350, blah_351, blah_352, blah_353, blah_354,
-	ce_first=blah_0,ce_last=blah_354
+	blah_355, blah_356, blah_357, blah_358, blah_359,
+	blah_360, blah_361, blah_362, blah_363, blah_364,
+	blah_365, blah_366, blah_367, blah_368, blah_369,
+	blah_370, blah_371, blah_372, blah_373, blah_374,
+	blah_375, blah_376, blah_377, blah_378, blah_379,
+	blah_380, blah_381, blah_382, blah_383, blah_384,
+	blah_385, blah_386, blah_387, blah_388, blah_389,
+	blah_390, blah_391, blah_392, blah_393, blah_394,
+	blah_395, blah_396, blah_397, blah_398, blah_399,
+	blah_400,
+	ce_first=blah_0,ce_last=blah_400
 };
 
 //-----------------------------------------------------------------------------------------
@@ -353,6 +363,6 @@ TEST_CASE("enum limits")
 	REQUIRE(conjure_enum<numbers>::get_enum_min_value() == conjure_enum<numbers>::get_actual_enum_min_value());
 	REQUIRE(conjure_enum<numbers>::get_enum_max_value() == conjure_enum<numbers>::get_actual_enum_max_value());
 	REQUIRE(conjure_enum<numbers>::get_enum_min_value() == 0);
-	REQUIRE(conjure_enum<numbers>::get_enum_max_value() == 354);
+	REQUIRE(conjure_enum<numbers>::get_enum_max_value() == 400);
 }
 

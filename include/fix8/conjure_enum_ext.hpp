@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------------------------
 // SPDX-License-Identifier: MIT
-// SPDX-FileCopyrightText: Copyright (C) 2024 Fix8 Market Technologies Pty Ltd
+// SPDX-FileCopyrightText: Copyright (C) 2024-25 Fix8 Market Technologies Pty Ltd
 // SPDX-FileType: SOURCE
 //
 // conjure_enum (header only)
@@ -123,6 +123,10 @@ public:
 	{
 		constexpr std::string_view from{tpeek()};
 #if defined _MSC_VER
+#define CHKMSSTR(e, x) \
+	if constexpr (constexpr auto ep##x { e.find(cs::get_spec<sval::anon_str,stype::x>()) }; ep##x != std::string_view::npos) \
+		return e.substr(ep##x + cs::get_spec<sval::anon_str,stype::x>().size(), e.size() - (ep##x + cs::get_spec<sval::anon_str,stype::x>().size()))
+
 		constexpr auto ep { from.rfind(cs::get_spec<sval::start,stype::type_t>()) };
 		if constexpr (ep == std::string_view::npos)
 			return {};
@@ -156,7 +160,7 @@ public:
 
 	template<typename Fn, typename C, typename... Args> // specialisation for member function with object
 	requires std::invocable<Fn&&, C, T, Args...>
-	[[maybe_unused]] static constexpr auto for_each(Fn&& func, C *obj, Args&&... args) noexcept
+	[[maybe_unused]] static constexpr auto for_each(Fn&& func, C&& obj, Args&&... args) noexcept
 	{
 		return for_each(std::bind(std::forward<Fn>(func), obj, std::placeholders::_1, std::forward<Args>(args)...));
 	}
@@ -176,7 +180,7 @@ public:
 
 	template<typename Fn, typename C, typename... Args> // specialisation for member function with object
 	requires std::invocable<Fn&&, C, T, Args...>
-	[[maybe_unused]] static constexpr auto for_each_n(int n, Fn&& func, C *obj, Args&&... args) noexcept
+	[[maybe_unused]] static constexpr auto for_each_n(int n, Fn&& func, C&& obj, Args&&... args) noexcept
 	{
 		return for_each_n(n, std::bind(std::forward<Fn>(func), obj, std::placeholders::_1, std::forward<Args>(args)...));
 	}
@@ -198,7 +202,7 @@ public:
 
 	template<std::size_t I, typename R, typename Fn, typename C, typename... Args> // specialisation for member function with not found value(nval) for return
 	requires std::invocable<Fn&&, C, T, Args...>
-	[[maybe_unused]] static constexpr R dispatch(T ev, R nval, const std::array<std::tuple<T, Fn>, I>& disp, C *obj, Args&&... args) noexcept
+	[[maybe_unused]] static constexpr R dispatch(T ev, R nval, const std::array<std::tuple<T, Fn>, I>& disp, C&& obj, Args&&... args) noexcept
 	{
 		const auto [begin,end] { std::equal_range(disp.cbegin(), disp.cend(), std::make_tuple(ev, Fn()), tuple_comp<Fn>) };
 		return begin != end ? std::invoke(std::get<Fn>(*begin), obj, ev, std::forward<Args>(args)...) : nval;
@@ -214,7 +218,7 @@ public:
 
 	template<std::size_t I, typename Fn, typename C, typename... Args> // specialisation for void member function with not found call to last element
 	requires (std::invocable<Fn&&, C, T, Args...> && I > 0)
-	static constexpr void dispatch(T ev, const std::array<std::tuple<T, Fn>, I>& disp, C *obj, Args&&... args) noexcept
+	static constexpr void dispatch(T ev, const std::array<std::tuple<T, Fn>, I>& disp, C&& obj, Args&&... args) noexcept
 	{
 		const auto [begin,end] { std::equal_range(disp.cbegin(), std::prev(disp.cend()), std::make_tuple(ev, Fn()), tuple_comp<Fn>) };
 		return std::invoke(std::get<Fn>(begin != end ? *begin : *std::prev(disp.cend())), obj, ev, std::forward<Args>(args)...);
@@ -236,9 +240,6 @@ struct iterator_adaptor
 	constexpr auto begin() noexcept { return conjure_enum<T>::entries.cbegin(); }
 	constexpr auto end() noexcept { return conjure_enum<T>::entries.cend(); }
 };
-
-//-----------------------------------------------------------------------------------------
-#include <ostream>
 
 //-----------------------------------------------------------------------------------------
 // ostream& operator<< for any enum; add the following before using:

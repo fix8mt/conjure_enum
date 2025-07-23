@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------------------------
 // SPDX-License-Identifier: MIT
-// SPDX-FileCopyrightText: Copyright (C) 2024 Fix8 Market Technologies Pty Ltd
+// SPDX-FileCopyrightText: Copyright (C) 2024-25 Fix8 Market Technologies Pty Ltd
 // SPDX-FileType: SOURCE
 //
 // conjure_enum (header only)
@@ -63,6 +63,7 @@
 #include <array>
 #if not defined FIX8_CONJURE_ENUM_MINIMAL
 # include <functional>
+# include <ostream>
 #endif
 
 //-----------------------------------------------------------------------------------------
@@ -146,12 +147,6 @@ public:
 };
 using stype = cs::stype;
 using sval = cs::sval;
-
-#if defined _MSC_VER
-#define CHKMSSTR(e, x) \
-	if constexpr (constexpr auto ep##x { e.find(cs::get_spec<sval::anon_str,stype::x>()) }; ep##x != std::string_view::npos) \
-		return e.substr(ep##x + cs::get_spec<sval::anon_str,stype::x>().size(), e.size() - (ep##x + cs::get_spec<sval::anon_str,stype::x>().size()))
-#endif
 
 //-----------------------------------------------------------------------------------------
 template<typename T>
@@ -323,6 +318,7 @@ public:
 	static constexpr auto count() noexcept { return values.size(); }
 	static constexpr bool is_continuous() noexcept { return (static_cast<size_t>(max_v) - static_cast<size_t>(min_v) + 1) == count(); }
 	static constexpr bool in_range(T value) noexcept { return std::clamp(value, min_v, max_v) == value; }
+	static constexpr bool starts_from_zero() noexcept { return static_cast<size_t>(min_v) == 0; }
 
 	// scope ops
 	static constexpr bool has_scope(std::string_view what) noexcept
@@ -389,7 +385,7 @@ public:
 
 	static constexpr std::string_view enum_to_string(T value, [[maybe_unused]] bool noscope=false) noexcept
 	{
-		if constexpr (is_continuous())
+		if constexpr (is_continuous() and starts_from_zero())
 		{
 			if (in_range(value))
 			{

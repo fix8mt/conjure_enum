@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------------------
 # SPDX-License-Identifier: MIT
-# SPDX-FileCopyrightText: Copyright (C) 2024 Fix8 Market Technologies Pty Ltd
+# SPDX-FileCopyrightText: Copyright (C) 2024-25 Fix8 Market Technologies Pty Ltd
 # SPDX-FileType: SOURCE
 #
 # conjure_enum (header only)
@@ -28,79 +28,50 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # ----------------------------------------------------------------------------------------
-cmake_minimum_required (VERSION 3.20)
+cmake_minimum_required (VERSION 3.21+)
+message(STATUS "CMake version ${CMAKE_VERSION}")
+include(cmake/buildutils.cmake)
 project (conjure_enum
    LANGUAGES CXX
-	HOMEPAGE_URL https://github.com/fix8mt/conjure_enum
+	HOMEPAGE_URL https://github.com/fix8mt/${PROJECT_NAME}
    DESCRIPTION "Lightweight C++20 enum and typename reflection"
-   VERSION 1.1.0)
+   VERSION 1.2.0)
 
-message("${CMAKE_PROJECT_NAME} version ${CMAKE_PROJECT_VERSION}")
-
-# to disable strip:
-# cmake -DBUILD_STRIP_EXE=false ..
-option(BUILD_STRIP_EXE "enable stripping of non-unittest executables" true)
-message("-- Build: strip exes ${BUILD_STRIP_EXE}")
-
-# to disable warnings:
-# cmake -DBUILD_ALL_WARNINGS=false ..
-option(BUILD_ALL_WARNINGS "enable building with all warnings" true)
-message("-- Build: with all warnings ${BUILD_ALL_WARNINGS}")
-
-# to disable building unit tests:
-# cmake -DBUILD_UNITTESTS=false ..
-option(BUILD_UNITTESTS "enable building unit tests" true)
-message("-- Build: unit tests ${BUILD_UNITTESTS}")
-
-# to enable clang build profiler:
-# cmake -DBUILD_CLANG_PROFILER=true ..
-# see examples/cbenchmark.sh
-option(BUILD_CLANG_PROFILER "enable clang build profiler" false)
-message("-- Build: clang profiler ${BUILD_CLANG_PROFILER}")
-if(BUILD_CLANG_PROFILER)
-	if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-		add_compile_options(-ftime-trace)
-	else()
-		message(WARNING "BUILD_CLANG_PROFILER only available with Clang")
-	endif()
+if(NOT MSVC)
+	fix8_setbuildtype(CONJURE_ENUM Release)
 endif()
+fix8_addoption("BUILD_UNITTESTS|enable building unit tests|true")
+fix8_addoption("BUILD_STRIP_EXE|enable stripping of non-unittest executables|true")
+fix8_addoption("BUILD_ALL_WARNINGS|enable building with all warnings|true")
+fix8_addoption("BUILD_CLANG_PROFILER|enable clang build profiler|false")
 
-function(build loc x)
-	add_executable(${x} ${loc}/${x}.cpp)
-	if(NOT ${x} STREQUAL srcloctest)
-		add_dependencies(${x} srcloctest) # srcloctest should be built even if errors with conjure_enum
-	endif()
-	set_target_properties(${x} PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED true)
-	target_include_directories(${x} PRIVATE include)
-	if(BUILD_ALL_WARNINGS)
-		target_compile_options(${x} PRIVATE
-			$<$<CXX_COMPILER_ID:MSVC>:/W4>
-			$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic>)
-	endif()
-	get_target_property(cppstd ${x} CXX_STANDARD)
-	message("-- adding ${x}.cpp CXX_STANDARD: C++${cppstd} (${CMAKE_CXX_COMPILER_ID})")
-endfunction()
-
-foreach(x srcloctest example statictest cbenchmark)
-	build(examples ${x})
+fix8_build(examples srcloctest 20)
+foreach(x example statictest cbenchmark)
+	fix8_build(examples ${x} 20)
+	add_dependencies(${x} srcloctest) # srcloctest should be built even if errors with conjure_enum
 	if(BUILD_STRIP_EXE)
 		add_custom_command(TARGET ${x} POST_BUILD COMMAND ${CMAKE_STRIP} ${x})
 	endif()
 endforeach()
 
+# make include visible to inheriting projects
+add_library(${PROJECT_NAME} INTERFACE)
+file(GLOB HEADER_FILES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/include/fix8/*.hpp")
+target_sources(${PROJECT_NAME} INTERFACE FILE_SET HEADERS FILES ${HEADER_FILES})
+install(TARGETS ${PROJECT_NAME} FILE_SET HEADERS DESTINATION .)
+target_include_directories(${PROJECT_NAME} INTERFACE
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+	$<INSTALL_INTERFACE:include>)
+
 if(BUILD_UNITTESTS)
-	include(FetchContent)
-	FetchContent_Declare(Catch2
-		GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-		GIT_SHALLOW ON
-		GIT_TAG devel)
-	FetchContent_MakeAvailable(Catch2)
+	fix8_fetch(Catch2 catchorg/Catch2 devel)
+	target_compile_features(Catch2 PRIVATE cxx_std_17)
+	add_dependencies(Catch2 srcloctest) # srcloctest should be built before building Catch2
 	list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
-	target_compile_features(Catch2 PRIVATE cxx_std_20)
 	include(Catch)
 	enable_testing()
 	foreach(x unittests edgetests)
-		build(utests ${x})
+		fix8_build(utests ${x} 20)
 		target_link_libraries(${x} PRIVATE Catch2::Catch2WithMain)
 		catch_discover_tests(${x})
 	endforeach()

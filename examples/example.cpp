@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------------------------
 // SPDX-License-Identifier: MIT
-// SPDX-FileCopyrightText: Copyright (C) 2024 Fix8 Market Technologies Pty Ltd
+// SPDX-FileCopyrightText: Copyright (C) 2024-25 Fix8 Market Technologies Pty Ltd
 // SPDX-FileType: SOURCE
 //
 // conjure_enum (header only)
@@ -264,5 +264,11 @@ int main(void)
 	std::cout << ee.get_underlying_bit_size()  << '\n';
 	std::cout << ee.get_bit_mask() << '\n';
 	std::cout << ee.get_unused_bit_mask() << '\n';
+
+	std::cout << enum_bitset<numbers>(3) << '\n';
+	std::cout << enum_bitset<numbers>({0,1}) << '\n';
+	std::cout << enum_bitset<numbers>(0,1,2,3) << '\n';
+	std::cout << enum_bitset<numbers>({0,1,2,3}) << '\n';
+	std::cout << enum_bitset<numbers>(42) << '\n';
 	return 0;
 }

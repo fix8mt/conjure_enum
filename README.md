@@ -1,6 +1,6 @@
 <!-----------------------------------------------------------------------------------------
 // SPDX-License-Identifier: MIT
-// SPDX-FileCopyrightText: Copyright (C) 2024 Fix8 Market Technologies Pty Ltd
+// SPDX-FileCopyrightText: Copyright (C) 2024-25 Fix8 Market Technologies Pty Ltd
 // SPDX-FileType: DOCUMENTATION
 //
 // conjure_enum (header only)
@@ -65,7 +65,7 @@
 # 2. Introduction
 ## a) Supercharge Your C++ Enums with This Lightweight Reflection Library!
 
-Based on the awesome work in [`magic_enum`](https://github.com/Neargye/magic_enum)[^2] and [`boost::describe`](https://github.com/boostorg/describe),
+Based on some of the awesome work in [`magic_enum`](https://github.com/Neargye/magic_enum)[^2] and [`boost::describe`](https://github.com/boostorg/describe),
 this library offers a streamlined and powerful way to add reflection capabilities to your C++ enums and other types. We've optimized the core functionality,
 focusing on the main features developers usually want. We've also added general purpose typename reflection for any type.
 
@@ -126,7 +126,7 @@ template<T e>
 static constexpr std::string_view enum_to_string();
 ```
 Returns a `std::string_view` or empty if not found. Optionally passing `true` will remove scope in result if present.
-`noscope` option ![](assets/notminimalred.svg).
+![](assets/notminimalred.svg).
 ```c++
 auto name { conjure_enum<component>::enum_to_string(component::path) };
 auto name_trim { conjure_enum<component>::enum_to_string(component::path, true) }; // optionally remove scope in result
@@ -143,6 +143,11 @@ component::path
 path
 numbers::two
 ```
+
+> [!TIP]
+> For scoped enums, this method will return the fully qualified enum name (with the class prefix). If you want
+> to return the unscoped enum specify `true`
+
 ### Aliases
 Because all methods in `conjure_enum` are defined _within_ a `class` instead of individual template functions in a `namespace`, you can reduce your
 typing with standard aliases:
@@ -472,7 +477,7 @@ requires std::invocable<Fn&&, T, Args...>
 
 template<typename Fn, typename C, typename... Args> // specialisation for member function with object
 requires std::invocable<Fn&&, C, T, Args...>
-[[maybe_unused]] static constexpr auto for_each(Fn&& func, C *obj, Args&&... args);
+[[maybe_unused]] static constexpr auto for_each(Fn&& func, C&& obj, Args&&... args);
 
 template<typename Fn, typename... Args>
 requires std::invocable<Fn&&, T, Args...>
@@ -480,12 +485,12 @@ requires std::invocable<Fn&&, T, Args...>
 
 template<typename Fn, typename C, typename... Args> // specialisation for member function with object
 requires std::invocable<Fn&&, C, T, Args...>
-[[maybe_unused]] static constexpr auto for_each_n(int n, Fn&& func, C *obj, Args&&... args);
+[[maybe_unused]] static constexpr auto for_each_n(int n, Fn&& func, C&& obj, Args&&... args);
 ```
 Call supplied invocable for _each_ enum value. Similar to `std::for_each` except the first parameter of your invocable must accept an enum value (passed by `for_each`).
 Optionally provide any additional parameters. You can limit the number of calls to your invocable by using the `for_each_n` version with the first parameter
 being the maximum number to call. The second version of `for_each` and `for_each_n` is intended to be used
-when using a member function - the _second_ parameter passed by your call must be the `this` pointer of the object.
+when using a member function - the _second_ parameter passed by your call must be a pointer or reference to the object.
 If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
 
 Works with lambdas, member functions, functions etc, compatible with `std::invoke`.
@@ -586,7 +591,7 @@ requires std::invocable<Fn&&, T, Args...>
 
 template<std::size_t I, typename R, typename Fn, typename C, typename... Args> // specialisation for member function with not found value(nval) for return
 requires std::invocable<Fn&&, C, T, Args...>
-[[maybe_unused]] static constexpr R dispatch(T ev, R nval, const std::array<std::tuple<T, Fn>, I>& disp, C *obj, Args&&... args);
+[[maybe_unused]] static constexpr R dispatch(T ev, R nval, const std::array<std::tuple<T, Fn>, I>& disp, C&& obj, Args&&... args);
 
 template<std::size_t I, typename Fn, typename... Args> // void func with not found call to last element
 requires (std::invocable<Fn&&, T, Args...> && I > 0)
@@ -594,10 +599,10 @@ static constexpr void dispatch(T ev, const std::array<std::tuple<T, Fn>, I>& dis
 
 template<std::size_t I, typename Fn, typename C, typename... Args> // specialisation for void member function with not found call to last element
 requires (std::invocable<Fn&&, C, T, Args...> && I > 0)
-static constexpr void dispatch(T ev, const std::array<std::tuple<T, Fn>, I>& disp, C *obj, Args&&... args);
+static constexpr void dispatch(T ev, const std::array<std::tuple<T, Fn>, I>& disp, C&& obj, Args&&... args);
 ```
-With a given enum, search and call user supplied invocable. A typical use case would be where you want to demux a complex event, allowing you to easily declare predefined invocable actions
-for different enum values.
+With a given enum, search and call user supplied invocable. So for example, if you want to demux a complex event predicated on an enum, you can easily declare predefined invocable actions
+for different enum values and then use `dispatch` to test and execute those actions.
 
 - Where invocable returns a value, return this value or a user supplied "not found" value.
 - Where invocable is void, call user supplied invocable or "not found" invocable (last in supplied array).
@@ -611,7 +616,7 @@ There are two versions of `dispatch` - the first takes an enum value, a 'not fou
 The second version takes an enum value, and a `std::array` of `std::tuple` of enum and invocable. The last element of the array is called if the enum is not found.
 This version is intended for use with `void` return invocables.
 
-The second version of each of the above is intended to be used when using a member function - the _first_ parameter passed after your array must be the `this` pointer of the object.
+The second version of each of the above is intended to be used when using a member function - the _first_ parameter passed after your array must be a pointer or reference to the object.
 You can also use `std::bind` to bind the this pointer and any parameter placeholders when declaring your array.
 If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
 
@@ -620,7 +625,7 @@ If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
 
 > [!IMPORTANT]
 > Your `std::array` of `std::tuple` should be sorted by enum.
-> The `dispatch` method performs a binary search on the array. Complexity for a sorted array is at most&ensp; $2log_2(N)+O(1)$ &ensp;comparisons.
+> The `dispatch` method performs a [binary search](https://en.cppreference.com/w/cpp/algorithm/binary_search) on the array. Complexity for a sorted array is at most&ensp; $2log_2(N)+O(1)$ &ensp;comparisons.
 > If the array is _not_ sorted, complexity is linear.
 
 The following example uses a `static constexpr` array of pointers to functions. For brevity they all point to the same function except the last which is
@@ -985,16 +990,16 @@ _output_
 ```CSV
 0000001111
 ```
-You can use the underlying type as well:
+You can use the underlying type in an initialiser_list as well:
 ```c++
-enum_bitset<numbers> b(0,1,2,3);
+enum_bitset<numbers> b({0,1,2,3});
 std::cout << b << '\n';
 ```
 _output_
 ```CSV
 0000001111
 ```
-You can use an `int` initialiser too:
+You can use an `unsigned integer` initialiser too (interpreted as an underlying type):
 ```c++
 enum_bitset<numbers> b(15);
 std::cout << b << '\n';
@@ -1220,7 +1225,7 @@ requires std::invocable<Fn&&, T, Args...>
 
 template<typename C, typename Fn, typename... Args> // specialisation for member function with object
 requires std::invocable<Fn&&, C, T, Args...>
-[[maybe_unused]] constexpr auto for_each(Fn&& func, C *obj, Args&&... args);
+[[maybe_unused]] constexpr auto for_each(Fn&& func, C&& obj, Args&&... args);
 
 template<typename Fn, typename... Args>
 requires std::invocable<Fn&&, T, Args...>
@@ -1228,12 +1233,12 @@ requires std::invocable<Fn&&, T, Args...>
 
 template<typename C, typename Fn, typename... Args> // specialisation for member function with object
 requires std::invocable<Fn&&, C, T, Args...>
-[[maybe_unused]] constexpr auto for_each_n(int n, Fn&& func, C *obj, Args&&... args);
+[[maybe_unused]] constexpr auto for_each_n(int n, Fn&& func, C&& obj, Args&&... args);
 ```
 Call supplied invocable for _every bit that is on_. Similar to `std::for_each` except first parameter of your invocable must accept an enum value (passed by `for_each`).
 Optionally provide any additional parameters. Works with lambdas, member functions, functions etc. You can limit the number of calls to your
 invocable by using the `for_each_n` version with the first parameter being the maximum number to call. The second version of `for_each` and `for_each_n` is intended to be used
-when using a member function - the _second_ parameter passed by your call must be the `this` pointer of the object.
+when using a member function - the _second_ parameter passed by your call must be a pointer or reference to the object.
 If you wish to pass a `reference` parameter, you must wrap it in `std::ref`.
 
 Returns `std::bind(std::forward<Fn>(func), std::placeholders::_1, std::forward<Args>(args)...)` or
@@ -1426,8 +1431,8 @@ static consteval const char* FIX8::conjure_type<T>::tpeek() [with T = test]
 
 ---
 # 6. `fixed_string`
-`fixed_string` is a specialisation of `std::array` that provides statics storage for an ASCII zero (asciiz) string. The purpose of this class is to allow the
-creation of `constexpr` strings with specfic storage, adding a trailing `0`. It is used by `conjure_enum` to store all strings. API is described below.
+`fixed_string` is a specialisation of `std::array` that provides static storage for an ASCII zero (asciiz) string. The purpose of this class is to allow the
+creation of `constexpr` strings with specfic storage whilst adding a trailing `0`. It is used by `conjure_enum` to store all strings. API is described below.
 
 ## a) Creating a `fixed_string`
 ```c++
@@ -1505,22 +1510,34 @@ by default.
 
 The package is also available on [vckpg](https://vcpkg.io/en/package/conjure-enum).
 
-### ii. Default compiler warnings
+### ii. Installing
+To install the headers in your target environment, you can either specify the installation prefix when you first run cmake or set the
+environment variable `CMAKE_INSTALL_PREFIX`. Omitting the prefix will install to the default target directory for your platform.
+```bash
+$ cmake -DCMAKE_INSTALL_PREFIX=<target directory> ..
+```
+
+Alternatively you can install after building using cmake:
+```bash
+$ cmake --install . --prefix <target directory>
+```
+
+### iii. Default compiler warnings
 By default all warnings are enabled. To prevent this, pass the following to cmake:
 ```bash
 $ cmake -DBUILD_ALL_WARNINGS=false ..
 ```
-### iii. Default unit tests
+### iv. Default unit tests
 By default the unit tests are built (which will download Catch2). To prevent this, pass the following to cmake:
 ```bash
 $ cmake -DBUILD_UNITTESTS=false ..
 ```
-### iv. Default executable stripping
+### v. Default executable stripping
 To disable stripping of the executables:
 ```bash
 $ cmake -DBUILD_STRIP_EXE=false ..
 ```
-### v. Clang compilation profiling
+### vi. Clang compilation profiling
 To enable clang compilation profiling:
 ```bash
 $ cmake -DBUILD_CLANG_PROFILER=true ..
@@ -1553,7 +1570,7 @@ message(STATUS "Downloading conjure_enum...")
 include(FetchContent)
 FetchContent_Declare(conjure_enum GIT_REPOSITORY https://github.com/fix8mt/conjure_enum.git)
 FetchContent_MakeAvailable(conjure_enum)
-target_include_directories(myproj PRIVATE ${conjure_enum_SOURCE_DIR}/include)
+target_link_libraries(myproj PRIVATE conjure_enum)
 ```
 
 ## d) Reporting issues
@@ -1650,11 +1667,13 @@ The following are the default settings:
 These definitions set the minimum and maximum enum values that are supported. You can adjust them to suit your requirements but for most use cases the defaults are sufficient.
 > [!TIP]
 > You can reduce compile times in some circumstances by narrowing the range of `FIX8_CONJURE_ENUM_MIN_VALUE` and `FIX8_CONJURE_ENUM_MAX_VALUE`. For example
-> if your enums are only within the range of say `0-16` you can set `FIX8_CONJURE_ENUM_MIN_VALUE` and `FIX8_CONJURE_ENUM_MAX_VALUE` to `0` and `16` respectively. If the range is _too_ narrow
-> `conjure_enum` will **ignore enum values outside your range**.
+> if your enums are only within the range of say `0-16` you can set `FIX8_CONJURE_ENUM_MIN_VALUE` and `FIX8_CONJURE_ENUM_MAX_VALUE` to `0` and `16` respectively.
 
 > [!TIP]
 > If you wish to set ranges on a per enum basis, use `enum_range` (see below).
+
+> [!WARNING]
+> If the range is _too_ narrow `conjure_enum` will **ignore enum values outside your specified range**.
 
 ### ii. using `enum_range`
 You can specialise this class to override the defaults and set your own range on a per enum basis.
@@ -2047,16 +2066,18 @@ From a compilation performance perspective, `conjure_enum` roughly matches the p
 | Compiler | Version(s) | Notes | Unsupported |
 | :--- | :--- | :--- | ---: |
 | [gcc](https://gcc.gnu.org/projects/cxx-status.html) | `11`, `12`, `13`, `14`| `std::format` not complete in `11`, `12` | `<= 10` |
-| [clang](https://clang.llvm.org/cxx_status.html) | `15`, `16`, `17`, `18`| Catch2 needs `cxx_std_20` in `15` | `<= 14` |
-| [msvc](https://learn.microsoft.com/en-us/cpp/overview/visual-cpp-language-conformance) | `16`, `17` | Visual Studio 2019,2022, latest `17.11.3`| `<= 16.9`|
-| [xcode](https://developer.apple.com/support/xcode/) | `15` | Apple Xcode Clang 15.0.0 (LLVM 16), some issues with `constexpr`, workarounds| `<= 14`|
+| [clang](https://clang.llvm.org/cxx_status.html) | `15`, `16`, `17`, `18`, `19`, `20`| Catch2 needs `cxx_std_20` in `15` | `<= 14` |
+| [msvc](https://learn.microsoft.com/en-us/cpp/overview/visual-cpp-language-conformance) | `16`, `17` | Visual Studio 2019,2022, latest `17.14.3`| `<= 16.9`|
+| [xcode](https://developer.apple.com/support/xcode/) | `15`, `16` | Apple Xcode Clang `15.0.0`, `16.3.0` (LLVM `16`, `17`), some issues with `constexpr`, workarounds| `<= 14`|
 
 # 11. Compiler issues
 | Compiler | Version(s) | Issues | Workaround |
 | :--- | :--- | :--- | ---: |
 | clang | `16`, `17`, `18`| Compiler reports integers outside valid range [x,y]| specify underlying type when declaring enum eg. `enum class foo : int` |
+| xcode clang | `17` | Compiler reports `constexpr evaluation hit maximum step limit; possible infinite loop?` error with large enum ranges | use compiler option `-fconstexpr-steps=4194304`|
+| gcc | `12`, `13`, `14`| Compiler reports warnings with catch2 with `CATCH2_INTERNAL_TEST_*` `is partly outside array bounds of ‘CATCH2_INTERNAL_TEST` warnings | can be ignored |
 
-[^1]: &copy; 2024 Fix8 Market Technologies Pty Ltd, David L. Dight.
+[^1]: &copy; 2024-25 Fix8 Market Technologies Pty Ltd, David L. Dight.
   Logo by [Adrian An](mailto:adrian.an[at]mac.com).
 [^2]: &copy; 2019 - 2024 Daniil Goncharov
 
